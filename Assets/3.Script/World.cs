@@ -6,11 +6,19 @@ using System;
 
 public class World : MonoBehaviour
 {
-
-    public int seed;
     // 플레이어
     public Transform player;
     public Vector3 spawnPoint;
+
+
+    //  ================================================== //
+    //  ================= 월드 생성 관련 ================== //
+    //  ================================================== //
+
+
+    public int seed;
+    //public int seedOffset;
+    public BiomeAttribute biome;
 
 
     // blocks
@@ -20,26 +28,29 @@ public class World : MonoBehaviour
     // chunk
     Chunk[,] chunks = new Chunk[VoxelData.worldSizeInChunks, VoxelData.worldSizeInChunks];
     List<ChunkCoord> activeChunks = new List<ChunkCoord>();
+
+    ChunkCoord playerChunkCoord;
     ChunkCoord playerLastChunkCoord;
 
 
-    // perlin
-    public int perlinOffset = 500;
-    public float perlinScale = 0.25f;
-
+    //// perlin
+    //public int perlinOffset = 500;
+    //public float perlinScale = 0.25f;
+    //
 
     private void Start()
     {
         UnityEngine.Random.InitState(seed);
-
+        //seedOffset = UnityEngine.Random.Range(100, 10000);
 
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
     }
     private void Update()
     {
+        playerChunkCoord = GetChunkCoordFromVector3(player.position);
 
-        if (!GetChunkCoordFromVector3(player.transform.position).Equals(playerLastChunkCoord))
+        if (!playerChunkCoord.Equals(playerLastChunkCoord))
             CheckViewDistance();
     }
 
@@ -50,7 +61,7 @@ public class World : MonoBehaviour
         return new ChunkCoord(x, z);
     }
 
-     void GenerateWorld()
+    void GenerateWorld()
     {
 
         for (int x = VoxelData.worldSizeInChunks / 2 - VoxelData.viewDistanceInChunks / 2; x < VoxelData.worldSizeInChunks / 2 + VoxelData.viewDistanceInChunks / 2; x++)
@@ -58,7 +69,7 @@ public class World : MonoBehaviour
             for (int z = VoxelData.worldSizeInChunks / 2 - VoxelData.viewDistanceInChunks / 2; z < VoxelData.worldSizeInChunks / 2 + VoxelData.viewDistanceInChunks / 2; z++)
             {
 
-                CreateChunk(new ChunkCoord(x, z));
+                CreateChunk(x, z);
 
             }
         }
@@ -68,50 +79,40 @@ public class World : MonoBehaviour
 
     }
 
-    private void CheckViewDistance()
+    void CheckViewDistance()
     {
-
-        int chunkX = Mathf.FloorToInt(player.position.x / VoxelData.ChunkWidth);
-        int chunkZ = Mathf.FloorToInt(player.position.z / VoxelData.ChunkWidth);
+        ChunkCoord coord = GetChunkCoordFromVector3(player.position);
 
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
 
-        for (int x = chunkX - VoxelData.viewDistanceInChunks / 2; x < chunkX + VoxelData.viewDistanceInChunks / 2; x++)
+        for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
         {
-            for (int z = chunkZ - VoxelData.viewDistanceInChunks / 2; z < chunkZ + VoxelData.viewDistanceInChunks / 2; z++)
+            for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
             {
-
-                // If the chunk is within the world bounds and it has not been created.
-                if (IsChunkInWorld(x, z))
+                if (IsChunkInWorld(x,z))
                 {
-
-                    ChunkCoord thisChunk = new ChunkCoord(x, z);
-
                     if (chunks[x, z] == null)
-                        CreateChunk(thisChunk);
+                        CreateChunk(x, z);
                     else if (!chunks[x, z].isActive)
                     {
                         chunks[x, z].isActive = true;
-                        activeChunks.Add(thisChunk);
+                        activeChunks.Add(new ChunkCoord(x, z));
                     }
-                    // Check if this chunk was already in the active chunks list.
-                    for (int i = 0; i < previouslyActiveChunks.Count; i++)
-                    {
+                }
 
-                        //if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
-                        if (previouslyActiveChunks[i].x == x && previouslyActiveChunks[i].z == z)
-                            previouslyActiveChunks.RemoveAt(i);
-
-                    }
-
+                for (int i = 0; i < previouslyActiveChunks.Count; i++)
+                {
+                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
+                        previouslyActiveChunks.RemoveAt(i);
                 }
             }
         }
 
-        foreach (ChunkCoord coord in previouslyActiveChunks)
-            chunks[coord.x, coord.z].isActive = false;
-
+        foreach (ChunkCoord c in previouslyActiveChunks)
+            chunks[c.x, c.z].isActive = false;
     }
+
+
 
     // 아마 맵 생성할때 동굴이라던가 바이옴이라던가 등등 주로 여기서 쓰일것
     public byte GetVoxel(Vector3 pos)
@@ -128,15 +129,50 @@ public class World : MonoBehaviour
         if (yPos == 0)
             return 1;
 
-        // 기본 terrain
+        // =============================================================================================================================================== //
+        // ========================================================     첫번째 생성    ==================================================================== //
+        // =============================================================================================================================================== //
 
-        int terrainHeight = Mathf.FloorToInt(VoxelData.ChunkHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), perlinOffset, perlinScale));
+        // 펄린 노이즈 사용해서...
+        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + biome.solidGroundHeight;
+
+        byte voxelValue = 0;
+
         if (yPos == terrainHeight)
-            return 3;
+        {
+            voxelValue = 3;
+        }
+        else if (yPos < terrainHeight && yPos > terrainHeight - 4)
+        {
+            voxelValue = 5; //return 5; 
+        }
         else if (yPos > terrainHeight)
+        {
             return 0;
+        }
+
         else
-            return 2;
+        {
+            voxelValue = 2;//return 2;
+
+        }
+        // =============================================================================================================================================== //
+        // ========================================================     두번째 생성    ==================================================================== //
+        // =============================================================================================================================================== //
+
+        if (voxelValue == 2)
+        {
+            foreach (Lode lode in biome.lodes)
+            {
+                if(yPos > lode.minHeight && yPos < lode.maxHeight)
+                {
+                    if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
+                        voxelValue = lode.blockID;
+                }
+            }
+        }
+        return voxelValue;
+
 
 
         //// 바닥
@@ -163,14 +199,28 @@ public class World : MonoBehaviour
         //    return 2;
     }
 
-    private void CreateChunk(ChunkCoord coord)
+    void CreateChunk(int x, int z)
     {
-
-        chunks[coord.x, coord.z] = new Chunk(new ChunkCoord(coord.x, coord.z), this);
-        activeChunks.Add(new ChunkCoord(coord.x, coord.z));
-
-
+        chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
+        activeChunks.Add(new ChunkCoord(x, z));
     }
+
+    //public bool CheckForVoxel(float _x, float _y, float _z)
+    //{
+    //
+    //    int xCheck = Mathf.FloorToInt(_x);
+    //    int yCheck = Mathf.FloorToInt(_y);
+    //    int zCheck = Mathf.FloorToInt(_z);
+    //
+    //    int xChunk = xCheck / VoxelData.ChunkWidth;
+    //    int zChunk = zCheck / VoxelData.ChunkWidth;
+    //
+    //    xCheck -= (xChunk * VoxelData.ChunkWidth);
+    //    zCheck -= (zChunk * VoxelData.ChunkWidth);
+    //
+    //    return blockTypes[chunks[xChunk, zChunk].voxelMap[xCheck, yCheck, zCheck]].isSolid;
+    //
+    //}
 
     bool IsChunkInWorld(int x, int z)
     {
@@ -193,6 +243,8 @@ public class World : MonoBehaviour
             return false;
     }
 }
+
+
 
 
 

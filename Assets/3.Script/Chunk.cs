@@ -21,24 +21,27 @@ public class Chunk
     // 2d 텍스쳐를 3d 모델로 매핑되도록...
     List<Vector2> uvs = new List<Vector2>();
 
-    byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
     World world;
 
+    public bool isActive
+    {
+        get { return chunkObject.activeSelf; }
+        set { chunkObject.SetActive(value); }
+    }
     public Chunk(ChunkCoord _coord, World _world)
     {
 
         coord = _coord;
-        chunkObject = new GameObject();
-        chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
-
-        meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-        meshFilter = chunkObject.AddComponent<MeshFilter>();
         world = _world;
+        chunkObject = new GameObject();
+        meshFilter = chunkObject.AddComponent<MeshFilter>();
+        meshRenderer = chunkObject.AddComponent<MeshRenderer>();
 
-        chunkObject.transform.SetParent(world.transform);
         meshRenderer.material = world.material;
-
+        chunkObject.transform.SetParent(world.transform);
+        chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
         chunkObject.name = coord.x + ", " + coord.z;
 
         PopulateVoxelMap();
@@ -47,14 +50,14 @@ public class Chunk
 
     }
 
-    public byte GetVoxelFromMap(Vector3 pos)
-    {
-
-        pos -= position;
-
-        return voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-
-    }
+    //public byte GetVoxelFromMap(Vector3 pos)
+    //{
+    //
+    //    pos -= position;
+    //
+    //    return voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
+    //
+    //}
 
     // Chunk 내의 각 위치에 어떤 블록이 있을지...
     void PopulateVoxelMap()
@@ -83,8 +86,10 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    if(world.blockTypes[voxelMap[x,y,z]].isSolid)
-                        AddVoxelDataToChunk(new Vector3(x, y, z));
+                    if (world.blockTypes[voxelMap[x, y, z]].isSolid)
+                    { 
+                        AddVoxelDataToChunk(new Vector3(x, y, z)); 
+                    }
 
                 }
             }
@@ -92,11 +97,6 @@ public class Chunk
 
     }
 
-    public bool isActive
-    {
-        get { return chunkObject.activeSelf; }
-        set { chunkObject.SetActive(value); }
-    }
 
     public Vector3 position
     {
@@ -115,37 +115,41 @@ public class Chunk
 
 
     // 빈공간인지 아닌지 판단 -> 그래야 보이는 면만 그리니까...
+
+
     bool CheckVoxel(Vector3 pos)
     {
-
+    
         int x = Mathf.FloorToInt(pos.x);
         int y = Mathf.FloorToInt(pos.y);
         int z = Mathf.FloorToInt(pos.z);
-
+    
         if (!IsVoxelInChunk(x,y, z))
             return world.blockTypes[world.GetVoxel(pos + position)].isSolid;
-
+    
         return world.blockTypes[voxelMap[x, y, z]].isSolid;
-
+    
     }
+
+    
 
     void AddVoxelDataToChunk(Vector3 pos)
     {
-
+    
         // 블록은 6면체
-
+    
         for (int p = 0; p < 6; p++)
         {
-
+    
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-
+    
             if (!CheckVoxel(pos + VoxelData.faceChecks[p]))
             {
-
+    
                 byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-
+    
                 for (int i = 0; i < 4; i++)
                 {
                     vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
@@ -153,9 +157,9 @@ public class Chunk
                 //vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 1]]);
                 //vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
                 //vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
-
+    
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
-
+    
                 triangles.Add(vertexIndex);
                 triangles.Add(vertexIndex + 1);
                 triangles.Add(vertexIndex + 2);
@@ -163,11 +167,38 @@ public class Chunk
                 triangles.Add(vertexIndex + 1);
                 triangles.Add(vertexIndex + 3);
                 vertexIndex += 4;
-
+    
             }
         }
-
+    
     }
+
+    //void AddVoxelDataToChunk(Vector3 pos)
+    //{
+    //    for (int p = 0; p < 6; p++)
+    //    {
+    //        if (!CheckVoxel(pos + VoxelData.faceChecks[p]))
+    //        {
+    //            byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
+    //
+    //            for (int i = 0; i < 4; i++)
+    //            {
+    //                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
+    //            }
+    //
+    //            AddTexture(world.blockTypes[blockID].GetTextureID(p));
+    //
+    //            triangles.Add(vertexIndex);
+    //            triangles.Add(vertexIndex + 1);
+    //            triangles.Add(vertexIndex + 2);
+    //            triangles.Add(vertexIndex + 2);
+    //            triangles.Add(vertexIndex + 1);
+    //            triangles.Add(vertexIndex + 3);
+    //            vertexIndex += 4;
+    //        }
+    //    }
+    //}
+
 
     void CreateMesh()
     {
@@ -215,11 +246,11 @@ public class ChunkCoord
     public int x;
     public int z;
 
-    public ChunkCoord()
-    {
-        x = 0;
-        z = 0;
-    }
+    //public ChunkCoord()
+    //{
+    //    x = 0;
+    //    z = 0;
+    //}
 
     public ChunkCoord(int _x, int _z)
     {
@@ -228,14 +259,14 @@ public class ChunkCoord
 
     }
 
-    public ChunkCoord(Vector3 pos)
-    {
-        int xCheck = Mathf.FloorToInt(pos.x);
-        int zCheck = Mathf.FloorToInt(pos.z);
-
-        x = xCheck / VoxelData.ChunkWidth;
-        z = zCheck / VoxelData.ChunkWidth;
-    }
+    //public ChunkCoord(Vector3 pos)
+    //{
+    //    int xCheck = Mathf.FloorToInt(pos.x);
+    //    int zCheck = Mathf.FloorToInt(pos.z);
+    //
+    //    x = xCheck / VoxelData.ChunkWidth;
+    //    z = zCheck / VoxelData.ChunkWidth;
+    //}
 
 
     public bool Equals(ChunkCoord other)

@@ -166,9 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227cfebbfbd3d0e41b429e3317226c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 0
   player: {fileID: 963194228}
   spawnPoint: {x: 0, y: 0, z: 0}
+  seed: 544
+  biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
   blockTypes:
   - blockName: Air
@@ -211,8 +212,14 @@ MonoBehaviour:
     leftFaceTexture: 10
     rightFaceTexture: 10
     bottomFaceTexture: 10
-  perlinOffset: 500
-  perlinScale: 0.25
+  - blockName: Dirt
+    isSolid: 1
+    topFaceTexture: 1
+    frontFaceTexture: 1
+    backFaceTexture: 1
+    leftFaceTexture: 1
+    rightFaceTexture: 1
+    bottomFaceTexture: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,49 +461,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!1 &1522197220
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1522197222}
-  - component: {fileID: 1522197221}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1522197221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522197220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56674d5893730864f87fd5798405461c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1522197222
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522197220}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &516486935195297777
 PrefabInstance:
   m_ObjectHideFlags: 0
