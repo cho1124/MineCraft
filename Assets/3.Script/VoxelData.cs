@@ -19,15 +19,21 @@ public static class VoxelData
     public static readonly int ChunkWidth = 5;
     public static readonly int ChunkHeight = 5;
 
-    // 연습용 텍스쳐 아틀라스
-    public static readonly int textureAtlasWidth = 4;
-    public static readonly int textureAtlasHeight = 4;
+    public static readonly int textureAtlasSizeInBlocks = 4;
+    public static float normalizedBlockTextureSize
+    {
+        get { return 1f / (float)textureAtlasSizeInBlocks; }
+    }
+
+    //// 연습용 텍스쳐 아틀라스
+    //public static readonly int textureAtlasWidth = 4;
+    //public static readonly int textureAtlasHeight = 4;
 
 
-    // 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
-    public static float NormalizedTextureAtlasWidth => 1f / textureAtlasWidth;
-
-    public static float NormalizedTextureAtlasHeight => 1f / textureAtlasHeight;
+    //// 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
+    //public static float NormalizedTextureAtlasWidth => 1f / textureAtlasWidth;
+    //
+    //public static float NormalizedTextureAtlasHeight => 1f / textureAtlasHeight;
 
     public static readonly Vector3[] voxelVerts = new Vector3[8] {
 
@@ -49,11 +55,11 @@ public static class VoxelData
 
     public static readonly Vector3[] faceChecks = new Vector3[6]
     {
-        new Vector3(0.0f, 0.0f, -1.0f), // LB 0
-        new Vector3(0.0f, 0.0f, 1.0f), // LB 0
-        new Vector3(0.0f, 1.0f, 0.0f), // LB 0
-        new Vector3(0.0f, -1.0f, 0.0f), // LB 0
-        new Vector3(-1.0f, 0.0f, 0.0f), // LB 0
+        new Vector3(0.0f, 0.0f, -1.0f), 
+        new Vector3(0.0f, 0.0f, 1.0f), 
+        new Vector3(0.0f, 1.0f, 0.0f), 
+        new Vector3(0.0f, -1.0f, 0.0f), 
+        new Vector3(-1.0f, 0.0f, 0.0f), 
         new Vector3(1.0f, 0.0f, 0.0f)
 
     };

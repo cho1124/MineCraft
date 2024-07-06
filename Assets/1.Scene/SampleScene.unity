@@ -169,13 +169,37 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
   blockTypes:
   - blockName: default
-    isSoild: 1
-    topFaceTextureID: 8
+    isSolid: 1
+    topFaceTextureID: 1
+    frontFaceTextureID: 1
+    backFaceTextureID: 1
+    leftFaceTextureID: 1
+    rightFaceTextureID: 1
+    bottomFaceTextureID: 1
+  - blockName: default
+    isSolid: 1
+    topFaceTextureID: 1
+    frontFaceTextureID: 1
+    backFaceTextureID: 1
+    leftFaceTextureID: 1
+    rightFaceTextureID: 1
+    bottomFaceTextureID: 1
+  - blockName: default
+    isSolid: 1
+    topFaceTextureID: 0
+    frontFaceTextureID: 0
+    backFaceTextureID: 0
+    leftFaceTextureID: 0
+    rightFaceTextureID: 0
+    bottomFaceTextureID: 0
+  - blockName: default
+    isSolid: 1
+    topFaceTextureID: 7
     frontFaceTextureID: 2
     backFaceTextureID: 2
     leftFaceTextureID: 2
     rightFaceTextureID: 2
-    bottomFaceTextureID: 2
+    bottomFaceTextureID: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,6 +478,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chunk
       objectReference: {fileID: 0}
+    - target: {fileID: 3857405776497799805, guid: e3caddc4180f45e43acbb75eb6c6d39f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
     - target: {fileID: 3857405776497799806, guid: e3caddc4180f45e43acbb75eb6c6d39f, type: 3}
       propertyPath: m_RootOrder
       value: 4

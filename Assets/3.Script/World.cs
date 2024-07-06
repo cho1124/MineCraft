@@ -17,7 +17,7 @@ public class World : MonoBehaviour
 public class BlockType
 {
     public string blockName;
-    public bool isSoild;
+    public bool isSolid;
 
     [Header("Texture IDs")]
     public int topFaceTextureID;
@@ -39,9 +39,13 @@ public class BlockType
             case VoxelData.bottomFace: return bottomFaceTextureID;
 
             default:
-                throw new IndexOutOfRangeException($"Face Index must be in 0 ~ 5, but input : {faceIndex}");
+                Debug.Log("Error in GetTextureID; invalid face index"); ;
+                return 0;
         }
 
     }
+
+
+
 }
 
