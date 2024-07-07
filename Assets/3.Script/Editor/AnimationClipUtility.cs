@@ -1,7 +1,7 @@
-using UnityEngine;
-using System.Collections.Generic;
-using static UnityEngine.GraphicsBuffer;
 using UnityEditor;
+using UnityEngine;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using UnityEditor.Animations;
 
 [System.Serializable]
@@ -12,42 +12,10 @@ public class KeyframeData
 }
 
 [System.Serializable]
-public class KeyframeDictionary : Dictionary<string, KeyframeData>, ISerializationCallbackReceiver
-{
-    [SerializeField]
-    private List<string> keys = new List<string>();
-
-    [SerializeField]
-    private List<KeyframeData> values = new List<KeyframeData>();
-
-    public void OnBeforeSerialize()
-    {
-        keys.Clear();
-        values.Clear();
-        foreach (var kvp in this)
-        {
-            keys.Add(kvp.Key);
-            values.Add(kvp.Value);
-        }
-    }
-
-    public void OnAfterDeserialize()
-    {
-        this.Clear();
-
-        if (keys.Count != values.Count)
-            throw new System.Exception($"There are {keys.Count} keys and {values.Count} values after deserialization. Make sure that both key and value lists have the same number of entries.");
-
-        for (int i = 0; i < keys.Count; i++)
-            this.Add(keys[i], values[i]);
-    }
-}
-
-[System.Serializable]
 public class Part
 {
     public string name;
-    public KeyframeDictionary keyframes;
+    public Dictionary<string, KeyframeData> keyframes;
 }
 
 [System.Serializable]
@@ -57,63 +25,6 @@ public class AnimationData
     public int frame_length;
     public List<Part> parts;
 }
-
-
-public static class AnimationClipUtility
-{
-    public static AnimationClip CreateAnimationClip(AnimationData animationData)
-    {
-
-        if (animationData == null)
-        {
-            Debug.LogError("AnimationData is null.");
-            return null;
-        }
-
-        AnimationClip clip = new AnimationClip();
-        clip.frameRate = animationData.frame_length;
-
-        foreach (var part in animationData.parts)
-        {
-            string transformPath = part.name; // Assuming part.name is the path to the transform
-
-            // Create position curves
-            AnimationCurve posXCurve = new AnimationCurve();
-            AnimationCurve posYCurve = new AnimationCurve();
-            AnimationCurve posZCurve = new AnimationCurve();
-
-            // Create rotation curves
-            AnimationCurve rotXCurve = new AnimationCurve();
-            AnimationCurve rotYCurve = new AnimationCurve();
-            AnimationCurve rotZCurve = new AnimationCurve();
-
-            foreach (var keyframe in part.keyframes)
-            {
-                float time = float.Parse(keyframe.Key);
-                KeyframeData keyframeData = keyframe.Value;
-
-                posXCurve.AddKey(time, keyframeData.translate[0]);
-                posYCurve.AddKey(time, keyframeData.translate[1]);
-                posZCurve.AddKey(time, keyframeData.translate[2]);
-
-                rotXCurve.AddKey(time, keyframeData.rotate[0]);
-                rotYCurve.AddKey(time, keyframeData.rotate[1]);
-                rotZCurve.AddKey(time, keyframeData.rotate[2]);
-            }
-
-            clip.SetCurve(transformPath, typeof(Transform), "localPosition.x", posXCurve);
-            clip.SetCurve(transformPath, typeof(Transform), "localPosition.y", posYCurve);
-            clip.SetCurve(transformPath, typeof(Transform), "localPosition.z", posZCurve);
-
-            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.x", rotXCurve);
-            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.y", rotYCurve);
-            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.z", rotZCurve);
-        }
-
-        return clip;
-    }
-}
-
 
 public class AnimationClipCreatorWindow : EditorWindow
 {
@@ -132,20 +43,19 @@ public class AnimationClipCreatorWindow : EditorWindow
         GUILayout.Label("Animation Clip Creator", EditorStyles.boldLabel);
 
         GUILayout.Label("Drag and drop your JSON file below:");
+        jsonFile = (TextAsset)EditorGUILayout.ObjectField(jsonFile, typeof(TextAsset), false);
 
         GUILayout.Label("Drag and drop your Model below:");
         model = (GameObject)EditorGUILayout.ObjectField(model, typeof(GameObject), true);
-
-        jsonFile = (TextAsset)EditorGUILayout.ObjectField(jsonFile, typeof(TextAsset), false);
 
         if (jsonFile != null && GUILayout.Button("Parse JSON"))
         {
             ParseJsonFile();
         }
 
-        if (animationData != null)
+        if (animationData != null && model != null)
         {
-            if (GUILayout.Button("Create Animation Clip"))
+            if (GUILayout.Button("Create and Apply Animation Clip"))
             {
                 AnimationClip clip = AnimationClipUtility.CreateAnimationClip(animationData);
                 if (clip != null)
@@ -167,7 +77,7 @@ public class AnimationClipCreatorWindow : EditorWindow
         }
         else
         {
-            GUILayout.Label("JSON data has not been parsed or is invalid.", EditorStyles.helpBox);
+            GUILayout.Label("JSON data has not been parsed or is invalid, or Model is not selected.", EditorStyles.helpBox);
         }
     }
 
@@ -176,7 +86,7 @@ public class AnimationClipCreatorWindow : EditorWindow
         if (jsonFile != null)
         {
             string jsonData = jsonFile.text;
-            animationData = JsonUtility.FromJson<AnimationData>(jsonData);
+            animationData = JsonConvert.DeserializeObject<AnimationData>(jsonData);
             if (animationData != null)
             {
                 Debug.Log("JSON data parsed successfully.");
@@ -200,12 +110,19 @@ public class AnimationClipCreatorWindow : EditorWindow
         foreach (var part in animationData.parts)
         {
             Debug.Log($"Part Name: {part.name}");
-            foreach (var keyframe in part.keyframes)
+            if (part.keyframes != null)
             {
-                var keyframeData = keyframe.Value;
-                string translation = string.Join(", ", keyframeData.translate);
-                string rotation = string.Join(", ", keyframeData.rotate);
-                Debug.Log($"  Keyframe Time: {keyframe.Key} - Translate: [{translation}], Rotate: [{rotation}]");
+                foreach (var keyframe in part.keyframes)
+                {
+                    var keyframeData = keyframe.Value;
+                    string translation = string.Join(", ", keyframeData.translate);
+                    string rotation = string.Join(", ", keyframeData.rotate);
+                    Debug.Log($"  Keyframe Time: {keyframe.Key} - Translate: [{translation}], Rotate: [{rotation}]");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Keyframes are null for part: {part.name}");
             }
         }
     }
@@ -221,11 +138,88 @@ public class AnimationClipCreatorWindow : EditorWindow
         AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPathWithClip("Assets/GeneratedController.controller", clip);
         animator.runtimeAnimatorController = controller;
     }
-
-
-
 }
 
+public static class AnimationClipUtility
+{
+    public static AnimationClip CreateAnimationClip(AnimationData animationData)
+    {
+        if (animationData == null)
+        {
+            Debug.LogError("AnimationData is null.");
+            return null;
+        }
 
+        AnimationClip clip = new AnimationClip();
+        clip.frameRate = animationData.frame_length;
 
+        foreach (var part in animationData.parts)
+        {
+            string transformPath = part.name; // Assuming part.name is the path to the transform
 
+            if (part.keyframes == null || part.keyframes.Count == 0)
+            {
+                Debug.LogWarning($"No keyframes found for part: {part.name}");
+                continue;
+            }
+
+            // Create position curves
+            AnimationCurve posXCurve = new AnimationCurve();
+            AnimationCurve posYCurve = new AnimationCurve();
+            AnimationCurve posZCurve = new AnimationCurve();
+
+            // Create rotation curves
+            AnimationCurve rotXCurve = new AnimationCurve();
+            AnimationCurve rotYCurve = new AnimationCurve();
+            AnimationCurve rotZCurve = new AnimationCurve();
+
+            foreach (var keyframe in part.keyframes)
+            {
+                if (keyframe.Value == null)
+                {
+                    Debug.LogWarning($"Keyframe at time {keyframe.Key} is null for part: {part.name}");
+                    continue;
+                }
+
+                float time;
+                if (!float.TryParse(keyframe.Key, out time))
+                {
+                    Debug.LogError($"Invalid keyframe time: {keyframe.Key} for part: {part.name}");
+                    continue;
+                }
+
+                KeyframeData keyframeData = keyframe.Value;
+
+                if (keyframeData.translate == null || keyframeData.rotate == null)
+                {
+                    Debug.LogWarning($"Translation or rotation data is null for keyframe at time {keyframe.Key} for part: {part.name}");
+                    continue;
+                }
+
+                posXCurve.AddKey(time, keyframeData.translate[0]);
+                posYCurve.AddKey(time, keyframeData.translate[1]);
+                posZCurve.AddKey(time, keyframeData.translate[2]);
+
+                rotXCurve.AddKey(time, keyframeData.rotate[0]);
+                rotYCurve.AddKey(time, keyframeData.rotate[1]);
+                rotZCurve.AddKey(time, keyframeData.rotate[2]);
+
+                Debug.Log($"Added keyframe at time {time} for part {part.name}: " +
+                          $"translate = [{keyframeData.translate[0]}, {keyframeData.translate[1]}, {keyframeData.translate[2]}], " +
+                          $"rotate = [{keyframeData.rotate[0]}, {keyframeData.rotate[1]}, {keyframeData.rotate[2]}]");
+            }
+
+            clip.SetCurve(transformPath, typeof(Transform), "localPosition.x", posXCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localPosition.y", posYCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localPosition.z", posZCurve);
+
+            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.x", rotXCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.y", rotYCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.z", rotZCurve);
+
+            Debug.Log($"Set animation curves for part {part.name}");
+        }
+
+        return clip;
+    }
+}
