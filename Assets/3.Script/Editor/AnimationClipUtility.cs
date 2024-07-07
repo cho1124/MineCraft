@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static UnityEngine.GraphicsBuffer;
 using UnityEditor;
+using UnityEditor.Animations;
 
 [System.Serializable]
 public class KeyframeData
@@ -118,6 +119,7 @@ public class AnimationClipCreatorWindow : EditorWindow
 {
     private TextAsset jsonFile;
     private AnimationData animationData;
+    private GameObject model;
 
     [MenuItem("Window/Animation Clip Creator")]
     public static void ShowWindow()
@@ -130,6 +132,10 @@ public class AnimationClipCreatorWindow : EditorWindow
         GUILayout.Label("Animation Clip Creator", EditorStyles.boldLabel);
 
         GUILayout.Label("Drag and drop your JSON file below:");
+
+        GUILayout.Label("Drag and drop your Model below:");
+        model = (GameObject)EditorGUILayout.ObjectField(model, typeof(GameObject), true);
+
         jsonFile = (TextAsset)EditorGUILayout.ObjectField(jsonFile, typeof(TextAsset), false);
 
         if (jsonFile != null && GUILayout.Button("Parse JSON"))
@@ -149,6 +155,8 @@ public class AnimationClipCreatorWindow : EditorWindow
                     {
                         AssetDatabase.CreateAsset(clip, path);
                         AssetDatabase.SaveAssets();
+
+                        ApplyAnimationClipToModel(clip, model);
                     }
                 }
                 else
@@ -201,6 +209,21 @@ public class AnimationClipCreatorWindow : EditorWindow
             }
         }
     }
+
+    private void ApplyAnimationClipToModel(AnimationClip clip, GameObject model)
+    {
+        Animator animator = model.GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = model.AddComponent<Animator>();
+        }
+
+        AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPathWithClip("Assets/GeneratedController.controller", clip);
+        animator.runtimeAnimatorController = controller;
+    }
+
+
+
 }
 
 
