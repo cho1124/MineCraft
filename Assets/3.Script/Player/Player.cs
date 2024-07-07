@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Player : MonoBehaviour
 {
     private Transform cam;
     private World world;
 
+
+    // ------------캐릭터 움직임---------------//
     public bool isGrounded;
     public bool isSprinting;
 
@@ -17,7 +21,6 @@ public class Player : MonoBehaviour
 
     public float playerWidth = 0.3f;
 
-
     private float horizontal;
     private float vertical;
     private float mouseHorizontal;
@@ -26,14 +29,33 @@ public class Player : MonoBehaviour
     private float verticalMomentum = 0;
     private bool jumpRequest;
 
+    // ------------캐릭터 움직임 끝 ---------------//
+
+
+
+    // 블록 파괴 및 배치
+    public Transform highlightBlock;
+    public Transform placeBlock;
+    public float checkIncrement = 0.1f;
+    public float reach = 8f;
+
+    public Text selectedBlockText;
+    public byte selefctedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
+
     private void Start()
     {
 
         cam = GameObject.Find("Main Camera").transform;
         world = GameObject.Find("World").GetComponent<World>();
 
+        Cursor.lockState = CursorLockMode.Locked;
+
+        selectedBlockText.text = world.blockTypes[selefctedBlockIndex].blockName + " blcok selected";
+
     }
 
+
+    // 고정된 시간마다 호출, 불필요한 연산 줄이고 정확한 물리연산
     private void FixedUpdate()
     {
 
@@ -64,10 +86,12 @@ public class Player : MonoBehaviour
 
     }
 
+    // 매 프레임마다 호출, 비물리적 연산, 부드러운 움직임
     private void Update()
     {
 
         GetPlayerInputs();
+        PlaceCursorBlocks();
 
     }
 
@@ -80,6 +104,39 @@ public class Player : MonoBehaviour
 
     }
 
+
+    // 블록 배치
+    private void PlaceCursorBlocks()
+    {
+        float step = checkIncrement;
+        Vector3 lastPos = new Vector3();
+
+        while(step < reach)
+        {
+            Vector3 pos = cam.position + (cam.forward * step);
+
+            if(world.CheckForVoxel(pos))
+            {
+                highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                placeBlock.position = lastPos;
+
+                highlightBlock.gameObject.SetActive(true);
+                placeBlock.gameObject.SetActive(true);
+
+                return;
+            }
+            
+            lastPos  = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+            step += checkIncrement;
+
+        }
+
+        highlightBlock.gameObject.SetActive(false);
+        placeBlock.gameObject.SetActive(false);
+
+    }
+
+    // 물리 계산
     private void CalculateVelocity()
     {
 
@@ -124,6 +181,34 @@ public class Player : MonoBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump"))
             jumpRequest = true;
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if(scroll != 0)
+        {
+            if (scroll > 0)
+                selefctedBlockIndex++;
+            else
+                selefctedBlockIndex--;
+
+            if (selefctedBlockIndex > (byte)(world.blockTypes.Length - 1))
+                selefctedBlockIndex = 1;
+            if (selefctedBlockIndex < 1)
+                selefctedBlockIndex = (byte)(world.blockTypes.Length - 1);
+
+            selectedBlockText.text = world.blockTypes[selefctedBlockIndex].blockName + " blcok selected";
+        }
+
+        if(highlightBlock.gameObject.activeSelf)
+        {
+            // 블록 파괴 Destroy block
+            if (Input.GetMouseButtonDown(0))
+                world.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0);
+
+            // 블록 배치 Place block
+            if (Input.GetMouseButtonDown(1))
+                world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selefctedBlockIndex);
+        }
 
     }
 

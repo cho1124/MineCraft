@@ -70,25 +70,7 @@ public class Chunk
             Init();
         }
 
-        //chunkObject = new GameObject();
-        //meshFilter = chunkObject.AddComponent<MeshFilter>();
-        //meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-        //meshRenderer.material = world.material;
-        //meshCollider = chunkObject.AddComponent<MeshCollider>();
-        //
-        //
-        //
-        //chunkObject.transform.SetParent(world.transform);
-        //chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
-        //chunkObject.name = coord.x + ", " + coord.z;
-        //
-        //PopulateVoxelMap();
-        //CreateMeshData();
-        //CreateMesh();
-        //
-        //
-        //meshCollider.sharedMesh = meshFilter.mesh;
-
+        //chunkObject = new GameObject()
     }
     public void Init()
     {
@@ -105,8 +87,10 @@ public class Chunk
         chunkObject.name = coord.x + ", " + coord.z;
 
         PopulateVoxelMap();
-        CreateMeshData();
-        CreateMesh();
+        //CreateMeshData();
+
+        UpdateChunk();
+        //CreateMesh();
 
 
         meshCollider.sharedMesh = meshFilter.mesh;
@@ -147,8 +131,9 @@ public class Chunk
 
 
 
-    void CreateMeshData()
+    void UpdateChunk()
     {
+        ClearMeshData();
 
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
         {
@@ -157,14 +142,25 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
                     if (world.blockTypes[voxelMap[x, y, z]].isSolid)
-                    { 
-                        AddVoxelDataToChunk(new Vector3(x, y, z)); 
+                    {
+                        UpdateMeshData(new Vector3(x,y,z));
+                        //AddVoxelDataToChunk(new Vector3(x, y, z)); 
                     }
 
                 }
             }
         }
 
+        CreateMesh();
+
+    }
+
+    void ClearMeshData()
+    {
+        vertexIndex = 0;
+        vertices.Clear();
+        triangles.Clear();
+        uvs.Clear();
     }
 
 
@@ -190,9 +186,42 @@ public class Chunk
     }
 
 
+    public void EditVoxel(Vector3 pos, byte newID)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        voxelMap[xCheck, yCheck, zCheck] = newID;
+
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+
+        UpdateChunk();
+    }
+
+
+    void UpdateSurroundingVoxels(int x, int y, int z)
+    {
+        Vector3 thisVoxel = new Vector3(x, y, z);
+
+        for(int p = 0; p<6;p++)
+        {
+            Vector3 currentVoxel = thisVoxel + VoxelData.faceChecks[p];
+
+            if(!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
+            {
+                world.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
+            }
+        }
+
+
+    }
+
 
     // 빈공간인지 아닌지 판단 -> 그래야 보이는 면만 그리니까...
-
 
     bool CheckVoxel(Vector3 pos)
     {
@@ -223,7 +252,7 @@ public class Chunk
 
     
 
-    void AddVoxelDataToChunk(Vector3 pos)
+    void UpdateMeshData(Vector3 pos)
     {
     
         // 블록은 6면체
@@ -263,31 +292,6 @@ public class Chunk
     
     }
 
-    //void AddVoxelDataToChunk(Vector3 pos)
-    //{
-    //    for (int p = 0; p < 6; p++)
-    //    {
-    //        if (!CheckVoxel(pos + VoxelData.faceChecks[p]))
-    //        {
-    //            byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-    //
-    //            for (int i = 0; i < 4; i++)
-    //            {
-    //                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
-    //            }
-    //
-    //            AddTexture(world.blockTypes[blockID].GetTextureID(p));
-    //
-    //            triangles.Add(vertexIndex);
-    //            triangles.Add(vertexIndex + 1);
-    //            triangles.Add(vertexIndex + 2);
-    //            triangles.Add(vertexIndex + 2);
-    //            triangles.Add(vertexIndex + 1);
-    //            triangles.Add(vertexIndex + 3);
-    //            vertexIndex += 4;
-    //        }
-    //    }
-    //}
 
 
     void CreateMesh()
