@@ -205,15 +205,15 @@ public static class AnimationClipUtility
                     continue;
                 }
 
-                posXCurve.AddKey(time, originalPosition.x + keyframeData.translate[0] * 0.3f);
-                posYCurve.AddKey(time, originalPosition.y + keyframeData.translate[1] * 0.3f);
-                posZCurve.AddKey(time, originalPosition.z + keyframeData.translate[2] * 0.3f);
+                posXCurve.AddKey(time, originalPosition.x + keyframeData.translate[0] * 0.02f);
+                posYCurve.AddKey(time, originalPosition.y + keyframeData.translate[1] * 0.02f);
+                posZCurve.AddKey(time, originalPosition.z + keyframeData.translate[2] * 0.02f);
 
                 Quaternion rotation = Quaternion.Euler(keyframeData.rotate[0], keyframeData.rotate[1], keyframeData.rotate[2]);
 
-                rotXCurve.AddKey(time, originalRotation.x + rotation.x);
-                rotYCurve.AddKey(time, originalRotation.y + rotation.y);
-                rotZCurve.AddKey(time, originalRotation.z + rotation.z);
+                rotXCurve.AddKey(time, originalRotation.x + rotation.x * -60f);
+                rotYCurve.AddKey(time, originalRotation.y + rotation.y * -60f);
+                rotZCurve.AddKey(time, originalRotation.z + rotation.z * -60f);
                 rotWCurve.AddKey(time, originalRotation.w + rotation.w);
 
                 Debug.Log($"Added keyframe at time {time} for part {part.name}: " +
