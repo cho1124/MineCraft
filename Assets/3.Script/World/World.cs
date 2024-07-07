@@ -6,6 +6,12 @@ using System;
 
 public class World : MonoBehaviour
 {
+    /// Chunk를 기반으로 World 생성
+    /// 캐릭터 주변 일정 범위 내의 Chunk만 보이게 해서 최적화
+    /// 
+    /// 
+    ///
+
     // 플레이어
     public Transform player;
     public Vector3 spawnPoint;
@@ -35,15 +41,9 @@ public class World : MonoBehaviour
     List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
     private bool isCreatingChunks;
 
-
+    // player에 쓰일 디버그 스크린
     public GameObject debugScreen;
 
-
-
-    //// perlin
-    //public int perlinOffset = 500;
-    //public float perlinScale = 0.25f;
-    //
 
 
 
@@ -51,8 +51,6 @@ public class World : MonoBehaviour
     private void Start()
     {
         UnityEngine.Random.InitState(seed);
-        //seedOffset = UnityEngine.Random.Range(100, 10000);
-
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
     }
@@ -128,33 +126,46 @@ public class World : MonoBehaviour
     }
 
 
+    // 보여할 chunk 만 활성화해서 최적화
+
     void CheckViewDistance()
     {
+        // 플레이어의 현재 chunk 좌표
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
+        
+        // 플레이어의 이전 chunk 좌표 업데이트
         playerLastChunkCoord = playerChunkCoord;
 
+        // 현재 활성화 된 chunk 목록을 복사하여 저장
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
 
+        // 플레이어 시야 거리 내의 청크 검사
         for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
         {
             for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
             {
+                // chunk 가 월드 내에 있는지 확인
                 if (IsChunkInWorld(new ChunkCoord(x,z)))
                 {
+                    // chunk가 없으면 새로운 chunk 생성
                     if (chunks[x, z] == null)
                     {
                         chunks[x, z] = new Chunk(new ChunkCoord(x, z), this, false);
                         chunksToCreate.Add(new ChunkCoord(x, z));
                         //CreateChunk(x, z);
                     }
+                    // chunk가 비활성화 된 경우엔 활성화 
                     else if (!chunks[x, z].isActive)
                     {
                         chunks[x, z].isActive = true;
                         //activeChunks.Add(new ChunkCoord(x, z));
                     }
+
+                    // 현재 chunk를 활성 chunk목록에 추가
                     activeChunks.Add(new ChunkCoord(x, z));
                 }
 
+                // 이전 활성화 된 chunk 목록에서 제거
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
                     if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
@@ -163,29 +174,17 @@ public class World : MonoBehaviour
             }
         }
 
+        // 시야에 벗어난 chunk를 비활성화
         foreach (ChunkCoord c in previouslyActiveChunks)
             chunks[c.x, c.z].isActive = false;
     }
 
 
 
+    // CheckVoxel과는 다르게 월드 내부에서 검사 -> 범위가 더 큼
     public bool CheckForVoxel(Vector3 pos)
     {
 
-        //ChunkCoord thisChunk = new ChunkCoord(pos);
-        //
-        //if(!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y > VoxelData.ChunkHeight)
-        //{
-        //    return false;
-        //}
-        //
-        //if(chunks[thisChunk.x, thisChunk.z]!= null && chunks[thisChunk.x, thisChunk.z].isVoxelMapPopulated)
-        //{
-        //    return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isSolid;
-        //}
-        //
-        //return blockTypes[GetVoxel(pos)].isSolid;
-        //--------------------------------------------
         ChunkCoord thisChunk = new ChunkCoord(pos);
         if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y >= VoxelData.ChunkHeight)
         {
@@ -208,19 +207,6 @@ public class World : MonoBehaviour
         }
 
         return blockTypes[GetVoxel(pos)].isSolid;
-
-        //int xCheck = Mathf.FloorToInt(_x);
-        //int yCheck = Mathf.FloorToInt(_y);
-        //int zCheck = Mathf.FloorToInt(_z);
-        //
-        //int xChunk = xCheck / VoxelData.ChunkWidth;
-        //int zChunk = zCheck / VoxelData.ChunkWidth;
-        //
-        //
-        //xCheck -= (xChunk * VoxelData.ChunkWidth);
-        //zCheck -= (zChunk * VoxelData.ChunkWidth);
-        //
-        //return blockTypes[chunks[xChunk, zChunk].voxelMap[xCheck, yCheck, zCheck]].isSolid;
 
     }
 
@@ -290,35 +276,7 @@ public class World : MonoBehaviour
 
 
 
-        //// 바닥
-        //if (pos.x < 0 || pos.x > VoxelData.worldSizeInBlocks - 1 || pos.y < 0 || pos.y > VoxelData.ChunkHeight - 1 || pos.z < 0 || pos.z > VoxelData.worldSizeInBlocks - 1)
-        //    //voxelMap[x, y, z] = 1;
-        //    return 0;
-        //if (pos.y < 1)
-        //    return 1;
-        //// 최상층
-        //else if (pos.y == VoxelData.ChunkHeight - 1)
-        //{
-        //    float tempNoise = Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, 0.1f);
-        //    if (tempNoise < 0.5)
-        //        return 3;
-        //    else
-        //        return 4;
-        //
-        //}
-        //    //voxelMap[x, y, z] = 3;
-        //    //return 3;
-        //// 중간
-        //else
-        //    //voxelMap[x, y, z] = 2;
-        //    return 2;
     }
-
-    //void CreateChunk(int x, int z)
-    //{
-    //    chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
-    //    activeChunks.Add(new ChunkCoord(x, z));
-    //}
 
 
     bool IsChunkInWorld(ChunkCoord coord)
@@ -332,16 +290,11 @@ public class World : MonoBehaviour
 
     public bool IsVoxelInWorld(Vector3 pos)
     {
-        // if (pos.x > 0 && pos.x < VoxelData.worldSizeInBlocks - 1 &&
-        //     pos.y > 0 && pos.y < VoxelData.ChunkHeight - 1 &&
-        //     pos.z > 0 && pos.z < VoxelData.worldSizeInBlocks - 1)
-        //     return true;
-        // else
-        //     return false;
+
 
         return pos.x >= 0 && pos.x < VoxelData.worldSizeInBlocks &&
-       pos.y >= 0 && pos.y < VoxelData.ChunkHeight &&
-       pos.z >= 0 && pos.z < VoxelData.worldSizeInBlocks;
+               pos.y >= 0 && pos.y < VoxelData.ChunkHeight &&
+               pos.z >= 0 && pos.z < VoxelData.worldSizeInBlocks;
     }
 }
 

@@ -6,6 +6,20 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    //
+    // Player의 움직임, 물리연산, 블록 배치 및 파괴가 있음
+    // Rigidbody의 물리연산을 쓰지 않고 직접 작성...
+    // World가 Collider를 전부 활성화한채로 게임을 시작한다면 무진장 렉걸려서 
+    // 플레이어가 접촉한 부분만 Collider를 활성화 할꺼임
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+
+    // 카메라
     private Transform cam;
     private World world;
 
@@ -42,12 +56,16 @@ public class Player : MonoBehaviour
     public Text selectedBlockText;
     public byte selefctedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
 
+
+    // 초기화
     private void Start()
     {
 
         cam = GameObject.Find("Main Camera").transform;
         world = GameObject.Find("World").GetComponent<World>();
 
+
+        // 마우스 커서가 Game 밖으로 안나가게 고정
         Cursor.lockState = CursorLockMode.Locked;
 
         selectedBlockText.text = world.blockTypes[selefctedBlockIndex].blockName + " blcok selected";
@@ -106,31 +124,45 @@ public class Player : MonoBehaviour
 
 
     // 블록 배치
+    // 이 Voxel 월드는 플레이어가 접촉할 부분만 Collider를 활성화하기때문에 Raycast가 안통함
+    // 그래서 직접 만들어야하는데 아래가 그 예시
     private void PlaceCursorBlocks()
     {
         float step = checkIncrement;
+
+        // 마지막으로 탐지된 위치를 저장할 변수;
         Vector3 lastPos = new Vector3();
 
+        // reach 거리만큼 반복
         while(step < reach)
         {
+            // 카메라의 위치에서 카메라가 바라보고 있는 방향으로 Step 거리만큼 이동
             Vector3 pos = cam.position + (cam.forward * step);
 
+            // 만약 거기에 Voxel이 있다면
             if(world.CheckForVoxel(pos))
             {
+                // 하이라이트 블록을 거기에 배치
                 highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                
+                
                 placeBlock.position = lastPos;
 
+                // 화면에 표시인데 좌표가 안맞아서 내가 투명하게 해놓음;
                 highlightBlock.gameObject.SetActive(true);
                 placeBlock.gameObject.SetActive(true);
 
+                // 블록 탐지됐으므로 메서드 종료
                 return;
             }
-            
+            // 현재 위치를 마지막 위치로 업데이트
             lastPos  = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+            
+            // 탐지 간격을 증가시킴;
             step += checkIncrement;
 
         }
-
+        // reach 거리 내에 블럭이 없으면 비활성화
         highlightBlock.gameObject.SetActive(false);
         placeBlock.gameObject.SetActive(false);
 
@@ -153,11 +185,13 @@ public class Player : MonoBehaviour
         // 공중의 있을때 수직속도
         velocity += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
 
+        // 앞, 뒤, 좌, 우 충돌검사
         if ((velocity.z > 0 && front) || (velocity.z < 0 && back))
             velocity.z = 0;
         if ((velocity.x > 0 && right) || (velocity.x < 0 && left))
             velocity.x = 0;
 
+        // 수직 속도 검사 및 조정
         if (velocity.y < 0)
             velocity.y = CheckDownSpeed(velocity.y);
         else if (velocity.y > 0)
@@ -212,6 +246,7 @@ public class Player : MonoBehaviour
 
     }
 
+    // 플레이어가 하강 중일때 충돌감지, 속도조정
     private float CheckDownSpeed(float downSpeed)
     {
 
@@ -237,6 +272,7 @@ public class Player : MonoBehaviour
 
     }
 
+    // 상승중일때 충돌감지, 속도조정
     private float CheckUpSpeed(float upSpeed)
     {
 
@@ -259,6 +295,12 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    /// ============================================================================ //
+    /// =========================앞 뒤 양 옆 복셀 검사=============================== //
+    /// ============================================================================ //
+    ///                    true 면 블록이 있다는 뜻
+    ///                    false 면 블록이 없다는 뜻
 
     public bool front
     {

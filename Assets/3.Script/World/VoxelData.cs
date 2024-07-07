@@ -4,6 +4,30 @@ using UnityEngine;
 
 public static class VoxelData
 {
+    // 마인크래프트 세계(Voxel World)를 구현하기위해 유니티에 3d오브젝트인 cube, 그 큐브 안에 있는 box collider를 무지성으로 배치하면
+    // 엄청난 연산량 때문에 컴퓨터가 버티지 못한다
+    // 그래서 필요한 부분만 처리한다던가 최적화가 필요하므로
+    // 이번 프로젝트는 마인크래프트 복셀시스템으로 구현 + 최적화 + RPG 컨셉임
+    //
+    //
+    // <<24년 7월 7일>> 기준으로 크게
+    // Voxel Data 구조 작성 -> 작성된걸로 Chunk 생성 -> Chunk로 월드 생성하고
+    // Player는 움직임 + 블록 생성 재배치를 함
+    // 
+    // 먼저 이 스크립트는 World를 구성하는 복셀들의 구조를 설계하는 스크립트
+    // 큐브의 정점 데이터를 정의 -> 한면을 삼각형 2개로 처리
+    // (삼각형으로 처리하는 이유는 GPU가 삼각형을 처리하는데 최적화 되어있고 복잡한 3D형상은 삼각형의 집합으로
+    // 분해되어 렌더링 됨 (걍 GPU 설계상 삼각형으로 구성하는게 효율적이라는 소리)
+    // + 물리 연산, 충돌검사가 단순해지고 텍스쳐 매핑도 쉬워지는 등등.... )
+    // 
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+
     // 블럭 6면 방향
     public const int backFace = 0;
     public const int frontFace = 1;
@@ -14,8 +38,7 @@ public static class VoxelData
 
 
 
-    // VoxelData.cs
-
+    // Chunk 사이즈, World사이즈, 주변에 얼마나 chunk를 보이게 할건지
     public static readonly int ChunkWidth = 16;
     public static readonly int ChunkHeight = 128;
     public static readonly int worldSizeInChunks = 100;
@@ -34,16 +57,21 @@ public static class VoxelData
         get { return 1f / (float)textureAtlasSizeInBlocks; }
     }
 
-    //// 연습용 텍스쳐 아틀라스
-    //public static readonly int textureAtlasWidth = 4;
-    //public static readonly int textureAtlasHeight = 4;
 
 
-    //// 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
-    //public static float NormalizedTextureAtlasWidth => 1f / textureAtlasWidth;
-    //
-    //public static float NormalizedTextureAtlasHeight => 1f / textureAtlasHeight;
 
+   // 
+   //       7 ──── 6    
+   //     / │       / │
+   //   3 ──── 2   │
+   //   │  │     │  │
+   //   │  4───│─5  
+   //   │/        │/
+   //   0 ──── 1
+   //
+
+
+    // 각 정점을 이은 삼각형, 그렇지만 최적화 과정을 통해 겹치는 부분은 지워버림
     public static readonly Vector3[] voxelVerts = new Vector3[8] {
 
         // front
@@ -61,19 +89,20 @@ public static class VoxelData
 
     };
 
-
+    // 각 면이 바깥쪽 면인지 체크하기 위해...
     public static readonly Vector3[] faceChecks = new Vector3[6]
     {
-        new Vector3(0.0f, 0.0f, -1.0f), 
-        new Vector3(0.0f, 0.0f, 1.0f), 
-        new Vector3(0.0f, 1.0f, 0.0f), 
-        new Vector3(0.0f, -1.0f, 0.0f), 
-        new Vector3(-1.0f, 0.0f, 0.0f), 
-        new Vector3(1.0f, 0.0f, 0.0f)
+        new Vector3(0.0f, 0.0f, -1.0f),  // back    (-z)
+        new Vector3(0.0f, 0.0f, +1.0f),  // front   (+z)
+        new Vector3(0.0f, +1.0f, 0.0f),  // top     (+y)
+        new Vector3(0.0f, -1.0f, 0.0f),  // bottom  (-y)
+        new Vector3(-1.0f, 0.0f, 0.0f),  // left    (-x)
+        new Vector3(+1.0f, 0.0f, 0.0f)   // right   (+x)
 
     };
 
 
+    // 각 면의 삼각형
     public static readonly int[,] voxelTris = new int[6, 4]
     {
 
@@ -124,7 +153,7 @@ public static class VoxelData
     };
 
 
-    // 텍스트 넣을 위치
+    // 텍스쳐 이미지의 좌표 -> 블록 아틀라스의 좌표
     public static readonly Vector2[] voxelUvs = new Vector2[4]
 {
         new Vector2(0.0f, 0.0f), // LB

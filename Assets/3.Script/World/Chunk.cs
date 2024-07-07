@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Chunk
 {
+
+    /// 여기는 VoxelData를 기반으로 Chunk를 생성하는 Script
+    /// 
+    /// 설명할게 너무 많아서 그냥 스크립트 전체에 주석 달아놓음
+    /// 
+    /// 
+    /// 
+
+
     public ChunkCoord coord;
 
 
@@ -34,13 +43,17 @@ public class Chunk
 
 
 
+    // Voxel맵, Chunk 안에 어떤 블록을 넣을껀지 byte단위의 3차원 배열
     public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
 
 
     World world;
 
+    // chunk의 활성화 여부 -> 최적화
     private bool _isActive;
+
+    // voxel맵이 채워졌는지 여부
     public bool isVoxelMapPopulated = false;
     
     public bool isActive
@@ -57,6 +70,13 @@ public class Chunk
         }
 
     }
+
+    public Vector3 position
+    {
+        get { return chunkObject.transform.position; }
+    }
+
+    // 생성자
     public Chunk(ChunkCoord _coord, World _world, bool generateOnLoad)
     {
 
@@ -72,6 +92,8 @@ public class Chunk
 
         //chunkObject = new GameObject()
     }
+
+    // Chunk 초기화
     public void Init()
     {
         chunkObject = new GameObject();
@@ -93,20 +115,12 @@ public class Chunk
         //CreateMesh();
 
 
+        // 시각적 메쉬 -> 충돌 메쉬 설정
         meshCollider.sharedMesh = meshFilter.mesh;
     }
 
 
-    //public byte GetVoxelFromMap(Vector3 pos)
-    //{
-    //
-    //    pos -= position;
-    //
-    //    return voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-    //
-    //}
-
-    // Chunk 내의 각 위치에 어떤 블록이 있을지...
+    // Chunk 내의 각 위치에 어떤 블록이 있을지 채운다
     void PopulateVoxelMap()
     {
 
@@ -131,6 +145,7 @@ public class Chunk
 
 
 
+    // Chunk 업데이트 (블럭부분만), 메쉬 생성 
     void UpdateChunk()
     {
         ClearMeshData();
@@ -154,7 +169,8 @@ public class Chunk
         CreateMesh();
 
     }
-
+    
+    // 메쉬 데이터 초기화
     void ClearMeshData()
     {
         vertexIndex = 0;
@@ -164,50 +180,50 @@ public class Chunk
     }
 
 
-    public Vector3 position
-    {
-        get { return chunkObject.transform.position; }
-    }
 
 
+    // 복셀이 청크에 있는지 검사
     public bool IsVoxelInChunk(int x,int y, int z)
     {
-        //if (x < 0 || x > VoxelData.ChunkWidth - 1 || y < 0 || y > VoxelData.ChunkHeight - 1 || z < 0 || z > VoxelData.ChunkWidth - 1)
-        //    return false;
-        //else
-        //    return true;
-
         if (x < 0 || x >= VoxelData.ChunkWidth || y < 0 || y >= VoxelData.ChunkHeight || z < 0 || z >= VoxelData.ChunkWidth)
             return false;
         else
             return true;
-    
 
     }
 
-
+    // Voxel 편집
     public void EditVoxel(Vector3 pos, byte newID)
     {
         int xCheck = Mathf.FloorToInt(pos.x);
         int yCheck = Mathf.FloorToInt(pos.y);
         int zCheck = Mathf.FloorToInt(pos.z);
 
+        // Chunk의 위치를 빼서 월드좌표 -> 청크내의 상대좌표로 변환
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
         voxelMap[xCheck, yCheck, zCheck] = newID;
 
+        // 변경된 주변 Voxel 업데이트
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
+        // Chunk 업데이트
         UpdateChunk();
     }
 
 
+
+    // 변경된 주변 Voxel 업데이트
     void UpdateSurroundingVoxels(int x, int y, int z)
     {
+        // 변경된 Voxel의 위치 저장
         Vector3 thisVoxel = new Vector3(x, y, z);
 
-        for(int p = 0; p<6;p++)
+
+
+        // Voxel의 6면을 검사해서 해당 Voxel이 현재 Chunk 내에 없다면 그 Voxel이 속한 Chunk를 찾아서 업데이트
+        for(int p = 0; p< 6 ;p++)
         {
             Vector3 currentVoxel = thisVoxel + VoxelData.faceChecks[p];
 
@@ -222,7 +238,7 @@ public class Chunk
 
 
     // 빈공간인지 아닌지 판단 -> 그래야 보이는 면만 그리니까...
-
+    // 이건 Chunk 내부에서만 검사
     bool CheckVoxel(Vector3 pos)
     {
     
@@ -237,62 +253,74 @@ public class Chunk
     
     }
 
-    public byte GetVoxelFromGlobalVector3(Vector3 pos)
-    {
-        int xCheck = Mathf.FloorToInt(pos.x);
-        int yCheck = Mathf.FloorToInt(pos.y);
-        int zCheck = Mathf.FloorToInt(pos.z);
+    //public byte GetVoxelFromGlobalVector3(Vector3 pos)
+    //{
+    //    int xCheck = Mathf.FloorToInt(pos.x);
+    //    int yCheck = Mathf.FloorToInt(pos.y);
+    //    int zCheck = Mathf.FloorToInt(pos.z);
+    //
+    //    xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+    //    zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+    //
+    //
+    //    return voxelMap[xCheck, yCheck, zCheck];
+    //}
 
-        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
-        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
 
-        return voxelMap[xCheck, yCheck, zCheck];
-    }
-
-    
-
+    // 아마 이 프로젝트에서 가장 중요한 메서드
+    // 복셀의 각 면을 검사해서 보이는 면만 메쉬 데이터에 추가
+    // 이 메소드를 UpdateChunk에서 for문을 3번으로 돌려서 한 Chunk에 보이는 면만 렌더링하니 게임성능이 최적화
     void UpdateMeshData(Vector3 pos)
     {
-    
+
         // 블록은 6면체
-    
+
         for (int p = 0; p < 6; p++)
         {
-    
+
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-    
+
+
+            // 현재 면이 외부와 접해있는지 확인
             if (!CheckVoxel(pos + VoxelData.faceChecks[p]))
             {
-    
+                // 현재 Voxel의 ID를 가져옴
                 byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-    
+
+
+                // 각 면의 정점을 추가
+                // 한 면은 사각형이니까 4번...
                 for (int i = 0; i < 4; i++)
                 {
                     vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
                 }
-                //vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 1]]);
-                //vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
-                //vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
-    
+
+                // 텍스쳐 좌표 추가
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
-    
+
+
+                // 삼각형 인덱스 추가
                 triangles.Add(vertexIndex);
                 triangles.Add(vertexIndex + 1);
                 triangles.Add(vertexIndex + 2);
                 triangles.Add(vertexIndex + 2);
                 triangles.Add(vertexIndex + 1);
                 triangles.Add(vertexIndex + 3);
+
+                // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
                 vertexIndex += 4;
-    
+
             }
         }
-    
+
     }
 
 
+    /// 새로운 mesh 객체 생성 -> 이전에 수집된 정점, 삼각형 인덱스, UV 좌표를 mesh에 할당
+    /// -> 법선벡터 재계산(조명계산) -> 다 생성된 mesh를 meshFileter에 할당해서 렌더링
 
     void CreateMesh()
     {
@@ -367,6 +395,8 @@ public class ChunkCoord
     }
 
 
+    // 두 Chunk 가 서로 같은지 판단
+    // 어따씀??? -> 플레이어 위치 업데이트, 활성 Chunk 관리
     public bool Equals(ChunkCoord other)
     {
 
