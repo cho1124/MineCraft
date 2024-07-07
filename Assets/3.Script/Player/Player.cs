@@ -37,13 +37,30 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
 
+        //CalculateVelocity();
+        //if (jumpRequest)
+        //    Jump();
+        //
+        //transform.Rotate(Vector3.up * mouseHorizontal);
+        //cam.Rotate(Vector3.right * -mouseVertical);
+        //transform.Translate(velocity, Space.World);
+
         CalculateVelocity();
         if (jumpRequest)
             Jump();
 
         transform.Rotate(Vector3.up * mouseHorizontal);
         cam.Rotate(Vector3.right * -mouseVertical);
-        transform.Translate(velocity, Space.World);
+
+        Vector3 newPosition = transform.position + velocity;
+        if (world.IsVoxelInWorld(newPosition))
+        {
+            transform.Translate(velocity, Space.World);
+        }
+        else
+        {
+            velocity = Vector3.zero;
+        }
 
     }
 
@@ -114,10 +131,10 @@ public class Player : MonoBehaviour
     {
 
         if (
-            world.CheckForVoxel(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth) ||
-            world.CheckForVoxel(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth) ||
-            world.CheckForVoxel(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth) ||
-            world.CheckForVoxel(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)
+            world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth))
            )
         {
 
@@ -139,10 +156,10 @@ public class Player : MonoBehaviour
     {
 
         if (
-            world.CheckForVoxel(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth) ||
-            world.CheckForVoxel(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth) ||
-            world.CheckForVoxel(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth) ||
-            world.CheckForVoxel(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)
+            world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth))
            )
         {
 
@@ -164,8 +181,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(transform.position.x, transform.position.y, transform.position.z + playerWidth) ||
-                world.CheckForVoxel(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth)
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth))
                 )
                 return true;
             else
@@ -179,8 +196,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(transform.position.x, transform.position.y, transform.position.z - playerWidth) ||
-                world.CheckForVoxel(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth)
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth))
                 )
                 return true;
             else
@@ -194,8 +211,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(transform.position.x - playerWidth, transform.position.y, transform.position.z) ||
-                world.CheckForVoxel(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z)
+                world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
+                world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z))
                 )
                 return true;
             else
@@ -209,8 +226,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(transform.position.x + playerWidth, transform.position.y, transform.position.z) ||
-                world.CheckForVoxel(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z)
+                world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
+                world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z))
                 )
                 return true;
             else
