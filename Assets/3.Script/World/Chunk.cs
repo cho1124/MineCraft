@@ -12,19 +12,37 @@ public class Chunk
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
+    MeshCollider meshCollider;
+
+
+
     int vertexIndex = 0;
+
+
+
 
     // 정점 -> 여러 버텍스를 모아 폴리곤 -> 메쉬데이터
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
 
+
+
+
     // 2d 텍스쳐를 3d 모델로 매핑되도록...
     List<Vector2> uvs = new List<Vector2>();
 
+
+
+
     public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+
+
 
     World world;
 
+
+
+    
     public bool isActive
     {
         get { return chunkObject.activeSelf; }
@@ -38,8 +56,11 @@ public class Chunk
         chunkObject = new GameObject();
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-
         meshRenderer.material = world.material;
+        meshCollider = chunkObject.AddComponent<MeshCollider>();
+
+        
+        
         chunkObject.transform.SetParent(world.transform);
         chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
         chunkObject.name = coord.x + ", " + coord.z;
@@ -47,6 +68,9 @@ public class Chunk
         PopulateVoxelMap();
         CreateMeshData();
         CreateMesh();
+
+
+        meshCollider.sharedMesh = meshFilter.mesh;
 
     }
 
@@ -70,12 +94,17 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
                     voxelMap[x, y, z] = world.GetVoxel(new Vector3(x, y, z) + position);
+                    //Debug.Log($"Position: {voxelMap[x,y,z]}, Noise Value: {noiseValue}, Voxel Value: {voxelValue}");
+
+
 
                 }
             }
         }
 
     }
+
+
 
     void CreateMeshData()
     {

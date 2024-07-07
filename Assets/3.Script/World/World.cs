@@ -38,6 +38,9 @@ public class World : MonoBehaviour
     //public float perlinScale = 0.25f;
     //
 
+
+
+    //월드 생성
     private void Start()
     {
         UnityEngine.Random.InitState(seed);
@@ -46,13 +49,20 @@ public class World : MonoBehaviour
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
     }
+
+
+
+
+
     private void Update()
     {
         playerChunkCoord = GetChunkCoordFromVector3(player.position);
 
-        if (!playerChunkCoord.Equals(playerLastChunkCoord))
-            CheckViewDistance();
+       // if (!playerChunkCoord.Equals(playerLastChunkCoord))
+       //     CheckViewDistance();
     }
+
+
 
     ChunkCoord GetChunkCoordFromVector3(Vector3 pos)
     {
@@ -60,6 +70,9 @@ public class World : MonoBehaviour
         int z = Mathf.FloorToInt(pos.z / VoxelData.ChunkWidth);
         return new ChunkCoord(x, z);
     }
+
+
+
 
     void GenerateWorld()
     {
@@ -74,7 +87,7 @@ public class World : MonoBehaviour
             }
         }
 
-        spawnPoint = new Vector3(VoxelData.worldSizeInBlocks / 2, VoxelData.ChunkHeight + 2, VoxelData.worldSizeInBlocks / 2);
+        spawnPoint = new Vector3(VoxelData.worldSizeInBlocks / 2, VoxelData.ChunkHeight -50f, VoxelData.worldSizeInBlocks / 2);
         player.position = spawnPoint;
 
     }
@@ -111,6 +124,27 @@ public class World : MonoBehaviour
         foreach (ChunkCoord c in previouslyActiveChunks)
             chunks[c.x, c.z].isActive = false;
     }
+
+
+
+    public bool CheckForVoxel(float _x, float _y, float _z)
+    {
+        int xCheck = Mathf.FloorToInt(_x);
+        int yCheck = Mathf.FloorToInt(_y);
+        int zCheck = Mathf.FloorToInt(_z);
+
+        int xChunk = xCheck / VoxelData.ChunkWidth;
+        int zChunk = zCheck / VoxelData.ChunkWidth;
+
+
+        xCheck -= (xChunk * VoxelData.ChunkWidth);
+        zCheck -= (zChunk * VoxelData.ChunkWidth);
+
+        return blockTypes[chunks[xChunk, zChunk].voxelMap[xCheck, yCheck, zCheck]].isSolid;
+
+    }
+
+
 
 
 
@@ -168,6 +202,7 @@ public class World : MonoBehaviour
                 {
                     if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
                         voxelValue = lode.blockID;
+
                 }
             }
         }
