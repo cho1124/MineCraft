@@ -57,7 +57,7 @@ public class AnimationClipCreatorWindow : EditorWindow
         {
             if (GUILayout.Button("Create and Apply Animation Clip"))
             {
-                AnimationClip clip = AnimationClipUtility.CreateAnimationClip(animationData);
+                AnimationClip clip = AnimationClipUtility.CreateAnimationClip(animationData, model.transform);
                 if (clip != null)
                 {
                     string path = EditorUtility.SaveFilePanelInProject("Save Animation Clip", "New Animation", "anim", "Please enter a file name to save the animation clip to");
@@ -142,7 +142,7 @@ public class AnimationClipCreatorWindow : EditorWindow
 
 public static class AnimationClipUtility
 {
-    public static AnimationClip CreateAnimationClip(AnimationData animationData)
+    public static AnimationClip CreateAnimationClip(AnimationData animationData, Transform rootTransform)
     {
         if (animationData == null)
         {
@@ -156,22 +156,32 @@ public static class AnimationClipUtility
         foreach (var part in animationData.parts)
         {
             string transformPath = part.name; // Assuming part.name is the path to the transform
-
+            Transform partTransform = rootTransform.Find(transformPath);
+            if (partTransform == null)
+            {
+                Debug.LogError($"Transform not found for path: {transformPath}");
+                continue;
+            }
+            Vector3 originalPosition = partTransform.position;
+            Quaternion originalRotation = partTransform.rotation;
             if (part.keyframes == null || part.keyframes.Count == 0)
             {
                 Debug.LogWarning($"No keyframes found for part: {part.name}");
                 continue;
             }
 
+           
+
             // Create position curves
             AnimationCurve posXCurve = new AnimationCurve();
             AnimationCurve posYCurve = new AnimationCurve();
             AnimationCurve posZCurve = new AnimationCurve();
 
-            // Create rotation curves
+            // Create rotation curves (Quaternion)
             AnimationCurve rotXCurve = new AnimationCurve();
             AnimationCurve rotYCurve = new AnimationCurve();
             AnimationCurve rotZCurve = new AnimationCurve();
+            AnimationCurve rotWCurve = new AnimationCurve();
 
             foreach (var keyframe in part.keyframes)
             {
@@ -181,8 +191,7 @@ public static class AnimationClipUtility
                     continue;
                 }
 
-                float time;
-                if (!float.TryParse(keyframe.Key, out time))
+                if (!float.TryParse(keyframe.Key, out float time))
                 {
                     Debug.LogError($"Invalid keyframe time: {keyframe.Key} for part: {part.name}");
                     continue;
@@ -196,26 +205,31 @@ public static class AnimationClipUtility
                     continue;
                 }
 
-                posXCurve.AddKey(time, keyframeData.translate[0]);
-                posYCurve.AddKey(time, keyframeData.translate[1]);
-                posZCurve.AddKey(time, keyframeData.translate[2]);
+                posXCurve.AddKey(time, originalPosition.x + keyframeData.translate[0] * 0.3f);
+                posYCurve.AddKey(time, originalPosition.y + keyframeData.translate[1] * 0.3f);
+                posZCurve.AddKey(time, originalPosition.z + keyframeData.translate[2] * 0.3f);
 
-                rotXCurve.AddKey(time, keyframeData.rotate[0]);
-                rotYCurve.AddKey(time, keyframeData.rotate[1]);
-                rotZCurve.AddKey(time, keyframeData.rotate[2]);
+                Quaternion rotation = Quaternion.Euler(keyframeData.rotate[0], keyframeData.rotate[1], keyframeData.rotate[2]);
+
+                rotXCurve.AddKey(time, originalRotation.x + rotation.x);
+                rotYCurve.AddKey(time, originalRotation.y + rotation.y);
+                rotZCurve.AddKey(time, originalRotation.z + rotation.z);
+                rotWCurve.AddKey(time, originalRotation.w + rotation.w);
 
                 Debug.Log($"Added keyframe at time {time} for part {part.name}: " +
                           $"translate = [{keyframeData.translate[0]}, {keyframeData.translate[1]}, {keyframeData.translate[2]}], " +
                           $"rotate = [{keyframeData.rotate[0]}, {keyframeData.rotate[1]}, {keyframeData.rotate[2]}]");
             }
 
+            // Ensure correct property paths are used for setting curves
             clip.SetCurve(transformPath, typeof(Transform), "localPosition.x", posXCurve);
             clip.SetCurve(transformPath, typeof(Transform), "localPosition.y", posYCurve);
             clip.SetCurve(transformPath, typeof(Transform), "localPosition.z", posZCurve);
 
-            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.x", rotXCurve);
-            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.y", rotYCurve);
-            clip.SetCurve(transformPath, typeof(Transform), "localEulerAnglesRaw.z", rotZCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localRotation.x", rotXCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localRotation.y", rotYCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localRotation.z", rotZCurve);
+            clip.SetCurve(transformPath, typeof(Transform), "localRotation.w", rotWCurve);
 
             Debug.Log($"Set animation curves for part {part.name}");
         }
@@ -223,3 +237,4 @@ public static class AnimationClipUtility
         return clip;
     }
 }
+
