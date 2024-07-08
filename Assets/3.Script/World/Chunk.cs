@@ -195,7 +195,40 @@ public class Chunk
     }
 
     // Voxel 편집
-    public void EditVoxel(Vector3 pos, byte newID)
+    //public void EditVoxel(Vector3 pos, byte newID)
+    //{
+    //    int xCheck = Mathf.FloorToInt(pos.x);
+    //    int yCheck = Mathf.FloorToInt(pos.y);
+    //    int zCheck = Mathf.FloorToInt(pos.z);
+    //
+    //    // Chunk의 위치를 빼서 월드좌표 -> 청크내의 상대좌표로 변환
+    //    xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+    //    zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+    //
+    //    byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
+    //    //byte voxelBlock = voxelMap[xCheck, yCheck, zCheck];
+    //    //GameObject tempBlock = GameObject.Instantiate(voxelBlock)
+    //    if (newID == 0)
+    //    {
+    //        GameObject.Instantiate(world.ItemBlock, new Vector3(pos.x, pos.y, pos.z) , Quaternion.identity);
+    //        for (int p = 0; p < 6; p++)
+    //        {
+    //            int textureID = world.blockTypes[currentBlockID].GetTextureID(p);
+    //            //AddTextureForBlock(world.blockTypes[currentBlockID].GetTextureID(p));
+    //            Debug.Log($"Block at ({pos.x}, {pos.y}, {pos.z}) replaced. TextureID of face {p}: {textureID}");
+    //        }
+    //        Debug.Log($"x : {pos.x}, y : {pos.y}, z : {pos.z}");
+    //    }
+    //
+    //    voxelMap[xCheck, yCheck, zCheck] = newID;
+    //
+    //    // 변경된 주변 Voxel 업데이트
+    //    UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+    //
+    //    // Chunk 업데이트
+    //    UpdateChunk();
+    //}
+    public byte EditVoxel(Vector3 pos, byte newID)
     {
         int xCheck = Mathf.FloorToInt(pos.x);
         int yCheck = Mathf.FloorToInt(pos.y);
@@ -205,21 +238,10 @@ public class Chunk
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
+        // 현재 블록 ID 저장
         byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
-        //byte voxelBlock = voxelMap[xCheck, yCheck, zCheck];
-        //GameObject tempBlock = GameObject.Instantiate(voxelBlock)
-        if (newID == 0)
-        {
-            GameObject.Instantiate(world.ItemBlock, new Vector3(pos.x, pos.y, pos.z) , Quaternion.identity);
-            for (int p = 0; p < 6; p++)
-            {
-                int textureID = world.blockTypes[currentBlockID].GetTextureID(p);
-                //AddTextureForBlock(world.blockTypes[currentBlockID].GetTextureID(p));
-                Debug.Log($"Block at ({pos.x}, {pos.y}, {pos.z}) replaced. TextureID of face {p}: {textureID}");
-            }
-            Debug.Log($"x : {pos.x}, y : {pos.y}, z : {pos.z}");
-        }
 
+        // 새로운 블록 ID로 설정
         voxelMap[xCheck, yCheck, zCheck] = newID;
 
         // 변경된 주변 Voxel 업데이트
@@ -227,7 +249,12 @@ public class Chunk
 
         // Chunk 업데이트
         UpdateChunk();
+
+        // 현재 블록 ID 반환
+        return currentBlockID;
     }
+
+
 
 
 
