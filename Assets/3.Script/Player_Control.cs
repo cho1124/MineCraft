@@ -25,8 +25,6 @@ public class Player_Control : MonoBehaviour
         cursor_y += v * 1.5f;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
 
-        Debug.Log(Difference(cursor_x, temp_y));
-
         if (Difference(cursor_x, temp_y) > 45f)
         {
             temp_y += h * 3f;
