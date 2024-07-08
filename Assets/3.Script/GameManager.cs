@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     public static GameManager instance = null;
 
+    [SerializeField] private GameObject Inventory_obj;
+
+    bool on_off = false;
+
     private void Awake()
     {
         if(instance == null)
@@ -20,5 +24,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            on_off = !on_off;
 
+            Inventory_obj.SetActive(on_off);
+        }
+    }
 }
