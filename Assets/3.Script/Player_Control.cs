@@ -14,9 +14,18 @@ public class Player_Control : MonoBehaviour
     {
         TryGetComponent(out player_rigidbody);
         head_transform = transform.GetChild(1).transform;
+
+
+
     }
 
     private void LateUpdate()
+    {
+        MouseMove();
+    }
+
+   
+    private void MouseMove()
     {
         float h = Input.GetAxis("Mouse X");
         float v = Input.GetAxis("Mouse Y");
@@ -37,6 +46,7 @@ public class Player_Control : MonoBehaviour
             head_transform.rotation = Quaternion.Euler(cursor_y, cursor_x, 0);
         }
     }
+
 
     private float Difference(float a, float b)
     {
