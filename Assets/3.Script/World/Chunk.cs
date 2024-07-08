@@ -18,6 +18,7 @@ public class Chunk
 
     GameObject chunkObject;
 
+
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
@@ -55,7 +56,7 @@ public class Chunk
 
     // voxel맵이 채워졌는지 여부
     public bool isVoxelMapPopulated = false;
-    
+
     public bool isActive
     {
         //get { return chunkObject.activeSelf; }
@@ -97,6 +98,7 @@ public class Chunk
     public void Init()
     {
         chunkObject = new GameObject();
+        //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
         meshRenderer.material = world.material;
@@ -158,7 +160,7 @@ public class Chunk
                 {
                     if (world.blockTypes[voxelMap[x, y, z]].isSolid)
                     {
-                        UpdateMeshData(new Vector3(x,y,z));
+                        UpdateMeshData(new Vector3(x, y, z));
                         //AddVoxelDataToChunk(new Vector3(x, y, z)); 
                     }
 
@@ -169,7 +171,7 @@ public class Chunk
         CreateMesh();
 
     }
-    
+
     // 메쉬 데이터 초기화
     void ClearMeshData()
     {
@@ -183,7 +185,7 @@ public class Chunk
 
 
     // 복셀이 청크에 있는지 검사
-    public bool IsVoxelInChunk(int x,int y, int z)
+    public bool IsVoxelInChunk(int x, int y, int z)
     {
         if (x < 0 || x >= VoxelData.ChunkWidth || y < 0 || y >= VoxelData.ChunkHeight || z < 0 || z >= VoxelData.ChunkWidth)
             return false;
@@ -202,6 +204,21 @@ public class Chunk
         // Chunk의 위치를 빼서 월드좌표 -> 청크내의 상대좌표로 변환
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
+        //byte voxelBlock = voxelMap[xCheck, yCheck, zCheck];
+        //GameObject tempBlock = GameObject.Instantiate(voxelBlock)
+        if (newID == 0)
+        {
+            GameObject.Instantiate(world.ItemBlock, new Vector3(pos.x, pos.y, pos.z) , Quaternion.identity);
+            for (int p = 0; p < 6; p++)
+            {
+                int textureID = world.blockTypes[currentBlockID].GetTextureID(p);
+                //AddTextureForBlock(world.blockTypes[currentBlockID].GetTextureID(p));
+                Debug.Log($"Block at ({pos.x}, {pos.y}, {pos.z}) replaced. TextureID of face {p}: {textureID}");
+            }
+            Debug.Log($"x : {pos.x}, y : {pos.y}, z : {pos.z}");
+        }
 
         voxelMap[xCheck, yCheck, zCheck] = newID;
 
@@ -223,11 +240,11 @@ public class Chunk
 
 
         // Voxel의 6면을 검사해서 해당 Voxel이 현재 Chunk 내에 없다면 그 Voxel이 속한 Chunk를 찾아서 업데이트
-        for(int p = 0; p< 6 ;p++)
+        for (int p = 0; p < 6; p++)
         {
             Vector3 currentVoxel = thisVoxel + VoxelData.faceChecks[p];
 
-            if(!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
+            if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
                 world.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
             }
@@ -241,16 +258,16 @@ public class Chunk
     // 이건 Chunk 내부에서만 검사
     bool CheckVoxel(Vector3 pos)
     {
-    
+
         int x = Mathf.FloorToInt(pos.x);
         int y = Mathf.FloorToInt(pos.y);
         int z = Mathf.FloorToInt(pos.z);
 
         if (!IsVoxelInChunk(x, y, z))
             return world.CheckForVoxel(pos + position);//world.blockTypes[world.GetVoxel(pos + position)].isSolid;
-    
+
         return world.blockTypes[voxelMap[x, y, z]].isSolid;
-    
+
     }
 
     //public byte GetVoxelFromGlobalVector3(Vector3 pos)
@@ -271,7 +288,7 @@ public class Chunk
     // 아마 이 프로젝트에서 가장 중요한 메서드
     // 복셀의 각 면을 검사해서 보이는 면만 메쉬 데이터에 추가
     // 이 메소드를 UpdateChunk에서 for문을 3번으로 돌려서 한 Chunk에 보이는 면만 렌더링하니 게임성능이 최적화
-    void UpdateMeshData(Vector3 pos)
+    public void UpdateMeshData(Vector3 pos)
     {
 
         // 블록은 6면체
@@ -337,7 +354,7 @@ public class Chunk
 
     }
 
-    void AddTexture(int textureID)
+    private void AddTexture(int textureID)
     {
 
         float y = textureID / VoxelData.textureAtlasSizeInBlocks;
@@ -358,6 +375,24 @@ public class Chunk
 
     }
 
+    private void AddTextureForBlock(int textureID)
+    {
+        float y = textureID / VoxelData.textureAtlasSizeInBlocks;
+        float x = textureID - (y * VoxelData.textureAtlasSizeInBlocks);
+
+        // 텍스쳐 아틀라스 정규화
+        x *= VoxelData.normalizedBlockTextureSize;
+        y *= VoxelData.normalizedBlockTextureSize;
+
+        y = 1f - y - VoxelData.normalizedBlockTextureSize;
+
+
+        uvs.Add(new Vector2(x, y));
+        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
+
+    }
 
 
 }
@@ -389,7 +424,7 @@ public class ChunkCoord
     {
         int xCheck = Mathf.FloorToInt(pos.x);
         int zCheck = Mathf.FloorToInt(pos.z);
-    
+
         x = xCheck / VoxelData.ChunkWidth;
         z = zCheck / VoxelData.ChunkWidth;
     }

@@ -30,9 +30,10 @@ public class World : MonoBehaviour
     // blocks
     public Material material;
     public BlockType[] blockTypes;
+    public GameObject ItemBlock;
 
     // chunk
-    Chunk[,] chunks = new Chunk[VoxelData.worldSizeInChunks, VoxelData.worldSizeInChunks];
+    public Chunk[,] chunks = new Chunk[VoxelData.worldSizeInChunks, VoxelData.worldSizeInChunks];
     List<ChunkCoord> activeChunks = new List<ChunkCoord>();
 
     public ChunkCoord playerChunkCoord;
@@ -113,7 +114,7 @@ public class World : MonoBehaviour
         isCreatingChunks = true;
 
 
-        while(chunksToCreate.Count > 0)
+        while (chunksToCreate.Count > 0)
         {
             chunks[chunksToCreate[0].x, chunksToCreate[0].z].Init();
             chunksToCreate.RemoveAt(0);
@@ -132,7 +133,7 @@ public class World : MonoBehaviour
     {
         // 플레이어의 현재 chunk 좌표
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
-        
+
         // 플레이어의 이전 chunk 좌표 업데이트
         playerLastChunkCoord = playerChunkCoord;
 
@@ -145,7 +146,7 @@ public class World : MonoBehaviour
             for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
             {
                 // chunk 가 월드 내에 있는지 확인
-                if (IsChunkInWorld(new ChunkCoord(x,z)))
+                if (IsChunkInWorld(new ChunkCoord(x, z)))
                 {
                     // chunk가 없으면 새로운 chunk 생성
                     if (chunks[x, z] == null)
@@ -264,7 +265,7 @@ public class World : MonoBehaviour
         {
             foreach (Lode lode in biome.lodes)
             {
-                if(yPos > lode.minHeight && yPos < lode.maxHeight)
+                if (yPos > lode.minHeight && yPos < lode.maxHeight)
                 {
                     if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
                         voxelValue = lode.blockID;

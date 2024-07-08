@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     private float vertical;
     private float mouseHorizontal;
     private float mouseVertical;
+
+    [SerializeField] private float mouseSensitive;
     private Vector3 velocity;
     private float verticalMomentum = 0;
     private bool jumpRequest;
@@ -54,7 +56,7 @@ public class Player : MonoBehaviour
     public float reach = 8f;
 
     public Text selectedBlockText;
-    public byte selefctedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
+    public byte selectedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
 
 
     // 초기화
@@ -68,12 +70,13 @@ public class Player : MonoBehaviour
         // 마우스 커서가 Game 밖으로 안나가게 고정
         Cursor.lockState = CursorLockMode.Locked;
 
-        selectedBlockText.text = world.blockTypes[selefctedBlockIndex].blockName + " blcok selected";
+        selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " blcok selected";
 
     }
 
 
     // 고정된 시간마다 호출, 불필요한 연산 줄이고 정확한 물리연산
+
     private void FixedUpdate()
     {
 
@@ -89,18 +92,18 @@ public class Player : MonoBehaviour
         if (jumpRequest)
             Jump();
 
-        transform.Rotate(Vector3.up * mouseHorizontal);
-        cam.Rotate(Vector3.right * -mouseVertical);
+        transform.Rotate(Vector3.up * mouseHorizontal * mouseSensitive);
+        cam.Rotate(Vector3.right * -mouseVertical * mouseSensitive);
 
         Vector3 newPosition = transform.position + velocity;
-        if (world.IsVoxelInWorld(newPosition))
-        {
-            transform.Translate(velocity, Space.World);
-        }
-        else
-        {
-            velocity = Vector3.zero;
-        }
+        //if (world.IsVoxelInWorld(newPosition))
+        //{
+        transform.Translate(velocity, Space.World);
+        //}
+        //else
+        //{
+        //    velocity = Vector3.zero;
+        //}
 
     }
 
@@ -124,8 +127,8 @@ public class Player : MonoBehaviour
 
 
     // 블록 배치
-    // 이 Voxel 월드는 플레이어가 접촉할 부분만 Collider를 활성화하기때문에 Raycast가 안통함
-    // 그래서 직접 만들어야하는데 아래가 그 예시
+
+
     private void PlaceCursorBlocks()
     {
         float step = checkIncrement;
@@ -134,18 +137,18 @@ public class Player : MonoBehaviour
         Vector3 lastPos = new Vector3();
 
         // reach 거리만큼 반복
-        while(step < reach)
+        while (step < reach)
         {
             // 카메라의 위치에서 카메라가 바라보고 있는 방향으로 Step 거리만큼 이동
             Vector3 pos = cam.position + (cam.forward * step);
 
             // 만약 거기에 Voxel이 있다면
-            if(world.CheckForVoxel(pos))
+            if (world.CheckForVoxel(pos))
             {
                 // 하이라이트 블록을 거기에 배치
                 highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
-                
-                
+
+
                 placeBlock.position = lastPos;
 
                 // 화면에 표시인데 좌표가 안맞아서 내가 투명하게 해놓음;
@@ -156,8 +159,8 @@ public class Player : MonoBehaviour
                 return;
             }
             // 현재 위치를 마지막 위치로 업데이트
-            lastPos  = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
-            
+            lastPos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+
             // 탐지 간격을 증가시킴;
             step += checkIncrement;
 
@@ -218,22 +221,22 @@ public class Player : MonoBehaviour
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-        if(scroll != 0)
+        if (scroll != 0)
         {
             if (scroll > 0)
-                selefctedBlockIndex++;
+                selectedBlockIndex++;
             else
-                selefctedBlockIndex--;
+                selectedBlockIndex--;
 
-            if (selefctedBlockIndex > (byte)(world.blockTypes.Length - 1))
-                selefctedBlockIndex = 1;
-            if (selefctedBlockIndex < 1)
-                selefctedBlockIndex = (byte)(world.blockTypes.Length - 1);
+            if (selectedBlockIndex > (byte)(world.blockTypes.Length - 1))
+                selectedBlockIndex = 1;
+            if (selectedBlockIndex < 1)
+                selectedBlockIndex = (byte)(world.blockTypes.Length - 1);
 
-            selectedBlockText.text = world.blockTypes[selefctedBlockIndex].blockName + " blcok selected";
+            selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " blcok selected";
         }
 
-        if(highlightBlock.gameObject.activeSelf)
+        if (highlightBlock.gameObject.activeSelf)
         {
             // 블록 파괴 Destroy block
             if (Input.GetMouseButtonDown(0))
@@ -241,7 +244,7 @@ public class Player : MonoBehaviour
 
             // 블록 배치 Place block
             if (Input.GetMouseButtonDown(1))
-                world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selefctedBlockIndex);
+                world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlockIndex);
         }
 
     }
