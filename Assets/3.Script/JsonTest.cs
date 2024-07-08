@@ -44,7 +44,7 @@ public class JsonTest : MonoBehaviour
                   ""translate"": [ 0.0, -0.0, -0.0 ],
                   ""rotate"": [ 0.1, 1.0, -3.0 ]
                 }
-              }
+              } 
             }
           ]
         }";

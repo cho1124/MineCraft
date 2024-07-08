@@ -211,9 +211,9 @@ public static class AnimationClipUtility
 
                 Quaternion rotation = Quaternion.Euler(keyframeData.rotate[0], keyframeData.rotate[1], keyframeData.rotate[2]);
 
-                rotXCurve.AddKey(time, originalRotation.x + rotation.x * -60f);
-                rotYCurve.AddKey(time, originalRotation.y + rotation.y * -60f);
-                rotZCurve.AddKey(time, originalRotation.z + rotation.z * -60f);
+                rotXCurve.AddKey(time, originalRotation.x - rotation.x * 80f);
+                rotYCurve.AddKey(time, originalRotation.y - rotation.y * 80f);
+                rotZCurve.AddKey(time, originalRotation.z - rotation.z * 80f);
                 rotWCurve.AddKey(time, originalRotation.w + rotation.w);
 
                 Debug.Log($"Added keyframe at time {time} for part {part.name}: " +
