@@ -10,6 +10,8 @@ public class Cat : MonoBehaviour
     private Animator ani;
     private Rigidbody rb;
 
+    public Transform head; // head 오브젝트를 참조할 필드 추가
+
     public float wanderRadius = 10f;
     public float wanderSpeed = 2f;
     public float runSpeed = 6f;
@@ -96,9 +98,10 @@ public class Cat : MonoBehaviour
 
     private void MoveTowardsTarget(float speed)
     {
-        // 현재 위치와 목표 위치의 y값을 유지하고 z축만 이동하도록 설정
-        Vector3 newPosition = new Vector3(transform.position.x, transform.position.y, targetPosition.z);
-        transform.position = Vector3.MoveTowards(transform.position, newPosition, speed * Time.deltaTime);
+        // head 오브젝트의 forward 방향으로 이동
+        Vector3 direction = head.forward;
+        Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
+        transform.position = newPosition;
     }
 
     private Vector3 GetRandomPosition()
