@@ -9,7 +9,6 @@ public class PlayerCTRL : MonoBehaviour
     [SerializeField] private float speed = 20f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 1.5f;
-    [SerializeField] private float mouseSensitivity = 100f;
 
     private float cursorX = 0f;
     private float cursorY = 0f;
