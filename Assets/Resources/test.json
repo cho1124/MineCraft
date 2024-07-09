@@ -1,0 +1,25 @@
+{
+    "entities": [
+        {
+            "type": "Player",
+            "name": "Hero",
+            "health": 100,
+            "damage": 25,
+            "experience": 1000
+        },
+        {
+            "type": "Animal",
+            "name": "Wolf",
+            "health": 80,
+            "damage": 10,
+            "isDomestic": false
+        },
+        {
+            "type": "Monster",
+            "name": "Zombie",
+            "health": 150,
+            "damage": 20,
+            "spawnLocation": "Graveyard"
+        }
+    ]
+}
