@@ -2,150 +2,171 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICatState
-{
-    void EnterState(Cat cat);
-    void UpdateState(Cat cat);
-    void ExitState(Cat cat);
-}
-
 public class Cat : MonoBehaviour
 {
-    public ICatState currentState;
-    public StandingState standingState = new StandingState();
-    public WalkingState walkingState = new WalkingState();
-    public JumpingState jumpingState = new JumpingState();
+    private enum State { Wander, Wait, Run, Jump }
+    private State currentState;
+    private Vector3 targetPosition;
+    private Animator ani;
+    private Rigidbody rb;
 
-    public Animator animator;
-    public Rigidbody rigidbody;
-    public float jumpForce = 5f;
-    public Transform player;
-    public float detectionRadius = 1f;
+    public Transform head; // head 오브젝트를 참조할 필드 추가
 
-    void Start()
+    public float wanderRadius = 10f;
+    public float wanderSpeed = 2f;
+    public float runSpeed = 6f;
+    public float waitTime = 2f;
+    public float minWanderTime = 3f;
+    public float maxWanderTime = 6f;
+    public float jumpForce = 3f;
+    public float detectionDistance = 1f;
+    public float playerDetectionRadius = 1f; // 플레이어 감지 범위
+
+    private void Start()
     {
-        TransitionToState(standingState);
+        ani = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        ChangeState(State.Wander);
     }
 
-    void Update()
+    private void Update()
     {
-        DetectPlayer();
-        currentState.UpdateState(this);
-    }
-
-    public void TransitionToState(ICatState newState)
-    {
-        if (currentState != null)
+        DetectObstaclesAndPlayer();
+        switch (currentState)
         {
-            currentState.ExitState(this);
+            case State.Wander:
+                Wander();
+                break;
+            case State.Wait:
+                // Do nothing, waiting
+                break;
+            case State.Run:
+                Run();
+                break;
+            case State.Jump:
+                // Jump logic handled in EnterState
+                break;
         }
+    }
+
+    private void ChangeState(State newState)
+    {
         currentState = newState;
-        currentState.EnterState(this);
-    }
 
-    public bool IsGrounded()
-    {
-        // 고양이가 땅에 닿아 있는지 확인하는 로직
-        return Physics.Raycast(transform.position, Vector3.down, 0.1f);
-    }
-
-    private void DetectPlayer()
-    {
-        if (player != null && Vector3.Distance(transform.position, player.position) <= detectionRadius)
+        switch (currentState)
         {
-            if (!(currentState is JumpingState))
+            case State.Wander:
+                ani.Play("CatWalk");
+                targetPosition = GetRandomPosition();
+                StartCoroutine(StateDuration(State.Wander, Random.Range(minWanderTime, maxWanderTime)));
+                break;
+            case State.Wait:
+                ani.Play("CatIdle");
+                StartCoroutine(StateDuration(State.Wait, Random.Range(2f, 10f)));
+                break;
+            case State.Run:
+                targetPosition = GetRandomPosition();
+                StartCoroutine(StateDuration(State.Run, Random.Range(minWanderTime / 2, maxWanderTime / 2)));
+                break;
+            case State.Jump:
+                ani.Play("CatJump");
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
+                break;
+        }
+    }
+
+    private void Wander()
+    {
+        MoveTowardsTarget(wanderSpeed);
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            ChangeState(State.Wait);
+        }
+    }
+
+    private void Run()
+    {
+        MoveTowardsTarget(runSpeed);
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            ChangeState(State.Wait);
+        }
+    }
+
+    private void MoveTowardsTarget(float speed)
+    {
+        // head 오브젝트의 forward 방향으로 이동
+        Vector3 direction = head.forward;
+        Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
+        transform.position = newPosition;
+    }
+
+    private Vector3 GetRandomPosition()
+    {
+        // 무작위 방향에서 z축만 변경하고 x와 y는 현재 위치를 유지
+        float randomZ = Random.Range(0, 100) < 20 ? Random.Range(-wanderRadius, 0) : Random.Range(0, wanderRadius);
+        // 고양이가 z축 방향으로 이동할 때 20% 확률로 음수 방향, 80% 확률로 양수 방향으로 이동
+        return new Vector3(transform.position.x, transform.position.y, transform.position.z + randomZ);
+    }
+
+    private IEnumerator StateDuration(State state, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        State nextState = GetRandomState();
+        ChangeState(nextState);
+    }
+
+    private State GetRandomState()
+    {
+        int randomIndex = Random.Range(0, 4);
+        switch (randomIndex)
+        {
+            case 0:
+                return State.Wander;
+            case 1:
+                return State.Run;
+            case 2:
+                return State.Jump;
+            case 3:
+                return State.Wait;
+            default:
+                return State.Wander;
+        }
+    }
+
+    private void DetectObstaclesAndPlayer()
+    {
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, transform.forward, detectionDistance);
+        foreach (var hit in hits)
+        {
+            if (hit.collider.CompareTag("Player"))
             {
-                TransitionToState(jumpingState);
+                Debug.Log("Player detected!");
+                JumpAndTurnAround();
+                return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
+            }
+            else if (!hit.collider.CompareTag("Plane")&& !hit.collider.CompareTag("Animals"))
+            {
+                Debug.Log($"Obstacle detected: {hit.collider.name}");
+                // 장애물이 감지되면 방향을 변경
+                float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
+                transform.Rotate(0, angle, 0);
+                return; // 장애물 감지 시 방향 변경 후 종료
             }
         }
     }
-}
 
-public class StandingState : ICatState
-{
-    public void EnterState(Cat cat)
+    private void JumpAndTurnAround()
     {
-        // 서 있는 상태에 진입할 때 호출되는 코드
-        cat.animator.Play("CatIdle");
-    }
-
-    public void UpdateState(Cat cat)
-    {
-        // 서 있는 동안 수행할 로직
-        if (Input.GetKeyDown(KeyCode.W))
+        if (currentState != State.Jump)
         {
-            cat.TransitionToState(cat.walkingState);
+            ani.Play("CatJump");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            transform.Rotate(0, 180f, 0); // 180도 회전
+            ChangeState(State.Jump); // 상태를 Jump로 변경
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            cat.TransitionToState(cat.jumpingState);
-        }
-    }
-
-    public void ExitState(Cat cat)
-    {
-        // 서 있는 상태를 떠날 때 호출되는 코드
-        Debug.Log("고양이가 서있는것을 멈췄습니다. ");
-    }
-}
-
-public class WalkingState : ICatState
-{
-    public void EnterState(Cat cat)
-    {
-        // 걷는 상태에 진입할 때 호출되는 코드
-        cat.animator.Play("CatWalk");
-    }
-
-    public void UpdateState(Cat cat)
-    {
-        // 걷는 동안 수행할 로직
-        if (Input.GetKeyUp(KeyCode.W))
-        {
-            cat.TransitionToState(cat.standingState);
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            cat.TransitionToState(cat.jumpingState);
-        }
-    }
-
-    public void ExitState(Cat cat)
-    {
-        // 걷는 상태를 떠날 때 호출되는 코드
-        Debug.Log("고양이가 걷는것을 멈췄습니다. ");
-    }
-}
-
-public class JumpingState : ICatState
-{
-    public void EnterState(Cat cat)
-    {
-        // 점프하는 상태에 진입할 때 호출되는 코드
-        cat.animator.Play("CatJump");
-        cat.rigidbody.AddForce(Vector3.up * cat.jumpForce, ForceMode.Impulse);
-    }
-
-    public void UpdateState(Cat cat)
-    {
-        // 점프하는 동안 수행할 로직
-        if (cat.IsGrounded())
-        {
-            // 서 있는 상태나 걷는 상태로 돌아가기
-            if (Input.GetKey(KeyCode.W))
-            {
-                cat.TransitionToState(cat.walkingState);
-            }
-            else
-            {
-                cat.TransitionToState(cat.standingState);
-            }
-        }
-    }
-
-    public void ExitState(Cat cat)
-    {
-        // 점프하는 상태를 떠날 때 호출되는 코드
-        Debug.Log("고양이가 점프를 멈췄습니다. ");
     }
 }
