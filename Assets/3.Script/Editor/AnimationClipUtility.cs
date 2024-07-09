@@ -32,6 +32,15 @@ public class AnimationClipCreatorWindow : EditorWindow
     private AnimationData animationData;
     private GameObject model;
 
+    private float posXcurve_modifier;
+    private float posYcurve_modifier;
+    private float posZcurve_modifier;
+
+    private float rotXcurve_modifier;
+    private float rotYcurve_modifier;
+    private float rotZcurve_modifier;
+    private float rotWcurve_modifier;
+
     [MenuItem("Window/Animation Clip Creator")]
     public static void ShowWindow()
     {
@@ -48,6 +57,17 @@ public class AnimationClipCreatorWindow : EditorWindow
         GUILayout.Label("Drag and drop your Model below:");
         model = (GameObject)EditorGUILayout.ObjectField(model, typeof(GameObject), true);
 
+        GUILayout.Label("position curve modifier");
+        posXcurve_modifier = (float)EditorGUILayout.FloatField(posXcurve_modifier);
+        posYcurve_modifier = (float)EditorGUILayout.FloatField(posYcurve_modifier);
+        posZcurve_modifier = (float)EditorGUILayout.FloatField(posZcurve_modifier);
+
+        GUILayout.Label("rotation curve modifier (rotWcurve must be -1 or 1)");
+        rotXcurve_modifier = (float)EditorGUILayout.FloatField(rotXcurve_modifier);
+        rotYcurve_modifier = (float)EditorGUILayout.FloatField(rotYcurve_modifier);
+        rotZcurve_modifier = (float)EditorGUILayout.FloatField(rotZcurve_modifier);
+        rotWcurve_modifier = (float)EditorGUILayout.FloatField(rotWcurve_modifier);
+
         if (jsonFile != null && GUILayout.Button("Parse JSON"))
         {
             ParseJsonFile();
@@ -57,7 +77,9 @@ public class AnimationClipCreatorWindow : EditorWindow
         {
             if (GUILayout.Button("Create and Apply Animation Clip"))
             {
-                AnimationClip clip = AnimationClipUtility.CreateAnimationClip(animationData, model.transform);
+                Vector3 pos_curve_modifier = new Vector3(posXcurve_modifier, posYcurve_modifier, posZcurve_modifier);
+                Vector4 rot_curve_modifier = new Vector4(rotXcurve_modifier, rotYcurve_modifier, rotZcurve_modifier, rotWcurve_modifier);
+                AnimationClip clip = AnimationClipUtility.CreateAnimationClip(animationData, model.transform, pos_curve_modifier, rot_curve_modifier);
                 if (clip != null)
                 {
                     string path = EditorUtility.SaveFilePanelInProject("Save Animation Clip", "New Animation", "anim", "Please enter a file name to save the animation clip to");
@@ -142,7 +164,7 @@ public class AnimationClipCreatorWindow : EditorWindow
 
 public static class AnimationClipUtility
 {
-    public static AnimationClip CreateAnimationClip(AnimationData animationData, Transform rootTransform)
+    public static AnimationClip CreateAnimationClip(AnimationData animationData, Transform rootTransform, Vector3 pos_curve_modifier, Vector4 rot_curve_modifier)
     {
         if (animationData == null)
         {
@@ -205,16 +227,16 @@ public static class AnimationClipUtility
                     continue;
                 }
 
-                posXCurve.AddKey(time, originalPosition.x + keyframeData.translate[0] * 0.02f);
-                posYCurve.AddKey(time, originalPosition.y + keyframeData.translate[1] * 0.02f);
-                posZCurve.AddKey(time, originalPosition.z + keyframeData.translate[2] * 0.02f);
+                posXCurve.AddKey(time, originalPosition.x + keyframeData.translate[0] * pos_curve_modifier.x);
+                posYCurve.AddKey(time, originalPosition.y + keyframeData.translate[1] * pos_curve_modifier.y);
+                posZCurve.AddKey(time, originalPosition.z + keyframeData.translate[2] * pos_curve_modifier.z);
 
                 Quaternion rotation = Quaternion.Euler(keyframeData.rotate[0], keyframeData.rotate[1], keyframeData.rotate[2]);
 
-                rotXCurve.AddKey(time, originalRotation.x + rotation.x * 80f);
-                rotYCurve.AddKey(time, originalRotation.y + rotation.y * 80f);
-                rotZCurve.AddKey(time, originalRotation.z + rotation.z * 80f);
-                rotWCurve.AddKey(time, originalRotation.w + rotation.w);
+                rotXCurve.AddKey(time, originalRotation.x + rotation.x * rot_curve_modifier.x);
+                rotYCurve.AddKey(time, originalRotation.y + rotation.y * rot_curve_modifier.y);
+                rotZCurve.AddKey(time, originalRotation.z + rotation.z * rot_curve_modifier.z);
+                rotWCurve.AddKey(time, originalRotation.w + rotation.w * rot_curve_modifier.w);
 
                 Debug.Log($"Added keyframe at time {time} for part {part.name}: " +
                           $"translate = [{keyframeData.translate[0]}, {keyframeData.translate[1]}, {keyframeData.translate[2]}], " +

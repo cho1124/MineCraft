@@ -7,7 +7,6 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    [SerializeField] private float newSpeed; //이동속도 증가될 그것
     
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
