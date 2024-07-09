@@ -7,6 +7,7 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
+    [SerializeField] private float newSpeed; //이동속도 증가될 그것
     
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
@@ -15,7 +16,7 @@ public class Player_Control : MonoBehaviour
 
     private Vector3 direction = Vector3.zero;
     private float speed_rotate = 10f;
-    private float speed_walk = 5f;
+    private float speed_walk = 1f;
     private float speed_sprint = 10f;
     private float jump_height = 1f;
     private float gravity_velocity = 0f;
@@ -37,34 +38,42 @@ public class Player_Control : MonoBehaviour
         key_h = Input.GetAxis("Horizontal");
         key_v = Input.GetAxis("Vertical");
 
-
-
         Head_Body_Rotate();
 
+        speed_sprint = speed_walk * 2;
+        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? speed_sprint : speed_walk;
 
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        // 입력이 없을 때 속도 0으로 설정
+        if (key_h == 0 && key_v == 0)
         {
-            //is running = true;
-            //속도 = 달리기 속도
+            currentSpeed = 0.0f;
         }
 
+        // 방향 설정
         direction = head_transform.forward * key_v + head_transform.right * key_h;
 
-        if (Input.GetKeyDown(KeyCode.LeftControl)) direction *= speed_sprint;
-        else direction *= speed_walk;
+        // LeftControl 키가 눌렸을 때 달리기 속도로 설정
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            direction *= speed_sprint;
+        }
+        else
+        {
+            direction *= currentSpeed * newSpeed;
+        }
 
-
-
-        //check is ground
+        // 지면 체크
         if (controller.isGrounded)
         {
             animator.SetBool("IsGround", true);
             animator.SetBool("IsJump", false);
         }
-        else animator.SetBool("IsGround", false);
+        else
+        {
+            animator.SetBool("IsGround", false);
+        }
 
-        //check is jump
+        // 점프 체크
         if (controller.isGrounded)
         {
             if (Input.GetButtonDown("Jump"))
@@ -74,16 +83,20 @@ public class Player_Control : MonoBehaviour
             }
         }
 
+        // 중력 적용
         gravity_velocity += -9.81f * Time.deltaTime;
         direction.y = gravity_velocity;
 
+        // 애니메이션 속도 설정
+        animator.SetFloat("Speed", currentSpeed);
 
-
-        Vector3 horizontalMoveDirection = new Vector3(direction.x, 0, direction.z);
-        animator.SetFloat("Speed", horizontalMoveDirection.magnitude);
-        
+        // 이동 적용
         controller.Move(direction * Time.deltaTime);
     }
+
+
+    
+
 
     private void Head_Body_Rotate()
     {

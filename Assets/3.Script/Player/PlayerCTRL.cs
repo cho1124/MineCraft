@@ -6,7 +6,8 @@ public class PlayerCTRL : MonoBehaviour
 {
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform headTransform;
-    [SerializeField] private float speed = 20f;
+    [SerializeField] private float playerSpeed = 10f;
+    [SerializeField] private float speed = 1f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 1.5f;
 
@@ -73,8 +74,11 @@ public class PlayerCTRL : MonoBehaviour
         // 달리기 속도 조절
         float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? speed * 2 : speed;
 
-        moveDirection = transform.right * moveX + transform.forward * moveZ;
-        moveDirection *= currentSpeed;
+        moveDirection = headTransform.right * moveX + headTransform.forward * moveZ;
+        moveDirection *= currentSpeed * playerSpeed;
+
+        
+
 
         // 점프 처리
         if (characterController.isGrounded)
@@ -90,7 +94,7 @@ public class PlayerCTRL : MonoBehaviour
         moveDirection.y = yVelocity;
 
         // 실제 이동 벡터의 크기를 Animator에 전달
-        Vector3 horizontalMoveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
+        Vector3 horizontalMoveDirection = new Vector3(moveDirection.x / playerSpeed, 0, moveDirection.z / playerSpeed);
         animator.SetFloat("Speed", horizontalMoveDirection.magnitude);
 
         characterController.Move(moveDirection * Time.deltaTime);
