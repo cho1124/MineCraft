@@ -40,27 +40,17 @@ public class Player_Control : MonoBehaviour
 
         Head_Body_Rotate();
 
-        speed_sprint = speed_walk * 2;
-        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? speed_sprint : speed_walk;
-
+        float speed_current;
         // 입력이 없을 때 속도 0으로 설정
-        if (key_h == 0 && key_v == 0)
-        {
-            currentSpeed = 0.0f;
-        }
+        if (key_h == 0 && key_v == 0) speed_current = 0.0f;
+        else speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
 
         // 방향 설정
         direction = head_transform.forward * key_v + head_transform.right * key_h;
 
         // LeftControl 키가 눌렸을 때 달리기 속도로 설정
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            direction *= speed_sprint;
-        }
-        else
-        {
-            direction *= currentSpeed * newSpeed;
-        }
+        if (Input.GetKey(KeyCode.LeftControl)) direction *= speed_sprint;
+        else direction *= speed_walk;
 
         // 지면 체크
         if (controller.isGrounded)
@@ -88,7 +78,7 @@ public class Player_Control : MonoBehaviour
         direction.y = gravity_velocity;
 
         // 애니메이션 속도 설정
-        animator.SetFloat("Speed", currentSpeed);
+        animator.SetFloat("Speed", speed_current);
 
         // 이동 적용
         controller.Move(direction * Time.deltaTime);
