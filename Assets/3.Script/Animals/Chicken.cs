@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dog : MonoBehaviour
+public class Chicken : MonoBehaviour
 {
     private enum State { Wander, Wait, Run, Jump }
     private State currentState;
@@ -11,6 +11,7 @@ public class Dog : MonoBehaviour
     private Rigidbody rb;
 
     public Transform head; // head 오브젝트를 참조할 필드 추가
+    public Transform player; // 플레이어를 참조할 필드 추가
 
     public float wanderRadius = 10f;
     public float wanderSpeed = 2f;
@@ -18,7 +19,7 @@ public class Dog : MonoBehaviour
     public float waitTime = 2f;
     public float minWanderTime = 3f;
     public float maxWanderTime = 6f;
-    public float jumpForce = 2f;
+    public float jumpForce = 3f;
     public float detectionDistance = 1f;
     public float playerDetectionRadius = 1f; // 플레이어 감지 범위
 
@@ -56,12 +57,12 @@ public class Dog : MonoBehaviour
         switch (currentState)
         {
             case State.Wander:
-                ani.Play("DogWalk");
+                ani.Play("ChickenWalk");
                 targetPosition = GetRandomPosition();
                 StartCoroutine(StateDuration(State.Wander, Random.Range(minWanderTime, maxWanderTime)));
                 break;
             case State.Wait:
-                ani.Play("DogIdle");
+                ani.Play("ChickenIdle");
                 StartCoroutine(StateDuration(State.Wait, Random.Range(2f, 10f)));
                 break;
             case State.Run:
@@ -69,7 +70,7 @@ public class Dog : MonoBehaviour
                 StartCoroutine(StateDuration(State.Run, Random.Range(minWanderTime / 2, maxWanderTime / 2)));
                 break;
             case State.Jump:
-                ani.Play("DogJump");
+                ani.Play("ChickenJump");
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
@@ -144,11 +145,12 @@ public class Dog : MonoBehaviour
         {
             if (hit.collider.CompareTag("Player"))
             {
+                player = hit.transform;
                 Debug.Log("Player detected!");
                 JumpAndTurnAround();
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
-            else if (!hit.collider.CompareTag("Plane")&& !hit.collider.CompareTag("Animals"))
+            else if (!hit.collider.CompareTag("Plane") && !hit.collider.CompareTag("Animals"))
             {
                 Debug.Log($"Obstacle detected: {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
@@ -159,14 +161,31 @@ public class Dog : MonoBehaviour
         }
     }
 
-    private void JumpAndTurnAround()
+    private void JumpAndTurnAround() //플레이어를 마주했을때 할 행동 
     {
         if (currentState != State.Jump)
         {
-            ani.Play("CatJump");
+            ani.Play("ChickenJump");
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             transform.Rotate(0, 180f, 0); // 180도 회전
-            ChangeState(State.Jump); // 상태를 Jump로 변경
+            StartCoroutine(RunFromPlayer());
         }
+    }
+    private IEnumerator RunFromPlayer()
+    {
+        float runTime = Random.Range(2f, 5f); // 2-5초 동안 도망
+        float startTime = Time.time;
+
+        while (Time.time < startTime + runTime)
+        {
+            if (player != null)
+            {
+                Vector3 runDirection = (transform.position - player.position).normalized;
+                transform.position += runDirection * runSpeed * Time.deltaTime;
+            }
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        GetRandomState();
     }
 }
