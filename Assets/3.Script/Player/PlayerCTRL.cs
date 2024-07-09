@@ -13,6 +13,7 @@ public class PlayerCTRL : MonoBehaviour
 
     private float cursorX = 0f;
     private float cursorY = 0f;
+    private float temp_y = 0f;
     private float yVelocity = 0f;
     private Vector3 moveDirection = Vector3.zero;
     private Animator animator;
@@ -47,7 +48,7 @@ public class PlayerCTRL : MonoBehaviour
 
     private void LateUpdate()
     {
-        HandleMouseLook();
+        MouseMove();
     }
 
     private void CheckGround()
@@ -96,18 +97,35 @@ public class PlayerCTRL : MonoBehaviour
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
-    private void HandleMouseLook()
+    private void MouseMove()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float h = Input.GetAxis("Mouse X");
+        float v = Input.GetAxis("Mouse Y");
 
-        cursorX += mouseX;
-        cursorY -= mouseY;
+        cursorX += h * 3f;
+        cursorY += v * 1.5f;
         cursorY = Mathf.Clamp(cursorY, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(0f, cursorX, 0f);
-        headTransform.localRotation = Quaternion.Euler(cursorY, 0f, 0f);
+        if (Difference(cursorX, temp_y) > 45f)
+        {
+            temp_y += h * 3f;
+            transform.rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
+            headTransform.rotation = Quaternion.Euler(cursorY, cursorX, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
+            headTransform.rotation = Quaternion.Euler(cursorY, cursorX, 0);
+        }
     }
 
-    
+
+    private float Difference(float a, float b)
+    {
+        if (a < b) return b - a;
+        else if (a > b) return a - b;
+        else return 0;
+    }
+
+
 }
