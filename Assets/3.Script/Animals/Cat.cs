@@ -18,6 +18,7 @@ public class Cat : MonoBehaviour
     public float maxWanderTime = 6f;
     public float jumpForce = 3f;
     public float detectionDistance = 1f;
+    public Transform rayOriginTransform;
 
     private void Start()
     {
@@ -136,12 +137,30 @@ public class Cat : MonoBehaviour
 
     private void DetectObstacle()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, detectionDistance))
+        if (rayOriginTransform == null)
         {
+            Debug.LogError("rayOriginTransform이 설정되지 않았습니다.");
+            return;
+        }
+
+        RaycastHit hit;
+        Vector3 rayOrigin = rayOriginTransform.position;
+        Vector3 rayDirection = rayOriginTransform.forward * detectionDistance;
+
+        // 레이캐스트 수행
+        if (Physics.Raycast(rayOrigin, rayOriginTransform.forward, out hit, detectionDistance))
+        {
+            // 장애물이 감지되면 레드를 사용해 레이를 그리기
+            Debug.DrawRay(rayOrigin, rayDirection, Color.red);
+
             // 장애물이 감지되면 방향을 변경
             float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
-            transform.Rotate(0, angle, 0);
+            rayOriginTransform.Rotate(0, angle, 0);
+        }
+        else
+        {
+            // 장애물이 감지되지 않으면 그린을 사용해 레이를 그리기
+            Debug.DrawRay(rayOrigin, rayDirection, Color.green);
         }
     }
 }
