@@ -14,6 +14,7 @@ public class Player_Control : MonoBehaviour
     private float temp_y = 0f;
 
     private Vector3 direction = Vector3.zero;
+    private float speed_rotate = 10f;
     private float speed_walk = 5f;
     private float speed_sprint = 10f;
     private float jump_height = 1f;
@@ -93,18 +94,28 @@ public class Player_Control : MonoBehaviour
         cursor_y += cursor_v * 1.5f;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
 
-        
+        if(key_h != 0 || key_v != 0)
+        {
+            if ((Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S))) temp_y = cursor_x - 45f;
+            else if ((Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S))) temp_y = cursor_x + 45f;
+            else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))) temp_y = cursor_x;
 
-        if ((Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S))) temp_y = cursor_x - 45f;
-        else if ((Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S))) temp_y = cursor_x + 45f;
-        else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))) temp_y = cursor_x;
-        
-        if (Difference(cursor_x, temp_y) > 45f) temp_y += cursor_h * 3f;
+            Quaternion target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
+            transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, speed_rotate * Time.deltaTime);
+            
+            head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+        }
+        else
+        {
+            if (Difference(cursor_x, temp_y) > 45f)
+            {
+                if(cursor_h > 0) temp_y = cursor_x - 45f;
+                else if(cursor_h < 0) temp_y = cursor_x + 45f;
+            }
 
-
-
-        transform.rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
-        head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+            transform.rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
+            head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+        }
     }
 
     private float Difference(float a, float b)
