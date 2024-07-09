@@ -166,7 +166,7 @@ public class Dog : MonoBehaviour
             {
                 player = hit.transform; // 플레이어를 참조로 설정
                 Debug.Log("Player detected!");
-                StartCoroutine(WalkAroundPlayer());
+                JumpAndTurnAround();
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
             else if (!hit.collider.CompareTag("Plane")&& !hit.collider.CompareTag("Animals"))
@@ -180,23 +180,46 @@ public class Dog : MonoBehaviour
         }
     }
 
+    private void JumpAndTurnAround()
+    {
+        if (currentState != State.Jump)
+        {
+            ChangeState(State.Jump);
+            StartCoroutine(WalkAroundPlayer());
+        }
+    }
+
     private IEnumerator WalkAroundPlayer()
     {
-        ChangeState(State.Jump);
         isOrbiting = true; // 한 바퀴 도는 중임을 표시
-        float orbitTime = 2f; // 한 바퀴 도는 시간
-        float elapsedTime = 0f;
-        Vector3 orbitCenter = player.position;
+        ChangeState(State.Jump);
+        ani.Play("DogJump");
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
+
+        //  float orbitTime = 2f; // 한 바퀴 도는 시간
+        //  float elapsedTime = 0f;
+        //  Vector3 orbitCenter = player.position;
+        //  float orbitRadius = 3f;
+        //
+        //  // 플레이어 주변을 한 바퀴 돔
+        //  while (elapsedTime < orbitTime)
+        //  {
+        //      float angle = (elapsedTime / orbitTime) * 360; // 각도를 도로 변환
+        //      transform.RotateAround(orbitCenter, Vector3.up, angle * Time.deltaTime);
+        //      elapsedTime += Time.deltaTime;
+        //      yield return null;
+        //  }
+
         float orbitRadius = 2f;
+        int steps = 30; // 한 바퀴를 도는 동안의 스텝 수
+        float stepAngle = 360f / steps; // 각 스텝마다 회전할 각도
 
         // 플레이어 주변을 한 바퀴 돔
-        while (elapsedTime < orbitTime)
+        for (int i = 0; i < steps; i++)
         {
-            Vector3 offset = new Vector3(Mathf.Sin(elapsedTime * Mathf.PI), 0, Mathf.Cos(elapsedTime * Mathf.PI)) * orbitRadius;
-            targetPosition = orbitCenter + offset;
-            MoveTowardsTarget(wanderSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            transform.RotateAround(player.position, Vector3.up, stepAngle);
+            yield return new WaitForSeconds(0.05f); // 각 스텝마다 잠시 대기
         }
 
         isOrbiting = false; // 한 바퀴 도는 작업이 끝났음을 표시
