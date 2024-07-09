@@ -166,12 +166,12 @@ public class Dog : MonoBehaviour
             {
                 player = hit.transform; // 플레이어를 참조로 설정
                 Debug.Log("Player detected!");
-                JumpAndTurnAround();
+                StartCoroutine(WalkAroundPlayer());
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
             else if (!hit.collider.CompareTag("Plane")&& !hit.collider.CompareTag("Animals"))
             {
-                Debug.Log($"Obstacle detected: {hit.collider.name}");
+                Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
                 float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
                 transform.Rotate(0, angle, 0);
@@ -180,19 +180,9 @@ public class Dog : MonoBehaviour
         }
     }
 
-    private void JumpAndTurnAround()
+    private IEnumerator WalkAroundPlayer()
     {
-        if (currentState != State.Jump)
-        {
-            ani.Play("DogJump");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            transform.Rotate(0, 180f, 0); // 180도 회전
-            StartCoroutine(OrbitPlayerAndFollow());
-        }
-    }
-
-    private IEnumerator OrbitPlayerAndFollow()
-    {
+        ChangeState(State.Jump);
         isOrbiting = true; // 한 바퀴 도는 중임을 표시
         float orbitTime = 2f; // 한 바퀴 도는 시간
         float elapsedTime = 0f;
@@ -202,9 +192,9 @@ public class Dog : MonoBehaviour
         // 플레이어 주변을 한 바퀴 돔
         while (elapsedTime < orbitTime)
         {
-            float angle = Mathf.Lerp(0, 360, elapsedTime / orbitTime);
-            Vector3 offset = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle)) * orbitRadius;
-            transform.position = orbitCenter + offset;
+            Vector3 offset = new Vector3(Mathf.Sin(elapsedTime * Mathf.PI), 0, Mathf.Cos(elapsedTime * Mathf.PI)) * orbitRadius;
+            targetPosition = orbitCenter + offset;
+            MoveTowardsTarget(wanderSpeed);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -218,6 +208,6 @@ public class Dog : MonoBehaviour
         ChangeState(State.Follow); // Follow 상태로 전환
         yield return new WaitForSeconds(followTime);
 
-        GetRandomState(); 
+        ChangeState(State.Wander); // 따라다닌 후 Wander 상태로 전환
     }
 }

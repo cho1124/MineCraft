@@ -147,12 +147,12 @@ public class Chicken : MonoBehaviour
             {
                 player = hit.transform;
                 Debug.Log("Player detected!");
-                JumpAndTurnAround();
+                JumpAndRunFromPlayer();
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
             else if (!hit.collider.CompareTag("Plane") && !hit.collider.CompareTag("Animals"))
             {
-                Debug.Log($"Obstacle detected: {hit.collider.name}");
+                Debug.Log($"Obstacle detected:{this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
                 float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
                 transform.Rotate(0, angle, 0);
@@ -161,21 +161,29 @@ public class Chicken : MonoBehaviour
         }
     }
 
-    private void JumpAndTurnAround() //플레이어를 마주했을때 할 행동 
+    private void JumpAndRunFromPlayer()
     {
         if (currentState != State.Jump)
         {
-            ani.Play("ChickenJump");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            transform.Rotate(0, 180f, 0); // 180도 회전
-            StartCoroutine(RunFromPlayer());
+            StartCoroutine(JumpThenRun());
         }
     }
-    private IEnumerator RunFromPlayer()
+    private IEnumerator JumpThenRun()
     {
-        float runTime = Random.Range(1f, 3f); // 1-3초 동안 도망
+        // 점프
+        ChangeState(State.Jump);
+        ani.Play("ChickenJump");
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
+
+        // 180도 회전
+        transform.Rotate(0, 180f, 0);
+
+        // 도망
+        float runTime = Random.Range(2f, 5f); // 2-5초 동안 도망
         float startTime = Time.time;
 
+        ChangeState(State.Run);
         while (Time.time < startTime + runTime)
         {
             if (player != null)
@@ -186,6 +194,6 @@ public class Chicken : MonoBehaviour
             yield return null; // 다음 프레임까지 대기
         }
 
-        GetRandomState();
+        ChangeState(State.Wander); // 도망 후에 다시 Wander 상태로 전환
     }
 }
