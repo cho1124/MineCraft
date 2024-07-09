@@ -7,7 +7,7 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    [SerializeField] private float newSpeed; //이동속도 증가될 그것
+    [SerializeField] private float moveSpeed; //이동속도 증가될 그것
     
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
@@ -17,7 +17,7 @@ public class Player_Control : MonoBehaviour
     private Vector3 direction = Vector3.zero;
     private float speed_rotate = 10f;
     private float speed_walk = 1f;
-    private float speed_sprint = 10f;
+    private float speed_sprint = 2f;
     private float jump_height = 1f;
     private float gravity_velocity = 0f;
 
@@ -28,65 +28,69 @@ public class Player_Control : MonoBehaviour
         head_transform = transform.GetChild(1).transform;
     }
 
+    private void Update()
+    {
+        //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
+        Move_Control();
+    }
+
+
     private void LateUpdate()
     {
-        Move_Control();
+        
+        // 대가리
+        Head_Body_Rotate();
     }
 
     private void Move_Control()
     {
-        key_h = Input.GetAxis("Horizontal");
-        key_v = Input.GetAxis("Vertical");
+        // 입력
+        float key_h = Input.GetAxis("Horizontal");
+        float key_v = Input.GetAxis("Vertical");
 
-        Head_Body_Rotate();
+        // 속도
+        float speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
 
-        float speed_current;
-        // 입력이 없을 때 속도 0으로 설정
-        if (key_h == 0 && key_v == 0) speed_current = 0.0f;
-        else speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
+        // 애니메이션
+        float speed = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
 
-        // 방향 설정
-        direction = head_transform.forward * key_v + head_transform.right * key_h;
+        if (key_v < 0f || key_h < 0f)
+        {
+            speed = -speed;
+        }
 
-        // LeftControl 키가 눌렸을 때 달리기 속도로 설정
-        if (Input.GetKey(KeyCode.LeftControl)) direction *= speed_sprint;
-        else direction *= speed_walk;
+        animator.SetFloat("Speed", speed);
 
-        // 지면 체크
+        
+
+
+        Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
+
+        // 땅인지
         if (controller.isGrounded)
         {
             animator.SetBool("IsGround", true);
             animator.SetBool("IsJump", false);
+
+            // 짬푸
+            if (Input.GetButtonDown("Jump"))
+            {
+                animator.SetBool("IsJump", true);
+                gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
+            }
         }
         else
         {
             animator.SetBool("IsGround", false);
         }
 
-        // 점프 체크
-        if (controller.isGrounded)
-        {
-            if (Input.GetButtonDown("Jump"))
-            {
-                animator.SetBool("IsJump", true);
-                gravity_velocity = Mathf.Sqrt(jump_height * -2f * -9.81f);
-            }
-        }
-
-        // 중력 적용
-        gravity_velocity += -9.81f * Time.deltaTime;
+        // 중력적용 -> 캐릭터 컨트롤러이기 때문
+        gravity_velocity += Physics.gravity.y * Time.deltaTime;
         direction.y = gravity_velocity;
 
-        // 애니메이션 속도 설정
-        animator.SetFloat("Speed", speed_current);
-
-        // 이동 적용
-        controller.Move(direction * Time.deltaTime);
+        // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
+        controller.Move(direction * Time.deltaTime * moveSpeed);
     }
-
-
-    
-
 
     private void Head_Body_Rotate()
     {
