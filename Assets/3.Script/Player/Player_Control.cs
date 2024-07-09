@@ -7,7 +7,6 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    [SerializeField] private float moveSpeed; //이동속도 증가될 그것
     
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
@@ -15,10 +14,11 @@ public class Player_Control : MonoBehaviour
     private float temp_y = 0f;
 
     private Vector3 direction = Vector3.zero;
+    private float speed_current = 0f;
     private float speed_rotate = 10f;
-    private float speed_walk = 1f;
-    private float speed_sprint = 2f;
-    private float jump_height = 1f;
+    private float speed_walk = 2f; // player_data에서 가져오기
+    private float speed_sprint = 4f; // player_data에서 가져오기
+    private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
 
     private void Awake()
@@ -37,7 +37,6 @@ public class Player_Control : MonoBehaviour
 
     private void LateUpdate()
     {
-        
         // 대가리
         Head_Body_Rotate();
     }
@@ -45,26 +44,25 @@ public class Player_Control : MonoBehaviour
     private void Move_Control()
     {
         // 입력
-        float key_h = Input.GetAxis("Horizontal");
-        float key_v = Input.GetAxis("Vertical");
+        key_h = Input.GetAxis("Horizontal");
+        key_v = Input.GetAxis("Vertical");
 
         // 속도
-        float speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
+        Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
+        speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
 
         // 애니메이션
-        float speed = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
+        float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
+        if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
+        animator.SetFloat("Speed", speed_animation);
 
-        if (key_v < 0f || key_h < 0f)
-        {
-            speed = -speed;
-        }
-
-        animator.SetFloat("Speed", speed);
-
-        
-
-
-        Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
+        //내일 마저 하자...
+        //if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
+        //else speed_current = 0f;
+        //
+        //float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
+        //if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
+        //animator.SetFloat("Speed", speed_animation);
 
         // 땅인지
         if (controller.isGrounded)
@@ -79,17 +77,14 @@ public class Player_Control : MonoBehaviour
                 gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
             }
         }
-        else
-        {
-            animator.SetBool("IsGround", false);
-        }
+        else animator.SetBool("IsGround", false);
 
         // 중력적용 -> 캐릭터 컨트롤러이기 때문
         gravity_velocity += Physics.gravity.y * Time.deltaTime;
         direction.y = gravity_velocity;
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
-        controller.Move(direction * Time.deltaTime * moveSpeed);
+        controller.Move(direction * Time.deltaTime * speed_current);
     }
 
     private void Head_Body_Rotate()
@@ -103,14 +98,9 @@ public class Player_Control : MonoBehaviour
 
         if(key_h != 0 || key_v != 0)
         {
-            if ((Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S))) temp_y = cursor_x - 45f;
-            else if ((Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S))) temp_y = cursor_x + 45f;
-            else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))) temp_y = cursor_x;
-
-            Quaternion target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
-            transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, speed_rotate * Time.deltaTime);
-            
-            head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+            if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
+            else if (((key_h > 0) && !(key_v < 0)) || ((key_h < 0) && (key_v < 0))) temp_y = cursor_x + 45f;
+            else if (key_v != 0 && key_h == 0) temp_y = cursor_x;
         }
         else
         {
@@ -119,10 +109,10 @@ public class Player_Control : MonoBehaviour
                 if(cursor_h > 0) temp_y = cursor_x - 45f;
                 else if(cursor_h < 0) temp_y = cursor_x + 45f;
             }
-
-            transform.rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
-            head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
         }
+        Quaternion target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
+        transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, speed_rotate * Time.deltaTime);
+        head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
     }
 
     private float Difference(float a, float b)
