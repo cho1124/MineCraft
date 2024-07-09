@@ -29,5 +29,6 @@ public class Lode
     public float scale;
     public float threshold;
     public float noiseOffset;
+    public bool isSolid;
 
 }

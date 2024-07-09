@@ -13,21 +13,39 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   biomeName: Default
-  solidGroundHeight: 42
-  terrainHeight: 42
+  solidGroundHeight: 64
+  terrainHeight: 64
   terrainScale: 0.25
   lodes:
   - nodeName: Sand
-    blockID: 5
-    minHeight: 30
-    maxHeight: 60
-    scale: 0.1
-    threshold: 0.5
-    noiseOffset: 2
-  - nodeName: Dirt
     blockID: 4
     minHeight: 1
     maxHeight: 255
     scale: 0.2
     threshold: 0.5
     noiseOffset: 0
+    isSolid: 1
+  - nodeName: Air
+    blockID: 0
+    minHeight: 1
+    maxHeight: 255
+    scale: 0.2
+    threshold: 0.1
+    noiseOffset: 50
+    isSolid: 0
+  - nodeName: Dirt
+    blockID: 5
+    minHeight: 30
+    maxHeight: 60
+    scale: 0.1
+    threshold: 0.5
+    noiseOffset: 2
+    isSolid: 1
+  - nodeName: Coal
+    blockID: 6
+    minHeight: 1
+    maxHeight: 120
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 4
+    isSolid: 1

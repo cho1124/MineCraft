@@ -226,6 +226,7 @@ public class World : MonoBehaviour
         if (!IsVoxelInWorld(pos))
             return 0;
 
+
         // 没农 力老 关官蹿
         if (yPos == 0)
             return 1;
@@ -241,17 +242,18 @@ public class World : MonoBehaviour
 
         if (yPos == terrainHeight)
         {
+            // grass
             voxelValue = 3;
         }
-        else if (yPos < terrainHeight && yPos > terrainHeight - 4)
+        else if (yPos < terrainHeight && yPos > terrainHeight - (int)UnityEngine.Random.Range(1, 10)) // - 4);
         {
+
             voxelValue = 5; //return 5; 
         }
         else if (yPos > terrainHeight)
         {
             return 0;
         }
-
         else
         {
             voxelValue = 2;//return 2;
@@ -268,7 +270,14 @@ public class World : MonoBehaviour
                 if (yPos > lode.minHeight && yPos < lode.maxHeight)
                 {
                     if (Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
+                    {
+                        //if(lode.blockID == 0)
+                        //{
+                        //    return voxelValue = 0;
+                        //}
                         voxelValue = lode.blockID;
+                    }
+                        
 
                 }
             }
@@ -278,6 +287,7 @@ public class World : MonoBehaviour
 
 
     }
+    
 
 
     bool IsChunkInWorld(ChunkCoord coord)
