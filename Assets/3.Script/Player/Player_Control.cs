@@ -6,16 +6,13 @@ public class Player_Control : MonoBehaviour
 {
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
-    [SerializeField] private Rigidbody player_rigidbody;
     [SerializeField] private Transform head_transform;
     
+    private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
     private float cursor_y = 0f;
     private float temp_y = 0f;
-    private float cursor_h;
-    private float cursor_v;
-    private float key_h;
-    private float key_v;
+
     private Vector3 direction = Vector3.zero;
     private float speed_walk = 5f;
     private float speed_sprint = 10f;
@@ -24,11 +21,9 @@ public class Player_Control : MonoBehaviour
 
     private void Awake()
     {
-        TryGetComponent(out player_rigidbody);
+        TryGetComponent(out controller);
+        TryGetComponent(out animator);
         head_transform = transform.GetChild(1).transform;
-
-
-
     }
 
     private void LateUpdate()
@@ -41,7 +36,11 @@ public class Player_Control : MonoBehaviour
         key_h = Input.GetAxis("Horizontal");
         key_v = Input.GetAxis("Vertical");
 
+
+
         Head_Body_Rotate();
+
+
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -53,6 +52,8 @@ public class Player_Control : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftControl)) direction *= speed_sprint;
         else direction *= speed_walk;
+
+
 
         //check is ground
         if (controller.isGrounded)
@@ -71,11 +72,15 @@ public class Player_Control : MonoBehaviour
                 gravity_velocity = Mathf.Sqrt(jump_height * -2f * -9.81f);
             }
         }
+
         gravity_velocity += -9.81f * Time.deltaTime;
         direction.y = gravity_velocity;
 
+
+
         Vector3 horizontalMoveDirection = new Vector3(direction.x, 0, direction.z);
         animator.SetFloat("Speed", horizontalMoveDirection.magnitude);
+        
         controller.Move(direction * Time.deltaTime);
     }
 
@@ -101,9 +106,6 @@ public class Player_Control : MonoBehaviour
         transform.rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
         head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
     }
-
-    
-
 
     private float Difference(float a, float b)
     {
