@@ -15,11 +15,11 @@ public class Chicken : MonoBehaviour
 
     public float wanderRadius = 10f;
     public float wanderSpeed = 2f;
-    public float runSpeed = 6f;
-    public float waitTime = 2f;
+    public float runSpeed = 8f;
+    public float waitTime = 3f;
     public float minWanderTime = 3f;
     public float maxWanderTime = 6f;
-    public float jumpForce = 3f;
+    public float jumpForce = 4f;
     public float detectionDistance = 1f;
     public float playerDetectionRadius = 1f; // 플레이어 감지 범위
 
@@ -107,8 +107,8 @@ public class Chicken : MonoBehaviour
     private Vector3 GetRandomPosition()
     {
         // 무작위 방향에서 z축만 변경하고 x와 y는 현재 위치를 유지
-        float randomZ = Random.Range(0, 100) < 20 ? Random.Range(-wanderRadius, 0) : Random.Range(0, wanderRadius);
-        // 고양이가 z축 방향으로 이동할 때 20% 확률로 음수 방향, 80% 확률로 양수 방향으로 이동
+        float randomZ = Random.Range(0, 100) < 30 ? Random.Range(-wanderRadius, 0) : Random.Range(0, wanderRadius);
+        // 고양이가 z축 방향으로 이동할 때 30% 확률로 음수 방향, 70% 확률로 양수 방향으로 이동
         return new Vector3(transform.position.x, transform.position.y, transform.position.z + randomZ);
     }
 
@@ -173,7 +173,7 @@ public class Chicken : MonoBehaviour
     }
     private IEnumerator RunFromPlayer()
     {
-        float runTime = Random.Range(2f, 5f); // 2-5초 동안 도망
+        float runTime = Random.Range(1f, 3f); // 1-3초 동안 도망
         float startTime = Time.time;
 
         while (Time.time < startTime + runTime)
