@@ -187,7 +187,8 @@ public class Lion : MonoBehaviour
             {
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
-                float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
+                float[] angles = { -90f, 90f, 180f, -180f };
+                float angle = angles[Random.Range(0, angles.Length)];
                 transform.Rotate(0, angle, 0);
                 return; // 장애물 감지 시 방향 변경 후 종료
             }
