@@ -21,15 +21,28 @@ public class Player_Control : MonoBehaviour
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
 
+    private Vector3 temp_position;
+    private Vector3 current_postion;
+
     private void Awake()
     {
         TryGetComponent(out controller);
         TryGetComponent(out animator);
         head_transform = transform.GetChild(1).transform;
+
+        temp_position = transform.position;
     }
 
     private void Update()
     {
+        current_postion = transform.position;
+
+        Vector3 dir = current_postion - temp_position;
+        var distance = Mathf.Sqrt(Mathf.Pow(dir.x, 2) + Mathf.Pow(dir.y, 2) + Mathf.Pow(dir.z, 2));
+        double velocity = distance / Time.deltaTime;
+        temp_position = transform.position;
+        Debug.Log($"{velocity}");
+
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
         Move_Control();
     }
