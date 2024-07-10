@@ -4,9 +4,9 @@ using UnityEngine;
 using System.IO;
 using TMPro;
 
-public class Data_manager : MonoBehaviour
+public class Game_UI_data_manager : MonoBehaviour
 {
-    public static Data_manager instance = null;
+    public static Game_UI_data_manager instance = null;
 
     private void Awake()
     {
@@ -22,9 +22,9 @@ public class Data_manager : MonoBehaviour
         }
     }
 
-    [SerializeField] 
+    [SerializeField]
 
-    Shame_data shame_data = new Shame_data();
+    public Shame_data shame_data = new Shame_data();
 
     private void Start()
     {
@@ -50,11 +50,13 @@ public class Data_manager : MonoBehaviour
         shame_data.level += 1;
 
         Debug.Log($"레벨 업!\n레벨: {shame_data.level}");
+
+
     }
 
     public void Set_blood()
     {
-
+        // shame_data.blood 
     }
 }
 
