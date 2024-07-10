@@ -45,6 +45,9 @@ public class Player_Control : MonoBehaviour
     {
         float speed = new Vector2(key_h, key_v).magnitude;
 
+        
+
+
         // Set the speed value to 1 when moving diagonally
         if (speed > 1)
         {
@@ -56,6 +59,7 @@ public class Player_Control : MonoBehaviour
             speed = -speed;
         }
 
+        speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2 : speed;
 
         animator.SetFloat("Speed", speed);
     }
