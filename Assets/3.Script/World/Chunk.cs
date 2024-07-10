@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
-
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 public class Chunk
 {
 
@@ -14,7 +17,7 @@ public class Chunk
 
 
     public ChunkCoord coord;
-
+    public Vector3 position;
 
     GameObject chunkObject;
 
@@ -55,7 +58,9 @@ public class Chunk
     private bool _isActive;
 
     // voxel맵이 채워졌는지 여부
-    public bool isVoxelMapPopulated = false;
+    private bool isVoxelMapPopulated = false;
+
+    private bool threadLocked = false;
 
     public bool isActive
     {
@@ -72,9 +77,21 @@ public class Chunk
 
     }
 
-    public Vector3 position
+    //public Vector3 position
+    //{
+    //    get { return chunkObject.transform.position; }
+    //}
+
+    public bool isEditable
     {
-        get { return chunkObject.transform.position; }
+        get
+        {
+
+            if (!isVoxelMapPopulated || threadLocked)
+                return false;
+            else
+                return true;
+        }
     }
 
     // 생성자
@@ -109,12 +126,18 @@ public class Chunk
         chunkObject.transform.SetParent(world.transform);
         chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
         chunkObject.name = coord.x + ", " + coord.z;
+        position = chunkObject.transform.position;
 
-        PopulateVoxelMap();
-        //CreateMeshData();
+        Thread myThread = new Thread(new ThreadStart(PopulateVoxelMap));
+        myThread.Start();
 
-        UpdateChunk();
-        //CreateMesh();
+        //PopulateVoxelMap();
+        //UpdateChunk();
+
+
+        ////CreateMeshData();
+        //
+        ////CreateMesh();
 
 
         // 시각적 메쉬 -> 충돌 메쉬 설정
@@ -140,16 +163,32 @@ public class Chunk
                 }
             }
         }
-
+        _updateChunk();
         isVoxelMapPopulated = true;
 
     }
 
+    public void UpdateChunk()
+    {
+        //_updateChunk();
+        Thread myThread = new Thread(new ThreadStart(_updateChunk));
+        myThread.Start();
+    }
 
 
     // Chunk 업데이트 (블럭부분만), 메쉬 생성 
-    void UpdateChunk()
+    private void _updateChunk()
     {
+        threadLocked = true;
+
+        //while(modifications.count > 0)
+        //{
+        //    VoxelMod v = modifications.Dequeue();
+        //    Vector3 pos = v.position -= position;
+        //    voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = v.id;
+        //}
+
+
         ClearMeshData();
 
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
@@ -168,8 +207,13 @@ public class Chunk
             }
         }
 
-        CreateMesh();
+        lock (world.ChunksToDraw)
+        {
+            //CreateMesh();
+            world.ChunksToDraw.Enqueue(this);
+        }
 
+        threadLocked = false;
     }
 
     // 메쉬 데이터 초기화
@@ -311,18 +355,18 @@ public class Chunk
 
     }
 
-    //public byte GetVoxelFromGlobalVector3(Vector3 pos)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //
-    //    xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
-    //    zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
-    //
-    //
-    //    return voxelMap[xCheck, yCheck, zCheck];
-    //}
+    public byte GetVoxelFromGlobalVector3(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+    
+        xCheck -= Mathf.FloorToInt(position.x);
+        zCheck -= Mathf.FloorToInt(position.z);
+    
+    
+        return voxelMap[xCheck, yCheck, zCheck];
+    }
 
 
 
@@ -380,7 +424,7 @@ public class Chunk
     /// 새로운 mesh 객체 생성 -> 이전에 수집된 정점, 삼각형 인덱스, UV 좌표를 mesh에 할당
     /// -> 법선벡터 재계산(조명계산) -> 다 생성된 mesh를 meshFileter에 할당해서 렌더링
 
-    void CreateMesh()
+    public void CreateMesh()
     {
 
         Mesh mesh = new Mesh();
@@ -484,4 +528,11 @@ public class ChunkCoord
             return false;
 
     }
+}
+
+
+public struct ChunkData
+{
+    public ChunkCoord coord;
+    public NativeArray<byte> voxelMap; // Voxel 데이터
 }
