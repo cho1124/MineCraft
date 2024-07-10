@@ -50,6 +50,16 @@ public class Cat : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        // Check if the cat is upside down and correct its orientation
+        if (Vector3.Dot(transform.up, Vector3.down) > 0.5f)
+        {
+            // If the cat is upside down, apply a torque to flip it upright
+            rb.AddTorque(Vector3.right * 10f);
+        }
+    }
+
     private void ChangeState(State newState)
     {
         currentState = newState;
@@ -195,5 +205,14 @@ public class Cat : MonoBehaviour
         }
 
         ChangeState(State.Wander); // 도망 후에 다시 Wander 상태로 전환
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Plane"))
+        {
+            // 충돌 시 고양이의 회전을 초기화하여 바로 세우기
+            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        }
     }
 }

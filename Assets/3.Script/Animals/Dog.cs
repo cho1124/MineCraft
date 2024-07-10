@@ -59,6 +59,16 @@ public class Dog : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        // Check if the cat is upside down and correct its orientation
+        if (Vector3.Dot(transform.up, Vector3.down) > 0.5f)
+        {
+            // If the cat is upside down, apply a torque to flip it upright
+            rb.AddTorque(Vector3.right * 10f);
+        }
+    }
+
     private void ChangeState(State newState)
     {
         currentState = newState;
