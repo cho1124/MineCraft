@@ -159,6 +159,8 @@ public class Chicken : MonoBehaviour
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, transform.forward, detectionDistance);
         foreach (var hit in hits)
         {
+            if (hit.collider.gameObject == this.gameObject) continue;
+
             if (hit.collider.CompareTag("Player"))
             {
                 player = hit.transform;
@@ -167,13 +169,26 @@ public class Chicken : MonoBehaviour
                 StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
-            else if (!hit.collider.CompareTag("Plane") && !hit.collider.CompareTag("Animals"))
+            else if (hit.collider.CompareTag("Animals"))
             {
-                Debug.Log($"Obstacle detected:{this.name} : {hit.collider.name}");
+                Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
                 float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
                 transform.Rotate(0, angle, 0);
                 return; // 장애물 감지 시 방향 변경 후 종료
+            }
+
+            else if (!hit.collider.CompareTag("Plane"))
+            {
+                Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
+                // 장애물이 감지되면 방향을 변경
+                float angle;
+                if (Vector3.Dot(transform.forward, hit.transform.position - transform.position) > 0) // 마주쳤을 때
+                {
+                    angle = Random.Range(0, 2) == 0 ? 180f : 270f;
+                    transform.Rotate(0, angle, 0);
+                    return; // 장애물 감지 시 방향 변경 후 종료
+                }
             }
         }
     }

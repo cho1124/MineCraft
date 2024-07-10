@@ -21,8 +21,8 @@ public class Lion : MonoBehaviour
     public float minWanderTime = 5f;
     public float maxWanderTime = 8f;
     public float jumpForce = 1f;
-    public float detectionDistance = 1.5f;
-    public float playerDetectionRadius = 1.5f; // 플레이어 감지 범위
+    public float detectionDistance = 3f;
+    public float playerDetectionRadius = 3f; // 플레이어 감지 범위
     public float detectionCooldown = 10f; // 플레이어 감지 후 쿨다운 시간
 
     private bool canDetectPlayer = true; // 플레이어 감지 가능 여부
@@ -175,6 +175,8 @@ public class Lion : MonoBehaviour
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, transform.forward, detectionDistance);
         foreach (var hit in hits)
         {
+            if (hit.collider.gameObject == this.gameObject) continue;
+
             if (hit.collider.CompareTag("Player"))
             {
                 player = hit.transform; // 플레이어를 참조로 설정
@@ -183,14 +185,26 @@ public class Lion : MonoBehaviour
                 StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
-            else if (!hit.collider.CompareTag("Plane") && !hit.collider.CompareTag("Animals"))
+            else if (hit.collider.CompareTag("Animals") )
             {
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
-                float[] angles = { -90f, 90f, 180f, -180f };
-                float angle = angles[Random.Range(0, angles.Length)];
+                float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
                 transform.Rotate(0, angle, 0);
                 return; // 장애물 감지 시 방향 변경 후 종료
+            }
+
+            else if (!hit.collider.CompareTag("Plane"))
+            {
+                Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
+                // 장애물이 감지되면 방향을 변경
+                float angle;
+                if (Vector3.Dot(transform.forward, hit.transform.position - transform.position) > 0) // 마주쳤을 때
+                {
+                    angle = Random.Range(0, 2) == 0 ? 180f : 270f;
+                    transform.Rotate(0, angle, 0);
+                    return; // 장애물 감지 시 방향 변경 후 종료
+                }
             }
         }
     }
