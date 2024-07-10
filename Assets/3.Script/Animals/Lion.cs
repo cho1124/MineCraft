@@ -75,7 +75,7 @@ public class Lion : MonoBehaviour
                 break;
             case State.Jump:
                 ani.Play("LionJump");
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
             case State.Follow:
@@ -184,7 +184,7 @@ public class Lion : MonoBehaviour
         {
             ChangeState(State.Jump);
             ani.Play("LionJump");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             yield return new WaitForSeconds(1f); // 두 번 점프 사이에 약간의 대기 시간
         }
 

@@ -74,7 +74,7 @@ public class Penguin : MonoBehaviour
                 break;
             case State.Jump:
                 ani.Play("PenguinJump");
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
             case State.DoubleJump:
@@ -86,10 +86,10 @@ public class Penguin : MonoBehaviour
     private IEnumerator DoubleJumpRoutine()
     {
         ani.Play("PenguinJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         yield return new WaitForSeconds(0.5f); // 첫 점프 후 잠시 대기
         ani.Play("PenguinJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         yield return new WaitForSeconds(0.5f); // 두 번째 점프 후 잠시 대기
         ChangeState(State.Wander); // 두 번째 점프 후 Wander 상태로 전환
     }
@@ -139,7 +139,7 @@ public class Penguin : MonoBehaviour
 
     private State GetRandomState()
     {
-        int randomIndex = Random.Range(0, 4);
+        int randomIndex = Random.Range(0, 9);
         switch (randomIndex)
         {
             case 0:
@@ -147,10 +147,14 @@ public class Penguin : MonoBehaviour
             case 1:
                 return State.Run;
             case 2:
-                return State.Jump;
             case 3:
-                return State.Wait;
             case 4:
+                return State.Jump;
+            case 5:
+                return State.Wait;
+            case 6:
+            case 7:
+            case 8:
                 return State.DoubleJump;
             default:
                 return State.Wander;
@@ -193,7 +197,7 @@ public class Penguin : MonoBehaviour
         {
             ChangeState(State.Jump);
             ani.Play("PenguinJump");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             yield return new WaitForSeconds(0.5f); // 각 점프 후 잠시 대기
         }
 

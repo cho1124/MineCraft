@@ -71,7 +71,7 @@ public class Cat : MonoBehaviour
                 break;
             case State.Jump:
                 ani.Play("CatJump");
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
         }
@@ -173,7 +173,7 @@ public class Cat : MonoBehaviour
         // 점프
         ChangeState(State.Jump);
         ani.Play("CatJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
 
         // 180도 회전
