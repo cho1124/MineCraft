@@ -14,6 +14,7 @@ public class Player_Control : MonoBehaviour
     private float temp_y = 0f;
 
     private Vector3 direction = Vector3.zero;
+    private float speed_animation = 0f;
     private float speed_current = 0f;
     private float speed_rotate = 10f;
     private float speed_walk = 2f; // player_data에서 가져오기
@@ -29,20 +30,10 @@ public class Player_Control : MonoBehaviour
         TryGetComponent(out controller);
         TryGetComponent(out animator);
         head_transform = transform.GetChild(1).transform;
-
-        temp_position = transform.position;
     }
 
     private void Update()
     {
-        current_postion = transform.position;
-
-        Vector3 dir = current_postion - temp_position;
-        var distance = Mathf.Sqrt(Mathf.Pow(dir.x, 2) + Mathf.Pow(dir.y, 2) + Mathf.Pow(dir.z, 2));
-        double velocity = distance / Time.deltaTime;
-        temp_position = transform.position;
-        Debug.Log($"{velocity}");
-
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
         Move_Control();
     }
@@ -63,31 +54,35 @@ public class Player_Control : MonoBehaviour
         key_h = Input.GetAxis("Horizontal");
         key_v = Input.GetAxis("Vertical");
 
-        // 속도
-        Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
-        speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
-
-
+        // 방향
+        direction = head_transform.forward * key_v + head_transform.right * key_h;
 
         //이거 쓰시면 됩니당.
-        float speed = direction.normalized.magnitude; //핵심!!! 방향 정규화후 값 구하기
-        speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2f : speed;
-        if (key_v < 0f || key_h < 0f) speed = -speed;
+        //float speed = direction.normalized.magnitude; //핵심!!! 방향 정규화후 값 구하기
+        //speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2f : speed;
+        //if (key_v < 0f || key_h < 0f) speed = -speed;
 
         // 애니메이션
-        float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
-        //float speed_animation = speed_current;
-        if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
-        animator.SetFloat("Speed", speed);
-
-        //내일 마저 하자...
-        //if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
-        //else speed_current = 0f;
-        //
         //float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
+        ////float speed_animation = speed_current;
         //if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
-        //animator.SetFloat("Speed", speed_animation);
+        //animator.SetFloat("Speed", speed);
 
+        //속도
+        if (key_h == 0 && key_v == 0)
+        {
+            speed_current = 0f;
+            speed_animation = 0f;
+        }
+        else if (key_h != 0 || key_v != 0)
+        {
+            speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
+            speed_animation = speed_current;
+            if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
+        }
+        animator.SetFloat("Speed", speed_animation);
+
+        
         // 땅인지
         if (controller.isGrounded)
         {
@@ -103,12 +98,15 @@ public class Player_Control : MonoBehaviour
         }
         else animator.SetBool("IsGround", false);
 
+        /*
         // 중력적용 -> 캐릭터 컨트롤러이기 때문
         gravity_velocity += Physics.gravity.y * Time.deltaTime;
         direction.y = gravity_velocity;
+        */
+
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
-        controller.Move(direction * Time.deltaTime * speed_current);
+        controller.Move(direction.normalized * speed_current * Time.deltaTime);
     }
 
     private void Head_Body_Rotate()
