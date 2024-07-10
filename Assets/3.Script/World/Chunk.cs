@@ -254,12 +254,26 @@ public class Chunk
         return currentBlockID;
     }
 
+    public byte EditVoxelCave(Vector3 pos, byte newID)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+        voxelMap[xCheck, yCheck, zCheck] = newID;
+
+        // 변경된 주변 Voxel 업데이트
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+
+        // Chunk 업데이트
+        UpdateChunk();
+        byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
+        return currentBlockID;
+    }
 
 
 
-
-    // 변경된 주변 Voxel 업데이트
-    void UpdateSurroundingVoxels(int x, int y, int z)
+        // 변경된 주변 Voxel 업데이트
+        void UpdateSurroundingVoxels(int x, int y, int z)
     {
         // 변경된 Voxel의 위치 저장
         Vector3 thisVoxel = new Vector3(x, y, z);

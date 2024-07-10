@@ -198,6 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 186203083}
+  - component: {fileID: 186203084}
   m_Layer: 0
   m_Name: CaveGenerator
   m_TagString: Untagged
@@ -219,6 +220,26 @@ Transform:
   m_Father: {fileID: 521010850}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &186203084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186203082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a7bbd05051ae946957234a36d57eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  length: 30
+  stepSize: 1
+  noiseScale: 0.1
+  maxCount: 4
+  biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
+  wormPath: []
+  world: {fileID: 521010851}
+  radiusInVoxels: 10.5
 --- !u!1 &329707792
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,6 +638,8 @@ MonoBehaviour:
     rightFaceTexture: 3
     bottomFaceTexture: 3
   ItemBlock: {fileID: 8924201329985380255, guid: 0b132f74815d1934f802f3622b8e1476, type: 3}
+  caveOffset: 1
+  caveScale: 0.12
   debugScreen: {fileID: 329707792}
 --- !u!1 &521844759
 GameObject:
@@ -958,7 +981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &624557784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1159,16 +1182,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1171314684}
-  - component: {fileID: 1171314685}
   - component: {fileID: 1171314687}
   - component: {fileID: 1171314686}
+  - component: {fileID: 1171314685}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1171314684
 Transform:
   m_ObjectHideFlags: 0
@@ -1193,9 +1216,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1171314683}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56674d5893730864f87fd5798405461c, type: 3}
+  m_Script: {fileID: 11500000, guid: bf63846a352182141968e7376674266a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGrounded: 0
+  isSprinting: 0
+  walkSpeed: 3
+  sprintSpeed: 6
+  jumpForce: 5
+  gravity: -9.8
+  playerWidth: 0.3
+  mouseSensitive: 5
+  highlightBlock: {fileID: 611511823}
+  placeBlock: {fileID: 1484057990}
+  checkIncrement: 0.1
+  reach: 8
+  selectedBlockText: {fileID: 521844761}
+  selectedBlockIndex: 1
 --- !u!54 &1171314686
 Rigidbody:
   m_ObjectHideFlags: 0
