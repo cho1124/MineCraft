@@ -126,8 +126,8 @@ public class Dog : MonoBehaviour
     private Vector3 GetRandomPosition()
     {
         // 무작위 방향에서 z축만 변경하고 x와 y는 현재 위치를 유지
-        float randomZ = Random.Range(0, 100) < 20 ? Random.Range(-wanderRadius, 0) : Random.Range(0, wanderRadius);
-        // 고양이가 z축 방향으로 이동할 때 20% 확률로 음수 방향, 80% 확률로 양수 방향으로 이동
+        float randomZ = Random.Range(0, 100) < 30 ? Random.Range(-wanderRadius, 0) : Random.Range(0, wanderRadius);
+        // 고양이가 z축 방향으로 이동할 때 30% 확률로 음수 방향, 70% 확률로 양수 방향으로 이동
         return new Vector3(transform.position.x, transform.position.y, transform.position.z + randomZ);
     }
 
@@ -192,45 +192,41 @@ public class Dog : MonoBehaviour
     private IEnumerator WalkAroundPlayer()
     {
         isOrbiting = true; // 한 바퀴 도는 중임을 표시
+                           // 점프 동작 수행
         ChangeState(State.Jump);
         ani.Play("DogJump");
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
 
-        //  float orbitTime = 2f; // 한 바퀴 도는 시간
-        //  float elapsedTime = 0f;
-        //  Vector3 orbitCenter = player.position;
-        //  float orbitRadius = 3f;
-        //
-        //  // 플레이어 주변을 한 바퀴 돔
-        //  while (elapsedTime < orbitTime)
-        //  {
-        //      float angle = (elapsedTime / orbitTime) * 360; // 각도를 도로 변환
-        //      transform.RotateAround(orbitCenter, Vector3.up, angle * Time.deltaTime);
-        //      elapsedTime += Time.deltaTime;
-        //      yield return null;
-        //  }
-
+        // 플레이어 주위를 도는 동작 수행
         float orbitRadius = 2f;
-        int steps = 30; // 한 바퀴를 도는 동안의 스텝 수
-        float stepAngle = 360f / steps; // 각 스텝마다 회전할 각도
+        int fullCircleSteps = 30; // 한 바퀴를 도는 동안의 스텝 수
+        float stepAngle = 360f / fullCircleSteps; // 각 스텝마다 회전할 각도
+
+        // 초기 위치 설정
+        Vector3 initialPosition = player.position + (transform.position - player.position).normalized * orbitRadius;
+        transform.position = initialPosition;
 
         // 플레이어 주변을 한 바퀴 돔
-        for (int i = 0; i < steps; i++)
+        for (int i = 0; i < fullCircleSteps; i++)
         {
             transform.RotateAround(player.position, Vector3.up, stepAngle);
+
+            // 플레이어로부터 일정 반경 유지
+            Vector3 directionFromPlayer = (transform.position - player.position).normalized;
+            transform.position = player.position + directionFromPlayer * orbitRadius;
+
             yield return new WaitForSeconds(0.05f); // 각 스텝마다 잠시 대기
         }
 
         isOrbiting = false; // 한 바퀴 도는 작업이 끝났음을 표시
 
-        // 플레이어 따라다니기
+        // 플레이어를 따라다니기
         float followTime = Random.Range(2f, 5f); // 2-5초 동안 따라다님
-        float startTime = Time.time;
-
         ChangeState(State.Follow); // Follow 상태로 전환
         yield return new WaitForSeconds(followTime);
 
-        ChangeState(State.Wander); // 따라다닌 후 Wander 상태로 전환
+        // Wander 상태로 전환
+        GetRandomState();
     }
-}
+    }
