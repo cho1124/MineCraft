@@ -172,42 +172,51 @@ public class Lion : MonoBehaviour
     {
         if (!canDetectPlayer) return; // 플레이어 감지 비활성화 시 감지하지 않음
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, transform.forward, detectionDistance);
-        foreach (var hit in hits)
+        // 여러 방향으로 레이캐스트를 사용하여 감지 범위 확장
+        Vector3[] directions = {
+        transform.forward,
+        (transform.forward + transform.right).normalized,
+        (transform.forward - transform.right).normalized
+    };
+
+        foreach (var direction in directions)
         {
-            if (hit.collider.gameObject == this.gameObject) continue;
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, direction, detectionDistance);
+            foreach (var hit in hits)
+            {
+                if (hit.collider.gameObject == this.gameObject) continue;
 
-            if (hit.collider.CompareTag("Player"))
-            {
-                player = hit.transform; // 플레이어를 참조로 설정
-                Debug.Log("Player detected!");
-                StartCoroutine(JumpAndFollowPlayer());
-                StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
-                return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
-            }
-            else if (hit.collider.CompareTag("Animals") )
-            {
-                Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
-                // 장애물이 감지되면 방향을 변경
-                float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
-                transform.Rotate(0, angle, 0);
-                return; // 장애물 감지 시 방향 변경 후 종료
-            }
-
-            else if (!hit.collider.CompareTag("Plane"))
-            {
-                Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
-                // 장애물이 감지되면 방향을 변경
-                float angle;
-                if (Vector3.Dot(transform.forward, hit.transform.position - transform.position) > 0) // 마주쳤을 때
+                if (hit.collider.CompareTag("Player"))
                 {
-                    angle = Random.Range(0, 2) == 0 ? 180f : 270f;
+                    player = hit.transform; // 플레이어를 참조로 설정
+                    Debug.Log("Player detected!");
+                    StartCoroutine(JumpAndFollowPlayer());
+                    StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
+                    return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
+                }
+                else if (hit.collider.CompareTag("Animals"))
+                {
+                    Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
+                    // 장애물이 감지되면 방향을 변경
+                    float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
                     transform.Rotate(0, angle, 0);
                     return; // 장애물 감지 시 방향 변경 후 종료
                 }
+                else if (!hit.collider.CompareTag("Plane"))
+                {
+                    Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
+                    // 장애물이 감지되면 방향을 변경
+                    float angle;
+                    if (Vector3.Dot(transform.forward, hit.transform.position - transform.position) > 0) // 마주쳤을 때
+                    {
+                        angle = Random.Range(0, 2) == 0 ? 180f : 270f;
+                        transform.Rotate(0, angle, 0);
+                        return; // 장애물 감지 시 방향 변경 후 종료
+                    }
+                }
             }
         }
-    }
+        }
 
     private IEnumerator PlayerDetectionCooldown()
     {
@@ -238,8 +247,15 @@ public class Lion : MonoBehaviour
     {
         if (collision.collider.CompareTag("Plane"))
         {
-            // 충돌 시 고양이의 회전을 초기화하여 바로 세우기
+            // 충돌 시 회전을 초기화하여 바로 세우기
             transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        }
+        else if (!collision.collider.CompareTag("Plane"))
+        {
+            // 장애물이 감지되면 방향을 변경
+            float angle= Random.Range(0, 2) == 0 ? 180f : 270f;
+                transform.Rotate(0, angle, 0);
+                return; // 장애물 감지 시 방향 변경 후 종료
         }
     }
 }
