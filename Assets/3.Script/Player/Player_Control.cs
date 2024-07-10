@@ -30,6 +30,7 @@ public class Player_Control : MonoBehaviour
     {
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
         Move_Control();
+        
     }
 
     private void LateUpdate()
@@ -37,6 +38,28 @@ public class Player_Control : MonoBehaviour
         // 대가리
         Head_Body_Rotate();
     }
+
+    
+
+    private void Move_ani(float key_h, float key_v)
+    {
+        float speed = new Vector2(key_h, key_v).magnitude;
+
+        // Set the speed value to 1 when moving diagonally
+        if (speed > 1)
+        {
+            speed = 1;
+        }
+
+        if(key_h < 0 || key_v < 0)
+        {
+            speed = -speed;
+        }
+
+
+        animator.SetFloat("Speed", speed);
+    }
+
 
     private void Move_Control()
     {
@@ -80,8 +103,7 @@ public class Player_Control : MonoBehaviour
         if (key_h == 0 && key_v == 0) speed_current = 0f;
         else if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
 
-        if (key_v < 0f) animator.SetFloat("Speed", -speed_current);
-        else animator.SetFloat("Speed", speed_current);
+        Move_ani(key_h, key_v);
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
         direction.y = 0f;
@@ -113,7 +135,7 @@ public class Player_Control : MonoBehaviour
             }
         }
         Quaternion target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
-        transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 10f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
         head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
     }
 
