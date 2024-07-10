@@ -48,6 +48,9 @@ public class Player_Control : MonoBehaviour
     }
 
 
+    
+
+
     private void LateUpdate()
     {
         // 대가리
@@ -64,10 +67,18 @@ public class Player_Control : MonoBehaviour
         Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
         speed_current = Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk;
 
+
+
+        //이거 쓰시면 됩니당.
+        float speed = direction.normalized.magnitude; //핵심!!! 방향 정규화후 값 구하기
+        speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2f : speed;
+        if (key_v < 0f || key_h < 0f) speed = -speed;
+
         // 애니메이션
         float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
+        //float speed_animation = speed_current;
         if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
-        animator.SetFloat("Speed", speed_animation);
+        animator.SetFloat("Speed", speed);
 
         //내일 마저 하자...
         //if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
