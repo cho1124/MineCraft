@@ -20,7 +20,7 @@ public class Dog : MonoBehaviour
     public float waitTime = 2f;
     public float minWanderTime = 3f;
     public float maxWanderTime = 6f;
-    public float jumpForce = 2f;
+    public float jumpForce = 1.5f;
     public float detectionDistance = 1f;
     public float playerDetectionRadius = 1f; // 플레이어 감지 범위
 
@@ -80,7 +80,7 @@ public class Dog : MonoBehaviour
                 break;
             case State.Jump:
                 ani.Play("DogJump");
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
 
@@ -195,7 +195,7 @@ public class Dog : MonoBehaviour
                            // 점프 동작 수행
         ChangeState(State.Jump);
         ani.Play("DogJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
         yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
 
         // 플레이어 주위를 도는 동작 수행

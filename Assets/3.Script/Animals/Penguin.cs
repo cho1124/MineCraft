@@ -74,7 +74,7 @@ public class Penguin : MonoBehaviour
                 break;
             case State.Jump:
                 ani.Play("PenguinJump");
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
             case State.DoubleJump:
@@ -86,10 +86,10 @@ public class Penguin : MonoBehaviour
     private IEnumerator DoubleJumpRoutine()
     {
         ani.Play("PenguinJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
         yield return new WaitForSeconds(0.5f); // 첫 점프 후 잠시 대기
         ani.Play("PenguinJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
         yield return new WaitForSeconds(0.5f); // 두 번째 점프 후 잠시 대기
         ChangeState(State.Wander); // 두 번째 점프 후 Wander 상태로 전환
     }
@@ -193,7 +193,7 @@ public class Penguin : MonoBehaviour
         {
             ChangeState(State.Jump);
             ani.Play("PenguinJump");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
             yield return new WaitForSeconds(0.5f); // 각 점프 후 잠시 대기
         }
 

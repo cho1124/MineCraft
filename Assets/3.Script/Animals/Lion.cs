@@ -20,7 +20,7 @@ public class Lion : MonoBehaviour
     public float waitTime = 2f;
     public float minWanderTime = 5f;
     public float maxWanderTime = 8f;
-    public float jumpForce = 1f;
+    public float jumpForce = 0.5f;
     public float detectionDistance = 1.5f;
     public float playerDetectionRadius = 1.5f; // 플레이어 감지 범위
 
@@ -75,7 +75,7 @@ public class Lion : MonoBehaviour
                 break;
             case State.Jump:
                 ani.Play("LionJump");
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
             case State.Follow:
@@ -184,7 +184,7 @@ public class Lion : MonoBehaviour
         {
             ChangeState(State.Jump);
             ani.Play("LionJump");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
             yield return new WaitForSeconds(1f); // 두 번 점프 사이에 약간의 대기 시간
         }
 
