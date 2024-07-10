@@ -13,17 +13,11 @@ public class Player_Control : MonoBehaviour
     private float cursor_y = 0f;
     private float temp_y = 0f;
 
-    private Vector3 direction = Vector3.zero;
-    private float speed_animation = 0f;
     private float speed_current = 0f;
-    private float speed_rotate = 10f;
     private float speed_walk = 2f; // player_data에서 가져오기
     private float speed_sprint = 4f; // player_data에서 가져오기
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
-
-    private Vector3 temp_position;
-    private Vector3 current_postion;
 
     private void Awake()
     {
@@ -37,10 +31,6 @@ public class Player_Control : MonoBehaviour
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
         Move_Control();
     }
-
-
-    
-
 
     private void LateUpdate()
     {
@@ -73,7 +63,7 @@ public class Player_Control : MonoBehaviour
         }
 
         // 방향
-        direction = head_transform.forward * key_v + head_transform.right * key_h;
+        Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
 
         //이거 쓰시면 됩니당.
         //float speed = direction.normalized.magnitude; //핵심!!! 방향 정규화후 값 구하기
@@ -87,18 +77,11 @@ public class Player_Control : MonoBehaviour
         //animator.SetFloat("Speed", speed);
 
         //속도
-        if (key_h == 0 && key_v == 0)
-        {
-            speed_current = 0f;
-            speed_animation = 0f;
-        }
-        else if (key_h != 0 || key_v != 0)
-        {
-            speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
-            speed_animation = speed_current;
-            if (key_v < 0f) speed_animation = -speed_animation;
-        }
-        animator.SetFloat("Speed", speed_animation);
+        if (key_h == 0 && key_v == 0) speed_current = 0f;
+        else if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
+
+        if (key_v < 0f) animator.SetFloat("Speed", -speed_current);
+        else animator.SetFloat("Speed", speed_current);
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
         direction.y = 0f;
@@ -130,7 +113,7 @@ public class Player_Control : MonoBehaviour
             }
         }
         Quaternion target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
-        transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, speed_rotate * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 10f * Time.deltaTime);
         head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
     }
 
