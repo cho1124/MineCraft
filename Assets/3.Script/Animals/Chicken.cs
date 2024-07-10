@@ -22,6 +22,9 @@ public class Chicken : MonoBehaviour
     public float jumpForce = 4f;
     public float detectionDistance = 1f;
     public float playerDetectionRadius = 1f; // 플레이어 감지 범위
+    public float detectionCooldown = 10f; // 플레이어 감지 후 쿨다운 시간
+
+    private bool canDetectPlayer = true; // 플레이어 감지 가능 여부
 
     private void Start()
     {
@@ -47,6 +50,16 @@ public class Chicken : MonoBehaviour
             case State.Jump:
                 // Jump logic handled in EnterState
                 break;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // Check if is upside down and correct its orientation
+        if (Vector3.Dot(transform.up, Vector3.down) > 0.5f)
+        {
+            // If is upside down, apply a torque to flip it upright
+            rb.AddTorque(Vector3.right * 10f);
         }
     }
 
@@ -140,6 +153,8 @@ public class Chicken : MonoBehaviour
 
     private void DetectObstaclesAndPlayer()
     {
+        if (!canDetectPlayer) return; // 플레이어 감지 비활성화 시 감지하지 않음
+
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, transform.forward, detectionDistance);
         foreach (var hit in hits)
         {
@@ -148,6 +163,7 @@ public class Chicken : MonoBehaviour
                 player = hit.transform;
                 Debug.Log("Player detected!");
                 JumpAndRunFromPlayer();
+                StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
             else if (!hit.collider.CompareTag("Plane") && !hit.collider.CompareTag("Animals"))
@@ -159,6 +175,13 @@ public class Chicken : MonoBehaviour
                 return; // 장애물 감지 시 방향 변경 후 종료
             }
         }
+    }
+
+    private IEnumerator PlayerDetectionCooldown()
+    {
+        canDetectPlayer = false; // 플레이어 감지 비활성화
+        yield return new WaitForSeconds(detectionCooldown); // 쿨다운 시간 대기
+        canDetectPlayer = true; // 플레이어 감지 재활성화
     }
 
     private void JumpAndRunFromPlayer()
@@ -195,5 +218,14 @@ public class Chicken : MonoBehaviour
         }
 
         ChangeState(State.Wander); // 도망 후에 다시 Wander 상태로 전환
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Plane"))
+        {
+            // 충돌 시 치킨의 회전을 초기화하여 바로 세우기
+            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        }
     }
 }

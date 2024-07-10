@@ -23,7 +23,9 @@ public class Dog : MonoBehaviour
     public float jumpForce = 1.5f;
     public float detectionDistance = 1f;
     public float playerDetectionRadius = 1f; // 플레이어 감지 범위
+    public float detectionCooldown = 10f; // 플레이어 감지 후 쿨다운 시간
 
+    private bool canDetectPlayer = true; // 플레이어 감지 가능 여부
     private bool isOrbiting = false; // 한 바퀴 도는 중인지 확인하기 위한 변수
 
     private void Start()
@@ -35,7 +37,7 @@ public class Dog : MonoBehaviour
 
     private void Update()
     {
-        if (!isOrbiting)
+        if (!isOrbiting && canDetectPlayer)
         {
             DetectObstaclesAndPlayer();
         }
@@ -169,6 +171,8 @@ public class Dog : MonoBehaviour
 
     private void DetectObstaclesAndPlayer()
     {
+        if (!canDetectPlayer) return; // 플레이어 감지 비활성화 시 감지하지 않음
+
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectionDistance, transform.forward, detectionDistance);
         foreach (var hit in hits)
         {
@@ -177,6 +181,7 @@ public class Dog : MonoBehaviour
                 player = hit.transform; // 플레이어를 참조로 설정
                 Debug.Log("Player detected!");
                 JumpAndTurnAround();
+                StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
                 return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
             }
             else if (!hit.collider.CompareTag("Plane")&& !hit.collider.CompareTag("Animals"))
@@ -188,6 +193,13 @@ public class Dog : MonoBehaviour
                 return; // 장애물 감지 시 방향 변경 후 종료
             }
         }
+    }
+
+    private IEnumerator PlayerDetectionCooldown()
+    {
+        canDetectPlayer = false; // 플레이어 감지 비활성화
+        yield return new WaitForSeconds(detectionCooldown); // 쿨다운 시간 대기
+        canDetectPlayer = true; // 플레이어 감지 재활성화
     }
 
     private void JumpAndTurnAround()
@@ -205,7 +217,7 @@ public class Dog : MonoBehaviour
                            // 점프 동작 수행
         ChangeState(State.Jump);
         ani.Play("DogJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
 
         // 플레이어 주위를 도는 동작 수행
@@ -239,4 +251,13 @@ public class Dog : MonoBehaviour
         // Wander 상태로 전환
         GetRandomState();
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Plane"))
+        {
+            // 충돌 시 고양이의 회전을 초기화하여 바로 세우기
+            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        }
     }
+}
