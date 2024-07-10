@@ -50,9 +50,27 @@ public class Player_Control : MonoBehaviour
 
     private void Move_Control()
     {
-        // 입력
-        key_h = Input.GetAxis("Horizontal");
-        key_v = Input.GetAxis("Vertical");
+        //땅인가? 중력인가?
+        if (controller.isGrounded)
+        {
+            key_h = Input.GetAxis("Horizontal");
+            key_v = Input.GetAxis("Vertical");
+
+            animator.SetBool("IsGround", true);
+            animator.SetBool("IsJump", false);
+
+            // 짬푸
+            if (Input.GetButtonDown("Jump"))
+            {
+                animator.SetBool("IsJump", true);
+                gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
+            }
+        }
+        else
+        {
+            animator.SetBool("IsGround", false);
+            gravity_velocity += Physics.gravity.y * Time.deltaTime;
+        }
 
         // 방향
         direction = head_transform.forward * key_v + head_transform.right * key_h;
@@ -78,35 +96,14 @@ public class Player_Control : MonoBehaviour
         {
             speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
             speed_animation = speed_current;
-            if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
+            if (key_v < 0f) speed_animation = -speed_animation;
         }
         animator.SetFloat("Speed", speed_animation);
 
-        
-        // 땅인지
-        if (controller.isGrounded)
-        {
-            animator.SetBool("IsGround", true);
-            animator.SetBool("IsJump", false);
-
-            // 짬푸
-            if (Input.GetButtonDown("Jump"))
-            {
-                animator.SetBool("IsJump", true);
-                gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
-            }
-        }
-        else animator.SetBool("IsGround", false);
-
-        /*
-        // 중력적용 -> 캐릭터 컨트롤러이기 때문
-        gravity_velocity += Physics.gravity.y * Time.deltaTime;
-        direction.y = gravity_velocity;
-        */
-
-
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
+        direction.y = 0f;
         controller.Move(direction.normalized * speed_current * Time.deltaTime);
+        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
 
     private void Head_Body_Rotate()
