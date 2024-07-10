@@ -4,7 +4,7 @@ using UnityEngine;
 //  ★★프리팹과 이름을 맞추기위해 펭귄이라 써놨지만 참새입니다!!!★★
 public class Penguin : MonoBehaviour
 {
-    private enum State { Wander, Wait, Run, Jump }
+    private enum State { Wander, Wait, Run, Jump, DoubleJump }
     private State currentState;
     private Vector3 targetPosition;
     private Animator ani;
@@ -47,6 +47,9 @@ public class Penguin : MonoBehaviour
             case State.Jump:
                 // Jump logic handled in EnterState
                 break;
+            case State.DoubleJump:
+                // Double Jump logic handled in EnterState
+                break;
         }
     }
 
@@ -74,7 +77,21 @@ public class Penguin : MonoBehaviour
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
+            case State.DoubleJump:
+                StartCoroutine(DoubleJumpRoutine());
+                break;
         }
+    }
+
+    private IEnumerator DoubleJumpRoutine()
+    {
+        ani.Play("PenguinJump");
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(0.5f); // 첫 점프 후 잠시 대기
+        ani.Play("PenguinJump");
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(0.5f); // 두 번째 점프 후 잠시 대기
+        ChangeState(State.Wander); // 두 번째 점프 후 Wander 상태로 전환
     }
 
     private void Wander()
@@ -133,6 +150,8 @@ public class Penguin : MonoBehaviour
                 return State.Jump;
             case 3:
                 return State.Wait;
+            case 4:
+                return State.DoubleJump;
             default:
                 return State.Wander;
         }
@@ -163,18 +182,20 @@ public class Penguin : MonoBehaviour
 
     private void JumpAndRunFromPlayer()
     {
-        if (currentState != State.Jump)
+        if (currentState != State.Jump && currentState != State.DoubleJump)
         {
             StartCoroutine(JumpThenRun());
         }
     }
     private IEnumerator JumpThenRun()
     {
-        // 점프
-        ChangeState(State.Jump);
-        ani.Play("PenguinJump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        yield return new WaitForSeconds(0.5f); // 점프 후 잠시 대기
+        for (int i = 0; i < 2; i++)
+        {
+            ChangeState(State.Jump);
+            ani.Play("PenguinJump");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            yield return new WaitForSeconds(0.5f); // 각 점프 후 잠시 대기
+        }
 
         // 180도 회전
         transform.Rotate(0, 180f, 0);
