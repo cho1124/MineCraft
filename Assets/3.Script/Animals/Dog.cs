@@ -153,16 +153,18 @@ public class Dog : MonoBehaviour
 
     private State GetRandomState()
     {
-        int randomIndex = Random.Range(0, 4);
+        int randomIndex = Random.Range(0, 6);
         switch (randomIndex)
         {
             case 0:
-                return State.Wander;
             case 1:
-                return State.Run;
+                return State.Wander;
             case 2:
-                return State.Jump;
             case 3:
+                return State.Run;
+            case 4:
+                return State.Jump;
+            case 5:
                 return State.Wait;
             default:
                 return State.Wander;

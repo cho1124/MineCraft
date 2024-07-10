@@ -135,7 +135,7 @@ public class Chicken : MonoBehaviour
 
     private State GetRandomState()
     {
-        int randomIndex = Random.Range(0, 4);
+        int randomIndex = Random.Range(0, 5);
         switch (randomIndex)
         {
             case 0:
@@ -145,6 +145,7 @@ public class Chicken : MonoBehaviour
             case 2:
                 return State.Jump;
             case 3:
+            case 4:
                 return State.Wait;
             default:
                 return State.Wander;
