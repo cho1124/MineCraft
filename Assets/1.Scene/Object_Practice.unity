@@ -9902,9 +9902,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 7771128197202835930}
   player: {fileID: 0}
   wanderRadius: 10
@@ -10160,9 +10160,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 1178805587}
   player: {fileID: 0}
   wanderRadius: 10
@@ -11226,9 +11226,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 295589998487886385}
   player: {fileID: 0}
   wanderRadius: 5
@@ -12199,10 +12199,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
+  adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   targetAnimal: {fileID: 2124416005}
+  hungerLevel: 10
+  baseSpeed: 2
 --- !u!114 &1440102338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13466,10 +13466,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
+  adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   targetAnimal: {fileID: 1585351547751132}
+  hungerLevel: 10
+  baseSpeed: 2
 --- !u!1 &1627332760
 GameObject:
   m_ObjectHideFlags: 0
@@ -16333,9 +16333,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 1046930385}
   player: {fileID: 0}
   wanderRadius: 10
@@ -16528,10 +16528,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
+  adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   targetAnimal: {fileID: 1440102335}
+  hungerLevel: 10
+  baseSpeed: 2
 --- !u!114 &2124416007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16759,10 +16759,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
+  adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   targetAnimal: {fileID: 1622272396}
+  hungerLevel: 10
+  baseSpeed: 2
 --- !u!1 &1686542098429870
 GameObject:
   m_ObjectHideFlags: 0
@@ -36928,9 +36928,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 2774158227876905010}
   player: {fileID: 0}
   wanderRadius: 10
@@ -49975,9 +49975,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 4395129162693473237}
   player: {fileID: 0}
   wanderRadius: 5
@@ -67229,7 +67229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6279044369850167127}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3645248, y: 15.11, z: 27.25}
+  m_LocalPosition: {x: -1.3645248, y: 15.11, z: 27.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1512630148}
@@ -79326,7 +79326,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7600675532078902255}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.8062248, y: 14.98, z: 27.18}
+  m_LocalPosition: {x: -2.8062248, y: 15.29, z: 27.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1512630148}
@@ -85918,6 +85918,7 @@ GameObject:
   - component: {fileID: 8480574040387052405}
   - component: {fileID: 8480574040387052403}
   - component: {fileID: 8480574040387052409}
+  - component: {fileID: 8480574040387052410}
   m_Layer: 0
   m_Name: Chicken
   m_TagString: Animals
@@ -86040,9 +86041,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 8480574040387157844}
   player: {fileID: 0}
   wanderRadius: 10
@@ -86055,6 +86056,22 @@ MonoBehaviour:
   detectionDistance: 1
   playerDetectionRadius: 1
   detectionCooldown: 10
+--- !u!114 &8480574040387052410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8480574040387052402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
+  targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
 --- !u!4 &8480574040387157840
 Transform:
   m_ObjectHideFlags: 0
@@ -87717,9 +87734,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 0}
-  animalPrefab: {fileID: 0}
-  isHungry: 0
   targetAnimal: {fileID: 0}
+  hungerLevel: 10
+  baseSpeed: 2
   head: {fileID: 8637212642126583781}
   player: {fileID: 0}
   wanderRadius: 10

@@ -89,15 +89,12 @@ public class Cat : MonoBehaviour
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
             case State.TurnLeft:
-                ani.Play("CatIdle"); // 회전할 때 애니메이션이 필요하면 설정
                 StartCoroutine(Turn(-90f));
                 break;
             case State.TurnRight:
-                ani.Play("CatIdle"); // 회전할 때 애니메이션이 필요하면 설정
                 StartCoroutine(Turn(90f));
                 break;
             case State.TurnAround:
-                ani.Play("CatIdle"); // 회전할 때 애니메이션이 필요하면 설정
                 StartCoroutine(Turn(180f));
                 break;
         }
@@ -148,7 +145,7 @@ public class Cat : MonoBehaviour
 
     private State GetRandomState()
     {
-        int randomIndex = Random.Range(0, 4);
+        int randomIndex = Random.Range(0, 9);
         switch (randomIndex)
         {
             case 0:
@@ -181,6 +178,7 @@ public class Cat : MonoBehaviour
         foreach (var hit in hits)
         {
             if (hit.collider.gameObject == this.gameObject) continue;
+            if (hit.collider.CompareTag("Plane")) continue;
 
             if (hit.collider.CompareTag("Player"))
             {
@@ -199,11 +197,11 @@ public class Cat : MonoBehaviour
 
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
-                float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
+                float angle = GetRandomAngle();
                 transform.Rotate(0, angle, 0);
                 return; // 장애물 감지 시 방향 변경 후 종료
             }
-            else if (!hit.collider.CompareTag("Plane"))
+            else if (!hit.collider.CompareTag("Food"))
             {
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
@@ -215,6 +213,22 @@ public class Cat : MonoBehaviour
                     return; // 장애물 감지 시 방향 변경 후 종료
                 }
             }
+        }
+    }
+
+    private float GetRandomAngle()
+    {
+        int randomValue = Random.Range(0, 3); // 0, 1, 2 중 하나를 선택
+        switch (randomValue)
+        {
+            case 0:
+                return 0f; // 회전하지 않음
+            case 1:
+                return 90f; // 90도 회전
+            case 2:
+                return -90f; // -90도 회전
+            default:
+                return 0f; // 기본값으로 회전하지 않음
         }
     }
 

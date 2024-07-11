@@ -4,7 +4,7 @@ using UnityEngine;
 //  ★★프리팹과 이름을 맞추기위해 사자라 써놨지만 맘모스(초식동물)입니다!!!★★
 public class Lion : Animal
 {
-    private enum State { Wander, Wait, Run, Jump, Follow }
+    private enum State { Wander, Wait, Run, Jump, Follow, TurnLeft, TurnRight, TurnAround }
     private State currentState;
     private Vector3 targetPosition;
     private Animator ani;
@@ -26,6 +26,7 @@ public class Lion : Animal
     public float detectionCooldown = 10f; // 플레이어 감지 후 쿨다운 시간
 
     private bool canDetectPlayer = true; // 플레이어 감지 가능 여부
+    private float obstacleDetectionRadius = 0.5f; // 같은종끼리의 감지 범위
 
     private void Start()
     {
@@ -94,6 +95,15 @@ public class Lion : Animal
             case State.Follow:
                 ani.Play("LionWalk");
                 break;
+            case State.TurnLeft:
+                StartCoroutine(Turn(-90f));
+                break;
+            case State.TurnRight:
+                StartCoroutine(Turn(90f));
+                break;
+            case State.TurnAround:
+                StartCoroutine(Turn(180f));
+                break;
 
         }
     }
@@ -152,17 +162,27 @@ public class Lion : Animal
 
     private State GetRandomState()
     {
-        int randomIndex = Random.Range(0, 4);
+        int randomIndex = Random.Range(0, 10);
         switch (randomIndex)
         {
             case 0:
+            case 7:
                 return State.Wander;
             case 1:
+            case 8:
                 return State.Run;
             case 2:
+            case 9:
                 return State.Jump;
             case 3:
+            case 10:
                 return State.Wait;
+            case 4:
+                return State.TurnLeft;
+            case 5:
+                return State.TurnRight;
+            case 6:
+                return State.TurnAround;
             default:
                 return State.Wander;
         }
@@ -185,24 +205,30 @@ public class Lion : Animal
             foreach (var hit in hits)
             {
                 if (hit.collider.gameObject == this.gameObject) continue;
+                if (hit.collider.CompareTag("Plane")) continue;
 
                 if (hit.collider.CompareTag("Player"))
                 {
-                    player = hit.transform; // 플레이어를 참조로 설정
+                    player = hit.transform;
                     Debug.Log("Player detected!");
-                    StartCoroutine(JumpAndFollowPlayer());
+                    JumpAndFollowPlayer();
                     StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
                     return; // 플레이어 감지 시 다른 오브젝트는 처리하지 않음
                 }
                 else if (hit.collider.CompareTag("Animals"))
                 {
+                    if (Vector3.Distance(hit.collider.transform.position, transform.position) > obstacleDetectionRadius)
+                    {
+                        continue; // 일정 거리 내에 있을 때만 회피
+                    }
+
                     Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                     // 장애물이 감지되면 방향을 변경
-                    float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
+                    float angle = GetRandomAngle();
                     transform.Rotate(0, angle, 0);
                     return; // 장애물 감지 시 방향 변경 후 종료
                 }
-                else if (!hit.collider.CompareTag("Plane"))
+                else if (!hit.collider.CompareTag("Food"))
                 {
                     Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                     // 장애물이 감지되면 방향을 변경
@@ -216,7 +242,23 @@ public class Lion : Animal
                 }
             }
         }
+    }
+
+    private float GetRandomAngle()
+    {
+        int randomValue = Random.Range(0, 3); // 0, 1, 2 중 하나를 선택
+        switch (randomValue)
+        {
+            case 0:
+                return 0f; // 회전하지 않음
+            case 1:
+                return 90f; // 90도 회전
+            case 2:
+                return -90f; // -90도 회전
+            default:
+                return 0f; // 기본값으로 회전하지 않음
         }
+    }
 
     private IEnumerator PlayerDetectionCooldown()
     {
@@ -241,6 +283,20 @@ public class Lion : Animal
 
         // 무작위 상태로 전환
         ChangeState(GetRandomState());
+    }
+
+    private IEnumerator Turn(float angle)
+    {
+        float rotationSpeed = 180f; // 회전 속도 (도/초)
+        float targetAngle = transform.eulerAngles.y + angle;
+        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.1f)
+        {
+            float step = rotationSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetAngle, 0), step);
+            yield return null; // 다음 프레임까지 대기
+        }
+        transform.eulerAngles = new Vector3(0, targetAngle, 0); // 정확히 목표 각도로 설정
+        ChangeState(State.Wander); // 회전 후에 다시 Wander 상태로 전환
     }
 
     private void OnCollisionEnter(Collision collision)

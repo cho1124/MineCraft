@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dog : Animal
 {
-    private enum State { Wander, Wait, Run, Jump, Follow }
+    private enum State { Wander, Wait, Run, Jump, Follow, TurnLeft, TurnRight, TurnAround }
     private State currentState;
     private Vector3 targetPosition;
     private Animator ani;
@@ -27,6 +27,7 @@ public class Dog : Animal
 
     private bool canDetectPlayer = true; // 플레이어 감지 가능 여부
     private bool isOrbiting = false; // 한 바퀴 도는 중인지 확인하기 위한 변수
+    private float obstacleDetectionRadius = 0.5f; // 같은종끼리의 감지 범위
 
     private void Start()
     {
@@ -95,6 +96,15 @@ public class Dog : Animal
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
+            case State.TurnLeft:
+                StartCoroutine(Turn(-90f));
+                break;
+            case State.TurnRight:
+                StartCoroutine(Turn(90f));
+                break;
+            case State.TurnAround:
+                StartCoroutine(Turn(180f));
+                break;
 
         }
     }
@@ -153,19 +163,29 @@ public class Dog : Animal
 
     private State GetRandomState()
     {
-        int randomIndex = Random.Range(0, 6);
+        int randomIndex = Random.Range(0, 12);
         switch (randomIndex)
         {
             case 0:
             case 1:
+            case 8:
                 return State.Wander;
             case 2:
             case 3:
+            case 9:
                 return State.Run;
             case 4:
+            case 10:
                 return State.Jump;
             case 5:
+            case 11:
                 return State.Wait;
+            case 6:
+                return State.TurnLeft;
+            case 7:
+                return State.TurnRight;
+            case 12:
+                return State.TurnAround;
             default:
                 return State.Wander;
         }
@@ -179,10 +199,11 @@ public class Dog : Animal
         foreach (var hit in hits)
         {
             if (hit.collider.gameObject == this.gameObject) continue;
+            if (hit.collider.CompareTag("Plane")) continue;
 
             if (hit.collider.CompareTag("Player"))
             {
-                player = hit.transform; // 플레이어를 참조로 설정
+                player = hit.transform;
                 Debug.Log("Player detected!");
                 JumpAndTurnAround();
                 StartCoroutine(PlayerDetectionCooldown()); // 플레이어 감지 후 쿨다운 시작
@@ -190,14 +211,18 @@ public class Dog : Animal
             }
             else if (hit.collider.CompareTag("Animals"))
             {
+                if (Vector3.Distance(hit.collider.transform.position, transform.position) > obstacleDetectionRadius)
+                {
+                    continue; // 일정 거리 내에 있을 때만 회피
+                }
+
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
-                float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
+                float angle = GetRandomAngle();
                 transform.Rotate(0, angle, 0);
                 return; // 장애물 감지 시 방향 변경 후 종료
             }
-
-            else if (!hit.collider.CompareTag("Plane"))
+            else if (!hit.collider.CompareTag("Food"))
             {
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
@@ -209,6 +234,22 @@ public class Dog : Animal
                     return; // 장애물 감지 시 방향 변경 후 종료
                 }
             }
+        }
+    }
+
+    private float GetRandomAngle()
+    {
+        int randomValue = Random.Range(0, 3); // 0, 1, 2 중 하나를 선택
+        switch (randomValue)
+        {
+            case 0:
+                return 0f; // 회전하지 않음
+            case 1:
+                return 90f; // 90도 회전
+            case 2:
+                return -90f; // -90도 회전
+            default:
+                return 0f; // 기본값으로 회전하지 않음
         }
     }
 
@@ -267,6 +308,20 @@ public class Dog : Animal
 
         // Wander 상태로 전환
         GetRandomState();
+    }
+
+    private IEnumerator Turn(float angle)
+    {
+        float rotationSpeed = 180f; // 회전 속도 (도/초)
+        float targetAngle = transform.eulerAngles.y + angle;
+        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.1f)
+        {
+            float step = rotationSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetAngle, 0), step);
+            yield return null; // 다음 프레임까지 대기
+        }
+        transform.eulerAngles = new Vector3(0, targetAngle, 0); // 정확히 목표 각도로 설정
+        ChangeState(State.Wander); // 회전 후에 다시 Wander 상태로 전환
     }
 
     private void OnCollisionEnter(Collision collision)
