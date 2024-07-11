@@ -120,7 +120,11 @@ public class Chunk
         //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-        meshRenderer.material = world.material;
+        //meshRenderer.material = world.material;
+        materials[0] = world.material;
+        materials[1] = world.transparentMaterial;
+
+        meshRenderer.materials = materials;
         meshCollider = chunkObject.AddComponent<MeshCollider>();
 
 
@@ -224,6 +228,7 @@ public class Chunk
         vertexIndex = 0;
         vertices.Clear();
         triangles.Clear();
+        transparentTriangles.Clear();
         uvs.Clear();
     }
 
@@ -391,7 +396,7 @@ public class Chunk
 
 
             // 현재 면이 외부와 접해있는지 확인
-            if (!CheckVoxel(pos + VoxelData.faceChecks[p]))
+            if (CheckVoxel(pos + VoxelData.faceChecks[p]))
             {
                 // 현재 Voxel의 ID를 가져옴
                 //byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
@@ -445,7 +450,7 @@ public class Chunk
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
+       // mesh.triangles = triangles.ToArray();
 
         mesh.subMeshCount = 2;
 
