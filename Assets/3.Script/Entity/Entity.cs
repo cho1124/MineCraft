@@ -28,6 +28,13 @@ public class Entity : MonoBehaviour
             }
         }
     }
+
+    public void OnDamage(float damage)
+    {
+        Health -= damage;
+    }
+
+
 //나머지는 커스텀 해서 구현 할 것
 
 

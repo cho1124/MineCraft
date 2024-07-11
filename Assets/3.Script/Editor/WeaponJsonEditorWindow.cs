@@ -28,7 +28,7 @@ public class WeaponJsonEditorWindow : EditorWindow
         weaponData.guard_rate = EditorGUILayout.FloatField("Guard Rate", weaponData.guard_rate);
         weaponData.weight = EditorGUILayout.FloatField("Weight", weaponData.weight);
         weaponData.durability_max = EditorGUILayout.IntField("Durability Max", weaponData.durability_max);
-        weaponData.type = EditorGUILayout.IntField("Type", weaponData.type);
+        
        
 
         if (GUILayout.Button("Save JSON"))
@@ -77,7 +77,7 @@ public class WeaponData
     public float guard_rate;
     public float weight;
     public int durability_max;
-    public int type;
+    
     
 }
 
