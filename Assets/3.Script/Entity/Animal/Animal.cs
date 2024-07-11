@@ -29,7 +29,7 @@ public class Animal : Entity
     private float currentTime = 0f; // 현재 시간
     public int hungerLevel = 6; // 배고픔 게이지
 
-    private const int collisionThreshold = 2; // 충돌 임계값
+    private const int collisionThreshold = 10; // 충돌 임계값
 
     private const int maxHungerLevel = 10;
     private bool isHungry = false; // 배고픔 상태
@@ -37,6 +37,9 @@ public class Animal : Entity
     public float baseSpeed; // 기본 이동 속도, 인스펙터에서 설정
     private float speedIncrease = 1f; // 추가 이동 속도
     private float currentSpeed; // 현재 이동 속도
+
+    private bool canSpawn = true; // 개체 복사 쿨타임 플래그
+    private float spawnCooldown = 30f; // 쿨타임 시간
 
     protected Queue<GameObject> recentAnimals = new Queue<GameObject>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<GameObject, int> animalCount = new Dictionary<GameObject, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
@@ -128,7 +131,7 @@ public class Animal : Entity
         {
             // 현재 오브젝트를 복제
             GameObject newAnimal = Instantiate(gameObject, transform.position, transform.rotation);
-            // 복제된 오브젝트의 크기를 1/3으로 설정
+            // 복제된 오브젝트의 크기를 1/2으로 설정
             newAnimal.transform.localScale = transform.localScale / 2;
 
             // 복제된 오브젝트의 충돌 카운트를 초기화
@@ -138,7 +141,16 @@ public class Animal : Entity
                 tracker.recentAnimals.Clear();
                 tracker.animalCount.Clear();
             }
+
+            // 쿨타임 설정
+            StartCoroutine(SpawnCooldown());
         }
+    }
+
+    private IEnumerator SpawnCooldown() {
+        canSpawn = false; // 스폰 금지
+        yield return new WaitForSeconds(spawnCooldown); // 쿨타임 대기
+        canSpawn = true; // 스폰 허용
     }
 
     private void GrowUp()
