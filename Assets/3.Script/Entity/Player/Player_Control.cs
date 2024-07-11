@@ -76,6 +76,13 @@ public class Player_Control : MonoBehaviour
             animator.SetBool("IsGround", true);
             animator.SetBool("IsJump", false);
 
+
+            if(Input.GetMouseButtonDown(0))
+            {
+                animator.SetTrigger("Attack");
+                Debug.Log("Attack");
+            }
+
             // «Ǫ
             if (Input.GetButtonDown("Jump"))
             {

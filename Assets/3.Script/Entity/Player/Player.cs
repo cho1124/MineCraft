@@ -8,17 +8,18 @@ public class Player : Entity
     private float Exp;
 
 
-    public void Gethealth()
-    {
-        Health = 2;
-    }
 
+
+    
     public float GetEXP()
     {
         return Exp++;
     }
 
-
+    public void CheckEquipment()
+    {
+       
+    }
 
 
 
