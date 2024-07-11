@@ -27,10 +27,8 @@ public class Animal : Entity
     private bool isAdult; // 성인 상태인지 여부
     private float growthTime; // 성장 시간 
     private float currentTime = 0f; // 현재 시간
-    public GameObject targetAnimal; // 충돌을 추적할 타겟 동물
     public int hungerLevel = 6; // 배고픔 게이지
 
-    private int collisionCount = 0; // 충돌 횟수
     private const int collisionThreshold = 2; // 충돌 임계값
 
     private const int maxHungerLevel = 10;
@@ -80,22 +78,46 @@ public class Animal : Entity
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log($"{name}과 {collision.gameObject.name}이 충돌했습니다.");
-        // 타겟 동물과의 충돌인지 확인
-        if(collision.gameObject==targetAnimal)
+        // 같은 컴포넌트를 가진 오브젝트와의 충돌인지 확인
+        if (collision.gameObject.GetComponent<Animal>() != null)
         {
-            collisionCount ++;
+            AddToRecentAnimals(collision.gameObject);
 
-            if(collisionCount>=collisionThreshold)
+            if (animalCount[collision.gameObject] >= collisionThreshold)
             {
                 SpawnNewAnimal();
-                collisionCount = 0;// 충돌 횟수 초기화
+                animalCount[collision.gameObject] = 0; // 충돌 횟수 초기화
             }
         }
+
         // Food 태그가 붙은 오브젝트를 먹는 처리
         if (collision.gameObject.CompareTag("Food") && !isFull)
         {
             Eat();
             Destroy(collision.gameObject); // 음식 오브젝트 제거
+        }
+    }
+
+    private void AddToRecentAnimals(GameObject animal)
+    {
+        if (recentAnimals.Count >= 10)
+        {
+            var removedAnimal = recentAnimals.Dequeue();
+            animalCount[removedAnimal]--;
+            if (animalCount[removedAnimal] <= 0)
+            {
+                animalCount.Remove(removedAnimal);
+            }
+        }
+
+        recentAnimals.Enqueue(animal);
+        if (animalCount.ContainsKey(animal))
+        {
+            animalCount[animal]++;
+        }
+        else
+        {
+            animalCount[animal] = 1;
         }
     }
 
@@ -113,7 +135,8 @@ public class Animal : Entity
             Animal tracker = newAnimal.GetComponent<Animal>();
             if (tracker != null)
             {
-                tracker.collisionCount = 0;
+                tracker.recentAnimals.Clear();
+                tracker.animalCount.Clear();
             }
         }
     }
