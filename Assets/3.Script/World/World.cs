@@ -455,8 +455,6 @@ public class World : MonoBehaviour
 
     // blocks
     public Material material;
-    public Material transparentMaterial;
-
     public BlockType[] blockTypes;
     public GameObject ItemBlock;
 
@@ -664,34 +662,6 @@ public class World : MonoBehaviour
 
     }
 
-    public bool CheckIfVoxelTransparent(Vector3 pos)
-    {
-
-        ChunkCoord thisChunk = new ChunkCoord(pos);
-        if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y >= VoxelData.ChunkHeight)
-        {
-            return false;
-        }
-
-
-        Chunk chunk = chunks[thisChunk.x, thisChunk.z];
-
-        if (chunk != null && chunk.isEditable)
-        {
-            int xCheck = Mathf.FloorToInt(pos.x) - (thisChunk.x * VoxelData.ChunkWidth);
-            int yCheck = Mathf.FloorToInt(pos.y);
-            int zCheck = Mathf.FloorToInt(pos.z) - (thisChunk.z * VoxelData.ChunkWidth);
-
-            if (chunk.IsVoxelInChunk(xCheck, yCheck, zCheck))
-            {
-                return blockTypes[chunk.voxelMap[xCheck, yCheck, zCheck]].isTransparent;
-            }
-        }
-
-        return blockTypes[GetVoxel(pos)].isTransparent;
-
-    }
-
 
 
 
@@ -850,7 +820,6 @@ public class BlockType
 {
     public string blockName;
     public bool isSolid;
-    public bool isTransparent;
 
     [Header("Texture IDs")]
     public int topFaceTexture;

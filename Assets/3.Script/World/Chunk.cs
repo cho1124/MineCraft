@@ -37,9 +37,7 @@ public class Chunk
     // 정점 -> 여러 버텍스를 모아 폴리곤 -> 메쉬데이터
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
-    List<int> transparentTriangles = new List<int>();
 
-    Material[] materials = new Material[2];
 
 
 
@@ -300,21 +298,21 @@ public class Chunk
         return currentBlockID;
     }
 
-    //public byte EditVoxelCave(Vector3 pos, byte newID)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //    voxelMap[xCheck, yCheck, zCheck] = newID;
-    //
-    //    // 변경된 주변 Voxel 업데이트
-    //    UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-    //
-    //    // Chunk 업데이트
-    //    UpdateChunk();
-    //    byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
-    //    return currentBlockID;
-    //}
+    public byte EditVoxelCave(Vector3 pos, byte newID)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+        voxelMap[xCheck, yCheck, zCheck] = newID;
+
+        // 변경된 주변 Voxel 업데이트
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+
+        // Chunk 업데이트
+        UpdateChunk();
+        byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
+        return currentBlockID;
+    }
 
 
 
@@ -351,24 +349,24 @@ public class Chunk
         int z = Mathf.FloorToInt(pos.z);
 
         if (!IsVoxelInChunk(x, y, z))
-            return world.CheckIfVoxelTransparent(pos + position);//world.blockTypes[world.GetVoxel(pos + position)].isSolid;
+            return world.CheckForVoxel(pos + position);//world.blockTypes[world.GetVoxel(pos + position)].isSolid;
 
-        return world.blockTypes[voxelMap[x, y, z]].isTransparent;
+        return world.blockTypes[voxelMap[x, y, z]].isSolid;
 
     }
 
-    //public byte GetVoxelFromGlobalVector3(Vector3 pos)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //
-    //    xCheck -= Mathf.FloorToInt(position.x);
-    //    zCheck -= Mathf.FloorToInt(position.z);
-    //
-    //
-    //    return voxelMap[xCheck, yCheck, zCheck];
-    //}
+    public byte GetVoxelFromGlobalVector3(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+    
+        xCheck -= Mathf.FloorToInt(position.x);
+        zCheck -= Mathf.FloorToInt(position.z);
+    
+    
+        return voxelMap[xCheck, yCheck, zCheck];
+    }
 
 
 
@@ -378,10 +376,8 @@ public class Chunk
     public void UpdateMeshData(Vector3 pos)
     {
 
-        byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-        bool isTransparent = world.blockTypes[blockID].isTransparent;
-
         // 블록은 6면체
+
         for (int p = 0; p < 6; p++)
         {
 
@@ -394,7 +390,7 @@ public class Chunk
             if (!CheckVoxel(pos + VoxelData.faceChecks[p]))
             {
                 // 현재 Voxel의 ID를 가져옴
-                //byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
+                byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
 
 
                 // 각 면의 정점을 추가
@@ -407,26 +403,14 @@ public class Chunk
                 // 텍스쳐 좌표 추가
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
 
-                if(!isTransparent)
-                {
-                    triangles.Add(vertexIndex);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 3);
-                }
-                else
-                {
-                    transparentTriangles.Add(vertexIndex);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 3);
 
                 // 삼각형 인덱스 추가
-                }
+                triangles.Add(vertexIndex);
+                triangles.Add(vertexIndex + 1);
+                triangles.Add(vertexIndex + 2);
+                triangles.Add(vertexIndex + 2);
+                triangles.Add(vertexIndex + 1);
+                triangles.Add(vertexIndex + 3);
 
                 // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
                 vertexIndex += 4;
@@ -446,11 +430,6 @@ public class Chunk
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
-
-        mesh.subMeshCount = 2;
-
-        mesh.SetTriangles(triangles.ToArray(), 0);
-        mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.uv = uvs.ToArray();
 
         // 법선벡터 재계산

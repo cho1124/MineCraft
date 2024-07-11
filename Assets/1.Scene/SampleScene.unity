@@ -232,6 +232,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57a7bbd05051ae946957234a36d57eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  length: 30
+  stepSize: 1
+  noiseScale: 0.1
+  maxCount: 4
+  biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
+  wormPath: []
+  world: {fileID: 521010851}
+  radiusInVoxels: 10.5
 --- !u!1 &329707792
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,11 +580,9 @@ MonoBehaviour:
   seed: 132
   biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
-  transparentMaterial: {fileID: 0}
   blockTypes:
   - blockName: Air
     isSolid: 0
-    isTransparent: 1
     topFaceTexture: 0
     frontFaceTexture: 0
     backFaceTexture: 0
@@ -585,7 +591,6 @@ MonoBehaviour:
     bottomFaceTexture: 0
   - blockName: Bedrock
     isSolid: 1
-    isTransparent: 0
     topFaceTexture: 9
     frontFaceTexture: 9
     backFaceTexture: 9
@@ -594,7 +599,6 @@ MonoBehaviour:
     bottomFaceTexture: 9
   - blockName: Stone
     isSolid: 1
-    isTransparent: 0
     topFaceTexture: 0
     frontFaceTexture: 0
     backFaceTexture: 0
@@ -603,7 +607,6 @@ MonoBehaviour:
     bottomFaceTexture: 0
   - blockName: Grass
     isSolid: 1
-    isTransparent: 0
     topFaceTexture: 7
     frontFaceTexture: 2
     backFaceTexture: 2
@@ -612,7 +615,6 @@ MonoBehaviour:
     bottomFaceTexture: 1
   - blockName: Sand
     isSolid: 1
-    isTransparent: 0
     topFaceTexture: 10
     frontFaceTexture: 10
     backFaceTexture: 10
@@ -621,16 +623,14 @@ MonoBehaviour:
     bottomFaceTexture: 10
   - blockName: Dirt
     isSolid: 1
-    isTransparent: 0
     topFaceTexture: 1
     frontFaceTexture: 1
     backFaceTexture: 1
     leftFaceTexture: 1
     rightFaceTexture: 1
     bottomFaceTexture: 1
-  - blockName: Glass
+  - blockName: Coal
     isSolid: 1
-    isTransparent: 1
     topFaceTexture: 3
     frontFaceTexture: 3
     backFaceTexture: 3
