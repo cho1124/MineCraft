@@ -75,7 +75,6 @@ public class Animal : Entity
             SearchForFood();
         }
 
-        DetectObstaclesAndPlayer(); // 이거 수정해야함!!!!!!
     }
 
     private void OnCollisionEnter(Collision collision)
