@@ -11,7 +11,7 @@ public class Slot : MonoBehaviour, IDropHandler
         {
             GameObject obj = eventData.pointerDrag;
 
-            Slot_item item = obj.GetComponent<Slot_item>();
+            SlotItem item = obj.GetComponent<SlotItem>();
 
             item.tm = this.transform;
         }

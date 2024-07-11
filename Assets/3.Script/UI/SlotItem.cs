@@ -4,17 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class Slot_item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class SlotItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] Image image;
 
     [HideInInspector] public Transform tm;
 
-    bool start_tr = false;
+    [Header("µð¹ö±×")]
+    public bool click_tr = false;
+    [SerializeField] bool start_tr = false;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        start_tr = !(Input.GetMouseButton(1) || Input.GetMouseButton(2));
+        start_tr = !(Input.GetMouseButton(0) && Input.GetMouseButton(1));
 
         if (start_tr)
         {
@@ -26,7 +28,7 @@ public class Slot_item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
             image.raycastTarget = false;
 
-            Inventory_manager.instance.click_tr = true;
+            click_tr = true;
         }
     }
 
@@ -46,7 +48,7 @@ public class Slot_item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
             image.raycastTarget = true;
 
-            Inventory_manager.instance.click_tr = false;
+            click_tr = false;
         }
     }
 }

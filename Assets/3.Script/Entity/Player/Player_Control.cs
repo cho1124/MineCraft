@@ -7,7 +7,8 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    
+    [SerializeField] private Inventory inventory_class;
+
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
     private float cursor_y = 0f;
@@ -26,20 +27,21 @@ public class Player_Control : MonoBehaviour
         head_transform = transform.GetChild(1).transform;
     }
 
-    private void Update()
+    private void Update() // 이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다....
     {
-        //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
-        Move_Control();
-        
+        if (!inventory_class.on_off_tr)
+        {
+            Move_Control();
+        }
     }
 
-    private void LateUpdate()
+    private void LateUpdate() // 대가리
     {
-        // 대가리
-        Head_Body_Rotate();
+        if(!inventory_class.on_off_tr)
+        {
+            Head_Body_Rotate();
+        }
     }
-
-    
 
     private void Move_ani(float key_h, float key_v)
     {
@@ -119,7 +121,7 @@ public class Player_Control : MonoBehaviour
     {
         cursor_h = Input.GetAxis("Mouse X");
         cursor_v = Input.GetAxis("Mouse Y");
-        
+
         cursor_x += cursor_h * 3f;
         cursor_y += cursor_v * 1.5f;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
