@@ -593,6 +593,7 @@ public class World : MonoBehaviour
         // 현재 활성화 된 chunk 목록을 복사하여 저장
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
 
+        activeChunks.Clear();
         // 플레이어 시야 거리 내의 청크 검사
         for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
         {
