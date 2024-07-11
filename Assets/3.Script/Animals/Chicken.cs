@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chicken : MonoBehaviour
+public class Chicken : Animal
 {
     private enum State { Wander, Wait, Run, Jump }
     private State currentState;

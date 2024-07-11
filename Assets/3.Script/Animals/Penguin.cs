@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //  ★★프리팹과 이름을 맞추기위해 펭귄이라 써놨지만 참새입니다!!!★★
-public class Penguin : MonoBehaviour
+public class Penguin : Animal
 {
     private enum State { Wander, Wait, Run, Jump, DoubleJump }
     private State currentState;

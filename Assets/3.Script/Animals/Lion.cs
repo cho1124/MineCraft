@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //  ★★프리팹과 이름을 맞추기위해 사자라 써놨지만 맘모스(초식동물)입니다!!!★★
-public class Lion : MonoBehaviour
+public class Lion : Animal
 {
     private enum State { Wander, Wait, Run, Jump, Follow }
     private State currentState;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cat : MonoBehaviour
 {
-    private enum State { Wander, Wait, Run, Jump }
+    private enum State { Wander, Wait, Run, Jump, TurnLeft, TurnRight, TurnAround }
     private State currentState;
     private Vector3 targetPosition;
     private Animator ani;
@@ -25,6 +25,7 @@ public class Cat : MonoBehaviour
     public float detectionCooldown = 10f; // 플레이어 감지 후 쿨다운 시간
 
     private bool canDetectPlayer = true; // 플레이어 감지 가능 여부
+    private float obstacleDetectionRadius = 0.5f; // 고양이들끼리의 감지 범위
 
     private void Start()
     {
@@ -87,6 +88,18 @@ public class Cat : MonoBehaviour
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 StartCoroutine(StateDuration(State.Jump, 1f)); // 점프 후 바로 다른 상태로 전환
                 break;
+            case State.TurnLeft:
+                ani.Play("CatIdle"); // 회전할 때 애니메이션이 필요하면 설정
+                StartCoroutine(Turn(-90f));
+                break;
+            case State.TurnRight:
+                ani.Play("CatIdle"); // 회전할 때 애니메이션이 필요하면 설정
+                StartCoroutine(Turn(90f));
+                break;
+            case State.TurnAround:
+                ani.Play("CatIdle"); // 회전할 때 애니메이션이 필요하면 설정
+                StartCoroutine(Turn(180f));
+                break;
         }
     }
 
@@ -141,11 +154,20 @@ public class Cat : MonoBehaviour
             case 0:
                 return State.Wander;
             case 1:
+            case 6:
                 return State.Run;
             case 2:
+            case 7:
                 return State.Jump;
             case 3:
+            case 8:
                 return State.Wait;
+            case 4:
+                return State.TurnLeft;
+            case 5:
+                return State.TurnRight;
+            case 9:
+                return State.TurnAround;
             default:
                 return State.Wander;
         }
@@ -170,13 +192,17 @@ public class Cat : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Animals"))
             {
+                if (Vector3.Distance(hit.collider.transform.position, transform.position) > obstacleDetectionRadius)
+                {
+                    continue; // 일정 거리 내에 있을 때만 회피
+                }
+
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
                 // 장애물이 감지되면 방향을 변경
                 float angle = Random.Range(0, 2) == 0 ? -90f : 90f;
                 transform.Rotate(0, angle, 0);
                 return; // 장애물 감지 시 방향 변경 후 종료
             }
-
             else if (!hit.collider.CompareTag("Plane"))
             {
                 Debug.Log($"Obstacle detected: {this.name} : {hit.collider.name}");
@@ -233,6 +259,20 @@ public class Cat : MonoBehaviour
         }
 
         ChangeState(State.Wander); // 도망 후에 다시 Wander 상태로 전환
+    }
+
+    private IEnumerator Turn(float angle)
+    {
+        float rotationSpeed = 180f; // 회전 속도 (도/초)
+        float targetAngle = transform.eulerAngles.y + angle;
+        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.1f)
+        {
+            float step = rotationSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetAngle, 0), step);
+            yield return null; // 다음 프레임까지 대기
+        }
+        transform.eulerAngles = new Vector3(0, targetAngle, 0); // 정확히 목표 각도로 설정
+        ChangeState(State.Wander); // 회전 후에 다시 Wander 상태로 전환
     }
 
     private void OnCollisionEnter(Collision collision)

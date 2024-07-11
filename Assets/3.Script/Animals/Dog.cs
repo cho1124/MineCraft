@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dog : MonoBehaviour
+public class Dog : Animal
 {
     private enum State { Wander, Wait, Run, Jump, Follow }
     private State currentState;
