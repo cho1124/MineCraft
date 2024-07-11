@@ -28,7 +28,7 @@ public class Game_UI_data_manager : MonoBehaviour
 
     private void Start()
     {
-        Load_data();
+        // Load_data();
     }
 
     public void Save_data()
