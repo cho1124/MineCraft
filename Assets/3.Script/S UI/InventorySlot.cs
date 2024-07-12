@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] float slot_color_value = 0.2f;
     private Color slot_color;
     private Image slot_image = null;
 
@@ -32,7 +33,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        SlotColor(0.2f);
+        SlotColor(slot_color_value);
     }
 
     public void OnPointerExit(PointerEventData eventData)
