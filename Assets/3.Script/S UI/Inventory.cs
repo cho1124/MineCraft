@@ -14,10 +14,13 @@ public class Inventory : MonoBehaviour
     public bool on_off_tr = false;
     [SerializeField] private bool full_crafting_slot = false;
 
-    private void Start()
+    private void Awake()
     {
         InventoryItemControl_class = FindObjectOfType<InventoryItemControl>();
+    }
 
+    private void Start()
+    {
         on_off_obj.SetActive(false);
         new_item_obj.SetActive(false);
     }
@@ -38,7 +41,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void Crafting_slot()
+    private void Crafting_slot()
     {
         if (crafting_slot[0].childCount == 1 && crafting_slot[1].childCount == 1 && crafting_slot[2].childCount == 1 && crafting_slot[3].childCount == 1)
         {
@@ -53,16 +56,12 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void Delete_item()
+    private void Delete_item()
     {
-        Debug.Log(InventoryItemControl_class.click_tr);
-
         if (InventoryItemControl_class.click_tr && full_crafting_slot)
         {
             for (int i = 0; i < crafting_slot.Length; i++)
             {
-                Debug.Log("½ÇÇà!");
-
                 Destroy(crafting_slot[i].GetChild(0).gameObject);
             }
         }
