@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] SlotItem slotitem_class;
+    private InventoryItemControl InventoryItemControl_class;
 
-    [Header("Á¶ÇÕ ½½·Ô"), SerializeField] Transform[] crafting_slot;
-    [Header("Á¶ÇÕ ½½·Ô °á°ú"), SerializeField] GameObject new_item_obj;
-    [Header("ÆË¾÷"), SerializeField] GameObject on_off_obj;
+    [Header("Á¶ÇÕ ½½·Ô"), SerializeField] private Transform[] crafting_slot;
+    [Header("Á¶ÇÕ ½½·Ô °á°ú"), SerializeField] private GameObject new_item_obj;
+    [Header("ÆË¾÷"), SerializeField] private GameObject on_off_obj;
 
     [Header("µð¹ö±×")]
     public bool on_off_tr = false;
-    [SerializeField] bool full_crafting_slot = false;
+    [SerializeField] private bool full_crafting_slot = false;
 
     private void Start()
     {
+        InventoryItemControl_class = FindObjectOfType<InventoryItemControl>();
+
         on_off_obj.SetActive(false);
         new_item_obj.SetActive(false);
     }
@@ -47,12 +49,15 @@ public class Inventory : MonoBehaviour
         {
             full_crafting_slot = false;
             new_item_obj.SetActive(false);
+            
         }
     }
 
     public void Delete_item()
     {
-        if (slotitem_class.click_tr && full_crafting_slot)
+        Debug.Log(InventoryItemControl_class.click_tr);
+
+        if (InventoryItemControl_class.click_tr && full_crafting_slot)
         {
             for (int i = 0; i < crafting_slot.Length; i++)
             {

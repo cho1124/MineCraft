@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class SlotItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] Image image;
+    [SerializeField] private Image image;
 
     [HideInInspector] public Transform tm;
 
     [Header("µð¹ö±×")]
     public bool click_tr = false;
-    [SerializeField] bool start_tr = false;
+    [SerializeField] private bool start_tr = false;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
