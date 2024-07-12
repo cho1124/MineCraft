@@ -29,8 +29,10 @@ public class Player_Control : MonoBehaviour
     private void Update()
     {
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
+        Attack_Control();
         Move_Control();
-        
+
+
     }
 
     private void LateUpdate()
@@ -64,6 +66,17 @@ public class Player_Control : MonoBehaviour
         animator.SetFloat("Speed", speed);
     }
 
+    private void Attack_Control()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("Attack");
+            Debug.Log("Attack");
+        }
+
+
+    }
+
 
     private void Move_Control()
     {
@@ -77,11 +90,7 @@ public class Player_Control : MonoBehaviour
             animator.SetBool("IsJump", false);
 
 
-            if(Input.GetMouseButtonDown(0))
-            {
-                animator.SetTrigger("Attack");
-                Debug.Log("Attack");
-            }
+            
 
             // 짬푸
             if (Input.GetButtonDown("Jump"))

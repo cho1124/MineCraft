@@ -8,34 +8,20 @@ public enum Equipment_Type
     CHESTPLATE,
     LEGGINGS,
     BOOTS,
-    
-
-
     SHIELD,
-
     DAGGER,
-
     SWORD_LIGHT,
-    SWORD_HEAVY,
-    
+    SWORD_HEAVY,    
     AXE_LIGHT,
-    AXE_HEAVY,
-    
+    AXE_HEAVY,    
     BLUNT_LIGHT,
     BLUNT_HEAVY,
-
     SPEAR,
-
     BOW,
-
-
-
     PICKAXE,
     SHOVEL,
     HOE
 }
-
-
 
 public class Item_Data
 {
@@ -44,8 +30,6 @@ public class Item_Data
     public GameObject item_model_in_inventory; //인벤토리에서 보여질 아이템의 형태
     public GameObject item_model_in_hand; //손에 있을 때 보여질 아이템의 형태
 }
-
-
 
 public class Item_Stackable_Data : Item_Data
 {
@@ -71,7 +55,6 @@ public class Item_Eatable_Data : Item_Stackable_Data
     public float hunger_amount; //먹었을 때 회복되는 배고픔 수치
     public float thirst_amount; //먹었을 때 회복되는 목마름 수치
     public float fatigue_amount; //먹었을 때 회복되는 피로도 수치
-
     public float freshness_max; //최대 유통기한
     public float freshness_current; //현재 유통기한
 }
@@ -80,8 +63,6 @@ public class Item_Material_Data : Item_Stackable_Data
 {
     //추가할 게... 있나...?
 }
-
-
 
 public class Item_Unstackable_Data : Item_Data
 {
