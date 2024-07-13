@@ -67,7 +67,7 @@ public class Animal : Entity
     private float playerDetectionCooldown = 20f;
 
     // 상태 관련 변수들
-    protected enum State { Wander, Jump, Idle, Run }
+    protected enum State { Wander, Jump, Idle, Run, DoubleJump, Follow }
     protected State currentState;
 
     void Start() {
@@ -379,8 +379,19 @@ public class Animal : Entity
     }
 
     protected virtual State GetRandomState() {
-        int random = Random.Range(0, 4);
-        return (State)random;
+        int random = Random.Range(0, 100);
+        if (random < 25) {
+            return State.Jump; // 25% 확률로 점프 상태로 전환
+        }
+        else if (random < 50) {
+            return State.Run; // 25% 확률로 달리기 상태로 전환
+        }
+        else if (random < 75) {
+            return State.Idle; // 25% 확률로 대기 상태로 전환
+        }
+        else {
+            return State.Wander; // 25% 확률로 배회 상태로 전환
+        }
     }
 
     protected virtual void SetRandomDestination() {

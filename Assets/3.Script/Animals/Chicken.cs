@@ -20,11 +20,12 @@ public class Chicken : Animal
         // Rotate 180 degrees
         transform.Rotate(0, 180, 0);
 
+        ChangeState(State.Jump);
+        yield return new WaitForSeconds(1.1f); // Jump duration
+
         // Run twice
         ChangeState(State.Run);
         yield return new WaitForSeconds(2f); // Duration for the first run
-        ChangeState(State.Run);
-        yield return new WaitForSeconds(2f); // Duration for the second run
 
         // Return to a random state
         ChangeState(GetRandomState());
