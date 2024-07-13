@@ -69,7 +69,7 @@ public class World : MonoBehaviour
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
         stopwatch.Stop();
-        UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+        UnityEngine.UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
     }
 
 
@@ -410,7 +410,7 @@ public class BlockType
             case 5: return rightFaceTexture;
 
             default:
-                UnityEngine.Debug.Log("Error in GetTextureID; invalid face index"); ;
+                UnityEngine.UnityEngine.Debug.Log("Error in GetTextureID; invalid face index"); ;
                 return 0;
         }
 
@@ -476,7 +476,7 @@ public class World : MonoBehaviour
 
     //private bool isCreatingChunks;
 
-    Queue<VoxelMod> modifications = new Queue<VoxelMod>();
+    Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
 
 
     // µ¿±¼ »ý¼º
@@ -519,24 +519,30 @@ public class World : MonoBehaviour
         //if (chunksToCreate.Count > 0 && !isCreatingChunks)
         //    StartCoroutine(CreateChunks_co());
 
-        if (modifications.Count > 0 && !applyingModifications)
-            StartCoroutine(ApplyModifications());
+        if (!applyingModifications)
+        {
+            ApplyModifications();
+        }
 
         if (chunksToCreate.Count > 0)
+        {
             CreateChunk();
-
+        }
         if (chunksToUpdate.Count > 0)
+        {
             UpdateChunks();
-
-        if (Input.GetKeyDown(KeyCode.F3))
-            debugScreen.SetActive(!debugScreen.activeSelf);
+        }
 
         if (ChunksToDraw.Count > 0)
+        {
             lock (ChunksToDraw)
             {
                 if (ChunksToDraw.Peek().isEditable)
                     ChunksToDraw.Dequeue().CreateMesh();
             }
+        }
+        if (Input.GetKeyDown(KeyCode.F3))
+            debugScreen.SetActive(!debugScreen.activeSelf);
     }
 
 
@@ -572,31 +578,31 @@ public class World : MonoBehaviour
             }
         }
 
-        while(modifications.Count > 0)
-        {
-            VoxelMod v = modifications.Dequeue();
-            ChunkCoord c = GetChunkCoordFromVector3(v.position);
+        //while(modifications.Count > 0)
+        //{
+        //    VoxelMod v = modifications.Dequeue();
+        //    ChunkCoord c = GetChunkCoordFromVector3(v.position);
+        //
+        //    if(chunks[c.x,c.z] == null)
+        //    {
+        //        chunks[c.x, c.z] = new Chunk(c, this, true);
+        //        activeChunks.Add(c);
+        //    }
+        //
+        //    chunks[c.x, c.z].modifications.Enqueue(v);
+        //    if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
+        //    {
+        //
+        //
+        //        chunksToUpdate.Add(chunks[c.x, c.z]);
+        //    }
+        //}
 
-            if(chunks[c.x,c.z] == null)
-            {
-                chunks[c.x, c.z] = new Chunk(c, this, true);
-                activeChunks.Add(c);
-            }
-
-            chunks[c.x, c.z].modifications.Enqueue(v);
-            if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
-            {
-
-
-                chunksToUpdate.Add(chunks[c.x, c.z]);
-            }
-        }
-
-        for(int i =0; i < chunksToUpdate.Count; i++)
-        {
-            chunksToUpdate[0].UpdateChunk();
-            chunksToUpdate.RemoveAt(0);
-        }
+        //for(int i =0; i < chunksToUpdate.Count; i++)
+        //{
+        //    chunksToUpdate[0].UpdateChunk();
+        //    chunksToUpdate.RemoveAt(0);
+        //}
 
         spawnPoint = new Vector3(VoxelData.worldSizeInBlocks / 2, VoxelData.ChunkHeight - 80f, VoxelData.worldSizeInBlocks / 2) ;
         player.position = spawnPoint;
@@ -611,13 +617,33 @@ public class World : MonoBehaviour
         chunks[c.x, c.z].Init();
     }
 
+    //void UpdateChunks()
+    //{
+    //    bool updated = false;
+    //    int index = 0;
+    //    while(!updated && index < chunksToUpdate.Count - 1)
+    //    {
+    //        if (chunksToUpdate[index].isVoxelMapPopulated)
+    //        {
+    //            chunksToUpdate[index].UpdateChunk();
+    //            chunksToUpdate.RemoveAt(index);
+    //            updated = true;
+    //        }
+    //        else
+    //        {
+    //            index++;
+    //        }
+    //    }
+    //}
+
+
     void UpdateChunks()
     {
         bool updated = false;
         int index = 0;
-        while(!updated && index < chunksToUpdate.Count - 1)
+        while (!updated && index < chunksToUpdate.Count - 1)
         {
-            if (chunksToUpdate[index].isVoxelMapPopulated)
+            if (chunksToUpdate[index].isEditable)
             {
                 chunksToUpdate[index].UpdateChunk();
                 chunksToUpdate.RemoveAt(index);
@@ -629,41 +655,95 @@ public class World : MonoBehaviour
             }
         }
     }
-    IEnumerator ApplyModifications()
+
+
+    //void ApplyModifications()
+    //{
+    //
+    //    applyingModifications = true;
+    //
+    //    while (modifications.Count > 0)
+    //    {
+    //
+    //        Queue<VoxelMod> queue = modifications.Dequeue();
+    //
+    //        while (queue.Count > 0)
+    //        {
+    //
+    //            VoxelMod v = queue.Dequeue();
+    //
+    //            ChunkCoord c = GetChunkCoordFromVector3(v.position);
+    //
+    //            if (chunks[c.x, c.z] == null)
+    //            {
+    //                chunks[c.x, c.z] = new Chunk(c, this, true);
+    //                activeChunks.Add(c);
+    //            }
+    //
+    //            chunks[c.x, c.z].modifications.Enqueue(v);
+    //
+    //            if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
+    //                chunksToUpdate.Add(chunks[c.x, c.z]);
+    //
+    //        }
+    //    }
+    //
+    //    applyingModifications = false;
+    //
+    //}
+
+    void ApplyModifications()
     {
         applyingModifications = true;
-        int count = 0;
-        while(modifications.Count > 0)
+
+        UnityEngine.Debug.Log("Applying modifications...");
+
+        while (modifications.Count > 0)
         {
-            VoxelMod v = modifications.Dequeue();
-            ChunkCoord c = GetChunkCoordFromVector3(v.position);
+            Queue<VoxelMod> queue = modifications.Dequeue();
 
-            if (chunks[c.x, c.z] == null)
+            if (queue == null)
             {
-                chunks[c.x, c.z] = new Chunk(c, this, true);
-                activeChunks.Add(c);
+                UnityEngine.Debug.LogError("Dequeued queue is null");
+                continue;
             }
 
-            chunks[c.x, c.z].modifications.Enqueue(v);
-            if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
+            while (queue.Count > 0)
             {
+                VoxelMod v = queue.Dequeue();
 
+                if (v == null)
+                {
+                    UnityEngine.Debug.LogError("Dequeued VoxelMod is null");
+                    continue;
+                }
 
-                chunksToUpdate.Add(chunks[c.x, c.z]);
-            }
+                ChunkCoord c = GetChunkCoordFromVector3(v.position);
 
-            count++;
-            if(count>200)
-            {
-                count = 0;
-                yield return null;
+                if (chunks[c.x, c.z] == null)
+                {
+                    chunks[c.x, c.z] = new Chunk(c, this, true);
+                    activeChunks.Add(c);
+                }
+
+                if (chunks[c.x, c.z] == null)
+                {
+                    UnityEngine.Debug.LogError($"Chunk at {c.x}, {c.z} is null");
+                    continue;
+                }
+
+                chunks[c.x, c.z].modifications.Enqueue(v);
+
+                if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
+                    chunksToUpdate.Add(chunks[c.x, c.z]);
             }
         }
 
         applyingModifications = false;
 
-
+        UnityEngine.Debug.Log("Finished applying modifications");
     }
+
 
     //IEnumerator CreateChunks_co()
     //{
@@ -924,7 +1004,7 @@ public class World : MonoBehaviour
                 if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treePlacementScale) > biome.treePlacementThreshold)
                 {
                     //modifications.Enqueue(new VoxelMod(new Vector3(pos.x, pos.y + 1, pos.z), 6));
-                    Structure.MakeTree(pos, modifications, biome.minTreeHeight, biome.maxTreeHeight);
+                    modifications.Enqueue(Structure.MakeTree(pos, biome.minTreeHeight, biome.maxTreeHeight));
                 }
             }
         }

@@ -453,7 +453,7 @@ public class Chunk
        // mesh.triangles = triangles.ToArray();
 
         mesh.subMeshCount = 2;
-
+        
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.uv = uvs.ToArray();
