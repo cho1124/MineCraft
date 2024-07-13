@@ -375,6 +375,7 @@ public class Animal : Entity
 
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
+        Debug.Log("Animal: OnPlayerDetected 호출됨");
         canDetectPlayer = false; // 탐지 비활성화
         StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
     }

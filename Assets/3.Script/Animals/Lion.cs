@@ -8,7 +8,7 @@ public class Lion : Animal
 
     protected override void Start() {
         base.Start();
-        detectionDistance *= 2; // Raycast 거리를 두 배로 설정
+        detectionDistance *= 3; // Raycast 거리를 두 배로 설정
     }
 
     protected override void Update() {
@@ -16,8 +16,16 @@ public class Lion : Animal
     }
 
     protected override void OnPlayerDetected() {
-        playerTransform = FindObjectOfType<Player>().transform; // 플레이어의 Transform을 가져옴
-        StartCoroutine(FleeSequence());
+        // 플레이어의 Transform을 태그를 사용하여 가져옴
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null) {
+            playerTransform = player.transform;
+            Debug.Log("Player detected and FleeSequence started"); // 로그 추가
+            StartCoroutine(FleeSequence());
+        }
+        else {
+            Debug.LogWarning("Player not found");
+        }
     }
 
     IEnumerator FleeSequence() {

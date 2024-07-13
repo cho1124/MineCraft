@@ -21,10 +21,6 @@ public class TreeSpawner : MonoBehaviour
         planeWidth = planeRenderer.bounds.size.x;
         planeHeight = planeRenderer.bounds.size.z;
 
-        Debug.Log(planeWidth);
-        Debug.Log(planeHeight);
-
-
         // 오브젝트를 랜덤하게 복제
         SpawnObjects();
     }

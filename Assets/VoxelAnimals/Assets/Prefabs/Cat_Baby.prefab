@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8744562214250761881}
   - component: {fileID: 1058095214571976038}
   - component: {fileID: 8468651761041208647}
-  - component: {fileID: 1251572583093472426}
   - component: {fileID: 6462233975581328176}
   - component: {fileID: 1987703473993605315}
   - component: {fileID: 1444242079930965751}
@@ -91,21 +90,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1251572583093472426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562798753983057749}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40079260bda69f14c80332a04d1632a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 3
-  jumpForce: 300
-  timeBeforeNextJump: 1.2
 --- !u!114 &6462233975581328176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
-  babyPrefab: {fileID: 0}
+  babyPrefab: {fileID: 562798753983057749}
   hungerLevel: 10
   baseSpeed: 2
   dynamicNavMesh: {fileID: 0}

@@ -9,16 +9,19 @@ public class Cat : Animal
     }
 
     protected override void OnPlayerDetected() {
+        Debug.Log("Cat: OnPlayerDetected 호출됨");
         StartCoroutine(FleeSequence());
     }
 
     IEnumerator FleeSequence() {
+        Debug.Log("FleeSequence 시작");
         // Jump
         ChangeState(State.Jump);
         yield return new WaitForSeconds(1.1f); // Jump duration
 
-        // Rotate 180 degrees
-        transform.Rotate(0, 180, 0);
+        // NavMeshAgent의 회전을 수동으로 업데이트
+        Vector3 newDirection = -transform.forward; // 180도 회전
+        transform.rotation = Quaternion.LookRotation(newDirection);
 
         // Run twice
         ChangeState(State.Run);
