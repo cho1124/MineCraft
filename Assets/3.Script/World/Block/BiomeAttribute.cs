@@ -21,7 +21,7 @@ public class BiomeAttribute : ScriptableObject
     public float treeZoneThreshold = 0.6f;
     public float treePlacementScale = 15f;
     [Range(0.1f, 1f)]
-    public float treePlacementThreshold = 0.8f;
+    public float treePlacementThreshold = 0.2f;
 
     public int maxTreeHeight = 12;
     public int minTreeHeight = 5;

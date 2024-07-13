@@ -447,23 +447,25 @@ public class Chunk
 
     public void CreateMesh()
     {
-
+    
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
        // mesh.triangles = triangles.ToArray();
-
+    
         mesh.subMeshCount = 2;
         
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.uv = uvs.ToArray();
-
+    
         // 법선벡터 재계산
         mesh.RecalculateNormals();
-
+    
         meshFilter.mesh = mesh;
-
+    
     }
+
+
 
     private void AddTexture(int textureID)
     {
