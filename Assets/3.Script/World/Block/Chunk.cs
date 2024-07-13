@@ -52,7 +52,7 @@ public class Chunk
     // Voxel맵, Chunk 안에 어떤 블록을 넣을껀지 byte단위의 3차원 배열
     public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
-
+    public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
 
     World world;
 
@@ -60,7 +60,7 @@ public class Chunk
     private bool _isActive;
 
     // voxel맵이 채워졌는지 여부
-    private bool isVoxelMapPopulated = false;
+    public bool isVoxelMapPopulated = false;
 
     private bool threadLocked = false;
 
@@ -187,12 +187,12 @@ public class Chunk
     {
         threadLocked = true;
 
-        //while(modifications.count > 0)
-        //{
-        //    VoxelMod v = modifications.Dequeue();
-        //    Vector3 pos = v.position -= position;
-        //    voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = v.id;
-        //}
+        while(modifications.Count > 0)
+        {
+            VoxelMod v = modifications.Dequeue();
+            Vector3 pos = v.position -= position;
+            voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = v.id;
+        }
 
 
         ClearMeshData();
