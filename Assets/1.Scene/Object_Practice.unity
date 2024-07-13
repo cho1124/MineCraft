@@ -1157,6 +1157,7 @@ GameObject:
   - component: {fileID: 81949639}
   - component: {fileID: 81949638}
   - component: {fileID: 81949637}
+  - component: {fileID: 81949640}
   m_Layer: 0
   m_Name: Cylinder (20)
   m_TagString: Untagged
@@ -1241,6 +1242,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 81949635}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &81949640
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81949635}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &83568461
 GameObject:
   m_ObjectHideFlags: 0
@@ -1774,6 +1791,7 @@ GameObject:
   - component: {fileID: 105847849}
   - component: {fileID: 105847848}
   - component: {fileID: 105847847}
+  - component: {fileID: 105847850}
   m_Layer: 0
   m_Name: Cylinder (15)
   m_TagString: Untagged
@@ -1858,6 +1876,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105847845}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &105847850
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105847845}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &112075847
 GameObject:
   m_ObjectHideFlags: 0
@@ -2127,6 +2161,7 @@ GameObject:
   - component: {fileID: 139314444}
   - component: {fileID: 139314443}
   - component: {fileID: 139314442}
+  - component: {fileID: 139314447}
   m_Layer: 0
   m_Name: Grass
   m_TagString: Untagged
@@ -2240,6 +2275,22 @@ RectTransform:
   m_AnchoredPosition: {x: 47.16981, y: -1.6226401}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!208 &139314447
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139314441}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &143370881
 GameObject:
   m_ObjectHideFlags: 0
@@ -2333,6 +2384,7 @@ GameObject:
   - component: {fileID: 150518949}
   - component: {fileID: 150518948}
   - component: {fileID: 150518947}
+  - component: {fileID: 150518950}
   m_Layer: 0
   m_Name: Cylinder (5)
   m_TagString: Untagged
@@ -2417,6 +2469,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150518945}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &150518950
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150518945}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &151506897
 GameObject:
   m_ObjectHideFlags: 0
@@ -2426,6 +2494,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 151506898}
+  - component: {fileID: 151506899}
   m_Layer: 0
   m_Name: Trees
   m_TagString: Untagged
@@ -2454,6 +2523,22 @@ Transform:
   m_Father: {fileID: 1219073781}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &151506899
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151506897}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &164227183
 GameObject:
   m_ObjectHideFlags: 0
@@ -2466,6 +2551,7 @@ GameObject:
   - component: {fileID: 164227186}
   - component: {fileID: 164227185}
   - component: {fileID: 164227184}
+  - component: {fileID: 164227188}
   m_Layer: 0
   m_Name: PinkFlower
   m_TagString: Untagged
@@ -2555,6 +2641,22 @@ Transform:
   m_Father: {fileID: 1219073781}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &164227188
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164227183}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &171424681
 GameObject:
   m_ObjectHideFlags: 0
@@ -2774,6 +2876,7 @@ GameObject:
   - component: {fileID: 184841044}
   - component: {fileID: 184841043}
   - component: {fileID: 184841042}
+  - component: {fileID: 184841045}
   m_Layer: 0
   m_Name: Cylinder (3)
   m_TagString: Untagged
@@ -2858,6 +2961,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 184841040}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &184841045
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184841040}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &186546183
 GameObject:
   m_ObjectHideFlags: 0
@@ -3540,6 +3659,7 @@ GameObject:
   - component: {fileID: 293061318}
   - component: {fileID: 293061317}
   - component: {fileID: 293061316}
+  - component: {fileID: 293061319}
   m_Layer: 0
   m_Name: Cylinder (2)
   m_TagString: Untagged
@@ -3624,6 +3744,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 293061314}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &293061319
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 293061314}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &294294033
 GameObject:
   m_ObjectHideFlags: 0
@@ -4691,6 +4827,7 @@ GameObject:
   - component: {fileID: 356960850}
   - component: {fileID: 356960849}
   - component: {fileID: 356960848}
+  - component: {fileID: 356960851}
   m_Layer: 0
   m_Name: Cylinder (16)
   m_TagString: Untagged
@@ -4775,6 +4912,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356960846}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &356960851
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356960846}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &387763927
 GameObject:
   m_ObjectHideFlags: 0
@@ -5344,6 +5497,7 @@ GameObject:
   - component: {fileID: 431365854}
   - component: {fileID: 431365853}
   - component: {fileID: 431365852}
+  - component: {fileID: 431365855}
   m_Layer: 0
   m_Name: Cylinder (14)
   m_TagString: Untagged
@@ -5428,6 +5582,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431365850}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &431365855
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431365850}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &434780827
 GameObject:
   m_ObjectHideFlags: 0
@@ -5647,6 +5817,7 @@ GameObject:
   - component: {fileID: 447376173}
   - component: {fileID: 447376172}
   - component: {fileID: 447376171}
+  - component: {fileID: 447376174}
   m_Layer: 0
   m_Name: Cylinder (18)
   m_TagString: Untagged
@@ -5731,6 +5902,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447376169}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &447376174
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447376169}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &482196597
 GameObject:
   m_ObjectHideFlags: 0
@@ -7223,6 +7410,7 @@ GameObject:
   - component: {fileID: 633373133}
   - component: {fileID: 633373132}
   - component: {fileID: 633373131}
+  - component: {fileID: 633373134}
   m_Layer: 0
   m_Name: Cylinder (9)
   m_TagString: Untagged
@@ -7307,6 +7495,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633373129}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &633373134
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633373129}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &635258832
 GameObject:
   m_ObjectHideFlags: 0
@@ -8813,6 +9017,7 @@ GameObject:
   - component: {fileID: 837513132}
   - component: {fileID: 837513131}
   - component: {fileID: 837513130}
+  - component: {fileID: 837513134}
   m_Layer: 0
   m_Name: YellowFlower
   m_TagString: Untagged
@@ -8902,6 +9107,22 @@ Transform:
   m_Father: {fileID: 1219073781}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &837513134
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837513129}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &840669631
 GameObject:
   m_ObjectHideFlags: 0
@@ -9040,6 +9261,7 @@ GameObject:
   - component: {fileID: 856457930}
   - component: {fileID: 856457929}
   - component: {fileID: 856457928}
+  - component: {fileID: 856457931}
   m_Layer: 0
   m_Name: Cylinder (11)
   m_TagString: Untagged
@@ -9124,6 +9346,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 856457926}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &856457931
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856457926}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &856813006
 GameObject:
   m_ObjectHideFlags: 0
@@ -10561,6 +10799,7 @@ GameObject:
   - component: {fileID: 978895338}
   - component: {fileID: 978895337}
   - component: {fileID: 978895336}
+  - component: {fileID: 978895340}
   m_Layer: 0
   m_Name: PurpleFlower
   m_TagString: Untagged
@@ -10650,6 +10889,22 @@ Transform:
   m_Father: {fileID: 1219073781}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &978895340
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978895335}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &982639253
 GameObject:
   m_ObjectHideFlags: 0
@@ -10744,6 +10999,7 @@ GameObject:
   - component: {fileID: 999165776}
   - component: {fileID: 999165775}
   - component: {fileID: 999165774}
+  - component: {fileID: 999165779}
   m_Layer: 0
   m_Name: Grasses
   m_TagString: Untagged
@@ -10862,6 +11118,22 @@ RectTransform:
   m_AnchoredPosition: {x: 47.17581, y: -1.5846401}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!208 &999165779
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999165773}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1003020544
 GameObject:
   m_ObjectHideFlags: 0
@@ -11084,6 +11356,7 @@ GameObject:
   - component: {fileID: 1011537831}
   - component: {fileID: 1011537830}
   - component: {fileID: 1011537829}
+  - component: {fileID: 1011537833}
   m_Layer: 0
   m_Name: Tree-8
   m_TagString: Untagged
@@ -11174,6 +11447,22 @@ Transform:
   m_Father: {fileID: 1219073781}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &1011537833
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011537828}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1014968265
 GameObject:
   m_ObjectHideFlags: 0
@@ -11248,6 +11537,7 @@ GameObject:
   - component: {fileID: 1022198755}
   - component: {fileID: 1022198754}
   - component: {fileID: 1022198753}
+  - component: {fileID: 1022198757}
   m_Layer: 0
   m_Name: MiniTree
   m_TagString: Untagged
@@ -11338,6 +11628,22 @@ Transform:
   m_Father: {fileID: 1219073781}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &1022198757
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022198752}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1025313932
 GameObject:
   m_ObjectHideFlags: 0
@@ -12891,6 +13197,7 @@ GameObject:
   - component: {fileID: 1239374490}
   - component: {fileID: 1239374489}
   - component: {fileID: 1239374488}
+  - component: {fileID: 1239374491}
   m_Layer: 0
   m_Name: Cylinder (12)
   m_TagString: Untagged
@@ -12975,6 +13282,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239374486}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1239374491
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239374486}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1250232263
 GameObject:
   m_ObjectHideFlags: 0
@@ -14301,6 +14624,7 @@ GameObject:
   - component: {fileID: 1362912624}
   - component: {fileID: 1362912623}
   - component: {fileID: 1362912622}
+  - component: {fileID: 1362912625}
   m_Layer: 0
   m_Name: Cylinder (6)
   m_TagString: Untagged
@@ -14385,6 +14709,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1362912620}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1362912625
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362912620}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1373828634
 GameObject:
   m_ObjectHideFlags: 0
@@ -14397,6 +14737,7 @@ GameObject:
   - component: {fileID: 1373828638}
   - component: {fileID: 1373828637}
   - component: {fileID: 1373828636}
+  - component: {fileID: 1373828639}
   m_Layer: 0
   m_Name: Cylinder (8)
   m_TagString: Untagged
@@ -14481,6 +14822,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373828634}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1373828639
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373828634}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1388587775
 GameObject:
   m_ObjectHideFlags: 0
@@ -15541,6 +15898,7 @@ GameObject:
   - component: {fileID: 1447961090}
   - component: {fileID: 1447961089}
   - component: {fileID: 1447961088}
+  - component: {fileID: 1447961091}
   m_Layer: 0
   m_Name: Cylinder (19)
   m_TagString: Untagged
@@ -15625,6 +15983,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447961086}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1447961091
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447961086}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1449035927
 GameObject:
   m_ObjectHideFlags: 0
@@ -15719,6 +16093,7 @@ GameObject:
   - component: {fileID: 1452340118}
   - component: {fileID: 1452340117}
   - component: {fileID: 1452340116}
+  - component: {fileID: 1452340119}
   m_Layer: 0
   m_Name: Cylinder (10)
   m_TagString: Untagged
@@ -15803,6 +16178,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452340114}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1452340119
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452340114}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1455083563
 GameObject:
   m_ObjectHideFlags: 0
@@ -15978,6 +16369,7 @@ GameObject:
   - component: {fileID: 1463529438}
   - component: {fileID: 1463529437}
   - component: {fileID: 1463529436}
+  - component: {fileID: 1463529439}
   m_Layer: 0
   m_Name: Cylinder (13)
   m_TagString: Untagged
@@ -16062,6 +16454,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463529434}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1463529439
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463529434}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1481067136
 GameObject:
   m_ObjectHideFlags: 0
@@ -16320,6 +16728,7 @@ GameObject:
   - component: {fileID: 1507973444}
   - component: {fileID: 1507973443}
   - component: {fileID: 1507973442}
+  - component: {fileID: 1507973445}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -16404,6 +16813,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1507973440}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1507973445
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507973440}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1512630147
 GameObject:
   m_ObjectHideFlags: 0
@@ -16462,6 +16887,7 @@ GameObject:
   - component: {fileID: 1515325217}
   - component: {fileID: 1515325216}
   - component: {fileID: 1515325215}
+  - component: {fileID: 1515325218}
   m_Layer: 0
   m_Name: Cylinder (17)
   m_TagString: Untagged
@@ -16546,6 +16972,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515325213}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1515325218
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515325213}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1545544268
 GameObject:
   m_ObjectHideFlags: 0
@@ -18847,6 +19289,7 @@ GameObject:
   - component: {fileID: 1805911880}
   - component: {fileID: 1805911879}
   - component: {fileID: 1805911878}
+  - component: {fileID: 1805911881}
   m_Layer: 0
   m_Name: Cylinder (7)
   m_TagString: Untagged
@@ -18931,6 +19374,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1805911876}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1805911881
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805911876}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1809512606
 GameObject:
   m_ObjectHideFlags: 0
@@ -19435,6 +19894,7 @@ GameObject:
   - component: {fileID: 1841277502}
   - component: {fileID: 1841277501}
   - component: {fileID: 1841277500}
+  - component: {fileID: 1841277503}
   m_Layer: 0
   m_Name: Cylinder (4)
   m_TagString: Untagged
@@ -19519,6 +19979,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1841277498}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!208 &1841277503
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841277498}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1914541063
 GameObject:
   m_ObjectHideFlags: 0
@@ -62595,6 +63071,7 @@ GameObject:
   - component: {fileID: 5126883151202748016}
   - component: {fileID: 5126883151202748017}
   - component: {fileID: 5126883151202748018}
+  - component: {fileID: 5126883151202748020}
   m_Layer: 0
   m_Name: Tree-10
   m_TagString: Untagged
@@ -62602,6 +63079,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!208 &5126883151202748020
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5126883151202748019}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!4 &5126883151202748031
 Transform:
   m_ObjectHideFlags: 0
@@ -81993,6 +82486,7 @@ GameObject:
   - component: {fileID: 7088660335891224840}
   - component: {fileID: 7088660335888357672}
   - component: {fileID: 7088660335889456104}
+  - component: {fileID: 7088660335891383593}
   m_Layer: 0
   m_Name: RedFlower
   m_TagString: Untagged
@@ -82000,6 +82494,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!208 &7088660335891383593
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7088660335891383592}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.002, y: 0.001, z: 0.002}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.001, y: 0.001, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!4 &7094018083980439933
 Transform:
   m_ObjectHideFlags: 0
@@ -99446,6 +99956,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4859825973030734275}
+  - component: {fileID: 9152919578768539647}
   m_Layer: 0
   m_Name: Tree-9
   m_TagString: Untagged
@@ -99453,6 +99964,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!208 &9152919578768539647
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9152919578768539646}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &9154027745046344201
 GameObject:
   m_ObjectHideFlags: 0

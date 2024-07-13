@@ -70,7 +70,13 @@ public class Animal : Entity
     protected enum State { Wander, Jump, Idle, Run, DoubleJump, Follow }
     protected State currentState;
 
-    void Start() {
+    // 위치 변화 감지 관련 변수들
+    private Vector3 lastPosition;
+    private float idleTime;
+    private float idleTimeLimit = 10f; // 10초 동안 위치가 변하지 않으면 이동
+    private const float positionThreshold = 3f; // 위치 변화 허용 범위
+
+    protected virtual void Start() {
         //컴포넌트 초기화
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -100,12 +106,15 @@ public class Animal : Entity
             Debug.LogWarning("Collider component is missing!");
         }
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-
         // 탐지 거리 초기화
         defaultDetectionDistance = detectionDistance;
 
         // 초기 상태 설정
         ChangeState(State.Wander);
+
+        // 위치 변화 감지 초기화
+        lastPosition = transform.position;
+        idleTime = 0f;
     }
 
     protected virtual void Update() {
@@ -163,6 +172,26 @@ public class Animal : Entity
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending) {
             ChangeState(GetRandomState());
         }
+
+        // 위치 변화 감지
+        CheckIdleTime();
+    }
+
+    private void CheckIdleTime() {
+        float distanceMoved = Vector3.Distance(transform.position, lastPosition);
+        if (distanceMoved < positionThreshold) {
+            idleTime += Time.deltaTime;
+        }
+        else {
+            idleTime = 0f;
+            lastPosition = transform.position;
+        }
+
+        if (idleTime >= idleTimeLimit) {
+            SetRandomDestination();
+            Debug.Log($"{name}가 10초동안 위치 변화가 없으므로 랜덤목적지를 변경합니다.");
+            idleTime = 0f;
+        }
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -217,6 +246,9 @@ public class Animal : Entity
                 tracker.animalCount.Clear();
             }
 
+            // 복제된 오브젝트의 이름에 "Baby" 추가
+            newAnimal.name = gameObject.name + " Baby";
+
             // 쿨타임 설정
             StartCoroutine(SpawnCooldown());
         }
@@ -230,10 +262,14 @@ public class Animal : Entity
 
     private void GrowUp() {
         // 성인 상태로 성장
-        GameObject newAdult = Instantiate(babyPrefab, transform.position, transform.rotation);
+        GameObject newAdult = Instantiate(adultPrefab, transform.position, transform.rotation);
         newAdult.transform.localScale = transform.localScale * 2;
+
+        // 성장한 오브젝트의 이름에서 "Baby" 제거
+        newAdult.name = gameObject.name.Replace(" Baby", "");
+
         Destroy(gameObject);
-        Debug.Log($"{name}가 성인으로 성장했습니다.");
+        Debug.Log($"{newAdult.name}가 성인으로 성장했습니다.");
     }
 
     private void Eat() {

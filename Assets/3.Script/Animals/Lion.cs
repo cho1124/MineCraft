@@ -6,6 +6,11 @@ public class Lion : Animal
 {
     private Transform playerTransform;
 
+    protected override void Start() {
+        base.Start();
+        detectionDistance *= 2; // Raycast 거리를 두 배로 설정
+    }
+
     protected override void Update() {
         base.Update();
     }
