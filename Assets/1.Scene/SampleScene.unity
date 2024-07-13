@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 4cd4bf4ba91c64a4abe0e861c97b9a36, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 56113b3b655ab7349bab4d7d405c258a, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -593,6 +593,33 @@ MonoBehaviour:
     leftFaceTexture: 3
     rightFaceTexture: 3
     bottomFaceTexture: 3
+  - blockName: Brick
+    isSolid: 1
+    isTransparent: 1
+    topFaceTexture: 11
+    frontFaceTexture: 11
+    backFaceTexture: 11
+    leftFaceTexture: 11
+    rightFaceTexture: 11
+    bottomFaceTexture: 11
+  - blockName: Wood
+    isSolid: 1
+    isTransparent: 0
+    topFaceTexture: 6
+    frontFaceTexture: 5
+    backFaceTexture: 5
+    leftFaceTexture: 5
+    rightFaceTexture: 5
+    bottomFaceTexture: 6
+  - blockName: Leef
+    isSolid: 1
+    isTransparent: 1
+    topFaceTexture: 16
+    frontFaceTexture: 16
+    backFaceTexture: 16
+    leftFaceTexture: 16
+    rightFaceTexture: 16
+    bottomFaceTexture: 16
   ItemBlock: {fileID: 8924201329985380255, guid: 0b132f74815d1934f802f3622b8e1476, type: 3}
   caveOffset: 1
   caveScale: 0.12
