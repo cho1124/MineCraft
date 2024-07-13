@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Animal : Entity
 {
@@ -23,112 +24,187 @@ public class Animal : Entity
      
      */
 
+    // 성장 관련 변수들
     public GameObject adultPrefab; //  성인 상태의 프리팹
+    public GameObject babyPrefab; // 새끼 상태의 프리팹
     private bool isAdult; // 성인 상태인지 여부
-    private float growthTime; // 성장 시간 
-    private float currentTime = 0f; // 현재 시간
+    private float growthTime = 60; // 성장 기준 시간 
+    private float growthTimeGaze = 0; // 배부름총족이후흐르는시간 
+
+    // 배고픔 관련 변수들
     public int hungerLevel = 6; // 배고픔 게이지
-
-    private const int collisionThreshold = 10; // 충돌 임계값
-
     private const int maxHungerLevel = 10;
     private bool isHungry = false; // 배고픔 상태
     private bool isFull = false; // 배부름 상태
-    public float baseSpeed; // 기본 이동 속도, 인스펙터에서 설정
     private float speedIncrease = 1f; // 추가 이동 속도
+
+    // 이동 속도 관련 변수들
+    public float baseSpeed; // 기본 이동 속도, 인스펙터에서 설정
     private float currentSpeed; // 현재 이동 속도
 
+    // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
     private float spawnCooldown = 30f; // 쿨타임 시간
-
+    private const int collisionThreshold = 10; // 충돌 임계값
     protected Queue<GameObject> recentAnimals = new Queue<GameObject>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<GameObject, int> animalCount = new Dictionary<GameObject, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
-    void Start()
-    {
-    if(transform.localScale==adultPrefab.transform.localScale/2)
-        {
-            isAdult = false; //새끼상태
+    // 컴포넌트 관련 변수들
+    protected NavMeshAgent agent;
+    protected Animator animator;
+    protected Rigidbody rb;
+    public DynamicNavMesh dynamicNavMesh;
+
+    // 탐지 관련 변수들
+    public float detectionDistance = 3f;
+    public int detectionAngle = 45;
+    public int detectionRays = 5;
+    public float wanderRadius = 30f;
+    private float defaultDetectionDistance; // 기본 탐지 거리
+
+    // 플레이어 탐지 관련 변수들
+    private bool canDetectPlayer = true;
+    private float playerDetectionCooldown = 20f;
+
+    // 상태 관련 변수들
+    protected enum State { Wander, Jump, Idle, Run }
+    protected State currentState;
+
+    void Start() {
+        //컴포넌트 초기화
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        Collider col = GetComponent<Collider>();
+
+        // 성장 관련 초기 설정
+        if (gameObject.name.Contains("Baby")) {
+            isAdult = false; // 새끼상태
         }
-        else
-        {
+        else {
             isAdult = true; // 성인 상태
         }
+
         // 초기 이동 속도 설정
-        currentSpeed = baseSpeed;
+        currentSpeed = baseSpeed = 2;
 
         // 배고픔 감소 루틴 시작
         StartCoroutine(HungerRoutine());
+
+        // 오브젝트의 크기에 맞게 NavMeshAgent의 radius 설정
+        if (col != null) {
+            float size = col.bounds.size.magnitude;
+            agent.radius = size / 4;
+        }
+        else {
+            Debug.LogWarning("Collider component is missing!");
+        }
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+
+        // 탐지 거리 초기화
+        defaultDetectionDistance = detectionDistance;
+
+        // 초기 상태 설정
+        ChangeState(State.Wander);
     }
 
-    void Update()
-    {
-        if (!isAdult)
-        {
-            currentTime += Time.deltaTime;
-            if (currentTime >= growthTime&& !isHungry)
-            {
+    protected virtual void Update() {
+
+        //성장 관련 업데이트
+        if (!isAdult && isFull) {
+            growthTimeGaze += Time.deltaTime;
+            if (growthTimeGaze >= growthTime) {
                 GrowUp();
             }
         }
-        if (hungerLevel <= 3)
-        {
+
+        // 배고픔 상태에 따른 성장 타이머 초기화
+        if (!isFull) {
+            growthTimeGaze = 0f;
+        }
+
+        if (hungerLevel <= 3) {
             SearchForFood();
         }
 
+        // NavMesh 상에 있는지 확인
+        if (!agent.isOnNavMesh) {
+            Debug.LogWarning("Agent 가 NavMesh위에 없습니다.!");
+            MoveToNearestNavMesh();
+            return;
+        }
+
+        // 실시간 맵 변동을 반영하여 NavMesh 업데이트
+        if (dynamicNavMesh != null) {
+            dynamicNavMesh.UpdateNavMesh();
+        }
+
+        if (DetectPlayer()) {
+            OnPlayerDetected();
+            return;
+        }
+
+        // 현재 상태에 따라 행동 수행
+        switch (currentState) {
+            case State.Wander:
+                if (!agent.hasPath) {
+                    SetRandomDestination();
+                }
+                break;
+            case State.Jump:
+                break;
+            case State.Idle:
+                break;
+            case State.Run:
+                break;
+        }
+
+        //목적지 도착시 상태 변경
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending) {
+            ChangeState(GetRandomState());
+        }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
+    private void OnCollisionEnter(Collision collision) {
         Debug.Log($"{name}과 {collision.gameObject.name}이 충돌했습니다.");
         // 같은 컴포넌트를 가진 오브젝트와의 충돌인지 확인
-        if (collision.gameObject.GetComponent<Animal>() != null)
-        {
+        if (collision.gameObject.GetComponent<Animal>() != null) {
             AddToRecentAnimals(collision.gameObject);
 
-            if (animalCount[collision.gameObject] >= collisionThreshold)
-            {
+            if (animalCount[collision.gameObject] >= collisionThreshold) {
                 SpawnNewAnimal();
                 animalCount[collision.gameObject] = 0; // 충돌 횟수 초기화
             }
         }
 
         // Food 태그가 붙은 오브젝트를 먹는 처리
-        if (collision.gameObject.CompareTag("Food") && !isFull)
-        {
+        if (collision.gameObject.CompareTag("Food") && !isFull) {
             Eat();
             Destroy(collision.gameObject); // 음식 오브젝트 제거
         }
     }
 
-    private void AddToRecentAnimals(GameObject animal)
-    {
-        if (recentAnimals.Count >= 10)
-        {
+    protected virtual void AddToRecentAnimals(GameObject animal) {
+        if (recentAnimals.Count >= 10) {
             var removedAnimal = recentAnimals.Dequeue();
             animalCount[removedAnimal]--;
-            if (animalCount[removedAnimal] <= 0)
-            {
+            if (animalCount[removedAnimal] <= 0) {
                 animalCount.Remove(removedAnimal);
             }
         }
 
         recentAnimals.Enqueue(animal);
-        if (animalCount.ContainsKey(animal))
-        {
+        if (animalCount.ContainsKey(animal)) {
             animalCount[animal]++;
         }
-        else
-        {
+        else {
             animalCount[animal] = 1;
         }
     }
 
-    private void SpawnNewAnimal()
-    {
+    private void SpawnNewAnimal() {
         // 현재 오브젝트의 크기와 프리팹의 크기를 비교
-        if (transform.localScale == adultPrefab.transform.localScale)
-        {
+        if (transform.localScale == adultPrefab.transform.localScale) {
             // 현재 오브젝트를 복제
             GameObject newAnimal = Instantiate(gameObject, transform.position, transform.rotation);
             // 복제된 오브젝트의 크기를 1/2으로 설정
@@ -136,8 +212,7 @@ public class Animal : Entity
 
             // 복제된 오브젝트의 충돌 카운트를 초기화
             Animal tracker = newAnimal.GetComponent<Animal>();
-            if (tracker != null)
-            {
+            if (tracker != null) {
                 tracker.recentAnimals.Clear();
                 tracker.animalCount.Clear();
             }
@@ -147,93 +222,191 @@ public class Animal : Entity
         }
     }
 
-    private IEnumerator SpawnCooldown() {
+    protected virtual IEnumerator SpawnCooldown() {
         canSpawn = false; // 스폰 금지
         yield return new WaitForSeconds(spawnCooldown); // 쿨타임 대기
         canSpawn = true; // 스폰 허용
     }
 
-    private void GrowUp()
-    {
+    private void GrowUp() {
         // 성인 상태로 성장
-        transform.localScale *= 2;
-        isAdult = true; // 성인 상태로 변경
+        GameObject newAdult = Instantiate(babyPrefab, transform.position, transform.rotation);
+        newAdult.transform.localScale = transform.localScale * 2;
+        Destroy(gameObject);
         Debug.Log($"{name}가 성인으로 성장했습니다.");
     }
 
-    private void Eat()
-    {
-        if (hungerLevel < maxHungerLevel)
-        {
+    private void Eat() {
+        if (hungerLevel < maxHungerLevel) {
             hungerLevel++;
             Debug.Log($"{name}가 사료를 먹었습니다. 배고픔 게이지: {hungerLevel}");
         }
 
         // 배고픔 상태 관리
-        if (hungerLevel > 5)
-        {
+        if (hungerLevel > 5) {
             isHungry = false;
             isFull = true;
+            detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
         }
-        else
-        {
+        else {
             isHungry = true;
             isFull = false;
+            detectionDistance = defaultDetectionDistance * 2; // 배고픔 상태일 때 탐지 거리 두 배
         }
     }
 
-    private IEnumerator HungerRoutine()
-    {
-        while (true)
-        {
+    private IEnumerator HungerRoutine() {
+        while (true) {
             yield return new WaitForSeconds(20f);
 
-            if (hungerLevel > 0)
-            {
+            if (hungerLevel > 0) {
                 hungerLevel--;
                 Debug.Log($"{name}의 배고픔 게이지 감소: {hungerLevel}");
             }
 
             // 배고픔 상태 관리
-            if (hungerLevel > 5)
-            {
+            if (hungerLevel > 5) {
                 isHungry = false;
                 isFull = true;
+                detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
                 currentSpeed = baseSpeed; // 배부름 상태에서는 기본 속도
             }
-            else
-            {
+            else {
                 isHungry = true;
                 isFull = false;
+                detectionDistance = defaultDetectionDistance * 2; // 배고픔 상태일 때 탐지 거리 두 배
 
-                if (hungerLevel <= 3)
-                {
+                if (hungerLevel <= 3) {
                     currentSpeed = baseSpeed + speedIncrease; // 배고픔 상태에서는 속도 증가
                 }
-                else
-                {
+                else {
                     currentSpeed = baseSpeed; // 기본 속도
                 }
             }
         }
     }
 
-    private void SearchForFood()
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("Food"))
-            {
-                MoveTowards(hitCollider.transform.position);
-                break;
+    private void SearchForFood() {
+        for (int i = 0; i < detectionRays; i++) {
+            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
+                if (hitInfo.collider.CompareTag("Food")) {
+                    MoveTowards(hitInfo.transform.position);
+                    break;
+                }
             }
         }
     }
 
-    private void MoveTowards(Vector3 targetPosition)
-    {
+    private void MoveTowards(Vector3 targetPosition) {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        transform.position += direction * currentSpeed * Time.deltaTime;
+        agent.SetDestination(targetPosition); // NavMeshAgent를 사용하여 이동
+    }
+    protected virtual void MoveToNearestNavMesh() {
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
+            agent.SetDestination(hit.position);
+            ChangeState(State.Wander);
+        }
+    }
+
+    protected virtual bool DetectPlayer() {
+        for (int i = 0; i < detectionRays; i++) {
+            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
+                if (hitInfo.collider.CompareTag("Player")) {
+                    Debug.Log("플레이어를 발견했습니다!");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+
+        // Y축으로 1만큼 위의 위치에서 레이캐스트 시작
+        Vector3 startPosition = transform.position + Vector3.up * 3;
+
+        for (int i = 0; i < detectionRays; i++) {
+            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+            Gizmos.DrawRay(transform.position, direction * detectionDistance);
+        }
+    }
+
+    protected virtual void OnPlayerDetected() {
+        // 플레이어를 발견했을 때의 기본 동작
+        canDetectPlayer = false; // 탐지 비활성화
+        StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
+    }
+
+    private IEnumerator PlayerDetectionCooldown() {
+        yield return new WaitForSeconds(playerDetectionCooldown);
+        canDetectPlayer = true; // 쿨타임 종료 후 탐지 활성화
+    }
+
+    protected virtual void ChangeState(State newState) {
+        currentState = newState;
+
+        switch (currentState) {
+            case State.Wander:
+                agent.speed = baseSpeed;
+                animator.SetInteger("Walk", 1);
+                SetRandomDestination();
+                break;
+            case State.Jump:
+                agent.isStopped = true;
+                agent.updatePosition = false;
+                agent.updateRotation = false;
+                rb.isKinematic = false;
+                animator.Play("Jump");
+                StartCoroutine(JumpThenIdle());
+                break;
+            case State.Idle:
+                agent.ResetPath();
+                animator.Play("Idle");
+                StartCoroutine(IdleThenWander());
+                break;
+            case State.Run:
+                agent.speed = baseSpeed * 2;
+                animator.SetInteger("Walk", 1);
+                SetRandomDestination();
+                break;
+        }
+    }
+
+    protected virtual State GetRandomState() {
+        int random = Random.Range(0, 4);
+        return (State)random;
+    }
+
+    protected virtual void SetRandomDestination() {
+        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+        randomDirection += transform.position;
+
+        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas)) {
+            agent.SetDestination(hit.position);
+        }
+        else {
+            Debug.LogWarning("Failed to find a valid NavMesh position!");
+        }
+    }
+
+    protected virtual IEnumerator JumpThenIdle() {
+        rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
+        yield return new WaitForSeconds(3f);
+        agent.updatePosition = true;
+        agent.updateRotation = true;
+        agent.isStopped = false;
+        rb.isKinematic = true;
+        ChangeState(State.Idle);
+    }
+
+    protected virtual IEnumerator IdleThenWander() {
+        yield return new WaitForSeconds(Random.Range(2, 5));
+        ChangeState(State.Wander);
     }
 }
