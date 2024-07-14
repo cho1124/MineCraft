@@ -18,6 +18,9 @@ public class Player_Control : MonoBehaviour
     private float speed_sprint = 4f; // player_data에서 가져오기
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
+    private float currentSpeed = 0f;
+    public float smoothTime = 0.1f;
+    private float velocity = 0f;
 
     private void Awake()
     {
@@ -31,40 +34,40 @@ public class Player_Control : MonoBehaviour
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
         Attack_Control();
         Move_Control();
-
+        Head_Body_Rotate();
 
     }
 
     private void LateUpdate()
     {
-        // 대가리
-        Head_Body_Rotate();
+        // 문제점 1. 머리의 회전 부분이 모델의 회전에 의해서 새롭게 덮어 씌워지는 치명적인 문제
+        
     }
 
-    
 
     private void Move_ani(float key_h, float key_v)
     {
-        float speed = new Vector2(key_h, key_v).magnitude;
+        float targetSpeed = new Vector2(key_h, key_v).magnitude;
 
-        
-
-
-        // Set the speed value to 1 when moving diagonally
-        if (speed > 1)
+        // 대각선 문제 해결
+        if (targetSpeed > 1)
         {
-            speed = 1;
+            targetSpeed = 1;
         }
 
-        if(key_h < 0 || key_v < 0)
+        if (key_h < 0 || key_v < 0)
         {
-            speed = -speed;
+            targetSpeed = -targetSpeed;
         }
 
-        speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2 : speed;
+        targetSpeed = Input.GetKey(KeyCode.LeftControl) ? targetSpeed * 2 : targetSpeed;
 
-        animator.SetFloat("Speed", speed);
+        // 부드러운 애니메이션 처리
+        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref velocity, smoothTime);
+
+        animator.SetFloat("Speed", currentSpeed);
     }
+
 
     private void Attack_Control()
     {
