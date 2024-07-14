@@ -48,7 +48,7 @@ public class InventoryBarSlotChoice : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount < 0)
+                    if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount == 1)
                     {
                         Destroy(inventory_bar_slot[i].GetChild(0).gameObject);
 
