@@ -80,7 +80,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) // 임시 치트 키
+        if (Input.GetKeyDown(KeyCode.V)) // 임시 치트 키
         {
             if (test.childCount == 0)
             {

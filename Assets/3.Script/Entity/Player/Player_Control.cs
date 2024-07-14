@@ -7,7 +7,8 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    
+    [SerializeField] private Inventory inventory_class;
+
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
     private float cursor_y = 0f;
@@ -26,15 +27,19 @@ public class Player_Control : MonoBehaviour
     {
         TryGetComponent(out controller);
         TryGetComponent(out animator);
+        
         head_transform = transform.GetChild(1).transform;
     }
 
     private void Update()
     {
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
+
         Attack_Control();
         Move_Control();
         Head_Body_Rotate();
+
+
 
     }
 
