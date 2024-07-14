@@ -144,10 +144,10 @@ public class Animal : Entity
             return;
         }
 
-        // 실시간 맵 변동을 반영하여 NavMesh 업데이트
-        if (dynamicNavMesh != null) {
-            dynamicNavMesh.UpdateNavMesh();
-        }
+      //  // 실시간 맵 변동을 반영하여 NavMesh 업데이트
+      //  if (dynamicNavMesh != null) {
+      //      dynamicNavMesh.UpdateNavMesh();
+      //  }
 
         if (DetectPlayer()) {
             OnPlayerDetected();

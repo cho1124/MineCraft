@@ -108,5 +108,6 @@ public class Penguin : Animal
 
         // Return to a random state
         ChangeState(GetRandomState());
+        SetRandomDestination();
     }
 }

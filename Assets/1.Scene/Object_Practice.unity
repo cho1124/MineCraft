@@ -8585,8 +8585,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 858e41e160a438a40822f58cf6d0ff93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshSurface: {fileID: 0}
-  updateInterval: 10
 --- !u!64 &785045210
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -63477,7 +63475,7 @@ GameObject:
   - component: {fileID: 5720208119147814555}
   m_Layer: 0
   m_Name: Player 1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96231,9 +96229,10 @@ GameObject:
   - component: {fileID: 5191735258241481201}
   - component: {fileID: 8063775380802784571}
   - component: {fileID: 8424181616517442799}
+  - component: {fileID: 8424181616517442800}
   m_Layer: 0
   m_Name: hoe
-  m_TagString: Untagged
+  m_TagString: Tool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96252,6 +96251,20 @@ CapsuleCollider:
   m_Height: 0.007552626
   m_Direction: 1
   m_Center: {x: -0.0004927754, y: 0.0021731497, z: 0.0012337927}
+--- !u!114 &8424181616517442800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8424181616517442798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcdbee128fde8864ebf3de59434e3d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  melonSeedPrefab: {fileID: 919132149155446097, guid: a23c0de35b039ad409f96e01afbf4837, type: 3}
+  leafMaterial: {fileID: 2100000, guid: 4054754602192e748ad04958c1dfbb61, type: 2}
 --- !u!23 &8428307329068727918
 MeshRenderer:
   m_ObjectHideFlags: 0

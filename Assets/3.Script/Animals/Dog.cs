@@ -46,6 +46,7 @@ public class Dog : Animal {
 
         // 원래 상태로 복귀
         ChangeState(GetRandomState());
+        SetRandomDestination();
     }
 
     protected override void ChangeState(State newState) {

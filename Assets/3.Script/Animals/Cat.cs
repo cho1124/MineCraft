@@ -36,5 +36,6 @@ public class Cat : Animal
 
         // Return to a random state
         ChangeState(GetRandomState());
+        SetRandomDestination();
     }
 }
