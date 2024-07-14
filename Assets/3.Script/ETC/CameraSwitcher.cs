@@ -3,6 +3,8 @@ using Cinemachine;
 
 public class CameraSwitcher : MonoBehaviour
 {
+    [SerializeField] private Inventory inventory_class;
+
     public CinemachineVirtualCamera[] cameras;
     private int currentCameraIndex;
 
@@ -14,14 +16,17 @@ public class CameraSwitcher : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (!inventory_class.on_off_tr)
         {
-            currentCameraIndex++;
-            if (currentCameraIndex >= cameras.Length)
+            if (Input.GetKeyDown(KeyCode.C))
             {
-                currentCameraIndex = 0;
+                currentCameraIndex++;
+                if (currentCameraIndex >= cameras.Length)
+                {
+                    currentCameraIndex = 0;
+                }
+                ActivateCamera(currentCameraIndex);
             }
-            ActivateCamera(currentCameraIndex);
         }
     }
 

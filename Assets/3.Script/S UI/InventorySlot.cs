@@ -6,8 +6,15 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] float slot_color_value = 0.2f;
+    // ========== Inspector public ==========
+
+    [Header("Ïä¨Î°Ø ÏÉâ Ï°∞Ï†à")]
+    [SerializeField] private float slot_color_value = 0.2f;
+
+    // ========== Inspector private ==========
+
     private Color slot_color;
+
     private Image slot_image = null;
 
     private void Awake()
@@ -19,15 +26,13 @@ public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
     {
         if (this.transform.childCount == 0)
         {
+            InventoryItemControl.test_tr = true;
+
             GameObject obj = eventData.pointerDrag;
 
             InventoryItemControl item = obj.GetComponent<InventoryItemControl>();
 
             item.tm = this.transform;
-        }
-        else
-        {
-            // æ∆¿Ã≈€ ¡ﬂ∫π √º≈© ∑Œ¡˜ ø‰√ª
         }
     }
 

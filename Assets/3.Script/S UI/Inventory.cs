@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private InventoryItemControl InventoryItemControl_class;
+    // ========== Inspector public ==========
 
-    [Header("¡∂«’ ΩΩ∑‘"), SerializeField] private Transform[] crafting_slot;
-    [Header("¡∂«’ ΩΩ∑‘ ∞·∞˙"), SerializeField] private GameObject new_item_obj;
-    [Header("∆Àæ˜"), SerializeField] private GameObject on_off_obj;
+    [Header("ÏïÑÏù¥ÌÖú")]
+    [SerializeField] private GameObject item_obj = null;
 
-    [Header("µπˆ±◊")]
+    [Header("Ï°∞Ìï© Ïä¨Î°Ø")]
+    [SerializeField] private Transform[] crafting_slot = null;
+
+    [Header("Í≤∞Í≥º Ï°∞Ìï© Ïä¨Î°Ø")]
+    [SerializeField] private GameObject result_crafting_slot_obj = null;
+
+    [Header("Ïù∏Î≤§ÌÜ†Î¶¨")]
+    [SerializeField] private GameObject on_off_obj = null;
+
+    [Header("ÎîîÎ≤ÑÍ∑∏")]
     public bool on_off_tr = false;
-    [SerializeField] private bool full_crafting_slot = false;
+    [SerializeField] private bool[] crafting_slot_tr = { false }; // test
+    [SerializeField] private bool full_crafting_slot_tr = false;
+
+    // ========== Inspector private ==========
+
+    private InventoryItemControl InventoryItemControl_class = null;
+
+    public Transform test; // test
 
     private void Awake()
     {
@@ -22,15 +37,15 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         on_off_obj.SetActive(false);
-        new_item_obj.SetActive(false);
+        result_crafting_slot_obj.SetActive(false);
     }
 
     private void Update()
     {
         if (on_off_tr)
         {
-            Crafting_slot();
-            Delete_item();
+            CraftingSlot();
+            ResultCraftingSlot();
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -41,28 +56,43 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void Crafting_slot()
+    private void CraftingSlot()
     {
         if (crafting_slot[0].childCount == 1 && crafting_slot[1].childCount == 1 && crafting_slot[2].childCount == 1 && crafting_slot[3].childCount == 1)
         {
-            full_crafting_slot = true;
-            new_item_obj.SetActive(true);
+            full_crafting_slot_tr = true;
         }
         else
         {
-            full_crafting_slot = false;
-            new_item_obj.SetActive(false);
-            
+            full_crafting_slot_tr = false;
         }
     }
 
-    private void Delete_item()
+    private void ResultCraftingSlot()
     {
-        if (InventoryItemControl_class.click_tr && full_crafting_slot)
+        // Debug.Log($"Click: {InventoryItemControl_class.click_tr}, full: {full_crafting_slot_tr}");
+
+        if (InventoryItemControl_class.click_tr && full_crafting_slot_tr)
         {
             for (int i = 0; i < crafting_slot.Length; i++)
             {
                 Destroy(crafting_slot[i].GetChild(0).gameObject);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space)) // ÏûÑÏãú ÏπòÌä∏ ÌÇ§
+        {
+            if (test.childCount == 0)
+            {
+                result_crafting_slot_obj.SetActive(false);
+
+                GameObject item = Instantiate(item_obj);
+
+                item.transform.localScale = new Vector3(5, 5, 1);
+
+                item.transform.SetParent(result_crafting_slot_obj.transform);
+
+                Debug.Log("ÏïÑÏù¥ÌÖú ÏÉùÏÑ± ÏÑ±Í≥µ!");
             }
         }
     }

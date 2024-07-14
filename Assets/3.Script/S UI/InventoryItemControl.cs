@@ -6,13 +6,19 @@ using UnityEngine.EventSystems;
 
 public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] private Image image;
+    // ========== Inspector public ==========
 
-    [HideInInspector] public Transform tm;
+    public static bool test_tr = false;
 
-    [Header("µð¹ö±×")]
+    [SerializeField] private Image image = null;
+
+    [Header("ë””ë²„ê·¸")]
     public bool click_tr = false;
     [SerializeField] private bool start_tr = false;
+
+    // ========== Inspector private ==========
+
+    [HideInInspector] public Transform tm = null;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -20,15 +26,14 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         if (start_tr)
         {
+            image.raycastTarget = false;
+            click_tr = true;
+            test_tr = false;
+
             tm = this.transform.parent;
 
             this.transform.SetParent(this.transform.root);
-
             this.transform.SetAsLastSibling();
-
-            image.raycastTarget = false;
-
-            click_tr = true;
         }
     }
 
@@ -44,11 +49,17 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         if (start_tr)
         {
-            this.transform.SetParent(tm);
-
             image.raycastTarget = true;
-
             click_tr = false;
+
+            if (test_tr)
+            {
+                this.transform.SetParent(tm);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 }
