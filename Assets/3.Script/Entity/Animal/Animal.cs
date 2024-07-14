@@ -63,8 +63,8 @@ public class Animal : Entity
     private float defaultDetectionDistance; // 기본 탐지 거리
 
     // 플레이어 탐지 관련 변수들
-    private bool canDetectPlayer = true;
-    private float playerDetectionCooldown = 20f;
+    protected bool canDetectPlayer = true;
+    protected float playerDetectionCooldown = 20f;
 
     // 상태 관련 변수들
     protected enum State { Wander, Jump, Idle, Run, DoubleJump, Follow }
@@ -101,6 +101,7 @@ public class Animal : Entity
         if (col != null) {
             float size = col.bounds.size.magnitude;
             agent.radius = size / 4;
+            agent.height = col.bounds.size.y; // 높이 설정 추가
         }
         else {
             Debug.LogWarning("Collider component is missing!");
@@ -266,7 +267,7 @@ public class Animal : Entity
         newAdult.transform.localScale = transform.localScale * 2;
 
         // 성장한 오브젝트의 이름에서 "Baby" 제거
-        newAdult.name = gameObject.name.Replace(" Baby", "");
+        newAdult.name = gameObject.name.Replace("Baby", "");
 
         Destroy(gameObject);
         Debug.Log($"{newAdult.name}가 성인으로 성장했습니다.");
@@ -376,11 +377,9 @@ public class Animal : Entity
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
         Debug.Log("Animal: OnPlayerDetected 호출됨");
-        canDetectPlayer = false; // 탐지 비활성화
-        StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
     }
 
-    private IEnumerator PlayerDetectionCooldown() {
+    protected IEnumerator PlayerDetectionCooldown() {
         yield return new WaitForSeconds(playerDetectionCooldown);
         canDetectPlayer = true; // 쿨타임 종료 후 탐지 활성화
     }

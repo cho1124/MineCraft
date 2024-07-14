@@ -17,6 +17,11 @@ public class Lion : Animal
 
     protected override void OnPlayerDetected() {
         // 플레이어의 Transform을 태그를 사용하여 가져옴
+
+        // Animal 클래스의 기본 동작 수행
+        canDetectPlayer = false; // 탐지 비활성화
+        StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) {
             playerTransform = player.transform;

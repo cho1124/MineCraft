@@ -29,6 +29,11 @@ public class Penguin : Animal
     }
 
     protected override void OnPlayerDetected() {
+
+        // Animal 클래스의 기본 동작 수행
+        canDetectPlayer = false; // 탐지 비활성화
+        StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
+
         StartCoroutine(FleeSequence());
     }
 
