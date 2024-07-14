@@ -27,8 +27,6 @@ public class Player_Control : MonoBehaviour
     {
         TryGetComponent(out controller);
         TryGetComponent(out animator);
-        
-        head_transform = transform.GetChild(1).transform;
     }
 
     private void Update()
@@ -37,16 +35,12 @@ public class Player_Control : MonoBehaviour
 
         Attack_Control();
         Move_Control();
-        Head_Body_Rotate();
-
-
-
     }
 
     private void LateUpdate()
     {
         // 문제점 1. 머리의 회전 부분이 모델의 회전에 의해서 새롭게 덮어 씌워지는 치명적인 문제
-        
+        Head_Body_Rotate();
     }
 
 
@@ -55,15 +49,9 @@ public class Player_Control : MonoBehaviour
         float targetSpeed = new Vector2(key_h, key_v).magnitude;
 
         // 대각선 문제 해결
-        if (targetSpeed > 1)
-        {
-            targetSpeed = 1;
-        }
+        if (targetSpeed > 1) targetSpeed = 1;
 
-        if (key_h < 0 || key_v < 0)
-        {
-            targetSpeed = -targetSpeed;
-        }
+        if (key_v < 0) targetSpeed = -targetSpeed;
 
         targetSpeed = Input.GetKey(KeyCode.LeftControl) ? targetSpeed * 2 : targetSpeed;
 
@@ -81,10 +69,7 @@ public class Player_Control : MonoBehaviour
             animator.SetTrigger("Attack");
             Debug.Log("Attack");
         }
-
-
     }
-
 
     private void Move_Control()
     {
@@ -96,9 +81,6 @@ public class Player_Control : MonoBehaviour
 
             animator.SetBool("IsGround", true);
             animator.SetBool("IsJump", false);
-
-
-            
 
             // 짬푸
             if (Input.GetButtonDown("Jump"))
