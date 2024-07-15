@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     private float mouseHorizontal;
     private float mouseVertical;
 
-    [SerializeField] private float mouseSensitive;
+    //[SerializeField] private float mouseSensitive;
     private Vector3 velocity;
     private float verticalMomentum = 0;
     private bool jumpRequest;
@@ -80,8 +80,8 @@ public class Player : MonoBehaviour
         if (jumpRequest)
             Jump();
 
-        transform.Rotate(Vector3.up * mouseHorizontal * mouseSensitive);
-        cam.Rotate(Vector3.right * -mouseVertical * mouseSensitive);
+        transform.Rotate(Vector3.up * mouseHorizontal * world.settings.mouseSensitivity);
+        cam.Rotate(Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
         transform.Translate(velocity, Space.World);
     }
 

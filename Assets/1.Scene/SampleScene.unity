@@ -523,15 +523,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227cfebbfbd3d0e41b429e3317226c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings:
+    version: 0.0.01
+    viewDistance: 5
+    enableThreading: 1
+    mouseSensitivity: 5
+    seed: 1234
   player: {fileID: 1171314684}
   spawnPoint: {x: 0, y: 0, z: 0}
   camera: {fileID: 576789853}
-  seed: 1313
   biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
   globalLightLevel: 0.95
   day: {r: 0, g: 0.8893428, b: 1, a: 0}
   night: {r: 0, g: 0.26948595, b: 1, a: 0}
-  enableThreading: 1
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 47af3025b26024f40b05b595bd6041cf, type: 2}
   blockTypes:
@@ -1301,7 +1305,6 @@ MonoBehaviour:
   jumpForce: 5
   gravity: -9.8
   playerWidth: 0.3
-  mouseSensitive: 5
   highlightBlock: {fileID: 611511823}
   placeBlock: {fileID: 1484057990}
   checkIncrement: 0.1

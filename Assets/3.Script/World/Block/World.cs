@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 
 
 public class World : MonoBehaviour
@@ -12,8 +13,8 @@ public class World : MonoBehaviour
     /// 
     /// 
     ///
-    
 
+    public Settings settings;
 
 
 
@@ -29,7 +30,7 @@ public class World : MonoBehaviour
 
 
     [Header("World Generation Values")]
-    public int seed;
+    //public int seed;
     //public int seedOffset;
     public BiomeAttribute biome;
 
@@ -40,8 +41,7 @@ public class World : MonoBehaviour
     public Color day;
     public Color night;
 
-    [Header("Performance")]
-    public bool enableThreading;
+
 
 
     // blocks
@@ -92,8 +92,18 @@ public class World : MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
+        //json
+        //string jsonExport = JsonUtility.ToJson(settings);
+        //UnityEngine.Debug.Log(jsonExport);
+        //
+        //
+        //File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
 
-        UnityEngine.Random.InitState(seed);
+        string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
+        settings = JsonUtility.FromJson<Settings>(jsonImport);
+
+
+        UnityEngine.Random.InitState(settings.seed);
 
 
         Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
@@ -101,7 +111,7 @@ public class World : MonoBehaviour
 
 
 
-        if (enableThreading)
+        if (settings.enableThreading)
         {
             chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
             chunkUpdateThread.Start();
@@ -157,7 +167,7 @@ public class World : MonoBehaviour
             
         }
 
-        if (!enableThreading)
+        if (!settings.enableThreading)
         {
 
 
@@ -206,9 +216,22 @@ public class World : MonoBehaviour
         //List<Vector3Int> wormPositions = perlinWorm.CreateWorm(VoxelData.worldSizeInBlocks / 2, VoxelData.worldSizeInBlocks / 2);
 
 
-        for (int x = VoxelData.worldSizeInChunks / 2 - VoxelData.viewDistanceInChunks / 2; x < VoxelData.worldSizeInChunks / 2 + VoxelData.viewDistanceInChunks / 2; x++)
+        //for (int x = VoxelData.worldSizeInChunks / 2 - VoxelData.viewDistanceInChunks / 2; x < VoxelData.worldSizeInChunks / 2 + VoxelData.viewDistanceInChunks / 2; x++)
+        //{
+        //    for (int z = VoxelData.worldSizeInChunks / 2 - VoxelData.viewDistanceInChunks / 2; z < VoxelData.worldSizeInChunks / 2 + VoxelData.viewDistanceInChunks / 2; z++)
+        //    {
+        //
+        //        ChunkCoord newchunk = new ChunkCoord(x, z);
+        //        chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
+        //        //activeChunks.Add(new ChunkCoord(x, z));
+        //        chunksToCreate.Add(newchunk);
+        //
+        //
+        //    }
+        //}
+        for (int x = VoxelData.worldSizeInChunks / 2 - settings.viewDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.viewDistance / 2; x++)
         {
-            for (int z = VoxelData.worldSizeInChunks / 2 - VoxelData.viewDistanceInChunks / 2; z < VoxelData.worldSizeInChunks / 2 + VoxelData.viewDistanceInChunks / 2; z++)
+            for (int z = VoxelData.worldSizeInChunks / 2 - settings.viewDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.viewDistance / 2; z++)
             {
 
                 ChunkCoord newchunk = new ChunkCoord(x, z);
@@ -219,6 +242,10 @@ public class World : MonoBehaviour
 
             }
         }
+
+
+
+
 
         //while(modifications.Count > 0)
         //{
@@ -326,7 +353,7 @@ public class World : MonoBehaviour
 
     private void OnDisable()
     {
-        if (enableThreading)
+        if (settings.enableThreading)
         {
             chunkUpdateThread.Abort();
         }
@@ -506,10 +533,45 @@ public class World : MonoBehaviour
         activeChunks.Clear();
 
 
+        //// 플레이어 시야 거리 내의 청크 검사
+        //for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
+        //{
+        //    for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
+        //    {
+        //        // chunk 가 월드 내에 있는지 확인
+        //        if (IsChunkInWorld(new ChunkCoord(x, z)))
+        //        {
+        //            // chunk가 없으면 새로운 chunk 생성
+        //            if (chunks[x, z] == null)
+        //            {
+        //                chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
+        //                chunksToCreate.Add(new ChunkCoord(x, z));
+        //
+        //            }
+        //            // chunk가 비활성화 된 경우엔 활성화 
+        //            else if (!chunks[x, z].isActive)
+        //            {
+        //                chunks[x, z].isActive = true;
+        //                //activeChunks.Add(new ChunkCoord(x, z));
+        //            }
+        //
+        //            // 현재 chunk를 활성 chunk목록에 추가
+        //            activeChunks.Add(new ChunkCoord(x, z));
+        //        }
+        //
+        //        // 이전 활성화 된 chunk 목록에서 제거
+        //        for (int i = 0; i < previouslyActiveChunks.Count; i++)
+        //        {
+        //            if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
+        //                previouslyActiveChunks.RemoveAt(i);
+        //        }
+        //    }
+        //}
+
         // 플레이어 시야 거리 내의 청크 검사
-        for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
+        for (int x = coord.x - settings.viewDistance; x < coord.x + settings.viewDistance; x++)
         {
-            for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
+            for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
             {
                 // chunk 가 월드 내에 있는지 확인
                 if (IsChunkInWorld(new ChunkCoord(x, z)))
@@ -540,6 +602,9 @@ public class World : MonoBehaviour
                 }
             }
         }
+
+
+
 
         // 시야에 벗어난 chunk를 비활성화
         foreach (ChunkCoord c in previouslyActiveChunks)
@@ -841,4 +906,24 @@ public class VoxelMod
         position = _position;
         id = _id;
     }
+}
+
+
+[System.Serializable]
+public class Settings
+{
+    [Header("Game Data")]
+    public string version;
+
+
+    [Header("Performance")]
+    public int viewDistance;
+    public bool enableThreading;
+
+    [Header("Controls")]
+    [Range(0.1f, 10f)]
+    public float mouseSensitivity;
+
+    [Header("World Gen")]
+    public int seed;
 }
