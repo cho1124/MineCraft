@@ -18,8 +18,8 @@ public class Chicken : Animal
 
     IEnumerator FleeSequence() {
         // Jump
-        ChangeState(State.Jump);
-        yield return new WaitForSeconds(1.1f); // Jump duration
+      //  ChangeState(State.Jump);
+      //  yield return new WaitForSeconds(1.1f); // Jump duration
 
 
         // NavMeshAgent의 회전을 수동으로 업데이트

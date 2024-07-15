@@ -20,8 +20,8 @@ public class Cat : Animal
     IEnumerator FleeSequence() {
         Debug.Log("Cat:FleeSequence 시작");
         // Jump
-        ChangeState(State.Jump);
-        yield return new WaitForSeconds(1.1f); // Jump duration
+      //  ChangeState(State.Jump);
+      //  yield return new WaitForSeconds(1.1f); // Jump duration
 
         // NavMeshAgent의 회전을 수동으로 업데이트
         Vector3 newDirection = -transform.forward; // 180도 회전

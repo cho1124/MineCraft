@@ -105,12 +105,8 @@ public class Animal : Entity
 
         // 오브젝트의 크기에 맞게 NavMeshAgent의 radius 설정
         if (col != null) {
-            float size = col.bounds.size.magnitude;
-            agent.radius = size / 4;
-            agent.height = col.bounds.size.y; // 높이 설정 추가
-        }
-        else {
-            Debug.LogWarning("Collider component is missing!");
+            agent.radius = Mathf.Max(col.bounds.size.x, col.bounds.size.z) / 2;
+            agent.height = col.bounds.size.y;
         }
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         // 탐지 거리 초기화
@@ -125,6 +121,12 @@ public class Animal : Entity
     }
 
     protected virtual void Update() {
+
+        // y축 높이 체크
+        if (transform.position.y > 2)
+        {
+            MoveToNearestNavMesh();
+        }
 
         //성장 관련 업데이트
         if (!isAdult && isFull) {
