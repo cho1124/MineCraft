@@ -8,27 +8,31 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
 {
     // ========== Inspector public ==========
 
-    public static bool test_tr = false;
-
     [SerializeField] private Image image = null;
+    [SerializeField] private Inventory Inventory_class = null;
 
-    [Header("디버그")]
-    public bool click_tr = false;
-    [SerializeField] private bool start_tr = false;
+    public static bool test_tr = false;
 
     // ========== Inspector private ==========
 
     [HideInInspector] public Transform tm = null;
 
+    private bool start_tr = false;
+
+    private void Awake()
+    {
+        Inventory_class = FindObjectOfType<Inventory>();
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        start_tr = !(Input.GetMouseButton(0) && Input.GetMouseButton(1));
+        start_tr = !(Input.GetMouseButton(0) && Input.GetMouseButton(1) || Input.GetMouseButton(2));
 
         if (start_tr)
         {
+            test_tr = false; // test
             image.raycastTarget = false;
-            click_tr = true;
-            test_tr = false;
+            Inventory_class.click_tr = true;
 
             tm = this.transform.parent;
 
@@ -50,9 +54,9 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (start_tr)
         {
             image.raycastTarget = true;
-            click_tr = false;
+            Inventory_class.click_tr = false;
 
-            if (test_tr)
+            if (test_tr) // test
             {
                 this.transform.SetParent(tm);
             }

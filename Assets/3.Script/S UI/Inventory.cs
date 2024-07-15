@@ -18,17 +18,24 @@ public class Inventory : MonoBehaviour
     [Header("인벤토리")]
     [SerializeField] private GameObject on_off_obj = null;
 
-    // ========== Inspector private ==========
+    public bool click_tr = false;
 
-    bool[] result; // test
+    public bool[] crafting_slot_tr = new bool[8]; // 수정: 배열 크기를 8로 변경
 
     public bool on_off_tr = false;
-    private bool end_crafting_tr = false;
+
+    // ========== Inspector private ==========
+
+    // ========== Test ==========
+
+    [SerializeField] private int[] item_id = new int[4];
+
+    [SerializeField] private bool[] item_tr = new bool[4];
+
+    [SerializeField] private bool[] check1_tr = new bool[4];
 
     private void Start()
     {
-        result = new bool[4]; // test
-
         on_off_obj.SetActive(false);
         result_crafting_slot_obj.SetActive(false);
     }
@@ -37,7 +44,8 @@ public class Inventory : MonoBehaviour
     {
         if (on_off_tr)
         {
-            CraftingSlot();
+            CraftingSlot1(0, "Pickaxe item");
+            CraftingSlot1(4, "Shovel item"); // 수정: value 값을 4로 변경
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -46,68 +54,80 @@ public class Inventory : MonoBehaviour
 
             on_off_obj.SetActive(on_off_tr);
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+    private void CraftingSlot1(int value, string item_name)
+    {
+        for (int i = 0; i < 4; i++) // 수정: 인덱스 범위를 고정값으로 변경
         {
-            if (result_crafting_slot_obj.transform.childCount == 0)
+            if (i + value < crafting_slot.Length) // 수정: 인덱스가 배열 범위를 초과하지 않도록 체크
             {
-                result_crafting_slot_obj.SetActive(true);
-
-                GameObject item = Instantiate(item_obj[0]);
-
-                item.transform.localScale = new Vector3(5, 5, 1); // test
-
-                item.transform.SetParent(result_crafting_slot_obj.transform);
-
-                Debug.Log("아이템 생성 성공!");
+                if (crafting_slot[i + value].childCount == 1 && crafting_slot[i + value].GetChild(0).name == item_name)
+                {
+                    crafting_slot_tr[i + value] = true;
+                }
+                else
+                {
+                    crafting_slot_tr[i + value] = false;
+                }
             }
         }
+
+        CraftingSlot2();
     }
 
-    private void CraftingSlot() // 수정 필요
+    private void CraftingSlot2()
     {
-        result[0] = crafting_slot[0].childCount == 1;
-        result[1] = crafting_slot[1].childCount == 1;
-        result[2] = crafting_slot[2].childCount == 1;
-        result[3] = crafting_slot[3].childCount == 1;
+        // 수정: 배열 길이를 벗어나지 않도록 조건을 체크
+        if (crafting_slot_tr.Length >= 4 && crafting_slot_tr[0] && crafting_slot_tr[1] && !crafting_slot_tr[2] && !crafting_slot_tr[3])
+            NewItem(0, "Pickaxe item");
 
-        if (result[0] && result[2]) NewItem(0);
-        else if (result[0] && result[3]) NewItem(1);
-
-        DeleteItem();
+        // 수정: 배열 길이를 벗어나지 않도록 조건을 체크
+        if (crafting_slot_tr.Length >= 8 && !crafting_slot_tr[4] && !crafting_slot_tr[5] && crafting_slot_tr[6] && crafting_slot_tr[7])
+            NewItem(1, "Shovel item");
     }
 
-    private void ResultCraftingSlot()
-    {
-
-    }
-
-    private void NewItem(int item_id)
+    private void NewItem(int item_index, string item_name)
     {
         if (result_crafting_slot_obj.transform.childCount == 0)
         {
             result_crafting_slot_obj.SetActive(true);
 
-            GameObject item = Instantiate(item_obj[item_id]);
+            GameObject item = Instantiate(item_obj[item_index]);
             item.transform.localScale = new Vector3(5, 5, 1); // test
             item.transform.SetParent(result_crafting_slot_obj.transform);
 
-            end_crafting_tr = true;
+            Debug.Log($"{item_name} 아이템 제작 완료!");
+
+            DeleteItem();
         }
     }
 
-    private void DeleteItem() // 아이템이 전부 다 삭제 됨
+    private void DeleteItem()
     {
-        if (end_crafting_tr)
+        for (int i = 0; i < crafting_slot.Length; i++)
         {
-            for (int i = 0; i < crafting_slot.Length; i++)
+            if (i < crafting_slot_tr.Length && crafting_slot_tr[i] && click_tr)
             {
-                if (crafting_slot[i].childCount == 1)
+                Destroy(crafting_slot[i].GetChild(0).gameObject);
+            }
+        }
+    }
+
+    private void ItemInfo()
+    {
+        for (int i = 0; i < crafting_slot.Length; i++)
+        {
+            if (crafting_slot[i].childCount == 1)
+            {
+                switch (crafting_slot[i].GetChild(0).name)
                 {
-                    if (result[i])
-                    {
-                        Destroy(crafting_slot[i].GetChild(0).gameObject);
-                    }
+                    case "Pickaxe item":
+                        item_id[i] = 1; // 예시로 1로 설정
+                        break;
+                    case "Shovel item":
+                        item_id[i] = 2; // 예시로 2로 설정
+                        break;
                 }
             }
         }

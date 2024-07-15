@@ -13,12 +13,10 @@ public class InventoryBarSlotChoice : MonoBehaviour
 
     // ========== Inspector private ==========
 
-    private Vector3[] slot_choice_pos = null;
+    private Vector3[] slot_choice_pos = new Vector3[9];
 
     private void Start()
     {
-        slot_choice_pos = new Vector3[9];
-
         // 설계 사정으로 수동으로 좌표를 구했습니다.
 
         slot_choice_pos[0] = new Vector3(-400, -485, 0);
