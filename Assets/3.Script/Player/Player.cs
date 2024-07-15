@@ -195,6 +195,11 @@ public class Player : MonoBehaviour
         mouseHorizontal = Input.GetAxis("Mouse X");
         mouseVertical = Input.GetAxis("Mouse Y");
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+
+
+
         if (Input.GetButtonDown("Sprint"))
             isSprinting = true;
         if (Input.GetButtonUp("Sprint"))

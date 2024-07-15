@@ -122,20 +122,29 @@ public class World : MonoBehaviour
         UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
 
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
+        SetGlobalLightValue();
 
     }
 
-
+    public void SetGlobalLightValue()
+    {
+        camera.backgroundColor = Color.Lerp(day, night, globalLightLevel);
+        
+        // 쉐이더 글로벌라이트 연결
+        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
+    }
 
 
 
     private void Update()
     {
         playerChunkCoord = GetChunkCoordFromVector3(player.position);
-        camera.backgroundColor = Color.Lerp(day, night, globalLightLevel);
+        
 
-        // 쉐이더 글로벌라이트 연결
-        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
+        //camera.backgroundColor = Color.Lerp(day, night, globalLightLevel);
+        //
+        //// 쉐이더 글로벌라이트 연결
+        //Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
 
 
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
@@ -573,14 +582,16 @@ public class World : MonoBehaviour
         {
             for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
             {
+
+                ChunkCoord thisChunkCoord = new ChunkCoord(x, z);
                 // chunk 가 월드 내에 있는지 확인
-                if (IsChunkInWorld(new ChunkCoord(x, z)))
+                if (IsChunkInWorld(thisChunkCoord))
                 {
                     // chunk가 없으면 새로운 chunk 생성
                     if (chunks[x, z] == null)
                     {
-                        chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
-                        chunksToCreate.Add(new ChunkCoord(x, z));
+                        chunks[x, z] = new Chunk(thisChunkCoord, this);
+                        chunksToCreate.Add(thisChunkCoord);
 
                     }
                     // chunk가 비활성화 된 경우엔 활성화 
@@ -591,13 +602,13 @@ public class World : MonoBehaviour
                     }
 
                     // 현재 chunk를 활성 chunk목록에 추가
-                    activeChunks.Add(new ChunkCoord(x, z));
+                    activeChunks.Add(thisChunkCoord);
                 }
 
                 // 이전 활성화 된 chunk 목록에서 제거
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
+                    if (previouslyActiveChunks[i].Equals(thisChunkCoord))
                         previouslyActiveChunks.RemoveAt(i);
                 }
             }

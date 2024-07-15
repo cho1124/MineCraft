@@ -65,6 +65,9 @@ public class Chunk
     // voxel맵이 채워졌는지 여부
     public bool isVoxelMapPopulated = false;
 
+
+
+    List<Vector3> normals = new List<Vector3>();
     //private bool threadLocked = false;
 
     public bool isActive
@@ -157,7 +160,7 @@ public class Chunk
         //    myThread.Start();
         //}
         //else
-            PopulateVoxelMap();
+        PopulateVoxelMap();
 
         //PopulateVoxelMap();
         //UpdateChunk();
@@ -198,7 +201,7 @@ public class Chunk
         lock (world.ChunkUpdateThreadLock)
         {
 
-        world.chunksToUpdate.Add(this);
+            world.chunksToUpdate.Add(this);
         }
 
     }
@@ -250,8 +253,8 @@ public class Chunk
 
         //lock (world.ChunksToDraw)
         //{
-            //CreateMesh();
-            world.ChunksToDraw.Enqueue(this);
+        //CreateMesh();
+        world.ChunksToDraw.Enqueue(this);
         //}
         //
         //threadLocked = false;
@@ -266,6 +269,7 @@ public class Chunk
         transparentTriangles.Clear();
         uvs.Clear();
         colors.Clear();
+        normals.Clear();
     }
 
 
@@ -334,7 +338,7 @@ public class Chunk
 
         lock (world.ChunkUpdateThreadLock)
         {
-            world.chunksToUpdate.Insert(0,this);
+            world.chunksToUpdate.Insert(0, this);
             // 변경된 주변 Voxel 업데이트
             UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
         }
@@ -474,13 +478,13 @@ public class Chunk
                 Vector3 currentVoxel = v + VoxelData.faceChecks[p];
                 Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
 
-                if(IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.y))
+                if (IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.y))
                 {
-                    if(voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent < voxelMap[v.x,v.y,v.z].globalLightPercent - VoxelData.lightFalloff)
+                    if (voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent < voxelMap[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff)
                     {
                         voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent = voxelMap[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
 
-                        if(voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent > VoxelData.lightFalloff)
+                        if (voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent > VoxelData.lightFalloff)
                         {
                             litVoxels.Enqueue(neighbor);
                         }
@@ -534,6 +538,10 @@ public class Chunk
                     vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
                 }
 
+                for (int i = 0; i < 4; i++)
+                {
+                    normals.Add(VoxelData.faceChecks[p]);
+                }
                 // 텍스쳐 좌표 추가
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
 
@@ -568,26 +576,26 @@ public class Chunk
                 colors.Add(new Color(0, 0, 0, lightLevel));
                 colors.Add(new Color(0, 0, 0, lightLevel));
 
-                //if (!renderNeighborFaces)
-                //{
-                triangles.Add(vertexIndex);
-                triangles.Add(vertexIndex + 1);
-                triangles.Add(vertexIndex + 2);
-                triangles.Add(vertexIndex + 2);
-                triangles.Add(vertexIndex + 1);
-                triangles.Add(vertexIndex + 3);
-                //}
-                //else
-                //{
-                //    transparentTriangles.Add(vertexIndex);
-                //    transparentTriangles.Add(vertexIndex + 1);
-                //    transparentTriangles.Add(vertexIndex + 2);
-                //    transparentTriangles.Add(vertexIndex + 2);
-                //    transparentTriangles.Add(vertexIndex + 1);
-                //    transparentTriangles.Add(vertexIndex + 3);
-                //
-                //    // 삼각형 인덱스 추가
-                //}
+                if (!world.blockTypes[neighbor.id].renderNeighborFaces)
+                {
+                    triangles.Add(vertexIndex);
+                    triangles.Add(vertexIndex + 1);
+                    triangles.Add(vertexIndex + 2);
+                    triangles.Add(vertexIndex + 2);
+                    triangles.Add(vertexIndex + 1);
+                    triangles.Add(vertexIndex + 3);
+                }
+                else
+                {
+                    transparentTriangles.Add(vertexIndex);
+                    transparentTriangles.Add(vertexIndex + 1);
+                    transparentTriangles.Add(vertexIndex + 2);
+                    transparentTriangles.Add(vertexIndex + 2);
+                    transparentTriangles.Add(vertexIndex + 1);
+                    transparentTriangles.Add(vertexIndex + 3);
+
+                    // 삼각형 인덱스 추가
+                }
 
                 // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
                 vertexIndex += 4;
@@ -615,9 +623,10 @@ public class Chunk
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.uv = uvs.ToArray();
         mesh.colors = colors.ToArray();
+        mesh.normals = normals.ToArray();
 
         // 법선벡터 재계산
-        mesh.RecalculateNormals();
+        //mesh.RecalculateNormals();
 
         meshFilter.mesh = mesh;
 
