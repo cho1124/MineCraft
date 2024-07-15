@@ -64,10 +64,23 @@ public class Player_Control : MonoBehaviour
 
     private void Attack_Control()
     {
+        
         if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Attack");
-            Debug.Log("Attack");
+            animator.SetTrigger("R_Attack");
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            animator.SetTrigger("L_Attack");
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            animator.SetBool("Is_Guarding", true);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            animator.SetBool("Is_Guarding", false);
         }
     }
 
