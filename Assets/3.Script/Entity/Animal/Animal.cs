@@ -123,7 +123,7 @@ public class Animal : Entity
     protected virtual void Update() {
 
         // y축 높이 체크
-        if (transform.position.y > 2)
+        if (transform.position.y >= 2)
         {
             MoveToNearestNavMesh();
         }
@@ -258,6 +258,9 @@ public class Animal : Entity
             // 복제된 오브젝트의 이름에 "Baby" 추가
             newAnimal.name = gameObject.name + "_Baby";
 
+            // 복제된 오브젝트에 "Animals" 태그 추가
+            newAnimal.tag = "Animals";
+
             // 쿨타임 설정
             StartCoroutine(SpawnCooldown());
         }
@@ -279,6 +282,9 @@ public class Animal : Entity
 
         // 성장한 오브젝트의 이름에서 "Baby" 제거
         newAdult.name = gameObject.name.Replace("_Baby", "");
+
+        // "Animals" 태그 추가
+        newAdult.tag = "Animals";
 
         // 새로운 성체 오브젝트 초기화
         Animal newAnimalComponent = newAdult.GetComponent<Animal>();
