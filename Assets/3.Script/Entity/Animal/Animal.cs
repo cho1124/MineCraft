@@ -45,7 +45,7 @@ public class Animal : Entity
     // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
     private float spawnCooldown = 30f; // 쿨타임 시간
-    private const int collisionThreshold = 10; // 충돌 임계값
+    private const int collisionThreshold = 7; // 충돌 임계값
     protected Queue<GameObject> recentAnimals = new Queue<GameObject>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<GameObject, int> animalCount = new Dictionary<GameObject, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
