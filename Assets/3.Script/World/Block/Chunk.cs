@@ -39,6 +39,8 @@ public class Chunk
     List<int> triangles = new List<int>();
     List<int> transparentTriangles = new List<int>();
 
+    List<Color> colors = new List<Color>();
+
     Material[] materials = new Material[2];
 
 
@@ -187,7 +189,7 @@ public class Chunk
     {
         threadLocked = true;
 
-        while(modifications.Count > 0)
+        while (modifications.Count > 0)
         {
             VoxelMod v = modifications.Dequeue();
             Vector3 pos = v.position -= position;
@@ -230,6 +232,7 @@ public class Chunk
         triangles.Clear();
         transparentTriangles.Clear();
         uvs.Clear();
+        colors.Clear();
     }
 
 
@@ -323,8 +326,8 @@ public class Chunk
 
 
 
-        // 변경된 주변 Voxel 업데이트
-        void UpdateSurroundingVoxels(int x, int y, int z)
+    // 변경된 주변 Voxel 업데이트
+    void UpdateSurroundingVoxels(int x, int y, int z)
     {
         // 변경된 Voxel의 위치 저장
         Vector3 thisVoxel = new Vector3(x, y, z);
@@ -412,7 +415,37 @@ public class Chunk
                 // 텍스쳐 좌표 추가
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
 
-                if(!isTransparent)
+                float lightLevel;
+                int yPos = (int)pos.y + 1;
+                bool inShade = false;
+                while (yPos < VoxelData.ChunkHeight)
+                {
+                    if (voxelMap[(int)pos.x, yPos, (int)pos.z] != 0)
+                    {
+                        inShade = true;
+                        break;
+                    }
+
+
+
+                    yPos++;
+                }
+
+                if (inShade)
+                {
+
+
+                    lightLevel = 0.4f;
+                }
+                else
+                { lightLevel = 0f; }
+
+                colors.Add(new Color(0, 0, 0, lightLevel));
+                colors.Add(new Color(0, 0, 0, lightLevel));
+                colors.Add(new Color(0, 0, 0, lightLevel));
+                colors.Add(new Color(0, 0, 0, lightLevel));
+
+                if (!isTransparent)
                 {
                     triangles.Add(vertexIndex);
                     triangles.Add(vertexIndex + 1);
@@ -430,7 +463,7 @@ public class Chunk
                     transparentTriangles.Add(vertexIndex + 1);
                     transparentTriangles.Add(vertexIndex + 3);
 
-                // 삼각형 인덱스 추가
+                    // 삼각형 인덱스 추가
                 }
 
                 // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
@@ -447,22 +480,23 @@ public class Chunk
 
     public void CreateMesh()
     {
-    
+
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
-       // mesh.triangles = triangles.ToArray();
-    
+        // mesh.triangles = triangles.ToArray();
+
         mesh.subMeshCount = 2;
-        
+
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
         mesh.uv = uvs.ToArray();
-    
+        mesh.colors = colors.ToArray();
+
         // 법선벡터 재계산
         mesh.RecalculateNormals();
-    
+
         meshFilter.mesh = mesh;
-    
+
     }
 
 
