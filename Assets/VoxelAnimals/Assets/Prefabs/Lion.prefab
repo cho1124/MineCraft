@@ -417,9 +417,9 @@ GameObject:
   - component: {fileID: 54254021876192096}
   - component: {fileID: 65306087575105876}
   - component: {fileID: 95995790678533120}
-  - component: {fileID: 114412009841591444}
   - component: {fileID: 6389368554289155211}
   - component: {fileID: 3262329574997193558}
+  - component: {fileID: 1947720676111983046}
   m_Layer: 0
   m_Name: Lion
   m_TagString: Untagged
@@ -436,7 +436,7 @@ Transform:
   m_GameObject: {fileID: 1553991042791506}
   m_LocalRotation: {x: -0, y: 0.8632902, z: -0, w: 0.5047079}
   m_LocalPosition: {x: -2.99, y: -0.019, z: 0.58}
-  m_LocalScale: {x: 1.8907, y: 1.8907, z: 1.8907}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 4309524265304134}
   - {fileID: 4616931332331144}
@@ -496,21 +496,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114412009841591444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553991042791506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40079260bda69f14c80332a04d1632a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 3
-  jumpForce: 300
-  timeBeforeNextJump: 1.2
 --- !u!114 &6389368554289155211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,6 +539,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1947720676111983046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553991042791506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea0edd52946548f4cb81e685c311b1c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adultPrefab: {fileID: 1553991042791506}
+  babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
+  hungerLevel: 6
+  baseSpeed: 0
+  dynamicNavMesh: {fileID: 0}
+  detectionDistance: 3
+  detectionAngle: 45
+  detectionRays: 5
+  wanderRadius: 30
 --- !u!1 &1559099344501894
 GameObject:
   m_ObjectHideFlags: 0

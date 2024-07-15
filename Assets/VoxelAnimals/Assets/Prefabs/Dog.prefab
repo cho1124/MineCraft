@@ -336,9 +336,9 @@ GameObject:
   - component: {fileID: 54385426829514116}
   - component: {fileID: 65449959130551738}
   - component: {fileID: 95598690723424096}
-  - component: {fileID: 114749360120129354}
   - component: {fileID: 2599661853164242754}
   - component: {fileID: 4541342326115507185}
+  - component: {fileID: 8323144176553616496}
   m_Layer: 0
   m_Name: Dog
   m_TagString: Untagged
@@ -416,21 +416,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114749360120129354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1417258215064542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40079260bda69f14c80332a04d1632a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 3
-  jumpForce: 300
-  timeBeforeNextJump: 1.2
 --- !u!114 &2599661853164242754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,6 +459,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8323144176553616496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417258215064542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df633c0701137d149a29a734015c9389, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adultPrefab: {fileID: 1417258215064542}
+  babyPrefab: {fileID: 4093909873755144833, guid: 9a9cbd48c2fd1b34487471af00e1ba8b, type: 3}
+  hungerLevel: 6
+  baseSpeed: 0
+  dynamicNavMesh: {fileID: 0}
+  detectionDistance: 3
+  detectionAngle: 45
+  detectionRays: 5
+  wanderRadius: 30
 --- !u!1 &1451966804129338
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,9 @@ public class Test1 : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) 
     {
+        // 충돌 이벤트 로그 출력
+        Debug.Log("Collision detected with: " + collision.gameObject.name);
+
         // 충돌한 오브젝트의 메터리얼을 가져옴
         Renderer renderer = collision.gameObject.GetComponent<Renderer>();
         

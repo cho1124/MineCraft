@@ -172,11 +172,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4936587561821370}
   - component: {fileID: 95485790526497962}
-  - component: {fileID: 114046883305083430}
   - component: {fileID: 65712882847760486}
   - component: {fileID: 54786317403076396}
   - component: {fileID: -3220157124405409727}
   - component: {fileID: 567314669562886362}
+  - component: {fileID: 5475096968953703423}
   m_Layer: 0
   m_Name: Penguin
   m_TagString: Untagged
@@ -193,7 +193,7 @@ Transform:
   m_GameObject: {fileID: 1755646104177140}
   m_LocalRotation: {x: -0, y: -0.890276, z: -0, w: -0.45542133}
   m_LocalPosition: {x: 1.31, y: -0.017460313, z: 1.85}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 4558486558690582}
   m_Father: {fileID: 0}
@@ -218,21 +218,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114046883305083430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755646104177140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40079260bda69f14c80332a04d1632a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 3
-  jumpForce: 300
-  timeBeforeNextJump: 1.2
 --- !u!65 &65712882847760486
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -305,6 +290,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5475096968953703423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755646104177140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e89eedc93e30d45b1da8e9798de2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adultPrefab: {fileID: 1755646104177140}
+  babyPrefab: {fileID: 6172145746540233397, guid: f2924713c8e86e044a6c5bdee6474fbe, type: 3}
+  hungerLevel: 6
+  baseSpeed: 0
+  dynamicNavMesh: {fileID: 0}
+  detectionDistance: 3
+  detectionAngle: 45
+  detectionRays: 5
+  wanderRadius: 30
 --- !u!1 &1855729412434242
 GameObject:
   m_ObjectHideFlags: 0

@@ -334,11 +334,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4292928448873590}
   - component: {fileID: 95970164997226778}
-  - component: {fileID: 114807186997810214}
   - component: {fileID: 54011750179816588}
   - component: {fileID: 65706843018012252}
   - component: {fileID: 8606847079321234811}
   - component: {fileID: 5121947202180820702}
+  - component: {fileID: 2386659430584838070}
   m_Layer: 0
   m_Name: Chicken
   m_TagString: Untagged
@@ -383,21 +383,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114807186997810214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1969419073538870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40079260bda69f14c80332a04d1632a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 3
-  jumpForce: 300
-  timeBeforeNextJump: 1.2
 --- !u!54 &54011750179816588
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -470,3 +455,24 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2386659430584838070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969419073538870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a8024aec2ceee42be937a8805782b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adultPrefab: {fileID: 1969419073538870}
+  babyPrefab: {fileID: 740167545552832187, guid: 0b47bdb7d4463e1499c010bb2fb81e2f, type: 3}
+  hungerLevel: 6
+  baseSpeed: 0
+  dynamicNavMesh: {fileID: 0}
+  detectionDistance: 3
+  detectionAngle: 45
+  detectionRays: 5
+  wanderRadius: 30

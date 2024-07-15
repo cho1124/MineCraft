@@ -9,7 +9,6 @@ public class Cat : Animal
     }
 
     protected override void OnPlayerDetected() {
-        Debug.Log("Cat: OnPlayerDetected 호출됨");
 
         // Animal 클래스의 기본 동작 수행
         canDetectPlayer = false; // 탐지 비활성화
@@ -19,7 +18,7 @@ public class Cat : Animal
     }
 
     IEnumerator FleeSequence() {
-        Debug.Log("FleeSequence 시작");
+        Debug.Log("Cat:FleeSequence 시작");
         // Jump
         ChangeState(State.Jump);
         yield return new WaitForSeconds(1.1f); // Jump duration

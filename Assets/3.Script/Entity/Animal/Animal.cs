@@ -83,6 +83,12 @@ public class Animal : Entity
         rb = GetComponent<Rigidbody>();
         Collider col = GetComponent<Collider>();
 
+        // NavMesh 위에 있는지 확인
+        if (!agent.isOnNavMesh)
+        {
+            MoveToNearestNavMesh();
+        }
+
         // 성장 관련 초기 설정
         if (gameObject.name.Contains("Baby")) {
             isAdult = false; // 새끼상태
@@ -248,7 +254,7 @@ public class Animal : Entity
             }
 
             // 복제된 오브젝트의 이름에 "Baby" 추가
-            newAnimal.name = gameObject.name + " Baby";
+            newAnimal.name = gameObject.name + "_Baby";
 
             // 쿨타임 설정
             StartCoroutine(SpawnCooldown());
@@ -262,13 +268,25 @@ public class Animal : Entity
     }
 
     private void GrowUp() {
+
+        if (isAdult) return;// 이미 성인 상태이면 종료
+
         // 성인 상태로 성장
         GameObject newAdult = Instantiate(adultPrefab, transform.position, transform.rotation);
         newAdult.transform.localScale = transform.localScale * 2;
 
         // 성장한 오브젝트의 이름에서 "Baby" 제거
-        newAdult.name = gameObject.name.Replace("Baby", "");
+        newAdult.name = gameObject.name.Replace("_Baby", "");
 
+        // 새로운 성체 오브젝트 초기화
+        Animal newAnimalComponent = newAdult.GetComponent<Animal>();
+        if (newAnimalComponent != null)
+        {
+            newAnimalComponent.isAdult = true;
+            newAnimalComponent.growthTimeGaze = 0; // 성체가 된 후 성장 타이머 초기화
+            newAnimalComponent.isFull = false; // 성장 후 배부름 상태 초기화
+        }
+        // 기존 오브젝트 삭제
         Destroy(gameObject);
         Debug.Log($"{newAdult.name}가 성인으로 성장했습니다.");
     }
@@ -338,11 +356,14 @@ public class Animal : Entity
 
     private void MoveTowards(Vector3 targetPosition) {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        agent.SetDestination(targetPosition); // NavMeshAgent를 사용하여 이동
+        if (agent.isOnNavMesh)
+        {
+            agent.SetDestination(targetPosition); // NavMeshAgent를 사용하여 이동
+        }
     }
     protected virtual void MoveToNearestNavMesh() {
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
-            agent.SetDestination(hit.position);
+            agent.Warp(hit.position);
             ChangeState(State.Wander);
         }
     }
@@ -394,10 +415,6 @@ public class Animal : Entity
                 SetRandomDestination();
                 break;
             case State.Jump:
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-                rb.isKinematic = false;
                 animator.Play("Jump");
                 StartCoroutine(JumpThenIdle());
                 break;
@@ -435,20 +452,42 @@ public class Animal : Entity
         randomDirection += transform.position;
 
         if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas)) {
-            agent.SetDestination(hit.position);
+            if (agent.isOnNavMesh)
+            {
+                agent.SetDestination(hit.position);
+            }
+            else
+            {
+                Debug.LogWarning("SetRandomDestination 호출 전에 NavMesh 위에 에이전트가 없습니다.");
+            }
         }
-        else {
+        else
+        {
             Debug.LogWarning("Failed to find a valid NavMesh position!");
         }
     }
 
     protected virtual IEnumerator JumpThenIdle() {
+
+        // NavMeshAgent 비활성화
+        agent.updatePosition = false;
+        agent.updateRotation = false;
+        agent.isStopped = true;
+
+        // Rigidbody 사용하여 점프
+        rb.isKinematic = false;
         rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
+
+        // 점프 지속 시간 동안 대기
         yield return new WaitForSeconds(3f);
+
+        // Rigidbody를 다시 비활성화하고 NavMeshAgent를 활성화
+        rb.isKinematic = true;
         agent.updatePosition = true;
         agent.updateRotation = true;
         agent.isStopped = false;
-        rb.isKinematic = true;
+
+        // 상태를 Idle로 변경
         ChangeState(State.Idle);
     }
 

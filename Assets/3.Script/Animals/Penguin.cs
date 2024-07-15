@@ -47,10 +47,6 @@ public class Penguin : Animal
                 SetRandomDestination();
                 break;
             case State.Jump:
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-                rb.isKinematic = false;
                 animator.Play("Jump");
                 StartCoroutine(JumpThenIdle());
                 break;
@@ -76,10 +72,10 @@ public class Penguin : Animal
     }
 
     protected IEnumerator DoubleJumpThenIdle() {
-        rb.AddForce(Vector3.up * 2f, ForceMode.Impulse); // 첫 번째 점프
+        rb.AddForce(Vector3.up * 3f, ForceMode.Impulse); // 첫 번째 점프
         yield return new WaitForSeconds(1f); // 첫 번째 점프 후 잠시 대기
 
-        rb.AddForce(Vector3.up * 2f, ForceMode.Impulse); // 두 번째 점프
+        rb.AddForce(Vector3.up * 3f, ForceMode.Impulse); // 두 번째 점프
         yield return new WaitForSeconds(1f); // 두 번째 점프 후 잠시 대기
 
         agent.updatePosition = true;
