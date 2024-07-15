@@ -52,7 +52,8 @@ public class Chunk
 
 
     // Voxel맵, Chunk 안에 어떤 블록을 넣을껀지 byte단위의 3차원 배열
-    public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    //public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    public VoxelState[,,] voxelMap = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
     public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
 
@@ -136,8 +137,14 @@ public class Chunk
         chunkObject.name = coord.x + ", " + coord.z;
         position = chunkObject.transform.position;
 
-        Thread myThread = new Thread(new ThreadStart(PopulateVoxelMap));
-        myThread.Start();
+        if (world.enableThreading)
+        {
+
+            Thread myThread = new Thread(new ThreadStart(PopulateVoxelMap));
+            myThread.Start();
+        }
+        else
+            PopulateVoxelMap();
 
         //PopulateVoxelMap();
         //UpdateChunk();
@@ -163,7 +170,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    voxelMap[x, y, z] = world.GetVoxel(new Vector3(x, y, z) + position);
+                    voxelMap[x, y, z] = new VoxelState(world.GetVoxel(new Vector3(x, y, z) + position));
                     //Debug.Log($"Position: {voxelMap[x,y,z]}, Noise Value: {noiseValue}, Voxel Value: {voxelValue}");
 
 
@@ -179,8 +186,14 @@ public class Chunk
     public void UpdateChunk()
     {
         //_updateChunk();
-        Thread myThread = new Thread(new ThreadStart(_updateChunk));
-        myThread.Start();
+        if (world.enableThreading)
+        {
+
+            Thread myThread = new Thread(new ThreadStart(_updateChunk));
+            myThread.Start();
+        }
+        else
+            _updateChunk();
     }
 
 
@@ -193,11 +206,12 @@ public class Chunk
         {
             VoxelMod v = modifications.Dequeue();
             Vector3 pos = v.position -= position;
-            voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = v.id;
+            voxelMap[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
         }
 
 
         ClearMeshData();
+        CalculateLight();
 
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
         {
@@ -205,7 +219,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    if (world.blockTypes[voxelMap[x, y, z]].isSolid)
+                    if (world.blockTypes[voxelMap[x, y, z].id].isSolid)
                     {
                         UpdateMeshData(new Vector3(x, y, z));
                         //AddVoxelDataToChunk(new Vector3(x, y, z)); 
@@ -293,10 +307,10 @@ public class Chunk
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
         // 현재 블록 ID 저장
-        byte currentBlockID = voxelMap[xCheck, yCheck, zCheck];
+        byte currentBlockID = voxelMap[xCheck, yCheck, zCheck].id;
 
         // 새로운 블록 ID로 설정
-        voxelMap[xCheck, yCheck, zCheck] = newID;
+        voxelMap[xCheck, yCheck, zCheck].id = newID;
 
         // 변경된 주변 Voxel 업데이트
         UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
@@ -351,7 +365,20 @@ public class Chunk
 
     // 빈공간인지 아닌지 판단 -> 그래야 보이는 면만 그리니까...
     // 이건 Chunk 내부에서만 검사
-    bool CheckVoxel(Vector3 pos)
+    //bool CheckVoxel(Vector3 pos)
+    //{
+    //
+    //    int x = Mathf.FloorToInt(pos.x);
+    //    int y = Mathf.FloorToInt(pos.y);
+    //    int z = Mathf.FloorToInt(pos.z);
+    //
+    //    if (!IsVoxelInChunk(x, y, z))
+    //        return world.CheckIfVoxelTransparent(pos + position);//world.blockTypes[world.GetVoxel(pos + position)].isSolid;
+    //
+    //    return world.blockTypes[voxelMap[x, y, z].id].renderNeighborFaces;
+    //
+    //}
+    VoxelState CheckVoxel(Vector3 pos)
     {
 
         int x = Mathf.FloorToInt(pos.x);
@@ -359,25 +386,89 @@ public class Chunk
         int z = Mathf.FloorToInt(pos.z);
 
         if (!IsVoxelInChunk(x, y, z))
-            return world.CheckIfVoxelTransparent(pos + position);//world.blockTypes[world.GetVoxel(pos + position)].isSolid;
+            return world.GetVoxelState(pos + position);//world.blockTypes[world.GetVoxel(pos + position)].isSolid;
 
-        return world.blockTypes[voxelMap[x, y, z]].isTransparent;
+        return voxelMap[x, y, z];
 
     }
 
-    //public byte GetVoxelFromGlobalVector3(Vector3 pos)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //
-    //    xCheck -= Mathf.FloorToInt(position.x);
-    //    zCheck -= Mathf.FloorToInt(position.z);
-    //
-    //
-    //    return voxelMap[xCheck, yCheck, zCheck];
-    //}
 
+
+    public VoxelState GetVoxelFromGlobalVector3(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(position.x);
+        zCheck -= Mathf.FloorToInt(position.z);
+
+
+        return voxelMap[xCheck, yCheck, zCheck];
+    }
+
+    void CalculateLight()
+    {
+        Queue<Vector3Int> litVoxels = new Queue<Vector3Int>();
+
+
+        for (int x = 0; x < VoxelData.ChunkWidth; x++)
+        {
+            for (int z = 0; z < VoxelData.ChunkWidth; z++)
+            {
+
+                float lightRay = 1f;
+
+                for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--)
+                {
+
+                    VoxelState thisVoxel = voxelMap[x, y, z];
+
+                    if (thisVoxel.id > 0 && world.blockTypes[thisVoxel.id].transparency < lightRay)
+                        lightRay = world.blockTypes[thisVoxel.id].transparency;
+
+                    thisVoxel.globalLightPercent = lightRay;
+
+                    voxelMap[x, y, z] = thisVoxel;
+
+                    if (lightRay > VoxelData.lightFalloff)
+                    {
+                        litVoxels.Enqueue(new Vector3Int(x, y, z));
+                    }
+
+
+                }
+
+            }
+        }
+
+        while (litVoxels.Count > 0)
+        {
+            Vector3Int v = litVoxels.Dequeue();
+
+            for (int p = 0; p < 6; p++)
+            {
+                Vector3 currentVoxel = v + VoxelData.faceChecks[p];
+                Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
+
+                if(IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.y))
+                {
+                    if(voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent < voxelMap[v.x,v.y,v.z].globalLightPercent - VoxelData.lightFalloff)
+                    {
+                        voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent = voxelMap[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
+
+                        if(voxelMap[neighbor.x, neighbor.y, neighbor.y].globalLightPercent > VoxelData.lightFalloff)
+                        {
+                            litVoxels.Enqueue(neighbor);
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+    }
 
 
     // 아마 이 프로젝트에서 가장 중요한 메서드
@@ -386,8 +477,13 @@ public class Chunk
     public void UpdateMeshData(Vector3 pos)
     {
 
-        byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
-        bool isTransparent = world.blockTypes[blockID].isTransparent;
+        int x = Mathf.FloorToInt(pos.x);
+        int y = Mathf.FloorToInt(pos.y);
+        int z = Mathf.FloorToInt(pos.z);
+
+        //byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z].id;
+        byte blockID = voxelMap[x, y, z].id;
+        //bool renderNeighborFaces = world.blockTypes[blockID].renderNeighborFaces;
 
         // 블록은 6면체
         for (int p = 0; p < 6; p++)
@@ -396,13 +492,16 @@ public class Chunk
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-
+            VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
 
             // 현재 면이 외부와 접해있는지 확인
-            if (CheckVoxel(pos + VoxelData.faceChecks[p]))
+            if (neighbor != null && world.blockTypes[neighbor.id].renderNeighborFaces)
             {
                 // 현재 Voxel의 ID를 가져옴
                 //byte blockID = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
+
+
+
 
 
                 // 각 면의 정점을 추가
@@ -415,59 +514,61 @@ public class Chunk
                 // 텍스쳐 좌표 추가
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
 
-                float lightLevel;
-                int yPos = (int)pos.y + 1;
-                bool inShade = false;
-                while (yPos < VoxelData.ChunkHeight)
-                {
-                    if (voxelMap[(int)pos.x, yPos, (int)pos.z] != 0)
-                    {
-                        inShade = true;
-                        break;
-                    }
-
-
-
-                    yPos++;
-                }
-
-                if (inShade)
-                {
-
-
-                    lightLevel = 0.4f;
-                }
-                else
-                { lightLevel = 0f; }
+                //float lightLevel;
+                //int yPos = (int)pos.y + 1;
+                //bool inShade = false;
+                //while (yPos < VoxelData.ChunkHeight)
+                //{
+                //    if (voxelMap[(int)pos.x, yPos, (int)pos.z].id != 0)
+                //    {
+                //        inShade = true;
+                //        break;
+                //    }
+                //
+                //
+                //
+                //    yPos++;
+                //}
+                //
+                //if (inShade)
+                //{
+                //
+                //
+                //    lightLevel = 0.4f;
+                //}
+                //else
+                //{ lightLevel = 0f; }
+                float lightLevel = neighbor.globalLightPercent;
 
                 colors.Add(new Color(0, 0, 0, lightLevel));
                 colors.Add(new Color(0, 0, 0, lightLevel));
                 colors.Add(new Color(0, 0, 0, lightLevel));
                 colors.Add(new Color(0, 0, 0, lightLevel));
 
-                if (!isTransparent)
-                {
-                    triangles.Add(vertexIndex);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 3);
-                }
-                else
-                {
-                    transparentTriangles.Add(vertexIndex);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 3);
-
-                    // 삼각형 인덱스 추가
-                }
+                //if (!renderNeighborFaces)
+                //{
+                triangles.Add(vertexIndex);
+                triangles.Add(vertexIndex + 1);
+                triangles.Add(vertexIndex + 2);
+                triangles.Add(vertexIndex + 2);
+                triangles.Add(vertexIndex + 1);
+                triangles.Add(vertexIndex + 3);
+                //}
+                //else
+                //{
+                //    transparentTriangles.Add(vertexIndex);
+                //    transparentTriangles.Add(vertexIndex + 1);
+                //    transparentTriangles.Add(vertexIndex + 2);
+                //    transparentTriangles.Add(vertexIndex + 2);
+                //    transparentTriangles.Add(vertexIndex + 1);
+                //    transparentTriangles.Add(vertexIndex + 3);
+                //
+                //    // 삼각형 인덱스 추가
+                //}
 
                 // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
                 vertexIndex += 4;
+
 
             }
         }
@@ -592,6 +693,25 @@ public class ChunkCoord
     }
 }
 
+public class VoxelState
+{
+    public byte id;
+    public float globalLightPercent;
+
+    public VoxelState()
+    {
+        id = 0;
+        globalLightPercent = 0f;
+    }
+
+
+    public VoxelState(byte _id)
+    {
+        id = _id;
+        globalLightPercent = 0f;
+
+    }
+}
 
 public struct ChunkData
 {

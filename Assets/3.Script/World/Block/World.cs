@@ -12,13 +12,9 @@ public class World : MonoBehaviour
     /// 
     /// 
     ///
+    
 
 
-    //for shader
-    [Range(0.95f,0f)]
-    public float globalLightLevel;
-    public Color day;
-    public Color night;
 
 
     // 플레이어
@@ -32,9 +28,20 @@ public class World : MonoBehaviour
     //  ================================================== //
 
 
+    [Header("World Generation Values")]
     public int seed;
     //public int seedOffset;
     public BiomeAttribute biome;
+
+
+    //for shader
+    [Range(0.95f, 0f)]
+    public float globalLightLevel;
+    public Color day;
+    public Color night;
+
+    [Header("Performance")]
+    public bool enableThreading;
 
 
     // blocks
@@ -81,6 +88,9 @@ public class World : MonoBehaviour
     {
         stopwatch = new Stopwatch();
         stopwatch.Start();
+
+        Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
+        Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
 
         UnityEngine.Random.InitState(seed);
         GenerateWorld();
@@ -411,11 +421,38 @@ public class World : MonoBehaviour
     // CheckVoxel과는 다르게 월드 내부에서 검사 -> 범위가 더 큼
     public bool CheckForVoxel(Vector3 pos)
     {
-
+    
         ChunkCoord thisChunk = new ChunkCoord(pos);
         if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y >= VoxelData.ChunkHeight)
         {
             return false;
+        }
+    
+    
+        Chunk chunk = chunks[thisChunk.x, thisChunk.z];
+    
+        if (chunk != null && chunk.isEditable)
+        {
+            int xCheck = Mathf.FloorToInt(pos.x) - (thisChunk.x * VoxelData.ChunkWidth);
+            int yCheck = Mathf.FloorToInt(pos.y);
+            int zCheck = Mathf.FloorToInt(pos.z) - (thisChunk.z * VoxelData.ChunkWidth);
+    
+            if (chunk.IsVoxelInChunk(xCheck, yCheck, zCheck))
+            {
+                return blockTypes[chunk.voxelMap[xCheck, yCheck, zCheck].id].isSolid;
+            }
+        }
+    
+        return blockTypes[GetVoxel(pos)].isSolid;
+    
+    }
+    public VoxelState GetVoxelState(Vector3 pos)
+    {
+
+        ChunkCoord thisChunk = new ChunkCoord(pos);
+        if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y >= VoxelData.ChunkHeight)
+        {
+            return null;
         }
 
 
@@ -429,13 +466,15 @@ public class World : MonoBehaviour
 
             if (chunk.IsVoxelInChunk(xCheck, yCheck, zCheck))
             {
-                return blockTypes[chunk.voxelMap[xCheck, yCheck, zCheck]].isSolid;
+                return chunks[thisChunk.x,thisChunk.z].GetVoxelFromGlobalVector3(pos);
             }
         }
 
-        return blockTypes[GetVoxel(pos)].isSolid;
+        return new VoxelState(GetVoxel(pos));
 
     }
+
+
 
     public bool CheckIfVoxelTransparent(Vector3 pos)
     {
@@ -457,11 +496,11 @@ public class World : MonoBehaviour
 
             if (chunk.IsVoxelInChunk(xCheck, yCheck, zCheck))
             {
-                return blockTypes[chunk.voxelMap[xCheck, yCheck, zCheck]].isTransparent;
+                return blockTypes[chunk.voxelMap[xCheck, yCheck, zCheck].id].renderNeighborFaces;
             }
         }
 
-        return blockTypes[GetVoxel(pos)].isTransparent;
+        return blockTypes[GetVoxel(pos)].renderNeighborFaces;
 
     }
 
@@ -621,7 +660,8 @@ public class BlockType
 {
     public string blockName;
     public bool isSolid;
-    public bool isTransparent;
+    public bool renderNeighborFaces;
+    public float transparency;
 
     [Header("Texture IDs")]
     public int topFaceTexture;

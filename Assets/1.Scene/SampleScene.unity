@@ -523,20 +523,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227cfebbfbd3d0e41b429e3317226c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalLightLevel: 0
-  day: {r: 0, g: 0.8893428, b: 1, a: 0}
-  night: {r: 0, g: 0.26948595, b: 1, a: 0}
   player: {fileID: 1171314684}
   spawnPoint: {x: 0, y: 0, z: 0}
   camera: {fileID: 576789853}
   seed: 1313
   biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
+  globalLightLevel: 0
+  day: {r: 0, g: 0.8893428, b: 1, a: 0}
+  night: {r: 0, g: 0.26948595, b: 1, a: 0}
+  enableThreading: 1
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 47af3025b26024f40b05b595bd6041cf, type: 2}
   blockTypes:
   - blockName: Air
     isSolid: 0
-    isTransparent: 1
+    renderNeighborFaces: 1
+    transparency: 1
     topFaceTexture: 0
     frontFaceTexture: 0
     backFaceTexture: 0
@@ -545,7 +547,8 @@ MonoBehaviour:
     bottomFaceTexture: 0
   - blockName: Bedrock
     isSolid: 1
-    isTransparent: 0
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 9
     frontFaceTexture: 9
     backFaceTexture: 9
@@ -554,7 +557,8 @@ MonoBehaviour:
     bottomFaceTexture: 9
   - blockName: Stone
     isSolid: 1
-    isTransparent: 0
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 0
     frontFaceTexture: 0
     backFaceTexture: 0
@@ -563,7 +567,8 @@ MonoBehaviour:
     bottomFaceTexture: 0
   - blockName: Grass
     isSolid: 1
-    isTransparent: 0
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 7
     frontFaceTexture: 2
     backFaceTexture: 2
@@ -572,7 +577,8 @@ MonoBehaviour:
     bottomFaceTexture: 1
   - blockName: Sand
     isSolid: 1
-    isTransparent: 0
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 10
     frontFaceTexture: 10
     backFaceTexture: 10
@@ -581,7 +587,8 @@ MonoBehaviour:
     bottomFaceTexture: 10
   - blockName: Dirt
     isSolid: 1
-    isTransparent: 0
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 1
     frontFaceTexture: 1
     backFaceTexture: 1
@@ -590,7 +597,8 @@ MonoBehaviour:
     bottomFaceTexture: 1
   - blockName: Glass
     isSolid: 1
-    isTransparent: 1
+    renderNeighborFaces: 1
+    transparency: 1
     topFaceTexture: 3
     frontFaceTexture: 3
     backFaceTexture: 3
@@ -599,7 +607,8 @@ MonoBehaviour:
     bottomFaceTexture: 3
   - blockName: Brick
     isSolid: 1
-    isTransparent: 1
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 11
     frontFaceTexture: 11
     backFaceTexture: 11
@@ -608,7 +617,8 @@ MonoBehaviour:
     bottomFaceTexture: 11
   - blockName: Wood
     isSolid: 1
-    isTransparent: 0
+    renderNeighborFaces: 0
+    transparency: 0
     topFaceTexture: 6
     frontFaceTexture: 5
     backFaceTexture: 5
@@ -617,7 +627,8 @@ MonoBehaviour:
     bottomFaceTexture: 6
   - blockName: Leef
     isSolid: 1
-    isTransparent: 1
+    renderNeighborFaces: 1
+    transparency: 0.8
     topFaceTexture: 16
     frontFaceTexture: 16
     backFaceTexture: 16
