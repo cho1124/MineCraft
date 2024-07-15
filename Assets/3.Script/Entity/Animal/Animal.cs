@@ -106,6 +106,7 @@ public class Animal : Entity
         // 오브젝트의 크기에 맞게 NavMeshAgent의 radius 설정
         if (col != null) {
             agent.radius = Mathf.Max(col.bounds.size.x, col.bounds.size.z) / 2;
+            //agent.radius가 반지름을 가리키는거기때문에 /2 함
             agent.height = col.bounds.size.y;
         }
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
