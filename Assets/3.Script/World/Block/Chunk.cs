@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+//using System.Threading;
 using UnityEngine;
 using Unity.Burst;
 using Unity.Collections;
@@ -65,7 +65,7 @@ public class Chunk
     // voxel맵이 채워졌는지 여부
     public bool isVoxelMapPopulated = false;
 
-    private bool threadLocked = false;
+    //private bool threadLocked = false;
 
     public bool isActive
     {
@@ -92,7 +92,7 @@ public class Chunk
         get
         {
 
-            if (!isVoxelMapPopulated || threadLocked)
+            if (!isVoxelMapPopulated)
                 return false;
             else
                 return true;
@@ -100,21 +100,34 @@ public class Chunk
     }
 
     // 생성자
-    public Chunk(ChunkCoord _coord, World _world, bool generateOnLoad)
+    //public Chunk(ChunkCoord _coord, World _world, bool generateOnLoad)
+    //{
+    //
+    //    coord = _coord;
+    //    world = _world;
+    //    isActive = true;
+    //
+    //
+    //    if (generateOnLoad)
+    //    {
+    //        Init();
+    //    }
+    //
+    //    //chunkObject = new GameObject()
+    //}
+
+
+    public Chunk(ChunkCoord _coord, World _world)
     {
 
         coord = _coord;
         world = _world;
-        isActive = true;
-
-
-        if (generateOnLoad)
-        {
-            Init();
-        }
+        //isActive = true;
 
         //chunkObject = new GameObject()
     }
+
+
 
     // Chunk 초기화
     public void Init()
@@ -137,13 +150,13 @@ public class Chunk
         chunkObject.name = coord.x + ", " + coord.z;
         position = chunkObject.transform.position;
 
-        if (world.enableThreading)
-        {
-
-            Thread myThread = new Thread(new ThreadStart(PopulateVoxelMap));
-            myThread.Start();
-        }
-        else
+        //if (world.enableThreading)
+        //{
+        //
+        //    Thread myThread = new Thread(new ThreadStart(PopulateVoxelMap));
+        //    myThread.Start();
+        //}
+        //else
             PopulateVoxelMap();
 
         //PopulateVoxelMap();
@@ -178,29 +191,28 @@ public class Chunk
                 }
             }
         }
-        _updateChunk();
+        UpdateChunk();
         isVoxelMapPopulated = true;
 
     }
 
-    public void UpdateChunk()
-    {
-        //_updateChunk();
-        if (world.enableThreading)
-        {
-
-            Thread myThread = new Thread(new ThreadStart(_updateChunk));
-            myThread.Start();
-        }
-        else
-            _updateChunk();
-    }
+    //public void UpdateChunk()
+    //{
+    //    //_updateChunk();
+    //    if (world.enableThreading)
+    //    {
+    //        Thread myThread = new Thread(new ThreadStart(_updateChunk));
+    //        myThread.Start();
+    //    }
+    //    else
+    //        _updateChunk();
+    //}
 
 
     // Chunk 업데이트 (블럭부분만), 메쉬 생성 
-    private void _updateChunk()
+    public void UpdateChunk()
     {
-        threadLocked = true;
+        //threadLocked = true;
 
         while (modifications.Count > 0)
         {
@@ -229,13 +241,13 @@ public class Chunk
             }
         }
 
-        lock (world.ChunksToDraw)
-        {
+        //lock (world.ChunksToDraw)
+        //{
             //CreateMesh();
             world.ChunksToDraw.Enqueue(this);
-        }
-
-        threadLocked = false;
+        //}
+        //
+        //threadLocked = false;
     }
 
     // 메쉬 데이터 초기화
@@ -312,11 +324,15 @@ public class Chunk
         // 새로운 블록 ID로 설정
         voxelMap[xCheck, yCheck, zCheck].id = newID;
 
-        // 변경된 주변 Voxel 업데이트
-        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
 
-        // Chunk 업데이트
-        UpdateChunk();
+        lock (world.ChunkUpdateThreadLock)
+        {
+            world.chunksToUpdate.Insert(0,this);
+            // 변경된 주변 Voxel 업데이트
+            UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+        }
+        //// Chunk 업데이트
+        //UpdateChunk();
 
         // 현재 블록 ID 반환
         return currentBlockID;
@@ -355,7 +371,7 @@ public class Chunk
 
             if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
             {
-                world.GetChunkFromVector3(currentVoxel + position).UpdateChunk();
+                world.chunksToUpdate.Insert(0, world.GetChunkFromVector3(currentVoxel + position)); //.UpdateChunk();
             }
         }
 
