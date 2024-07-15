@@ -92,20 +92,27 @@ public class World : MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
+
+        UnityEngine.Random.InitState(seed);
+
+
         Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
         Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
 
-        //lock (ChunkUpdateThreadLock)
-        //{
-            UnityEngine.Random.InitState(seed);
-        //}
+
+
+        if (enableThreading)
+        {
+            chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
+            chunkUpdateThread.Start();
+        }
         GenerateWorld();
-        playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
+
         stopwatch.Stop();
         UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
 
-        chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
-        chunkUpdateThread.Start();
+        playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
+
     }
 
 
@@ -144,12 +151,33 @@ public class World : MonoBehaviour
 
         if (ChunksToDraw.Count > 0)
         {
-            lock (ChunksToDraw)
-            {
+
                 if (ChunksToDraw.Peek().isEditable)
                     ChunksToDraw.Dequeue().CreateMesh();
-            }
+            
         }
+
+        if (!enableThreading)
+        {
+
+
+            if (!applyingModifications)
+            {
+                ApplyModifications();
+            }
+            if (chunksToUpdate.Count > 0)
+            {
+                UpdateChunks();
+            }
+
+
+        }
+
+
+
+
+
+
         if (Input.GetKeyDown(KeyCode.F3))
             debugScreen.SetActive(!debugScreen.activeSelf);
     }
@@ -266,6 +294,7 @@ public class World : MonoBehaviour
                 if (chunksToUpdate[index].isEditable)
                 {
                     chunksToUpdate[index].UpdateChunk();
+                    activeChunks.Add(chunksToUpdate[index].coord);
                     chunksToUpdate.RemoveAt(index);
                     updated = true;
                 }
@@ -297,9 +326,11 @@ public class World : MonoBehaviour
 
     private void OnDisable()
     {
-        chunkUpdateThread.Abort();
+        if (enableThreading)
+        {
+            chunkUpdateThread.Abort();
+        }
     }
-
 
 
     //void ApplyModifications()
@@ -420,19 +451,14 @@ public class World : MonoBehaviour
                 if (chunks[c.x, c.z] == null)
                 {
                     chunks[c.x, c.z] = new Chunk(c, this);
+                    chunksToCreate.Add(c);
                     //activeChunks.Add(c);
                 }
 
-                if (chunks[c.x, c.z] == null)
-                {
-                    UnityEngine.Debug.LogError($"Chunk at {c.x}, {c.z} is null");
-                    continue;
-                }
+
 
                 chunks[c.x, c.z].modifications.Enqueue(v);
 
-                if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
-                    chunksToUpdate.Add(chunks[c.x, c.z]);
             }
         }
 

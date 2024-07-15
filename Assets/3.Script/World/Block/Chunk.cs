@@ -191,8 +191,15 @@ public class Chunk
                 }
             }
         }
-        UpdateChunk();
+        //UpdateChunk();
         isVoxelMapPopulated = true;
+
+
+        lock (world.ChunkUpdateThreadLock)
+        {
+
+        world.chunksToUpdate.Add(this);
+        }
 
     }
 
