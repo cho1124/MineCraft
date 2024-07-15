@@ -518,7 +518,10 @@ MonoBehaviour:
   player: {fileID: 1171314684}
   spawnPoint: {x: 0, y: 0, z: 0}
   camera: {fileID: 576789853}
-  biome: {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
+  biomes:
+  - {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
+  - {fileID: 11400000, guid: b14ea4d02a18a794aa14a3bba415714c, type: 2}
+  - {fileID: 11400000, guid: e431e3c2660007e4f8667bc7c8ecde0a, type: 2}
   globalLightLevel: 0.95
   day: {r: 0, g: 0.8893428, b: 1, a: 0}
   night: {r: 0, g: 0.26948595, b: 1, a: 0}
@@ -625,6 +628,26 @@ MonoBehaviour:
     leftFaceTexture: 16
     rightFaceTexture: 16
     bottomFaceTexture: 16
+  - blockName: Cactus
+    isSolid: 1
+    renderNeighborFaces: 0
+    transparency: 0
+    topFaceTexture: 19
+    frontFaceTexture: 18
+    backFaceTexture: 18
+    leftFaceTexture: 18
+    rightFaceTexture: 18
+    bottomFaceTexture: 19
+  - blockName: Cactus Top
+    isSolid: 1
+    renderNeighborFaces: 0
+    transparency: 0
+    topFaceTexture: 17
+    frontFaceTexture: 18
+    backFaceTexture: 18
+    leftFaceTexture: 18
+    rightFaceTexture: 18
+    bottomFaceTexture: 19
   ItemBlock: {fileID: 8924201329985380255, guid: 0b132f74815d1934f802f3622b8e1476, type: 3}
   caveOffset: 1
   caveScale: 0.12

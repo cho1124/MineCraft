@@ -5,26 +5,37 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="BiomAttributes", menuName ="Minecraft/Biome Attribute") ]
 public class BiomeAttribute : ScriptableObject
 {
+    [Header("Biome Settings")]
     public string biomeName;
+    public int offset;
+    public float scale;
 
-    public int solidGroundHeight;
+    //public int solidGroundHeight;
     public int terrainHeight;
 
     // 노이즈에 들어갈꺼
     public float terrainScale;
 
+    
+    [Header("Biome Blocks")]
+    public byte surfaceBlock;
+    public byte subSurfaceBlock;
 
-    [Header("Trees")]
-    public float treeZoneScale = 1.3f;
+
+
+    [Header("Major Flora")]
+    public int majorFloraIndex;
+    public float majorFloraZoneScale = 1.3f;
 
     [Range(0.1f, 1f)]
-    public float treeZoneThreshold = 0.6f;
-    public float treePlacementScale = 15f;
+    public float majorFloraZoneThreshold = 0.6f;
+    public float majorFloraPlacementScale = 15f;
     [Range(0.1f, 1f)]
-    public float treePlacementThreshold = 0.2f;
+    public float majorFloraPlacementThreshold = 0.2f;
+    public bool placeMajorFlora = true;
 
-    public int maxTreeHeight = 12;
-    public int minTreeHeight = 5;
+    public int maxHeight = 12;
+    public int minHeight = 5;
 
 
     public Lode[] lodes;

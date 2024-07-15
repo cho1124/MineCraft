@@ -32,7 +32,7 @@ public class World : MonoBehaviour
     [Header("World Generation Values")]
     //public int seed;
     //public int seedOffset;
-    public BiomeAttribute biome;
+    public BiomeAttribute[] biomes;
 
 
     //for shader
@@ -717,7 +717,14 @@ public class World : MonoBehaviour
     // 아마 맵 생성할때 동굴이라던가 바이옴이라던가 등등 주로 여기서 쓰일것
     public byte GetVoxel(Vector3 pos)
     {
-        // ImmutablePass
+
+
+        // =============================================================================================================================================== //
+        // ========================================================     첫번째 생성    ==================================================================== //
+        // =============================================================================================================================================== //
+
+
+
         int yPos = Mathf.FloorToInt(pos.y);
 
 
@@ -730,12 +737,63 @@ public class World : MonoBehaviour
         if (yPos == 0)
             return 1;
 
+
+        ///
+        /// 바이옴
+        ///
+
+        int solidGroundHeight = 64;
+        float sumOfHeights = 0f;
+        int count = 0;
+
+        float strongestWeight = 0f;
+        int strongestBiomeIndex = 0;
+        for(int i =0; i< biomes.Length; i++)
+        {
+            float weight = Noise.Get2DPerlin(new Vector2(pos.x, pos.z), biomes[i].offset, biomes[i].scale);
+
+            // Keep track of which weight is strongest
+            if(weight > strongestWeight)
+            {
+                strongestWeight = weight;
+                strongestBiomeIndex = i;
+            }
+
+            float height = biomes[i].terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biomes[i].terrainScale) * weight;
+
+            
+            if(height > 0)
+            {
+                sumOfHeights += height;
+                count++;
+            }
+
+
+
+
+        }
+
+        BiomeAttribute biome = biomes[strongestBiomeIndex];
+
+        sumOfHeights /= count;
+
+        int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
+
+        int index;
+
+        //if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 12345, 2f) > 0.5f)
+        //    index = 0;
+        //else
+        //    index = 1;
+
+        //BiomeAttribute biome = biomes[index];
+
         // =============================================================================================================================================== //
-        // ========================================================     첫번째 생성    ==================================================================== //
+        // ========================================================     두번째 생성    ==================================================================== //
         // =============================================================================================================================================== //
 
         // 펄린 노이즈 사용해서...
-        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + biome.solidGroundHeight;
+        //int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + solidGroundHeight;
 
         byte voxelValue = 0;
 
@@ -744,7 +802,7 @@ public class World : MonoBehaviour
         if (yPos == terrainHeight)
         {
             // grass
-            voxelValue = 3;
+            voxelValue = biome.surfaceBlock;
         }
         else if
 
@@ -752,7 +810,7 @@ public class World : MonoBehaviour
         (yPos < terrainHeight && yPos > terrainHeight - 4) // - 4);
         {
 
-            voxelValue = 5; //return 5; 
+            voxelValue = biome.subSurfaceBlock; //return 5; 
         }
         else if (yPos > terrainHeight)
         {
@@ -764,7 +822,7 @@ public class World : MonoBehaviour
 
         }
         // =============================================================================================================================================== //
-        // ========================================================     두번째 생성    ==================================================================== //
+        // ========================================================     세번째 생성    ==================================================================== //
         // =============================================================================================================================================== //
         if (yPos < terrainHeight + 20)
         {
@@ -812,19 +870,19 @@ public class World : MonoBehaviour
 
 
         // =============================================================================================================================================== //
-        // ========================================================     세번째 생성    ==================================================================== //
+        // ========================================================     네번째 생성    ==================================================================== //
         // =============================================================================================================================================== //
 
 
-        if (yPos == terrainHeight)
+        if (yPos == terrainHeight && biome.placeMajorFlora)
         {
-            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treeZoneScale) > biome.treeZoneThreshold)
+            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.majorFloraZoneScale) > biome.majorFloraZoneThreshold)
             {
  
-                if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treePlacementScale) > biome.treePlacementThreshold)
+                if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.majorFloraPlacementScale) > biome.majorFloraPlacementThreshold)
                 {
                     //modifications.Enqueue(new VoxelMod(new Vector3(pos.x, pos.y + 1, pos.z), 6));
-                    modifications.Enqueue(Structure.MakeTree(pos, biome.minTreeHeight, biome.maxTreeHeight));
+                    modifications.Enqueue(Structure.GenerateMajorFlora(biome.majorFloraIndex, pos, biome.minHeight, biome.maxHeight));
                 }
             }
         }

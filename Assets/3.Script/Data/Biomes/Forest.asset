@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d558f66af23a2be4ba5ca2c4b4aab347, type: 3}
+  m_Name: Forest
+  m_EditorClassIdentifier: 
+  biomeName: Forest
+  offset: 87544
+  scale: 0.17
+  terrainHeight: 80
+  terrainScale: 0.3
+  surfaceBlock: 3
+  subSurfaceBlock: 5
+  majorFloraIndex: 0
+  majorFloraZoneScale: 1.3
+  majorFloraZoneThreshold: 0.384
+  majorFloraPlacementScale: 5
+  majorFloraPlacementThreshold: 0.755
+  placeMajorFlora: 1
+  maxHeight: 12
+  minHeight: 5
+  lodes:
+  - nodeName: Sand
+    blockID: 4
+    minHeight: 1
+    maxHeight: 255
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 0
+    isSolid: 1
+  - nodeName: Air
+    blockID: 0
+    minHeight: 1
+    maxHeight: 255
+    scale: 1
+    threshold: 0.5
+    noiseOffset: 50
+    isSolid: 0
+  - nodeName: Dirt
+    blockID: 5
+    minHeight: 30
+    maxHeight: 60
+    scale: 0.1
+    threshold: 0.5
+    noiseOffset: 2
+    isSolid: 1
+  - nodeName: Coal
+    blockID: 6
+    minHeight: 1
+    maxHeight: 120
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 4
+    isSolid: 1
