@@ -44,7 +44,7 @@ public class Player_Control : MonoBehaviour
     }
 
 
-    private void Move_ani(float key_h, float key_v)
+    private void Move_Animation(float key_h, float key_v)
     {
         float targetSpeed = new Vector2(key_h, key_v).magnitude;
 
@@ -61,17 +61,19 @@ public class Player_Control : MonoBehaviour
         animator.SetFloat("Speed", currentSpeed);
     }
 
-
     private void Attack_Control()
     {
-        
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0) && Input.GetMouseButton(1) || Input.GetMouseButton(2))
         {
-            animator.SetTrigger("R_Attack");
+            animator.SetBool("LR_Attack", true);
         }
-        else if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(0) && !Input.GetMouseButton(1))
         {
-            animator.SetTrigger("L_Attack");
+            animator.SetBool("L_Attack", true);
+        }
+        if (Input.GetMouseButton(1) && !Input.GetMouseButton(0))
+        {
+            animator.SetBool("R_Attack", true);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -126,7 +128,7 @@ public class Player_Control : MonoBehaviour
         if (key_h == 0 && key_v == 0) speed_current = 0f;
         else if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
 
-        Move_ani(key_h, key_v);
+        Move_Animation(key_h, key_v);
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
         direction.y = 0f;
