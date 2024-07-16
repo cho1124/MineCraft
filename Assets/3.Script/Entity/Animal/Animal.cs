@@ -39,8 +39,8 @@ public class Animal : Entity
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
     private float spawnCooldown = 30f; // 쿨타임 시간
     private const int collisionThreshold = 5; // 충돌 임계값
-    protected Queue<GameObject> recentAnimals = new Queue<GameObject>(); // 최근 탐색된 10개의 개체를 저장할 큐
-    protected Dictionary<GameObject, int> animalCount = new Dictionary<GameObject, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
+    protected Queue<int> recentAnimals = new Queue<int>(); // 최근 탐색된 10개의 개체를 저장할 큐
+    protected Dictionary<int, int> animalCount = new Dictionary<int, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
     // 컴포넌트 관련 변수들
     protected NavMeshAgent agent;
@@ -202,15 +202,16 @@ public class Animal : Entity
     }
 
     private void OnCollisionEnter(Collision collision) {
-        Debug.Log($"{name}과 {collision.gameObject.name}이 충돌했습니다.");
+
         // 자신과 같은 컴포넌트를 가진 오브젝트와의 충돌인지 확인
         if (collision.gameObject.GetComponent(GetType()) != null) {
             //최근 충돌한 동물 목록에 추가
             AddToRecentAnimals(collision.gameObject);
-
-            if (animalCount[collision.gameObject] >= collisionThreshold) {
+            int collisionAnimalId = collision.gameObject.GetInstanceID();
+            if (animalCount.ContainsKey(collisionAnimalId) && animalCount[collisionAnimalId] >= collisionThreshold)
+            {
                 SpawnNewAnimal();
-                animalCount[collision.gameObject] = 0; // 충돌 횟수 초기화
+                animalCount[collisionAnimalId] = 0;
             }
         }
 
@@ -219,30 +220,40 @@ public class Animal : Entity
             Eat();
             Destroy(collision.gameObject); // 음식 오브젝트 제거
         }
+
+        GameObject otherAnimal = collision.gameObject;
+        AddToRecentAnimals(otherAnimal);
     }
 
     //같은 종의 동물이 5회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
     protected virtual void AddToRecentAnimals(GameObject animal) {
+
+        int animalId = animal.GetInstanceID();
+
         // recentAnimals 큐의 크기가 10 이상인지 확인
         if (recentAnimals.Count >= 10) {
             // 큐에서 가장 오래된 동물을 제거하고, 그 동물의 충돌 횟수를 감소시킴
-            var removedAnimal = recentAnimals.Dequeue();
-            animalCount[removedAnimal]--;
-            // 해당 동물의 충돌 횟수가 0 이하이면 딕셔너리에서 제거
-            if (animalCount[removedAnimal] <= 0) {
-                animalCount.Remove(removedAnimal);
+            var removedAnimalId = recentAnimals.Dequeue();
+            if (animalCount.ContainsKey(removedAnimalId))
+            {
+                animalCount[removedAnimalId]--;
+                // 해당 동물의 충돌 횟수가 0 이하이면 딕셔너리에서 제거
+                if (animalCount[removedAnimalId] <= 0)
+                {
+                    animalCount.Remove(removedAnimalId);
+                }
             }
         }
         // 큐에 새로운 동물 추가
-        recentAnimals.Enqueue(animal);
+        recentAnimals.Enqueue(animalId);
         // 딕셔너리에 동물이 이미 있는지 확인
-        if (animalCount.ContainsKey(animal)) {
+        if (animalCount.ContainsKey(animalId)) {
             // 이미 있다면, 해당 동물의 충돌 횟수를 증가시킴
-            animalCount[animal]++;
+            animalCount[animalId]++;
         }
         else {
             // 없다면, 해당 동물을 추가하고 충돌 횟수를 1로 설정
-            animalCount[animal] = 1;
+            animalCount[animalId] = 1;
         }
     }
 
@@ -263,6 +274,7 @@ public class Animal : Entity
 
             // 복제된 오브젝트의 이름에 "Baby" 추가
             newAnimal.name = gameObject.name + "_Baby";
+            Debug.Log($"{newAnimal.name} 태어남! ");
 
             // 복제된 오브젝트에 "Animals" 태그 추가
             newAnimal.tag = "Animals";
