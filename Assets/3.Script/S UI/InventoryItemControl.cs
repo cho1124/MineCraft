@@ -32,7 +32,7 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             test_tr = false; // test
             image.raycastTarget = false;
-            Inventory_class.click_tr = true;
+            Inventory_class.item_click_tr = true;
 
             tm = this.transform.parent;
 
@@ -54,7 +54,7 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (start_tr)
         {
             image.raycastTarget = true;
-            Inventory_class.click_tr = false;
+            Inventory_class.item_click_tr = false;
 
             if (test_tr) // test
             {
