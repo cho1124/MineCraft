@@ -70,7 +70,10 @@ public class Animal : Entity
     private float idleTimeLimit = 10f; // 10초 동안 위치가 변하지 않으면 이동
     private const float positionThreshold = 3f; // 위치 변화 허용 범위(10초동안 이 범위 안에만 있으면 네비메쉬목적지변경)
 
-    protected virtual void Start() {
+    protected override void Start() {
+
+        base.Start();
+
         //컴포넌트 초기화
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();

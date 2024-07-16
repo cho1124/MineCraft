@@ -45,6 +45,20 @@ public class Test1 : MonoBehaviour
             // 충돌한 오브젝트가 "Animals" 태그를 가지고 있는지 확인
             if (currentCollider.gameObject.CompareTag("Animals"))
             {
+
+                // Health 컴포넌트 가져오기
+                Entity entity = currentCollider.GetComponent<Entity>();
+                if (entity != null) {
+                    // HP를 20 감소시키기
+                    entity.TakeDamage(20);
+                    Debug.Log($"{entity.name} 를 때림");
+                }
+
+                // HP가 감소된 후의 동물 오브젝트의 HP가 0이 되지 않았을 경우, 아래 로직을 실행하지 않음
+                if (entity == null || entity.Health > 0) {
+                    return;
+                }
+
                 // 충돌한 오브젝트의 위치와 회전 값을 저장
                 Vector3 position = currentCollider.transform.position;
                 Quaternion rotation = currentCollider.transform.rotation;

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요) 24.07.16 수정(한유진)
+    // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
     // Start is called before the first frame update
     private float maxHealth=100;
     private float health;
@@ -16,7 +17,7 @@ public class Entity : MonoBehaviour
     private Renderer entityRenderer;
     private Color originalColor;
 
-    void Start()
+    protected virtual void Start()
     {
         health = maxHealth;
         entityRenderer = GetComponent<Renderer>();
@@ -63,10 +64,14 @@ public class Entity : MonoBehaviour
         entityRenderer.material.color = originalColor;
     }
 
-    private void OnDie()
+    protected virtual void OnDie()
     {
         Debug.Log($"{name} 이 죽었습니다. ");
         Destroy(gameObject);
+    }
+
+    public void TakeDamage(float damage) {
+        Health -= damage;
     }
 }
 /*
