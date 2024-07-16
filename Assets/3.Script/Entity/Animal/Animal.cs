@@ -8,19 +8,12 @@ public class Animal : Entity
     //동물도 자유롭게 구현하면 될거에용
 
     /*
-    동일한 스크립트를 가진 각각의 오브젝트가 3회 충돌하면 (최근 raycast로 인식하는 10개의 개체를 저장하고 같은 개체가 3번 있으면 생성)
-    본인의 1/3 사이즈를 가진 새로운 오브젝트를 생성하는 메서드 
-    */
-
-    /*
-     1.  동물 성인상태 / 새끼상태 
-     -> 프리팹을 인스펙터에 저장해서 그거를 성인상태로 잡고 그것에서 
-    1/2 scale 이 되면 새끼인걸로 하는게 어떨지
-     
-     2. 새끼상태일때 
-     배고프지 않음+3일이 지나면 성인이 되는걸로? (날짜는 동물별로 달라야 할듯)
-     3일을 어떻게 카운트 할것이냐? (현실 시간 기준으로 잡을지...?)
-     
+      ★현재 문제점 
+     -   네비메쉬와 리지드바디 충돌문제로 player 태그를 인식하면 하늘로 솟구쳐오르는 문제가 있음
+     -   갑자기 스케이트 타듯 미끄러지는 듯한 움직임이 있음
+     -   다이나믹네비메쉬(네비메쉬를 계속 업데이트하여 변화를 탐지하는 기능) 키면 너무 느려져서 꺼둠. 
+         -> 동물들이 지면의 변화를 인지할수가 없음 -> 3f이내의 장소에서 10f동안 변화가 없으면 네비메쉬상 목적지를
+             바꾸게 해둠(방향을 바꿀 수 있게)
      
      */
 
@@ -29,10 +22,10 @@ public class Animal : Entity
     public GameObject babyPrefab; // 새끼 상태의 프리팹
     private bool isAdult; // 성인 상태인지 여부
     private float growthTime = 60; // 성장 기준 시간 
-    private float growthTimeGaze = 0; // 배부름총족이후흐르는시간 
+    private float growthTimeGaze = 0; // 배부름총족이후흐르는시간 :성장 타이머
 
     // 배고픔 관련 변수들
-    public int hungerLevel = 6; // 배고픔 게이지
+    public int hungerLevel = 7; // 배고픔 게이지
     private const int maxHungerLevel = 10;
     private bool isHungry = false; // 배고픔 상태
     private bool isFull = false; // 배부름 상태
@@ -45,7 +38,7 @@ public class Animal : Entity
     // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
     private float spawnCooldown = 30f; // 쿨타임 시간
-    private const int collisionThreshold = 7; // 충돌 임계값
+    private const int collisionThreshold = 5; // 충돌 임계값
     protected Queue<GameObject> recentAnimals = new Queue<GameObject>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<GameObject, int> animalCount = new Dictionary<GameObject, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
@@ -53,28 +46,29 @@ public class Animal : Entity
     protected NavMeshAgent agent;
     protected Animator animator;
     protected Rigidbody rb;
-    public DynamicNavMesh dynamicNavMesh;
+    public DynamicNavMesh dynamicNavMesh;//동적인 NavMesh 업데이트를 관리하는 컴포넌트입니다.
 
     // 탐지 관련 변수들
-    public float detectionDistance = 3f;
-    public int detectionAngle = 45;
-    public int detectionRays = 5;
-    public float wanderRadius = 30f;
+    public float detectionDistance = 3f; //동물이 탐지할 수 있는 최대 거리입니다.
+    public int detectionAngle = 45; //동물이 탐지할 수 있는 각도 범위입니다.
+    public int detectionRays = 5; //동물이 탐지할 때 사용하는 레이의 수입니다.
+    public float wanderRadius = 30f; //동물이 배회할 수 있는 최대 반경입니다.
     private float defaultDetectionDistance; // 기본 탐지 거리
 
     // 플레이어 탐지 관련 변수들
     protected bool canDetectPlayer = true;
-    protected float playerDetectionCooldown = 20f;
+    protected float playerDetectionCooldown = 20f; 
+    //플레이어를 중복으로 감지하면 플레이어 감지시 행동이 과도하게 이루어져서 쿨타임을 만들었음
 
     // 상태 관련 변수들
     protected enum State { Wander, Jump, Idle, Run, DoubleJump, Follow }
     protected State currentState;
 
     // 위치 변화 감지 관련 변수들
-    private Vector3 lastPosition;
-    private float idleTime;
+    private Vector3 lastPosition; //동물이 배회할 수 있는 최대 반경입니다.
+    private float idleTime; //대기 시간을 추적하는 변수입니다.
     private float idleTimeLimit = 10f; // 10초 동안 위치가 변하지 않으면 이동
-    private const float positionThreshold = 3f; // 위치 변화 허용 범위
+    private const float positionThreshold = 3f; // 위치 변화 허용 범위(10초동안 이 범위 안에만 있으면 네비메쉬목적지변경)
 
     protected virtual void Start() {
         //컴포넌트 초기화
@@ -118,18 +112,20 @@ public class Animal : Entity
 
         // 위치 변화 감지 초기화
         lastPosition = transform.position;
+        //동물들이 움직이지 않고 한곳에 멈춰있는지 확인하기 위한 대기시간 초기화
         idleTime = 0f;
     }
 
     protected virtual void Update() {
 
         // y축 높이 체크
-        if (transform.position.y >= 2)
+        if (transform.position.y >= 2|| transform.position.y<-5)
         {
             MoveToNearestNavMesh();
         }
 
         //성장 관련 업데이트
+        //성인이 아니고 배부름상태가 growthTimeGaze 만큼 유지되면 성인으로 자람
         if (!isAdult && isFull) {
             growthTimeGaze += Time.deltaTime;
             if (growthTimeGaze >= growthTime) {
@@ -142,13 +138,9 @@ public class Animal : Entity
             growthTimeGaze = 0f;
         }
 
-        if (hungerLevel <= 3) {
-            SearchForFood();
-        }
-
         // NavMesh 상에 있는지 확인
         if (!agent.isOnNavMesh) {
-            Debug.LogWarning("Agent 가 NavMesh위에 없습니다.!");
+            Debug.LogWarning($"Agent{agent.name} 가 NavMesh위에 없습니다.!");
             MoveToNearestNavMesh();
             return;
         }
@@ -181,6 +173,7 @@ public class Animal : Entity
         //목적지 도착시 상태 변경
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending) {
             ChangeState(GetRandomState());
+            SetRandomDestination();
         }
 
         // 위치 변화 감지
@@ -188,15 +181,19 @@ public class Animal : Entity
     }
 
     private void CheckIdleTime() {
+        // 현재 위치와 마지막 위치 사이의 거리를 계산합니다.
         float distanceMoved = Vector3.Distance(transform.position, lastPosition);
+        // 이동한 거리가 positionThreshold 이하인 경우 idleTime을 증가시킵니다.
         if (distanceMoved < positionThreshold) {
             idleTime += Time.deltaTime;
         }
-        else {
+        // 이동한 거리가 positionThreshold를 초과한 경우 idleTime을 초기화하고 마지막 위치를 업데이트합니다.
+        else
+        {
             idleTime = 0f;
             lastPosition = transform.position;
         }
-
+        // idleTime이 idleTimeLimit을 초과한 경우 새로운 랜덤 목적지를 설정합니다.
         if (idleTime >= idleTimeLimit) {
             SetRandomDestination();
             Debug.Log($"{name}가 10초동안 위치 변화가 없으므로 랜덤목적지를 변경합니다.");
@@ -206,8 +203,9 @@ public class Animal : Entity
 
     private void OnCollisionEnter(Collision collision) {
         Debug.Log($"{name}과 {collision.gameObject.name}이 충돌했습니다.");
-        // 같은 컴포넌트를 가진 오브젝트와의 충돌인지 확인
-        if (collision.gameObject.GetComponent<Animal>() != null) {
+        // 자신과 같은 컴포넌트를 가진 오브젝트와의 충돌인지 확인
+        if (collision.gameObject.GetComponent(GetType()) != null) {
+            //최근 충돌한 동물 목록에 추가
             AddToRecentAnimals(collision.gameObject);
 
             if (animalCount[collision.gameObject] >= collisionThreshold) {
@@ -223,26 +221,33 @@ public class Animal : Entity
         }
     }
 
+    //같은 종의 동물이 5회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
     protected virtual void AddToRecentAnimals(GameObject animal) {
+        // recentAnimals 큐의 크기가 10 이상인지 확인
         if (recentAnimals.Count >= 10) {
+            // 큐에서 가장 오래된 동물을 제거하고, 그 동물의 충돌 횟수를 감소시킴
             var removedAnimal = recentAnimals.Dequeue();
             animalCount[removedAnimal]--;
+            // 해당 동물의 충돌 횟수가 0 이하이면 딕셔너리에서 제거
             if (animalCount[removedAnimal] <= 0) {
                 animalCount.Remove(removedAnimal);
             }
         }
-
+        // 큐에 새로운 동물 추가
         recentAnimals.Enqueue(animal);
+        // 딕셔너리에 동물이 이미 있는지 확인
         if (animalCount.ContainsKey(animal)) {
+            // 이미 있다면, 해당 동물의 충돌 횟수를 증가시킴
             animalCount[animal]++;
         }
         else {
+            // 없다면, 해당 동물을 추가하고 충돌 횟수를 1로 설정
             animalCount[animal] = 1;
         }
     }
 
     private void SpawnNewAnimal() {
-        // 현재 오브젝트의 크기와 프리팹의 크기를 비교
+        // 현재 오브젝트의 크기와 성인 프리팹의 크기를 비교(성인만 복사(번식)할 수 있도록)
         if (transform.localScale == adultPrefab.transform.localScale) {
             // 현재 오브젝트를 복제
             GameObject newAnimal = Instantiate(gameObject, transform.position, transform.rotation);
@@ -270,6 +275,9 @@ public class Animal : Entity
     protected virtual IEnumerator SpawnCooldown() {
         canSpawn = false; // 스폰 금지
         yield return new WaitForSeconds(spawnCooldown); // 쿨타임 대기
+        // 충돌 횟수와 큐 초기화
+        recentAnimals.Clear();
+        animalCount.Clear();
         canSpawn = true; // 스폰 허용
     }
 
@@ -321,15 +329,14 @@ public class Animal : Entity
 
     private IEnumerator HungerRoutine() {
         while (true) {
-            yield return new WaitForSeconds(20f);
+            yield return new WaitForSeconds(60f);
 
             if (hungerLevel > 0) {
                 hungerLevel--;
-                Debug.Log($"{name}의 배고픔 게이지 감소: {hungerLevel}");
             }
 
             // 배고픔 상태 관리
-            if (hungerLevel > 5) {
+            if (hungerLevel > 6) {
                 isHungry = false;
                 isFull = true;
                 detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
@@ -342,6 +349,7 @@ public class Animal : Entity
 
                 if (hungerLevel <= 3) {
                     currentSpeed = baseSpeed + speedIncrease; // 배고픔 상태에서는 속도 증가
+                    SearchForFood();
                 }
                 else {
                     currentSpeed = baseSpeed; // 기본 속도
@@ -372,7 +380,7 @@ public class Animal : Entity
     }
     protected virtual void MoveToNearestNavMesh() {
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
-            agent.Warp(hit.position);
+            MoveTowards(hit.position);
             ChangeState(State.Wander);
         }
     }
@@ -414,6 +422,7 @@ public class Animal : Entity
         canDetectPlayer = true; // 쿨타임 종료 후 탐지 활성화
     }
 
+    //걷거나 달리기 상태일 때 랜덤 목적지로 변경되는 이유는 동물이 정해진 패턴 없이 무작위로 배회하거나 달리게 하기 위해서.
     protected virtual void ChangeState(State newState) {
         currentState = newState;
 
