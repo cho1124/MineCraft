@@ -49,12 +49,44 @@ public class Test1 : MonoBehaviour
                 Vector3 position = currentCollider.transform.position;
                 Quaternion rotation = currentCollider.transform.rotation;
 
+                // 고기 프리팹의 개수를 정하는 로직 추가
+                int meatCount = 1;//기본값
+
+                //충돌한 오브젝트의 이름에 따라 고기 개수 결정
+                string animalName = currentCollider.gameObject.name;
+
+                    if (animalName.Contains("Cat"))
+                    {
+                        meatCount = Random.Range(1, 3);
+                    }
+                    else if (animalName.Contains("Dog"))
+                    {
+                        meatCount = Random.Range(2, 4);
+                    }
+                    else if (animalName.Contains("Chicken"))
+                    {
+                        meatCount = Random.Range(1, 4);
+                    }
+                    else if (animalName.Contains("Lion"))
+                    {
+                        meatCount = Random.Range(3, 6);
+                    }
+
+                    if(animalName.Contains("Baby"))
+                {
+                    meatCount = Mathf.CeilToInt(meatCount / 2.0f);
+                }
+
                 // 기존 동물 오브젝트를 삭제
                 Destroy(currentCollider.gameObject);
 
                 // 새로운 beaf 프리팹 인스턴스 생성
-                Instantiate(beafPrefab, position, rotation);
-            }
+                for (int i = 0; i < meatCount; i++)
+                {
+                    Vector3 spawnPosition = position + new Vector3(i*0.5f, 0, 0);
+                    Instantiate(beafPrefab, spawnPosition, rotation);
+                }
+                }
 
             // 충돌한 오브젝트가 "Grass" 태그를 가지고 있는지 확인
             if (currentCollider.gameObject.CompareTag("Grass"))
