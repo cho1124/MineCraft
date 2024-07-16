@@ -53,6 +53,10 @@ public static class VoxelData
     public static float lightFalloff = 0.08f;
 
 
+    public static int WorldCenter
+    {
+        get { return (worldSizeInChunks * ChunkWidth) / 2; }
+    }
 
     public static int worldSizeInBlocks
     {

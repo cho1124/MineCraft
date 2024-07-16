@@ -525,6 +525,7 @@ MonoBehaviour:
   globalLightLevel: 0.752
   day: {r: 0, g: 0.8893428, b: 1, a: 0}
   night: {r: 0, g: 0.26948595, b: 1, a: 0}
+  clouds: {fileID: 1393693410}
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 9cc781dd30a31d54cb618023bf734f98, type: 2}
   blockTypes:
@@ -702,7 +703,6 @@ MonoBehaviour:
   caveOffset: 1
   caveScale: 0.12
   debugScreen: {fileID: 329707792}
-  cloudHeight: 120
 --- !u!1 &521844759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386,6 +1386,53 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1393693409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1393693411}
+  - component: {fileID: 1393693410}
+  m_Layer: 0
+  m_Name: Clouds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1393693410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393693409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99cd30b059206b34d9af0954c17adb56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cloudHeight: 115
+  cloudPattern: {fileID: 2800000, guid: be15680a4fbc7e44392f7eb464b68e7c, type: 3}
+  cloudMaterial: {fileID: 2100000, guid: 8b82f260fb776fe4b8d5c43a907470b8, type: 2}
+  world: {fileID: 521010851}
+--- !u!4 &1393693411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393693409}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1484057989
 GameObject:
   m_ObjectHideFlags: 0

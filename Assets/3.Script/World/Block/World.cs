@@ -42,6 +42,9 @@ public class World : MonoBehaviour
     public Color night;
 
 
+    // Clouds
+    public Clouds clouds;
+
 
 
     // blocks
@@ -65,14 +68,11 @@ public class World : MonoBehaviour
 
     bool applyingModifications = false;
 
-    //private bool isCreatingChunks;
 
     Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
 
 
     // 동굴 생성
-    //[SerializeField]
-    //public CaveGenerator caveGenerator;
     public float caveOffset;
     public float caveScale;
 
@@ -81,11 +81,13 @@ public class World : MonoBehaviour
     private Stopwatch stopwatch;
 
 
+
+    // Thread
     Thread chunkUpdateThread;
     public object ChunkUpdateThreadLock = new object();
 
 
-    public int cloudHeight = 120;
+    //public int cloudHeight = 120;
 
 
     //월드 생성
@@ -284,7 +286,7 @@ public class World : MonoBehaviour
         //    chunksToUpdate.RemoveAt(0);
         //}
 
-        spawnPoint = new Vector3(VoxelData.worldSizeInBlocks / 2, VoxelData.ChunkHeight - 80f, VoxelData.worldSizeInBlocks / 2) ;
+        spawnPoint = new Vector3( VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter) ;
         player.position = spawnPoint;
 
         CheckViewDistance();
@@ -532,6 +534,8 @@ public class World : MonoBehaviour
 
     void CheckViewDistance()
     {
+
+        clouds.UpdateClouds();
         // 플레이어의 현재 chunk 좌표
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
 
@@ -803,13 +807,13 @@ public class World : MonoBehaviour
 
 
 
-        if (yPos == cloudHeight)
-        {
-            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, 08f) > 0.8f)
-            {
-                voxelValue = 15; // cloud
-            }
-        }
+        //if (yPos == cloudHeight)
+        //{
+        //    if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, 08f) > 0.8f)
+        //    {
+        //        voxelValue = 15; // cloud
+        //    }
+        //}
 
 
 
