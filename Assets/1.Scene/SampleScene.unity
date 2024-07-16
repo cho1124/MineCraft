@@ -526,7 +526,7 @@ MonoBehaviour:
   day: {r: 0, g: 0.8893428, b: 1, a: 0}
   night: {r: 0, g: 0.26948595, b: 1, a: 0}
   material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: 47af3025b26024f40b05b595bd6041cf, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 9cc781dd30a31d54cb618023bf734f98, type: 2}
   blockTypes:
   - blockName: Air
     isSolid: 0
@@ -542,12 +542,12 @@ MonoBehaviour:
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 9
-    frontFaceTexture: 9
-    backFaceTexture: 9
-    leftFaceTexture: 9
-    rightFaceTexture: 9
-    bottomFaceTexture: 9
+    topFaceTexture: 1
+    frontFaceTexture: 1
+    backFaceTexture: 1
+    leftFaceTexture: 1
+    rightFaceTexture: 1
+    bottomFaceTexture: 1
   - blockName: Stone
     isSolid: 1
     renderNeighborFaces: 0
@@ -562,42 +562,42 @@ MonoBehaviour:
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 7
-    frontFaceTexture: 2
-    backFaceTexture: 2
-    leftFaceTexture: 2
-    rightFaceTexture: 2
-    bottomFaceTexture: 1
+    topFaceTexture: 23
+    frontFaceTexture: 18
+    backFaceTexture: 18
+    leftFaceTexture: 18
+    rightFaceTexture: 18
+    bottomFaceTexture: 11
   - blockName: Sand
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 10
-    frontFaceTexture: 10
-    backFaceTexture: 10
-    leftFaceTexture: 10
-    rightFaceTexture: 10
-    bottomFaceTexture: 10
+    topFaceTexture: 2
+    frontFaceTexture: 2
+    backFaceTexture: 2
+    leftFaceTexture: 2
+    rightFaceTexture: 2
+    bottomFaceTexture: 2
   - blockName: Dirt
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 1
-    frontFaceTexture: 1
-    backFaceTexture: 1
-    leftFaceTexture: 1
-    rightFaceTexture: 1
-    bottomFaceTexture: 1
+    topFaceTexture: 11
+    frontFaceTexture: 11
+    backFaceTexture: 11
+    leftFaceTexture: 11
+    rightFaceTexture: 11
+    bottomFaceTexture: 11
   - blockName: Glass
     isSolid: 1
     renderNeighborFaces: 1
     transparency: 1
-    topFaceTexture: 3
-    frontFaceTexture: 3
-    backFaceTexture: 3
-    leftFaceTexture: 3
-    rightFaceTexture: 3
-    bottomFaceTexture: 3
+    topFaceTexture: 19
+    frontFaceTexture: 19
+    backFaceTexture: 19
+    leftFaceTexture: 19
+    rightFaceTexture: 19
+    bottomFaceTexture: 19
   - blockName: Brick
     isSolid: 1
     renderNeighborFaces: 0
@@ -612,46 +612,97 @@ MonoBehaviour:
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 6
-    frontFaceTexture: 5
-    backFaceTexture: 5
-    leftFaceTexture: 5
-    rightFaceTexture: 5
-    bottomFaceTexture: 6
+    topFaceTexture: 22
+    frontFaceTexture: 21
+    backFaceTexture: 21
+    leftFaceTexture: 21
+    rightFaceTexture: 21
+    bottomFaceTexture: 22
   - blockName: Leef
     isSolid: 1
     renderNeighborFaces: 1
     transparency: 0.8
-    topFaceTexture: 16
-    frontFaceTexture: 16
-    backFaceTexture: 16
-    leftFaceTexture: 16
-    rightFaceTexture: 16
-    bottomFaceTexture: 16
+    topFaceTexture: 8
+    frontFaceTexture: 8
+    backFaceTexture: 8
+    leftFaceTexture: 8
+    rightFaceTexture: 8
+    bottomFaceTexture: 8
   - blockName: Cactus
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 19
-    frontFaceTexture: 18
-    backFaceTexture: 18
-    leftFaceTexture: 18
-    rightFaceTexture: 18
-    bottomFaceTexture: 19
+    topFaceTexture: 12
+    frontFaceTexture: 10
+    backFaceTexture: 10
+    leftFaceTexture: 10
+    rightFaceTexture: 10
+    bottomFaceTexture: 12
   - blockName: Cactus Top
     isSolid: 1
     renderNeighborFaces: 0
     transparency: 0
-    topFaceTexture: 17
-    frontFaceTexture: 18
-    backFaceTexture: 18
-    leftFaceTexture: 18
-    rightFaceTexture: 18
-    bottomFaceTexture: 19
+    topFaceTexture: 9
+    frontFaceTexture: 10
+    backFaceTexture: 10
+    leftFaceTexture: 10
+    rightFaceTexture: 10
+    bottomFaceTexture: 12
+  - blockName: Coal
+    isSolid: 1
+    renderNeighborFaces: 0
+    transparency: 0
+    topFaceTexture: 13
+    frontFaceTexture: 13
+    backFaceTexture: 13
+    leftFaceTexture: 13
+    rightFaceTexture: 13
+    bottomFaceTexture: 13
+  - blockName: Copper
+    isSolid: 1
+    renderNeighborFaces: 0
+    transparency: 0
+    topFaceTexture: 14
+    frontFaceTexture: 14
+    backFaceTexture: 14
+    leftFaceTexture: 14
+    rightFaceTexture: 14
+    bottomFaceTexture: 14
+  - blockName: Iron
+    isSolid: 1
+    renderNeighborFaces: 0
+    transparency: 0
+    topFaceTexture: 15
+    frontFaceTexture: 15
+    backFaceTexture: 15
+    leftFaceTexture: 15
+    rightFaceTexture: 15
+    bottomFaceTexture: 15
+  - blockName: Cloud
+    isSolid: 0
+    renderNeighborFaces: 1
+    transparency: 0.5
+    topFaceTexture: 28
+    frontFaceTexture: 28
+    backFaceTexture: 28
+    leftFaceTexture: 28
+    rightFaceTexture: 28
+    bottomFaceTexture: 28
+  - blockName: Chest
+    isSolid: 1
+    renderNeighborFaces: 0
+    transparency: 0
+    topFaceTexture: 31
+    frontFaceTexture: 29
+    backFaceTexture: 30
+    leftFaceTexture: 30
+    rightFaceTexture: 30
+    bottomFaceTexture: 31
   ItemBlock: {fileID: 8924201329985380255, guid: 0b132f74815d1934f802f3622b8e1476, type: 3}
   caveOffset: 1
   caveScale: 0.12
   debugScreen: {fileID: 329707792}
+  cloudHeight: 120
 --- !u!1 &521844759
 GameObject:
   m_ObjectHideFlags: 0

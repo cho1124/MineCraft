@@ -85,6 +85,8 @@ public class World : MonoBehaviour
     public object ChunkUpdateThreadLock = new object();
 
 
+    public int cloudHeight = 120;
+
 
     //월드 생성
     private void Start()
@@ -799,6 +801,18 @@ public class World : MonoBehaviour
 
 
 
+
+
+        if (yPos == cloudHeight)
+        {
+            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, 08f) > 0.8f)
+            {
+                voxelValue = 15; // cloud
+            }
+        }
+
+
+
         if (yPos == terrainHeight)
         {
             // grass
@@ -886,7 +900,16 @@ public class World : MonoBehaviour
                 }
             }
         }
+
+
+
+
+
+
+
         return voxelValue;
+
+        
 
 
 
