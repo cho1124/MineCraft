@@ -60,6 +60,8 @@ Shader "Minecraft/Blocks" {
 						shade *= i.color.a;
 						shade = clamp(1 - shade, minGlobalLightLevel, maxGlobalLightLevel);
 
+						
+
 						//clip(col.a - 1);
 						col = lerp(col, float4(0, 0, 0, 1), shade);
 

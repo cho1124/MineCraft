@@ -36,7 +36,7 @@ public class World : MonoBehaviour
 
 
     //for shader
-    [Range(0.95f, 0f)]
+    [Range(0f, 0.95f)]
     public float globalLightLevel;
     public Color day;
     public Color night;
