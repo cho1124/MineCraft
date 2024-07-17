@@ -18,7 +18,7 @@ public class Monster : Entity
     private MonsterState currentState; // 몬스터의 현재상태 
 
     //참조를 위한 변수
-    private Vector3 targetPosition; //몬스터가 공격할 물체 목표 위치
+    private Vector3 targetPosition; //몬스터 목적지
     private Rigidbody rb;
     private ObstacleDetector obstacleDetector; //장애물감지 큐브
     public Transform head; //몬스터의 머리(head) 참조
@@ -26,12 +26,12 @@ public class Monster : Entity
     public Transform animal; // 동물 오브젝트 참조 추가
 
     //이동 및 행동 속성 변수
-    public float walkRadius = 10; //몬스터가 이동할 수 있는 방황 반경
-    public float walkSpeed = 3; //몬스터 기본 걸음 속도
-    public float runSpeed = 4; //몬스터 달릴때 속도
+    public float walkRadius = 10f; //몬스터가 이동할 수 있는 방황 반경
+    public float walkSpeed = 3f; //몬스터 기본 걸음 속도
+    public float runSpeed = 4f; //몬스터 달릴때 속도
     public float idleTime = 4f; //몬스터 idle 시간
-    public float minWalkTime = 4; //몬스터 걷기 최소 시간
-    public float maxWalkTime = 6; //몬스터 걷기 최대 시간
+    public float minWalkTime = 4f; //몬스터 걷기 최소 시간
+    public float maxWalkTime = 6f; //몬스터 걷기 최대 시간
     public float jumpForce = 4f; //몬스터 점프할때 힘
     public float detectionDistance = 2f; //몬스터 탐지 거리
     public float ChaseDuration = 7f; // 쫒아오기 지속 시간
@@ -51,13 +51,11 @@ public class Monster : Entity
                 Walk();
                 break;
             case MonsterState.Idle:
-                //멈춰있는 코드를 넣자
                 break;
             case MonsterState.Run:
                 Run();
                 break;
             case MonsterState.Jump:
-                //점프
                 break;
             case MonsterState.Chase:
                 Chase();
