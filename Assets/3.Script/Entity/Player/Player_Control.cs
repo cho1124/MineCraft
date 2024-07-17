@@ -134,9 +134,10 @@ public class Player_Control : MonoBehaviour
 
     private void Move_Control()
     {
-        if(!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
+        Debug.Log(controller.isGrounded);
+        if (controller.isGrounded)
         {
-            if (controller.isGrounded)
+            if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
             {
                 key_h = Input.GetAxis("Horizontal");
                 key_v = Input.GetAxis("Vertical");
@@ -157,27 +158,17 @@ public class Player_Control : MonoBehaviour
                     gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
                 }
             }
-            else
-            {
-                animator.SetBool("IsGround", false);
-                gravity_velocity += Physics.gravity.y * Time.deltaTime;
-            }
         }
+        else
+        {
+            animator.SetBool("IsGround", false);
+            gravity_velocity += Physics.gravity.y * Time.deltaTime;
+        }
+        
         //땅인가? 중력인가?
 
         // 방향
         Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
-
-        //이거 쓰시면 됩니당.
-        //float speed = direction.normalized.magnitude; //핵심!!! 방향 정규화후 값 구하기
-        //speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2f : speed;
-        //if (key_v < 0f || key_h < 0f) speed = -speed;
-
-        // 애니메이션
-        //float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
-        ////float speed_animation = speed_current;
-        //if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
-        //animator.SetFloat("Speed", speed);
 
         //속도
         if (key_h == 0 && key_v == 0) speed_current = 0f;
@@ -187,7 +178,7 @@ public class Player_Control : MonoBehaviour
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
         direction.y = 0f;
-        controller.Move(direction.normalized * speed_current * Time.deltaTime);
+        if(!animator.GetBool("Is_Stop"))controller.Move(direction.normalized * speed_current * Time.deltaTime);
         controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
 
@@ -233,5 +224,26 @@ public class Player_Control : MonoBehaviour
         if (a < b) return b - a;
         else if (a > b) return a - b;
         else return 0;
+    }
+
+    [Header("Boxcast Property")]
+    [SerializeField] private Vector3 boxSize;
+    [SerializeField] private float maxDistance;
+    [SerializeField] private LayerMask groundLayer;
+
+    [Header("Debug")]
+    [SerializeField] private bool drawGizmo;
+
+    private void OnDrawGizmos()
+    {
+        if (!drawGizmo) return;
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawCube(transform.position - transform.up * maxDistance, boxSize);
+    }
+
+    public bool IsGrounded()
+    {
+        return Physics.BoxCast(transform.position, boxSize, -transform.up, transform.rotation, maxDistance);
     }
 }
