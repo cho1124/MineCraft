@@ -9,7 +9,10 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
     [SerializeField] private Inventory inventory_class;
+    [SerializeField] private GameObject position_anchor;
+    [SerializeField] private GameObject rotation_anchor;
 
+    private Quaternion target_rotation;
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
     private float cursor_y = 0f;
@@ -48,7 +51,7 @@ public class Player_Control : MonoBehaviour
     private void LateUpdate()
     {
         // 문제점 1. 머리의 회전 부분이 모델의 회전에 의해서 새롭게 덮어 씌워지는 치명적인 문제
-        Head_Body_Rotate();
+        Rotation_Control();
     }
 
 
@@ -131,27 +134,36 @@ public class Player_Control : MonoBehaviour
 
     private void Move_Control()
     {
-        //땅인가? 중력인가?
-        if (controller.isGrounded)
+        if(!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
         {
-            key_h = Input.GetAxis("Horizontal");
-            key_v = Input.GetAxis("Vertical");
-
-            animator.SetBool("IsGround", true);
-            animator.SetBool("IsJump", false);
-
-            // 짬푸
-            if (Input.GetButtonDown("Jump"))
+            if (controller.isGrounded)
             {
-                animator.SetBool("IsJump", true);
-                gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
+                key_h = Input.GetAxis("Horizontal");
+                key_v = Input.GetAxis("Vertical");
+
+                if(key_h != 0 && (animator.GetInteger("Moveset_Number") == 2 || animator.GetInteger("Moveset_Number") == -2))
+                {
+                    if (key_h < 0) animator.SetInteger("Moveset_Number", -2);
+                    if (key_h > 0) animator.SetInteger("Moveset_Number", 2);
+                }
+
+                animator.SetBool("IsGround", true);
+                animator.SetBool("IsJump", false);
+
+                // 짬푸
+                if (Input.GetButtonDown("Jump"))
+                {
+                    animator.SetBool("IsJump", true);
+                    gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
+                }
+            }
+            else
+            {
+                animator.SetBool("IsGround", false);
+                gravity_velocity += Physics.gravity.y * Time.deltaTime;
             }
         }
-        else
-        {
-            animator.SetBool("IsGround", false);
-            gravity_velocity += Physics.gravity.y * Time.deltaTime;
-        }
+        //땅인가? 중력인가?
 
         // 방향
         Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
@@ -179,7 +191,7 @@ public class Player_Control : MonoBehaviour
         controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
 
-    private void Head_Body_Rotate()
+    private void Rotation_Control()
     {
         cursor_h = Input.GetAxis("Mouse X");
         cursor_v = Input.GetAxis("Mouse Y");
@@ -202,9 +214,18 @@ public class Player_Control : MonoBehaviour
                 else if(cursor_h < 0) temp_y = cursor_x + 45f;
             }
         }
-        Quaternion target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
-        transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
-        head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+        target_rotation = Quaternion.Euler(transform.rotation.x, temp_y, transform.rotation.z);
+
+        rotation_anchor.transform.position = position_anchor.transform.position;
+        rotation_anchor.transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+
+
+        if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
+            //head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
+            head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
+        }
     }
 
     private float Difference(float a, float b)
