@@ -10,10 +10,10 @@ public class JsonEditorWindow : EditorWindow
     private string weaponName = "";
     private WeaponData weaponData = new WeaponData();
 
-    [MenuItem("Window/JSON Weapon Editor")]
+    [MenuItem("Window/JSON Weapon Editor")] //유니티의 탭/항목이름
     public static void ShowWindow()
     {
-        GetWindow<JsonEditorWindow>("JSON Weapon Editor");
+        GetWindow<JsonEditorWindow>("JSON Weapon Editor"); //에디터 켜졌을때 상단 탭
     }
 
     private void OnGUI()
@@ -46,6 +46,7 @@ public class JsonEditorWindow : EditorWindow
         {
             string existingJson = File.ReadAllText(path);
             wrapper = JsonConvert.DeserializeObject<WeaponDictionaryWrapper>(existingJson) ?? new WeaponDictionaryWrapper();
+            //      '??' : null 병합 연산자로 null이 아니면 왼쪽값을 반환 / null이면 오른쪽 값을 반환
         }
 
         // 새로운 무기 데이터 추가 또는 업데이트
