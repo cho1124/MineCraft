@@ -1,11 +1,11 @@
 # ProBuilder 4.5.2
 # https://unity3d.com/unity/features/worldbuilding/probuilder
-# 2024-07-17 PM 12:10:50
+# 2024-07-17 PM 12:21:05
 
-mtllib ./Melon.mtl
-o Melon
+mtllib ./2_log.mtl
+o 2_log
 
-g Cube
+g Cube (1)
 v 0 0 0
 v -1 0 0
 v 0 1 0
@@ -32,11 +32,11 @@ vn 1 0 0
 vn 0 1 0
 vn 0 -1 0
 
-usemtl Melon_Top
+usemtl 2_log_top
 f 8/7/5 6/8/5 4/5/5 3/1/5
 f 1/1/6 2/2/6 5/9/6 7/7/6
 
-usemtl Melon_Side
+usemtl 2_log
 f 3/3/1 4/4/1 2/2/1 1/1/1
 f 4/3/2 6/4/2 5/2/2 2/1/2
 f 6/6/3 8/3/3 7/1/3 5/5/3
