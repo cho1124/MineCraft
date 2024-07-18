@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3877980889212511045}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.032, y: 2.819, z: -19.255}
+  m_LocalPosition: {x: 2.032, y: 1.57, z: -19.255}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7469311766127740184}
@@ -77,8 +77,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 2015929771698643318}
-  player: {fileID: 0}
-  animal: {fileID: 0}
   walkRadius: 10
   walkSpeed: 3
   runSpeed: 4
@@ -88,6 +86,9 @@ MonoBehaviour:
   jumpForce: 4
   detectionDistance: 2
   ChaseDuration: 7
+  turnDuration: 1
+  positionCheckInterval: 15
+  minPositionChange: 3
 --- !u!1 &4032110391933622099
 GameObject:
   m_ObjectHideFlags: 0
