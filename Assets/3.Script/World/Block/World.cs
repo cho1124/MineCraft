@@ -63,8 +63,8 @@ public class World : MonoBehaviour
     public ChunkCoord playerChunkCoord;
     ChunkCoord playerLastChunkCoord;
 
-    List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
-    public List<Chunk> chunksToUpdate = new List<Chunk>();
+    //List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
+    private List<Chunk> chunksToUpdate = new List<Chunk>();
 
     bool applyingModifications = false;
 
@@ -137,18 +137,33 @@ public class World : MonoBehaviour
 
 
 
-        if (settings.enableThreading)
-        {
-            chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
-            chunkUpdateThread.Start();
-        }
-        GenerateWorld();
+
+
+        LoadWorld();
+
+
+        SetGlobalLightValue();
+
+        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter);
+        player.position = spawnPoint;
+
+        CheckViewDistance();
+
+        
 
         stopwatch.Stop();
         UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
 
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
-        SetGlobalLightValue();
+
+        if (settings.enableThreading)
+        {
+            chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
+            chunkUpdateThread.Start();
+        }
+
+
+
 
     }
 
@@ -184,10 +199,10 @@ public class World : MonoBehaviour
         //    ApplyModifications();
         //}
 
-        if (chunksToCreate.Count > 0)
-        {
-            CreateChunk();
-        }
+        //if (chunksToCreate.Count > 0)
+        //{
+        //    CreateChunk();
+        //}
 
         //if (chunksToUpdate.Count > 0)
         //{
@@ -243,35 +258,6 @@ public class World : MonoBehaviour
     }
 
 
-    void GenerateWorld()
-    {
-
-        for (int x = VoxelData.worldSizeInChunks / 2 - settings.viewDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.viewDistance / 2; x++)
-        {
-            for (int z = VoxelData.worldSizeInChunks / 2 - settings.viewDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.viewDistance / 2; z++)
-            {
-
-                ChunkCoord newchunk = new ChunkCoord(x, z);
-                chunks[x, z] = new Chunk(new ChunkCoord(x, z));
-                //activeChunks.Add(new ChunkCoord(x, z));
-                chunksToCreate.Add(newchunk);
-
-
-            }
-        }
-
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter);
-        player.position = spawnPoint;
-
-        CheckViewDistance();
-
-    }
-
-
-
-
-
-
 
 
 
@@ -292,33 +278,25 @@ public class World : MonoBehaviour
 
     }
 
-    void CreateChunk()
+    public void AddChunkToUpdate(Chunk chunk)
     {
-        ChunkCoord c = chunksToCreate[0];
-        chunksToCreate.RemoveAt(0);
-        //activeChunks.Add(c);
-        chunks[c.x, c.z].Init();
+        AddChunkToUpdate(chunk, false);
     }
 
-    //void UpdateChunks()
-    //{
-    //    bool updated = false;
-    //    int index = 0;
-    //    while(!updated && index < chunksToUpdate.Count - 1)
-    //    {
-    //        if (chunksToUpdate[index].isVoxelMapPopulated)
-    //        {
-    //            chunksToUpdate[index].UpdateChunk();
-    //            chunksToUpdate.RemoveAt(index);
-    //            updated = true;
-    //        }
-    //        else
-    //        {
-    //            index++;
-    //        }
-    //    }
-    //}
+    public void AddChunkToUpdate(Chunk chunk, bool insert)
+    {
+        lock (ChunkUpdateThreadLock)
+        {
+            if(!chunksToUpdate.Contains(chunk))
+            {
+                if (insert)
+                    chunksToUpdate.Insert(0, chunk);
+                else
+                    chunksToUpdate.Add(chunk);
+            }
+        }
 
+    }
 
     void UpdateChunks()
     {
@@ -501,19 +479,11 @@ public class World : MonoBehaviour
                 {
                     // chunk가 없으면 새로운 chunk 생성
                     if (chunks[x, z] == null)
-                    {
                         chunks[x, z] = new Chunk(thisChunkCoord);
-                        chunksToCreate.Add(thisChunkCoord);
-
-                    }
-                    // chunk가 비활성화 된 경우엔 활성화 
-                    else if (!chunks[x, z].isActive)
-                    {
-                        chunks[x, z].isActive = true;
-                        //activeChunks.Add(new ChunkCoord(x, z));
-                    }
-
-                    // 현재 chunk를 활성 chunk목록에 추가
+                        
+                    
+                    
+                    chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord);
                 }
 
@@ -817,7 +787,7 @@ public class BlockType
     public string blockName;
     public bool isSolid;
     public bool renderNeighborFaces;
-    public float transparency;
+    public byte opacity;
 
     [Header("Texture IDs")]
     public int topFaceTexture;
