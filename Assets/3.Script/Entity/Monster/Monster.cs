@@ -287,7 +287,9 @@ public class Monster : Entity
         ChangeState(GetRandomState());
     }
 
-    private void OnTriggerEnter(Collision collision)
+   
+
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Tool"))
         {
