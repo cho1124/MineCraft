@@ -464,9 +464,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb990c33409915a43a9d724db24c232a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isObstacleDeteched: 0
-  isPlayerDeteched: 0
-  isAnimalDeteched: 0
+  playerTag: Player
+  animalTag: Animals
+  chaseDuration: 7
+  detectionCooldown: 30
+  maxChaseDistance: 10
 --- !u!1 &5652841033020156913
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,6 +512,7 @@ GameObject:
   - component: {fileID: 6086126368442328690}
   - component: {fileID: 6086126368442328691}
   - component: {fileID: 5917821463045448123}
+  - component: {fileID: 1909501268656922201}
   m_Layer: 0
   m_Name: enderman
   m_TagString: Untagged
@@ -580,8 +583,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 4123892497744069405}
-  player: {fileID: 0}
-  animal: {fileID: 0}
   walkRadius: 10
   walkSpeed: 3
   runSpeed: 4
@@ -591,6 +592,28 @@ MonoBehaviour:
   jumpForce: 4
   detectionDistance: 2
   ChaseDuration: 7
+  turnDuration: 4
+  positionCheckInterval: 15
+  minPositionChange: 3
+--- !u!95 &1909501268656922201
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6392624918292962084}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 895316790d3b47f46841bddf3f3e5e36, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6676483470790809109
 GameObject:
   m_ObjectHideFlags: 0

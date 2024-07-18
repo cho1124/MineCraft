@@ -756,9 +756,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb990c33409915a43a9d724db24c232a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isObstacleDeteched: 0
-  isPlayerDeteched: 0
-  isAnimalDeteched: 0
+  playerTag: Player
+  animalTag: Animals
+  chaseDuration: 7
+  detectionCooldown: 30
+  maxChaseDistance: 10
 --- !u!1 &7053498219005094514
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,6 +807,7 @@ GameObject:
   - component: {fileID: 7672257771420419111}
   - component: {fileID: 7672257771420419128}
   - component: {fileID: 5501483357301923496}
+  - component: {fileID: -2815101361065574711}
   m_Layer: 0
   m_Name: slime
   m_TagString: Untagged
@@ -871,8 +874,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 7796825662160098818}
-  player: {fileID: 0}
-  animal: {fileID: 0}
   walkRadius: 10
   walkSpeed: 3
   runSpeed: 4
@@ -882,6 +883,28 @@ MonoBehaviour:
   jumpForce: 4
   detectionDistance: 2
   ChaseDuration: 7
+  turnDuration: 4
+  positionCheckInterval: 15
+  minPositionChange: 3
+--- !u!95 &-2815101361065574711
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7401732072854609404}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8944656964792782805
 GameObject:
   m_ObjectHideFlags: 0
