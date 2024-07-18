@@ -44,16 +44,16 @@ public class Monster : Entity
     public Transform head; //몬스터의 머리(head) 참조
 
     //이동 및 행동 속성 변수
-    public float walkRadius = 10f; //몬스터가 이동할 수 있는 방황 반경
+    public float walkRadius = 5f; //몬스터가 이동할 수 있는 방황 반경
     public float walkSpeed = 3f; //몬스터 기본 걸음 속도
     public float runSpeed = 4f; //몬스터 달릴때 속도
     public float idleTime = 4f; //몬스터 idle 시간
-    public float minWalkTime = 4f; //몬스터 걷기 최소 시간
-    public float maxWalkTime = 8f; //몬스터 걷기 최대 시간
+    public float minWalkTime = 6f; //몬스터 걷기 최소 시간
+    public float maxWalkTime = 12f; //몬스터 걷기 최대 시간
     public float jumpForce = 4f; //몬스터 점프할때 힘
     public float detectionDistance = 2f; //몬스터 탐지 거리
     public float ChaseDuration = 7f; // 쫒아오기 지속 시간
-    public float turnDuration = 3f; // 회전 지속 시간
+    public float turnDuration = 4f; // 회전 지속 시간
 
     // 위치 변화 추적을 위한 변수
     private Vector3 lastPosition;
@@ -61,7 +61,7 @@ public class Monster : Entity
     public float positionCheckInterval = 15f; // 위치를 체크할 간격
     public float minPositionChange = 3f; // 최소 위치 변화
 
-    public bool IsChasingPlayer { get; private set; } = false; // 플레이어를 추적 중인지 여부를 저장
+    public bool IsChasingPlayer { get; set; } = false; // 플레이어를 추적 중인지 여부를 저장
 
     private void Start()
     {
@@ -127,10 +127,9 @@ public class Monster : Entity
                 StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Idle:
-                StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(2f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
+                StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Run:
-                targetPosition= GetRandomPosition();
                 StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
             case MonsterState.Jump:
@@ -151,17 +150,12 @@ public class Monster : Entity
         }
     }
 
-    private void SetRandomTarget() // 새로운 랜덤 목표 위치를 설정하는 메서드입니다.
-    {
-        targetPosition = GetRandomPosition(); // 새로운 랜덤 목표 위치를 설정합니다.
-    }
-
     private void Walk() // 걷기 상태에서 수행할 행동을 정의하는 메서드입니다.
     {
         MoveTowardsTarget(walkSpeed); // 목표 위치로 걷기 속도로 이동합니다.
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
         {
-            targetPosition = GetRandomPosition(); // 새로운 목표 위치를 설정합니다.
+            ChangeState(MonsterState.Idle); // Idle 상태로 변경
         }
     }
 
@@ -170,7 +164,7 @@ public class Monster : Entity
         MoveTowardsTarget(runSpeed); // 목표 위치로 달리기 속도로 이동합니다.
         if (Vector3.Distance(transform.position,targetPosition)<0.1f) // 목표 위치에 도달했는지 확인합니다.
         {
-            targetPosition = GetRandomPosition(); // 새로운 목표 위치를 설정합니다.
+            ChangeState(MonsterState.Idle); // Idle 상태로 변경
         }
     }
 
@@ -191,6 +185,10 @@ public class Monster : Entity
     private void Chase() 
     {
         MoveTowardsTarget(runSpeed);
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
+        {
+            EndChaseAndWander(); // 추적 종료 후 다른 상태로 전환
+        }
     }
 
     private void MoveTowardsTarget(float speed) //몬스터를 targetPosition으로 이동시키는 기능
@@ -213,14 +211,19 @@ public class Monster : Entity
         Debug.Log("새로운 목적지를 생성하겠습니다.");
         float randomAngle = Random.Range(0, 360);// 랜덤 각도를 생성합니다.
         Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward; // 랜덤 방향을 생성합니다.
-        return transform.position + randomDirection * walkRadius; // 현재 위치에서 랜덤 방향으로 walkRadius만큼 떨어진 위치를 반환합니다.
+        Vector3 randomPosition;
+        do
+        {
+            randomPosition = transform.position + randomDirection * walkRadius; // 현재 위치에서 랜덤 방향으로 walkRadius만큼 떨어진 위치를 반환합니다.
+        } while (Vector3.Distance(transform.position, randomPosition) < 3f); // 최소 거리 조건 추가
+        return randomPosition;
     }
 
     private IEnumerator StateDuration(MonsterState state, float duration) //몬스터가 특정 상태를 일정 시간 동안 유지하게
     {
         // 지정된 시간(duration)만큼 대기
         yield return new WaitForSeconds(duration);
-
+        yield return new WaitForSeconds(3f);
         // 다음 상태를 랜덤하게 선택
         MonsterState nextState = GetRandomState();
 
@@ -267,18 +270,6 @@ public class Monster : Entity
     {
         targetPosition = target;
         ChangeState(MonsterState.Chase);
-    }
-
-    public void StartChasingPlayer()
-    {
-        IsChasingPlayer = true;
-        ChangeState(MonsterState.Chase);
-    }
-
-    public void StopChasingPlayer()
-    {
-        IsChasingPlayer = false;
-        ChangeState(MonsterState.Idle);
     }
 
     public void EndChaseAndWander()

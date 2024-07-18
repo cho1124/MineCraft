@@ -37,6 +37,7 @@ public class ObstacleDetector : MonoBehaviour
     private IEnumerator ChaseTarget(Transform target, bool isPlayer)
     {
         float startTime = Time.time;
+        monsterScript.IsChasingPlayer = isPlayer;
 
         while (Time.time < startTime + chaseDuration)
         {
