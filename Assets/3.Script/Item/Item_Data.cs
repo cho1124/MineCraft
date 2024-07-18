@@ -9,93 +9,209 @@ public enum Equipment_Type
     LEGGINGS,
     BOOTS,
     SHIELD,
-    DAGGER,
-    SWORD_LIGHT,
-    SWORD_HEAVY,    
-    AXE_LIGHT,
-    AXE_HEAVY,    
-    BLUNT_LIGHT,
-    BLUNT_HEAVY,
-    SPEAR,
+    ONE_HANDED_SWORD,
+    ONE_HANDED_AXE,
+    ONE_HANDED_HAMMER,
+    TWO_HANDED_SWORD,
+    TWO_HANDED_AXE,
+    TWO_HANDED_HAMMER,
     BOW,
     PICKAXE,
     SHOVEL,
     HOE
 }
 
-public class Item_Data
+public class Item_Data : MonoBehaviour
 {
-    public string item_ID; //아이템 아이디
-    public string item_name; //아이템 이름
-    public GameObject item_model_in_inventory; //인벤토리에서 보여질 아이템의 형태
-    public GameObject item_model_in_hand; //손에 있을 때 보여질 아이템의 형태
+    public int item_ID { get; protected set; } //아이템 아이디
+    public string item_name { get; protected set; } //아이템 이름
+    public GameObject item_model_in_world { get; protected set; } //바닥에 떨어져있을 때 보여질 아이템의 형태
+    public GameObject item_model_in_inventory { get; protected set; } //인벤토리에서 보여질 아이템의 형태
+
+    public Item_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+    }
 }
 
 public class Item_Stackable_Data : Item_Data
 {
-    public int stack_max; //겹칠 수 있는 최대 개수
+    public int stack_max { get; protected set; } //겹칠 수 있는 최대 개수
+    public int stack_current { get; protected set; }
+
+    public Item_Stackable_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, int stack_max, int stack_current) : 
+        base(item_ID, item_name, item_model_in_world,item_model_in_inventory)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+        
+        this.stack_max = stack_max;
+        this.stack_current = stack_current;
+    }
+}
+public class Item_Consumable_Data : Item_Stackable_Data
+{
+    public float hunger_amount { get; protected set; } //먹었을 때 회복되는 배고픔 수치
+    public float thirst_amount { get; protected set; } //먹었을 때 회복되는 목마름 수치
+    public float fatigue_amount { get; protected set; } //먹었을 때 회복되는 피로도 수치
+
+    public float freshment_max { get; protected set; } //최대 유통기한
+    public float freshment_current { get; protected set; } //현재 유통기한
+
+    public Item_Consumable_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, int stack_max, int stack_current, float hunger_amount, float thirst_amount, float fatigue_amount, float freshment_max, float freshment_current) :
+        base(item_ID, item_name, item_model_in_world, item_model_in_inventory, stack_max, stack_current)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+        
+        this.stack_max = stack_max;
+        this.stack_current = stack_current;
+
+        this.hunger_amount = hunger_amount;
+        this.thirst_amount = thirst_amount;
+        this.fatigue_amount = fatigue_amount;
+        this.freshment_max = freshment_max;
+        this.freshment_current = freshment_current;
+    }
 }
 
 public class Item_Placeable_Data : Item_Stackable_Data
 {
-    public Equipment_Type require_tool_type; //해당 블럭을 파괴하기 위해 필요한 도구의 타입
-    public int require_tool_tier; //해당 블럭을 파괴하기 위해 필요한 도구의 티어
-    public float durability_max; //해당 블럭의 체력
-    public float durability_current;
-    public GameObject item_model_in_world; //설치되었을 때 보여질 아이템의 형태 (근데 이건 텍스쳐로 해놔야 되나)
+    public Equipment_Type require_tool_type { get; protected set; } //해당 블럭을 파괴하기 위해 필요한 도구의 타입
+    public int require_tool_tier { get; protected set; } //해당 블럭을 파괴하기 위해 필요한 도구의 티어
+
+    public float durability_max { get; protected set; } //해당 블럭의 체력
+    public float durability_current { get; protected set; }
+
+    public GameObject item_model_in_place { get; protected set; } //설치되었을 때 보여질 아이템의 형태 (근데 이건 텍스쳐로 해놔야 되나)
+
+    //만약 기능이 있는 블럭의 경우 이벤트로 추가하는 식으로
+    public Item_Placeable_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, int stack_max, int stack_current, Equipment_Type require_tool_type, int require_tool_tier, float durability_max, float durability_current, GameObject item_model_in_place) :
+        base(item_ID, item_name, item_model_in_world, item_model_in_inventory, stack_max, stack_current)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+
+        this.stack_max = stack_max;
+        this.stack_current = stack_current;
+
+        this.require_tool_type = require_tool_type;
+        this.require_tool_tier = require_tool_tier;
+        this.durability_max = durability_max;
+        this.durability_current = durability_current;
+        this.item_model_in_place = item_model_in_place;
+    }
 }
 
-public class Item_Function_Data : Item_Placeable_Data
-{
-    //상호작용이 가능한 블럭의 기능은 이벤트로 만들어두고 추가하는 식으로?
-}
 
-public class Item_Eatable_Data : Item_Stackable_Data
+public class Item_Equipment_Data : Item_Data
 {
-    public float hunger_amount; //먹었을 때 회복되는 배고픔 수치
-    public float thirst_amount; //먹었을 때 회복되는 목마름 수치
-    public float fatigue_amount; //먹었을 때 회복되는 피로도 수치
-    public float freshness_max; //최대 유통기한
-    public float freshness_current; //현재 유통기한
-}
+    public Equipment_Type equipment_type { get; protected set; } //장비의 타입
 
-public class Item_Material_Data : Item_Stackable_Data
-{
-    //추가할 게... 있나...?
-}
+    public float weight { get; protected set; } //장비의 무게
+    public float durability_max { get; protected set; } //장비의 최대 내구도
+    public float durability_current { get; protected set; } //장비의 현재 내구도
 
-public class Item_Unstackable_Data : Item_Data
-{
-    //추가할 게... 있나...?
-}
+    public GameObject item_model_in_equip { get; protected set; } // 장착했을 때의 모델링
 
-public class Item_Equipment_Data : Item_Unstackable_Data
-{
-    public Equipment_Type equipment_type; //장비의 타입
-    public float weight; //장비의 무게
-    public float durability_max; //장비의 최대 내구도
-    public float durability_current; //장비의 현재 내구도
+    public Item_Equipment_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, Equipment_Type equipment_type, float weight, float durability_max, float durability_current, GameObject item_model_in_equip) :
+        base(item_ID, item_name, item_model_in_world, item_model_in_inventory)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+
+        this.equipment_type = equipment_type;
+        this.weight = weight;
+        this.durability_max = durability_max;
+        this.durability_current = durability_current;
+        this.item_model_in_equip = item_model_in_equip;
+    }
 }
 
 public class Item_Armor_Data : Item_Equipment_Data
 {
-    public float armor_defense; //방어구의 방어력
-    public GameObject item_model_in_equip; //방어구 장착 시의 모델링
+    public float armor_defense { get; protected set; } //방어구의 방어력
+
+    public Item_Armor_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, Equipment_Type equipment_type, float weight, float durability_max, float durability_current, GameObject item_model_in_equip, float armor_defense) :
+        base(item_ID, item_name, item_model_in_world, item_model_in_inventory, equipment_type, weight, durability_max, durability_current, item_model_in_equip)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+
+        this.equipment_type = equipment_type;
+        this.weight = weight;
+        this.durability_max = durability_max;
+        this.durability_current = durability_current;
+        this.item_model_in_equip = item_model_in_equip;
+
+        this.armor_defense = armor_defense;
+    }
 }
 
 public class Item_Gear_Data : Item_Equipment_Data
 {
-    public float attack_damage; //무기 또는 도구의 공격력
-    public float attack_speed; //무기 또는 도구의 공격속도
-    public float attack_reach; //무기 또는 도구의 공격거리 (만약 모델링에 collider 붙여서 처리할거면 필요없음)
-    public float guard_rate; //무기 또는 도구의 방어배율
+    public float melee_damage { get; protected set; } //무기 또는 도구의 공격력
+    public float melee_speed { get; protected set; } //무기 또는 도구의 공격속도
+    public float guard_rate { get; protected set; } //무기 또는 도구의 방어배율
 
-    public string[] actions; // 무기 또는 도구가 가진 애니메이션
+    public int tool_tier { get; protected set; } //무기 또는 도구의 티어 (블럭 파괴 외에도 제작 스테이션 등에서 사용할수도?)
 
-    public int tool_tier; //무기 또는 도구의 티어 (블럭 파괴 외에도 제작 스테이션 등에서 사용할수도?)
+    public Item_Gear_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, Equipment_Type equipment_type, float weight, float durability_max, float durability_current, GameObject item_model_in_equip, float melee_damage, float melee_speed, float guard_rate, int tool_tier) :
+        base(item_ID, item_name, item_model_in_world, item_model_in_inventory, equipment_type, weight, durability_max, durability_current, item_model_in_equip)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+
+        this.equipment_type = equipment_type;
+        this.weight = weight;
+        this.durability_max = durability_max;
+        this.durability_current = durability_current;
+        this.item_model_in_equip = item_model_in_equip;
+
+        this.melee_damage = melee_damage;
+        this.melee_speed = melee_speed;
+        this.guard_rate = guard_rate;
+        this.tool_tier = tool_tier;
+    }
 }
 
-public class item_Bow_Data : Item_Gear_Data
+public class Item_Bow_Data : Item_Equipment_Data
 {
-    public GameObject arrow; //소모할 화살
+    public float draw_power { get; protected set; } //발사체의 가속도
+    public float draw_speed { get; protected set; } //당기는 속도
+    public float aim_accuracy { get; protected set; } //에임의 정확도
+
+    public Item_Bow_Data(int item_ID, string item_name, GameObject item_model_in_world, GameObject item_model_in_inventory, Equipment_Type equipment_type, float weight, float durability_max, float durability_current, GameObject item_model_in_equip, float draw_power, float draw_speed, float aim_accuracy) :
+        base(item_ID, item_name, item_model_in_world, item_model_in_inventory, equipment_type, weight, durability_max, durability_current, item_model_in_equip)
+    {
+        this.item_ID = item_ID;
+        this.item_name = item_name;
+        this.item_model_in_world = item_model_in_world;
+        this.item_model_in_inventory = item_model_in_inventory;
+
+        this.equipment_type = equipment_type;
+        this.weight = weight;
+        this.durability_max = durability_max;
+        this.durability_current = durability_current;
+        this.item_model_in_equip = item_model_in_equip;
+
+        this.draw_power = draw_power;
+        this.draw_speed = draw_speed;
+        this.aim_accuracy = aim_accuracy;
+    }
 }
