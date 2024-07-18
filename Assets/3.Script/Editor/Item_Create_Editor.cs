@@ -11,12 +11,14 @@ public class Item_Create_Editor
 
 public class Item_Create_Editor_Window : EditorWindow
 {
-    private string item_type = "Item";
+    private TextAsset item_json;
+
+    private string item_type;
 
     private int item_ID;
     private string item_name;
-    private GameObject item_model_in_world;
-    private GameObject item_model_in_inventory;
+    private string item_model_in_world;
+    private string item_model_in_inventory;
 
     //stackable
     private int stack_max;
@@ -37,7 +39,7 @@ public class Item_Create_Editor_Window : EditorWindow
     private float block_durability_max;
     private float block_durability_current;
 
-    private GameObject item_model_in_place;
+    private string item_model_in_place;
 
     //equipment
     private Equipment_Type equipment_type;
@@ -46,7 +48,7 @@ public class Item_Create_Editor_Window : EditorWindow
     private float durability_max;
     private float durability_current;
 
-    private GameObject item_model_in_equip;
+    private string item_model_in_equip;
 
     //armor
     private float armor_defense;
@@ -73,21 +75,34 @@ public class Item_Create_Editor_Window : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("Select item type", EditorStyles.boldLabel);
-        item_type = (string)EditorGUILayout.TextField(item_type);
+        GUILayout.Label("JSON File", EditorStyles.boldLabel);
+        item_json = (TextAsset)EditorGUILayout.ObjectField(item_json, typeof(TextAsset), false);
+
+
 
         GUILayout.Label("", EditorStyles.boldLabel);
         GUILayout.Label("", EditorStyles.boldLabel);
         GUILayout.Label("", EditorStyles.boldLabel);
+
+
+
+        GUILayout.Label("Item Type", EditorStyles.boldLabel);
+        item_type = (string)EditorGUILayout.TextField(item_type);
+
+
+
+        GUILayout.Label("", EditorStyles.boldLabel);
+
+
 
         GUILayout.Label("Item_ID", EditorStyles.boldLabel);
         item_ID = (int)EditorGUILayout.IntField(item_ID);
         GUILayout.Label("Item_Name", EditorStyles.boldLabel);
         item_name = (string)EditorGUILayout.TextField(item_name);
         GUILayout.Label("Item_Model_In_World", EditorStyles.boldLabel);
-        item_model_in_world = (GameObject)EditorGUILayout.ObjectField(item_model_in_world, typeof(GameObject), true);
+        item_model_in_world = (string)EditorGUILayout.TextField(item_model_in_world);
         GUILayout.Label("Item_Model_In_Inventory", EditorStyles.boldLabel);
-        item_model_in_inventory = (GameObject)EditorGUILayout.ObjectField(item_model_in_inventory, typeof(GameObject), true);
+        item_model_in_inventory = (string)EditorGUILayout.TextField(item_model_in_inventory);
 
         GUILayout.Label("", EditorStyles.boldLabel);
 
@@ -98,9 +113,12 @@ public class Item_Create_Editor_Window : EditorWindow
                 {
                     GameObject item = new GameObject(item_name);
                     Item_Data item_data = new Item_Data(item_ID, item_name, item_model_in_world, item_model_in_inventory);
-                    item_data = item.AddComponent<Item_Data>();
+                    //item_data = item.AddComponent<Item_Data>();
+                    //
+                    //Instantiate(item);
 
-                    Instantiate(item);
+                    //이런 식으로 딕셔너리에 먼저 저장해두고 나중에 빈 오브젝트에 컴포넌트 형식으로 데이터를 넣고? 자식으로 모델링을 넣으면? 된다?
+                    //Item_Dictionary.Add(item_data.item_ID, item_data);
 
                     //아이템 생성 부분은 다시 생각해보자.
                     //이 부분에서 직접 생성하는 것이 아닌 데이터만 불러와 놓고 있다가 필요할 때만 생성하는 방식, 따라서 에디터에서도 무기 만들기와 마찬가지로 json으로 데이터를 가지고 있다가 게임이 시작할 때 딕셔너리 형태로 값을 받아온 다음에 필요할 때마다 생성해서 쓰면 될듯 합니다.
@@ -177,7 +195,7 @@ public class Item_Create_Editor_Window : EditorWindow
                 block_durability_current = (float)EditorGUILayout.FloatField(block_durability_current);
 
                 GUILayout.Label("Item_Model_In_Place", EditorStyles.boldLabel);
-                item_model_in_place = (GameObject)EditorGUILayout.ObjectField(item_model_in_place, typeof(GameObject), true);
+                item_model_in_place = (string)EditorGUILayout.TextField(item_model_in_place);
 
 
 
@@ -199,7 +217,7 @@ public class Item_Create_Editor_Window : EditorWindow
                 durability_current = (float)EditorGUILayout.FloatField(durability_current);
 
                 GUILayout.Label("Item_Model_In_Equip", EditorStyles.boldLabel);
-                item_model_in_equip = (GameObject)EditorGUILayout.ObjectField(item_model_in_equip, typeof(GameObject), true);
+                item_model_in_equip = (string)EditorGUILayout.TextField(item_model_in_equip);
 
 
 
@@ -230,7 +248,7 @@ public class Item_Create_Editor_Window : EditorWindow
                 durability_current = (float)EditorGUILayout.FloatField(durability_current);
 
                 GUILayout.Label("Item_Model_In_Equip", EditorStyles.boldLabel);
-                item_model_in_equip = (GameObject)EditorGUILayout.ObjectField(item_model_in_equip, typeof(GameObject), true);
+                item_model_in_equip = (string)EditorGUILayout.TextField(item_model_in_equip);
 
 
 
@@ -268,7 +286,7 @@ public class Item_Create_Editor_Window : EditorWindow
                 durability_current = (float)EditorGUILayout.FloatField(durability_current);
 
                 GUILayout.Label("Item_Model_In_Equip", EditorStyles.boldLabel);
-                item_model_in_equip = (GameObject)EditorGUILayout.ObjectField(item_model_in_equip, typeof(GameObject), true);
+                item_model_in_equip = (string)EditorGUILayout.TextField(item_model_in_equip);
 
 
 
@@ -291,5 +309,10 @@ public class Item_Create_Editor_Window : EditorWindow
                 }
                 break;
         }
+    }
+
+    private void Parse_JSON_File(TextAsset item_json)
+    {
+
     }
 }
