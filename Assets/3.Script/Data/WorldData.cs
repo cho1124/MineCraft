@@ -93,7 +93,8 @@ public class WorldData
 
         ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z -z));
-        chunk.ModifyVoxel(voxel, value);
+        chunk.map[voxel.x, voxel.y, voxel.z].id = value;
+        AddToModifiedChunkList(chunk);
 
     }
 
@@ -108,15 +109,8 @@ public class WorldData
         x *= VoxelData.ChunkWidth;
         z *= VoxelData.ChunkWidth;
 
-        ChunkData chunk = RequestChunk(new Vector2Int(x, z), false);
-        
-        if (chunk == null)
-            return null;
-
-
+        ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
-        
-        
         return chunk.map[voxel.x, voxel.y, voxel.z];
 
 
