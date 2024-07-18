@@ -324,16 +324,11 @@ public class Chunk
         byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck].id;
 
         // 새로운 블록 ID로 설정
-        chunkData.map[xCheck, yCheck, zCheck].id = newID;
-        World.Instance.worldData.AddToModifiedChunkList(chunkData);
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID);
 
-
-        lock (World.Instance.ChunkUpdateThreadLock)
-        {
-            World.Instance.AddChunkToUpdate(this, true);
-            // 변경된 주변 Voxel 업데이트
-            UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-        }
+        // 변경된 주변 Voxel 업데이트
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+        
         //// Chunk 업데이트
         //UpdateChunk();
 
@@ -397,19 +392,7 @@ public class Chunk
     //    return World.Instance.blockTypes[chunkData.map[x, y, z].id].renderNeighborFaces;
     //
     //}
-    VoxelState CheckVoxel(Vector3 pos)
-    {
 
-        int x = Mathf.FloorToInt(pos.x);
-        int y = Mathf.FloorToInt(pos.y);
-        int z = Mathf.FloorToInt(pos.z);
-
-        if (!chunkData.IsVoxelInChunk(x, y, z))
-            return World.Instance.GetVoxelState(pos + position);//World.Instance.blockTypes[World.Instance.GetVoxel(pos + position)].isSolid;
-
-        return chunkData.map[x, y, z];
-
-    }
 
 
 
@@ -449,7 +432,7 @@ public class Chunk
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-            VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
+            VoxelState neighbor = chunkData.map[x, y, z].neighbours[p];
 
             // 현재 면이 외부와 접해있는지 확인
             if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
