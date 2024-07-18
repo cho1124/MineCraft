@@ -27,11 +27,6 @@ public class Player_Control : MonoBehaviour
     public float smoothTime = 0.1f;
     private float velocity = 0f;
 
-    public float allowedInterval = 0.1f; // 허용 간격 (초 단위)
-
-    private float lastInputTime1 = -1f;
-    private float lastInputTime2 = -1f;
-
 
 
     private void Awake()
@@ -74,13 +69,10 @@ public class Player_Control : MonoBehaviour
 
     private void Attack_Control()
     {
-        //if (Input.GetMouseButton(0) && Input.GetMouseButton(1) || Input.GetMouseButton(2))
-        //{
-        //    animator.SetBool("LR_Attack", true);
-        //}
-
-        CheckDualAttack(Input.GetMouseButton(0), Input.GetMouseButton(1));
-
+        if((Input.GetMouseButton(0) && Input.GetMouseButtonDown(1)) || (Input.GetMouseButtonDown(0) && Input.GetMouseButton(1)))
+        {
+            animator.SetBool("LR_Attack", true);
+        }
         if (Input.GetMouseButton(0) && !Input.GetMouseButton(1))
         {
             animator.SetBool("L_Attack", true);
@@ -99,42 +91,8 @@ public class Player_Control : MonoBehaviour
             animator.SetBool("Is_Guarding", false);
         }
     }
-
-    private void CheckDualAttack(bool input1, bool input2)
-    {
-        float currentTime = Time.time;
-
-        if (input1)
-        {
-            lastInputTime1 = currentTime;
-            CheckDualInput();
-        }
-
-        if (input2)
-        {
-            lastInputTime2 = currentTime;
-            CheckDualInput();
-        }
-    }
-
-    void CheckDualInput()
-    {
-        if (Mathf.Abs(lastInputTime1 - lastInputTime2) <= allowedInterval)
-        {
-            Debug.Log("두 입력이 동시에 감지되었습니다!");
-            animator.SetBool("LR_Attack", true);
-            // 동시에 감지된 경우 처리할 로직을 여기에 추가하세요
-        }
-        else
-        {
-            animator.SetBool("LR_Attack", false);
-        }
-    }
-
-
     private void Move_Control()
     {
-        Debug.Log(controller.isGrounded);
         if (controller.isGrounded)
         {
             if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
@@ -164,8 +122,6 @@ public class Player_Control : MonoBehaviour
             animator.SetBool("IsGround", false);
             gravity_velocity += Physics.gravity.y * Time.deltaTime;
         }
-        
-        //땅인가? 중력인가?
 
         // 방향
         Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
