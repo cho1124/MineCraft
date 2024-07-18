@@ -28,25 +28,7 @@ public class ChunkData
 
     public ChunkData(Vector2Int pos) { position = pos; }
     public ChunkData(int _x, int _y) { x = _x; y = _y; }
-    public ChunkData(ChunkData chunkData)
-    {
-        x = chunkData.x;
-        y = chunkData.y;
 
-        for (int y = 0; y < VoxelData.ChunkHeight; y++)
-        {
-            for (int x = 0; x < VoxelData.ChunkWidth; x++)
-            {
-                for (int z = 0; z < VoxelData.ChunkWidth; z++)
-                {
-                    var voxelState = chunkData.map[x, y, z];
-                    map[x, y, z] = new VoxelState(voxelState.id, this, voxelState.position);
-                }
-            }
-        }
-
-        Populate();
-    }
 
     [System.NonSerialized]
     public Chunk chunk;
