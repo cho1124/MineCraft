@@ -6,14 +6,17 @@ public class Entity : MonoBehaviour
 {
     // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요) 24.07.16 수정(한유진)
     // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
-    // entity가 공격받을때 빨갛게 변하게 하려고 함 
+    // entity가 공격받을때 빨갛게 변함
+    // 죽을때 파티클로 이펙트 넣으려고 하는중
     // Start is called before the first frame update
+
     private float maxHealth=100;
     private float health;
     private float posture;
     private float defence;
     private float weight;
     private float speed;
+    public GameObject deathEffectPrefab;
 
     private Renderer[] entityRenderer;
     private Color[] originalColor;
@@ -79,6 +82,7 @@ public class Entity : MonoBehaviour
     protected virtual void OnDie()
     {
         Debug.Log($"{name} 이 죽었습니다. ");
+        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 
