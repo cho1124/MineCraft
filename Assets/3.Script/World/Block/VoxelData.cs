@@ -40,8 +40,8 @@ public static class VoxelData
 
     // Chunk 사이즈, World사이즈, 주변에 얼마나 chunk를 보이게 할건지
     public static readonly int ChunkWidth = 16;
-    public static readonly int ChunkHeight = 194;
-    public static readonly int worldSizeInChunks = 100;
+    public static readonly int ChunkHeight = 123;
+    public static readonly int worldSizeInChunks = 30;
 
 
     // 20240715 setting으로 잠깐 넘김

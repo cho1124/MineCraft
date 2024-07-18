@@ -144,7 +144,7 @@ public class World : MonoBehaviour
 
         SetGlobalLightValue();
 
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter);
+        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 20f, VoxelData.WorldCenter);
         player.position = spawnPoint;
 
         CheckViewDistance();
@@ -269,19 +269,19 @@ public class World : MonoBehaviour
     void LoadWorld()
     {
 
-        for (int x = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; x++)
+        for (int x = (VoxelData.worldSizeInChunks / 2) - settings.loadDistance; x < (VoxelData.worldSizeInChunks / 2) + settings.loadDistance; x++)
         {
-            for (int z = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; z++)
+            for (int z = (VoxelData.worldSizeInChunks / 2) - settings.loadDistance; z < (VoxelData.worldSizeInChunks / 2) + settings.loadDistance; z++)
             {
-                worldData.LoadChunk(new Vector2Int(x, z));
 
+                worldData.LoadChunk(new Vector2Int(x, z));
 
             }
         }
 
-
-
     }
+
+
 
     public void AddChunkToUpdate(Chunk chunk)
     {
