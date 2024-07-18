@@ -8,6 +8,7 @@ public class ObstacleDetector : MonoBehaviour
     public string animalTag = "Animals";
     public float chaseDuration = 7f;
     public float detectionCooldown = 30f; // 감지 후 쿨타임 시간
+    public float maxChaseDistance = 10f; // 최대 추적 거리
     private Monster monsterScript;
     private float lastPlayerDetectionTime = -Mathf.Infinity; // 마지막 플레이어 감지 시간
     private float lastAnimalDetectionTime = -Mathf.Infinity; // 마지막 동물 감지 시간
@@ -32,6 +33,11 @@ public class ObstacleDetector : MonoBehaviour
                 StartCoroutine(ChaseTarget(other.transform, false));
             }
         }
+        else
+        {
+            // 플레이어나 동물이 아닌 경우 점프
+            monsterScript.JumpAndChangeState();
+        }
     }
 
     private IEnumerator ChaseTarget(Transform target, bool isPlayer)
@@ -43,6 +49,14 @@ public class ObstacleDetector : MonoBehaviour
         {
             if (target != null)
             {
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (distanceToTarget > maxChaseDistance)
+                {
+                    // 목표가 감지 범위를 벗어났을 때 추적을 멈춤
+                    break;
+                }
+
                 RaycastHit hit;
                 Vector3 direction = (target.position - transform.position).normalized;
 
@@ -50,14 +64,7 @@ public class ObstacleDetector : MonoBehaviour
                 {
                     Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
 
-                    // 플레이어가 감지되면 그 위치를 타겟으로 설정
-                    if (hit.transform.CompareTag(playerTag))
-                    {
-                        monsterScript.SetTarget(target.position);
-                        yield return null;
-                    }
-                    // 동물이 감지되고 현재 플레이어를 추적 중이지 않으면 그 위치를 타겟으로 설정
-                    else if (hit.transform.CompareTag(animalTag) && !monsterScript.IsChasingPlayer)
+                    if (hit.transform.CompareTag(playerTag) || (hit.transform.CompareTag(animalTag) && !monsterScript.IsChasingPlayer))
                     {
                         monsterScript.SetTarget(target.position);
                     }
@@ -66,6 +73,7 @@ public class ObstacleDetector : MonoBehaviour
 
             yield return new WaitForSeconds(0.1f);
         }
+        Debug.Log("추격을 그만둡니다. ");
         monsterScript.EndChaseAndWander();
     }
 }

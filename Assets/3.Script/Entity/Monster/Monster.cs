@@ -15,13 +15,11 @@ public class Monster : Entity
     ===>(혹시 어딘가 끼어 움직이지 못하고 있는 상황 대비) 15초간 3f이상의 좌표 변동이 없으면 180도 회전 하도록 해둠 
     ====> 플레이어 감지하면 플레이어에게 raycast 쏘면서 한동안 chase(7초) 함 
     =====> 플레이어 움직임 좀더 자연스럽게 움직이도록 일정 시간마다 랜덤 방향으로 회전하고 이동하고 또 일정 이후 상태 변경하도록
-     */
 
-
-    /*
 
     확인할것
     ★ 시작하고 일정시간 지나면 갑자기 다들 제자리에서....발광함...(매우큰문제..)
+    GetRandomPosition()  에 있는 목적지 생성 로그 무한으로 찎힘
 
 
     확인한것
@@ -52,7 +50,7 @@ public class Monster : Entity
     public float maxWalkTime = 12f; //몬스터 걷기 최대 시간
     public float jumpForce = 4f; //몬스터 점프할때 힘
     public float detectionDistance = 2f; //몬스터 탐지 거리
-    public float ChaseDuration = 7f; // 쫒아오기 지속 시간
+    public float ChaseDuration = 5f; // 쫒아오기 지속 시간
     public float turnDuration = 4f; // 회전 지속 시간
 
     // 위치 변화 추적을 위한 변수
@@ -63,8 +61,11 @@ public class Monster : Entity
 
     public bool IsChasingPlayer { get; set; } = false; // 플레이어를 추적 중인지 여부를 저장
 
-    private void Start()
+    private Coroutine stateCoroutine;
+
+    protected override void Start()
     {
+        base.Start();  // Entity 클래스의 Start 메서드 호출
         rb = GetComponent<Rigidbody>();
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
         ChangeState(MonsterState.Idle);
@@ -119,11 +120,16 @@ public class Monster : Entity
 
     private void ChangeState(MonsterState NewState) // 상태를 변경하는 메서드입니다.
     {
+        if (stateCoroutine != null)
+        {
+            StopCoroutine(stateCoroutine);
+        }
+
         currentState = NewState; // 현재 상태를 새로운 상태로 변경합니다.
         switch (currentState)
         {
             case MonsterState.Walk:
-                targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
+               targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
                 StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Idle:
@@ -137,14 +143,12 @@ public class Monster : Entity
                 StartCoroutine(StateDuration(MonsterState.Jump, 3f));
                 break;
             case MonsterState.Chase:
-                StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
+              //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
                 break;
             case MonsterState.TurnLeft:
-                targetPosition = transform.position + Quaternion.Euler(0, -90, 0) * transform.forward * walkRadius;  // 왼쪽 회전 상태로 변경될 때 새로운 목표 위치를 설정합니다.
                 StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
                 break;
             case MonsterState.TurnRight:
-                targetPosition = transform.position + Quaternion.Euler(0, 90, 0) * transform.forward * walkRadius;
                 StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
                 break;
         }
@@ -208,7 +212,7 @@ public class Monster : Entity
 
     private Vector3 GetRandomPosition() //몬스터가 이동할 새로운 랜덤 위치를 생성
     {
-        Debug.Log("새로운 목적지를 생성하겠습니다.");
+        Debug.Log($"{name}새로운 목적지를 생성하겠습니다.");
         float randomAngle = Random.Range(0, 360);// 랜덤 각도를 생성합니다.
         Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward; // 랜덤 방향을 생성합니다.
         Vector3 randomPosition;
@@ -222,8 +226,7 @@ public class Monster : Entity
     private IEnumerator StateDuration(MonsterState state, float duration) //몬스터가 특정 상태를 일정 시간 동안 유지하게
     {
         // 지정된 시간(duration)만큼 대기
-        yield return new WaitForSeconds(duration);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(duration+5f);
         // 다음 상태를 랜덤하게 선택
         MonsterState nextState = GetRandomState();
 
@@ -276,6 +279,20 @@ public class Monster : Entity
     {
         IsChasingPlayer = false;
         ChangeState(GetRandomState());
+    }
+
+    public void JumpAndChangeState()
+    {
+        ChangeState(MonsterState.Jump);
+        ChangeState(GetRandomState());
+    }
+
+    private void OnTriggerEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Tool"))
+        {
+            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+        }
     }
 }
     
