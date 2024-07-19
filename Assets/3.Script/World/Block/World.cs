@@ -117,7 +117,7 @@ public class World : MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        worldData = SaveSystem.LoadWorld("Testing");
+        worldData = SaveSystem.LoadWorld("Prototype");
         //json
         //string jsonExport = JsonUtility.ToJson(settings);
         //UnityEngine.Debug.Log(jsonExport);
@@ -235,12 +235,7 @@ public class World : MonoBehaviour
 
 
         if (Input.GetKeyDown(KeyCode.F1))
-        {
             SaveSystem.SaveWorld(worldData);
-            UnityEngine.Debug.Log("World saved");
-            
-        }
-
 
         if (Input.GetKeyDown(KeyCode.F3))
             debugScreen.SetActive(!debugScreen.activeSelf);
