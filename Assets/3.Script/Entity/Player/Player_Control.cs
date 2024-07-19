@@ -162,9 +162,9 @@ public class Player_Control : MonoBehaviour
         Move_Animation(key_h, key_v);
 
         // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
-        direction.y = 0f;
-        if(!animator.GetBool("Is_Stop"))controller.Move(direction.normalized * speed_current * Time.deltaTime);
-        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
+        //direction.y = 0f;
+        //if(!animator.GetBool("Is_Stop"))controller.Move(direction.normalized * speed_current * Time.deltaTime);
+        //controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
 
     private void Rotation_Control()
