@@ -103,53 +103,27 @@ public static class SaveSystem
 
     }
 
-    //public static ChunkData LoadChunk(string worldName, Vector2Int position)
-    //{
-    //
-    //    string chunkName = position.x + "-" + position.y;
-    //
-    //    string loadPath = World.Instance.appPath + "/saves/" + worldName + "/chunks/" + chunkName + ".chunk";
-    //
-    //    if (File.Exists(loadPath))
-    //    {
-    //
-    //        BinaryFormatter formatter = new BinaryFormatter();
-    //        FileStream stream = new FileStream(loadPath, FileMode.Open);
-    //
-    //        ChunkData chunkData = formatter.Deserialize(stream) as ChunkData;
-    //        stream.Close();
-    //
-    //        return chunkData;
-    //
-    //    }
-    //
-    //    return null;
-    //
-    //}
-
-
     public static ChunkData LoadChunk(string worldName, Vector2Int position)
     {
+
         string chunkName = position.x + "-" + position.y;
+
         string loadPath = World.Instance.appPath + "/saves/" + worldName + "/chunks/" + chunkName + ".chunk";
 
         if (File.Exists(loadPath))
         {
+
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath, FileMode.Open);
 
             ChunkData chunkData = formatter.Deserialize(stream) as ChunkData;
             stream.Close();
 
-            // Create a new ChunkData object using the loaded ChunkData
-            var result = new ChunkData(chunkData);
+            return chunkData;
 
-            return result;
         }
 
         return null;
+
     }
-
-
-
 }
