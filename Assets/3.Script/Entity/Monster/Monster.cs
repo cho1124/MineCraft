@@ -109,6 +109,7 @@ public class Monster : Entity
             rb.AddTorque(Vector3.right * 10f); // 힘을 가해서 자연스럽게 스도록 유도하는 방법
 
             /*
+            뒤집힌걸 세울 수 있는 다른 코드
             rb.angularVelocity = Vector3.zero;
             rb.velocity = Vector3.zero;
             transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
@@ -124,7 +125,6 @@ public class Monster : Entity
         {
             StopCoroutine(stateCoroutine);
         }
-
         currentState = NewState; // 현재 상태를 새로운 상태로 변경합니다.
         switch (currentState)
         {
@@ -212,14 +212,14 @@ public class Monster : Entity
 
     private Vector3 GetRandomPosition() //몬스터가 이동할 새로운 랜덤 위치를 생성
     {
-        Debug.Log($"{name}새로운 목적지를 생성하겠습니다.");
-        float randomAngle = Random.Range(0, 360);// 랜덤 각도를 생성합니다.
-        Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward; // 랜덤 방향을 생성합니다.
         Vector3 randomPosition;
         do
         {
-            randomPosition = transform.position + randomDirection * walkRadius; // 현재 위치에서 랜덤 방향으로 walkRadius만큼 떨어진 위치를 반환합니다.
-        } while (Vector3.Distance(transform.position, randomPosition) < 3f); // 최소 거리 조건 추가
+            float randomDistance = Random.Range(1f, walkRadius);
+            float randomAngle = Random.Range(0f, 360f);
+            Vector3 randomDirection = new Vector3(Mathf.Sin(randomAngle), 0, Mathf.Cos(randomAngle)).normalized;
+            randomPosition = transform.position + randomDirection * randomDistance;
+        } while (Vector3.Distance(transform.position, randomPosition) < 1f);
         return randomPosition;
     }
 
@@ -287,8 +287,7 @@ public class Monster : Entity
         ChangeState(GetRandomState());
     }
 
-   
-
+  
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Tool"))
