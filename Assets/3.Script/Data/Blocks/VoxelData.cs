@@ -103,14 +103,14 @@ public static class VoxelData
     };
 
     // 각 면이 바깥쪽 면인지 체크하기 위해...
-    public static readonly Vector3[] faceChecks = new Vector3[6]
+    public static readonly Vector3Int[] faceChecks = new Vector3Int[6]
     {
-        new Vector3(0.0f, 0.0f, -1.0f),  // back    (-z)
-        new Vector3(0.0f, 0.0f, +1.0f),  // front   (+z)
-        new Vector3(0.0f, +1.0f, 0.0f),  // top     (+y)
-        new Vector3(0.0f, -1.0f, 0.0f),  // bottom  (-y)
-        new Vector3(-1.0f, 0.0f, 0.0f),  // left    (-x)
-        new Vector3(+1.0f, 0.0f, 0.0f)   // right   (+x)
+        new Vector3Int(0, 0, -1),  // back    (-z)
+        new Vector3Int(0, 0, +1),  // front   (+z)
+        new Vector3Int(0, +1, 0),  // top     (+y)
+        new Vector3Int(0, -1, 0),  // bottom  (-y)
+        new Vector3Int(-1, 0, 0),  // left    (-x)
+        new Vector3Int(+1, 0, 0)   // right   (+x)
 
     };
 
@@ -177,6 +177,6 @@ public static class VoxelData
 
 
 
-
+    public static readonly int[] revFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
 
 }
