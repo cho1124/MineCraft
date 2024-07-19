@@ -52,7 +52,12 @@ public class Chunk
 
 
     // Voxel맵, Chunk 안에 어떤 블록을 넣을껀지 byte단위의 3차원 배열
+    //public byte[,,] chunkData.map = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    //public VoxelState[,,] chunkData.map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
+    //public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
+
+    //World.Instance World.Instance;
 
     // chunk의 활성화 여부 -> 최적화
     private bool _isActive;
@@ -62,11 +67,10 @@ public class Chunk
 
     ChunkData chunkData;
 
-  
 
 
     List<Vector3> normals = new List<Vector3>();
-    private bool threadLocked = false;
+    //private bool threadLocked = false;
 
     public bool isActive
     {
@@ -83,7 +87,39 @@ public class Chunk
 
     }
 
+    //public Vector3 position
+    //{
+    //    get { return chunkObject.transform.position; }
+    //}
 
+    //public bool isEditable
+    //{
+    //    get
+    //    {
+    //
+    //        if (!ischunkData.mapPopulated)
+    //            return false;
+    //        else
+    //            return true;
+    //    }
+    //}
+
+    // 생성자
+    //public Chunk(ChunkCoord _coord, World.Instance _World.Instance, bool generateOnLoad)
+    //{
+    //
+    //    coord = _coord;
+    //    World.Instance = _World.Instance;
+    //    isActive = true;
+    //
+    //
+    //    if (generateOnLoad)
+    //    {
+    //        Init();
+    //    }
+    //
+    //    //chunkObject = new GameObject()
+    //}
 
 
     public Chunk(ChunkCoord _coord)
@@ -110,6 +146,15 @@ public class Chunk
 
         chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
 
+        //PopulatechunkData.map();
+
+        //PopulatechunkData.map();
+        //UpdateChunk();
+
+
+        ////CreateMeshData();
+        //
+        ////CreateMesh();
 
 
         // 시각적 메쉬 -> 충돌 메쉬 설정
@@ -154,13 +199,31 @@ public class Chunk
     //
     //}
 
+    //public void UpdateChunk()
+    //{
+    //    //_updateChunk();
+    //    if (World.Instance.enableThreading)
+    //    {
+    //        Thread myThread = new Thread(new ThreadStart(_updateChunk));
+    //        myThread.Start();
+    //    }
+    //    else
+    //        _updateChunk();
+    //}
 
 
     // Chunk 업데이트 (블럭부분만), 메쉬 생성 
     public void UpdateChunk()
     {
+        //threadLocked = true;
 
-        threadLocked = true;
+        //while (modifications.Count > 0)
+        //{
+        //    VoxelMod v = modifications.Dequeue();
+        //    Vector3 pos = v.position -= position;
+        //    chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
+        //}
+
 
         ClearMeshData();
         CalculateLight();
@@ -181,13 +244,13 @@ public class Chunk
             }
         }
 
-        lock (World.Instance.ChunksToDraw)
-        {
-
-            World.Instance.ChunksToDraw.Enqueue(this);
-        }
-        
-        threadLocked = false;
+        //lock (World.Instance.ChunksToDraw)
+        //{
+        //CreateMesh();
+        World.Instance.ChunksToDraw.Enqueue(this);
+        //}
+        //
+        //threadLocked = false;
     }
 
     // 메쉬 데이터 초기화
