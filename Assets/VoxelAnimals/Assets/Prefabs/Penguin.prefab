@@ -265,6 +265,8 @@ MonoBehaviour:
   hungerLevel: 6
   baseSpeed: 0
   dynamicNavMesh: {fileID: 0}
+  heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
+  shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
   detectionDistance: 3
   detectionAngle: 45
   detectionRays: 5
@@ -303,16 +305,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e89eedc93e30d45b1da8e9798de2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
-  adultPrefab: {fileID: 1755646104177140}
-  babyPrefab: {fileID: 6172145746540233397, guid: f2924713c8e86e044a6c5bdee6474fbe, type: 3}
-  hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
+  walkRadius: 10
+  walkSpeed: 3
+  runSpeed: 4
+  idleTime: 3
+  minWalkTime: 5
+  maxWalkTime: 8
+  jumpForce: 4
   detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
-  wanderRadius: 30
+  ChaseDuration: 2
+  positionCheckInterval: 15
+  minPositionChange: 3
 --- !u!1 &1855729412434242
 GameObject:
   m_ObjectHideFlags: 0

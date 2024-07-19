@@ -49,7 +49,8 @@ public class Animal : Entity
     protected NavMeshAgent agent;
     protected Rigidbody rb;
     public DynamicNavMesh dynamicNavMesh;//동적인 NavMesh 업데이트를 관리하는 컴포넌트입니다.
-    public GameObject heartParticlePrefab; // 하트 파티클 프리팹
+    public GameObject heartObjectPrefab; // 하트 오브젝트 프리팹
+    public GameObject shockObjectPrefab; // 충격 오브젝트 프리팹
 
     // 탐지 관련 변수들
     public float detectionDistance = 3f; //동물이 탐지할 수 있는 최대 거리입니다.
@@ -72,6 +73,8 @@ public class Animal : Entity
     private float idleTime; //대기 시간을 추적하는 변수입니다.
     private float idleTimeLimit = 10f; // 10초 동안 위치가 변하지 않으면 이동
     private const float positionThreshold = 3f; // 위치 변화 허용 범위(10초동안 이 범위 안에만 있으면 네비메쉬목적지변경)
+
+    private GameObject activeEffect;
 
     protected override void Start() {
 
@@ -155,8 +158,9 @@ public class Animal : Entity
       //      dynamicNavMesh.UpdateNavMesh();
       //  }
 
-        if (DetectPlayer()) {
-            OnPlayerDetected();
+        if (Detect()) {
+          //  OnPlayerDetected();
+          //  OnMonsterDetected();
             return;
         }
 
@@ -402,18 +406,38 @@ public class Animal : Entity
         }
     }
 
-    protected virtual bool DetectPlayer() {
-        for (int i = 0; i < detectionRays; i++) {
+    protected virtual bool Detect()
+    {
+        bool detected = false;
+
+        for (int i = 0; i < detectionRays; i++)
+        {
             float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
             Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
-                if (hitInfo.collider.CompareTag("Player")) {
-                    Debug.Log("플레이어를 발견했습니다!");
-                    return true;
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance))
+            {
+                if (hitInfo.collider.CompareTag("Player"))
+                {
+                  //  Debug.Log("플레이어를 발견했습니다!");
+                    if (activeEffect == null || activeEffect.tag != "Heart")
+                    {
+                        OnPlayerDetected();
+                        detected = true;
+                    }
+                }
+                else if (hitInfo.collider.CompareTag("Monster"))
+                {
+                  //  Debug.Log("몬스터를 발견했습니다!");
+                    if (activeEffect == null || activeEffect.tag != "Shock")
+                    {
+                        OnMonsterDetected();
+                        detected = true;
+                    }
                 }
             }
         }
-        return false;
+
+        return detected;
     }
 
     void OnDrawGizmos() {
@@ -431,28 +455,65 @@ public class Animal : Entity
 
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
-        Debug.Log("Animal: OnPlayerDetected 호출됨");
-        StartCoroutine(DisplayHeartAndRun());
+       // Debug.Log("Animal: OnPlayerDetected 호출됨");
+        if (activeEffect == null || activeEffect.tag != "Shock")
+        {
+            StartCoroutine(DisplayHeartAndRun());
+        }
+    }
+
+    protected virtual void OnMonsterDetected()
+    {
+       // Debug.Log("Animal: OnMonsterDetected 호출됨");
+        if (activeEffect == null || activeEffect.tag != "Heart")
+        {
+            StartCoroutine(DisplayShockAndRun());
+        }
     }
 
     private IEnumerator DisplayHeartAndRun()
     {
-        // 하트 파티클 생성
-        GameObject heart = Instantiate(heartParticlePrefab, transform.position + Vector3.up * 2, Quaternion.identity);
-        heart.transform.SetParent(transform);
+        ClearActiveEffect(); // 기존 효과 제거
 
-        // Idle 상태로 전환
+        activeEffect = Instantiate(heartObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        activeEffect.transform.SetParent(transform);
+        activeEffect.tag = "Heart";
+
         ChangeState(State.Idle);
-        yield return new WaitForSeconds(2f); // 2초 동안 Idle 상태 유지
+        yield return new WaitForSeconds(2f);
 
-        // 180도 회전
         transform.Rotate(0, 180, 0);
 
-        // Run 상태로 전환
         ChangeState(State.Run);
 
-        // 하트 파티클 제거
-        Destroy(heart);
+        ClearActiveEffect(); // 효과 제거
+    }
+
+    private IEnumerator DisplayShockAndRun()
+    {
+        ClearActiveEffect(); // 기존 효과 제거
+
+        activeEffect = Instantiate(shockObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        activeEffect.transform.SetParent(transform);
+        activeEffect.tag = "Shock";
+
+        ChangeState(State.Idle);
+        yield return new WaitForSeconds(2f);
+
+        transform.Rotate(0, 180, 0);
+
+        ChangeState(State.Run);
+
+        ClearActiveEffect(); // 효과 제거
+    }
+
+    private void ClearActiveEffect()
+    {
+        if (activeEffect != null)
+        {
+            Destroy(activeEffect);
+            activeEffect = null;
+        }
     }
 
     protected IEnumerator PlayerDetectionCooldown() {

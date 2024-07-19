@@ -59,12 +59,12 @@ public class Dog : Animal {
                 SetRandomDestination();
                 break;
             case State.Jump:
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-                rb.isKinematic = false;
+             //   agent.isStopped = true;
+             //   agent.updatePosition = false;
+             //   agent.updateRotation = false;
+             //   rb.isKinematic = false;
                 animator.Play("Jump");
-                StartCoroutine(JumpThenIdle());
+               // StartCoroutine(JumpThenIdle());
                 break;
             case State.Idle:
                 agent.ResetPath();
