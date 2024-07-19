@@ -100,7 +100,37 @@ public class Test1 : MonoBehaviour
                     Vector3 spawnPosition = position + new Vector3(i*0.5f, 0, 0);
                     Instantiate(beafPrefab, spawnPosition, rotation);
                 }
+            }
+
+            // 충돌한 오브젝트가 "Monster" 태그를 가지고 있는지 확인
+            if (currentCollider.gameObject.CompareTag("Monster"))
+            {
+
+                // Health 컴포넌트 가져오기
+                Entity entity = currentCollider.GetComponent<Entity>();
+                if (entity != null)
+                {
+                    // HP를 20 감소시키기
+                    entity.TakeDamage(20);
+                    Debug.Log($"{entity.name} 를 때림");
                 }
+
+                // HP가 감소된 후의 동물 오브젝트의 HP가 0이 되지 않았을 경우, 아래 로직을 실행하지 않음
+                if (entity == null || entity.Health > 0)
+                {
+                    return;
+                }
+
+                // 충돌한 오브젝트의 위치와 회전 값을 저장
+                Vector3 position = currentCollider.transform.position;
+                Quaternion rotation = currentCollider.transform.rotation;
+
+                //충돌한 오브젝트의 이름에 따라 고기 개수 결정
+                string animalName = currentCollider.gameObject.name;
+
+                // 기존 동물 오브젝트를 삭제
+                Destroy(currentCollider.gameObject);
+            }
 
             // 충돌한 오브젝트가 "Grass" 태그를 가지고 있는지 확인
             if (currentCollider.gameObject.CompareTag("Grass"))

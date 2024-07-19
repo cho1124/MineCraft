@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 7020336880089531473}
   m_Layer: 0
   m_Name: spider
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -391,9 +391,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffad103a0fa49c4b90f2e5403a3b768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 5735212819037652343}
-  player: {fileID: 0}
-  animal: {fileID: 0}
   walkRadius: 10
   walkSpeed: 3
   runSpeed: 4
@@ -403,6 +402,9 @@ MonoBehaviour:
   jumpForce: 4
   detectionDistance: 2
   ChaseDuration: 7
+  turnDuration: 4
+  positionCheckInterval: 15
+  minPositionChange: 3
 --- !u!1 &2046885535344306363
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,9 +992,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb990c33409915a43a9d724db24c232a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isObstacleDeteched: 0
-  isPlayerDeteched: 0
-  isAnimalDeteched: 0
+  playerTag: Player
+  animalTag: Animals
+  chaseDuration: 7
+  detectionCooldown: 30
+  maxChaseDistance: 10
 --- !u!1 &5966615406137086953
 GameObject:
   m_ObjectHideFlags: 0

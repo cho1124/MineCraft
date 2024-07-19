@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요) 24.07.16 수정(한유진)
+    // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
     // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
     // entity가 공격받을때 빨갛게 변함
     // 죽을때 파티클로 이펙트 넣으려고 하는중
@@ -30,10 +30,7 @@ public class Entity : MonoBehaviour
         {
             originalColor[i] = entityRenderer[i].material.color;
         }
-        if (entityRenderer.Length==0)
-        {
-            Debug.Log("렌더러 컴포넌트를 찾을 수 없습니다.");
-        }
+
     }
 
     public float Health
@@ -63,7 +60,7 @@ public class Entity : MonoBehaviour
         float elapsedTime = 0;
         bool isRed = false;
 
-        while(elapsedTime<3f)
+        while(elapsedTime<2f)
         {
             for (int i = 0; i < entityRenderer.Length; i++)
             {
@@ -77,7 +74,7 @@ public class Entity : MonoBehaviour
         {
             entityRenderer[i].material.color = originalColor[i];
         }
-        }
+    }
 
     protected virtual void OnDie()
     {
