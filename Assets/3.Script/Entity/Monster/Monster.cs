@@ -32,7 +32,7 @@ public class Monster : Entity
     */
 
     //상태 및 동작 관련 변수
-    private enum MonsterState { Idle, Walk, Run, Jump,Chase, TurnLeft, TurnRight }
+    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight }
     private MonsterState currentState; // 몬스터의 현재상태 
 
     //참조를 위한 변수

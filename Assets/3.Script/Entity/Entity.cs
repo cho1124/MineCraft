@@ -18,12 +18,14 @@ public class Entity : MonoBehaviour
     private float speed;
     public GameObject deathEffectPrefab;
 
+    protected Animator animator;
     private Renderer[] entityRenderer;
     private Color[] originalColor;
 
     protected virtual void Start()
     {
         health = maxHealth;
+        animator = GetComponent<Animator>();
         entityRenderer = GetComponentsInChildren<Renderer>();
         originalColor = new Color[entityRenderer.Length];
         for (int i = 0; i < entityRenderer.Length; i++)
@@ -79,8 +81,12 @@ public class Entity : MonoBehaviour
     protected virtual void OnDie()
     {
         Debug.Log($"{name} 이 죽었습니다. ");
+        if (animator != null)
+        {
+            animator.SetBool("Die", true); // die 애니메이션 트리거
+        }
         Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        Destroy(gameObject,1f);
     }
 
     public void TakeDamage(float damage) {

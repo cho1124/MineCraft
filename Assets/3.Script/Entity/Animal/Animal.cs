@@ -14,6 +14,9 @@ public class Animal : Entity
      -   다이나믹네비메쉬(네비메쉬를 계속 업데이트하여 변화를 탐지하는 기능) 키면 너무 느려져서 꺼둠. 
          -> 동물들이 지면의 변화를 인지할수가 없음 -> 3f이내의 장소에서 10f동안 변화가 없으면 네비메쉬상 목적지를
              바꾸게 해둠(방향을 바꿀 수 있게)
+
+
+     => 점프모션만 하고, y축 이동 제외
      
      */
 
@@ -44,9 +47,9 @@ public class Animal : Entity
 
     // 컴포넌트 관련 변수들
     protected NavMeshAgent agent;
-    protected Animator animator;
     protected Rigidbody rb;
     public DynamicNavMesh dynamicNavMesh;//동적인 NavMesh 업데이트를 관리하는 컴포넌트입니다.
+    public GameObject heartParticlePrefab; // 하트 파티클 프리팹
 
     // 탐지 관련 변수들
     public float detectionDistance = 3f; //동물이 탐지할 수 있는 최대 거리입니다.
@@ -76,7 +79,6 @@ public class Animal : Entity
 
         //컴포넌트 초기화
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         Collider col = GetComponent<Collider>();
 
@@ -330,7 +332,7 @@ public class Animal : Entity
         }
 
         // 배고픔 상태 관리
-        if (hungerLevel > 5) {
+        if (hungerLevel > 6) {
             isHungry = false;
             isFull = true;
             detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
@@ -430,6 +432,27 @@ public class Animal : Entity
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
         Debug.Log("Animal: OnPlayerDetected 호출됨");
+        StartCoroutine(DisplayHeartAndRun());
+    }
+
+    private IEnumerator DisplayHeartAndRun()
+    {
+        // 하트 파티클 생성
+        GameObject heart = Instantiate(heartParticlePrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        heart.transform.SetParent(transform);
+
+        // Idle 상태로 전환
+        ChangeState(State.Idle);
+        yield return new WaitForSeconds(2f); // 2초 동안 Idle 상태 유지
+
+        // 180도 회전
+        transform.Rotate(0, 180, 0);
+
+        // Run 상태로 전환
+        ChangeState(State.Run);
+
+        // 하트 파티클 제거
+        Destroy(heart);
     }
 
     protected IEnumerator PlayerDetectionCooldown() {
@@ -449,7 +472,7 @@ public class Animal : Entity
                 break;
             case State.Jump:
                 animator.Play("Jump");
-                StartCoroutine(JumpThenIdle());
+              //  StartCoroutine(JumpThenIdle());
                 break;
             case State.Idle:
                 agent.ResetPath();
@@ -500,29 +523,29 @@ public class Animal : Entity
         }
     }
 
-    protected virtual IEnumerator JumpThenIdle() {
-
-        // NavMeshAgent 비활성화
-        agent.updatePosition = false;
-        agent.updateRotation = false;
-        agent.isStopped = true;
-
-        // Rigidbody 사용하여 점프
-        rb.isKinematic = false;
-        rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
-
-        // 점프 지속 시간 동안 대기
-        yield return new WaitForSeconds(3f);
-
-        // Rigidbody를 다시 비활성화하고 NavMeshAgent를 활성화
-        rb.isKinematic = true;
-        agent.updatePosition = true;
-        agent.updateRotation = true;
-        agent.isStopped = false;
-
-        // 상태를 Idle로 변경
-        ChangeState(State.Idle);
-    }
+  //  protected virtual IEnumerator JumpThenIdle() {
+  //
+  //     // // NavMeshAgent 비활성화
+  //     // agent.updatePosition = false;
+  //     // agent.updateRotation = false;
+  //     // agent.isStopped = true;
+  //
+  //      // Rigidbody 사용하여 점프
+  //    //  rb.isKinematic = false;
+  //    //  rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
+  //
+  //    //  // 점프 지속 시간 동안 대기
+  //    //  yield return new WaitForSeconds(3f);
+  //
+  //    //  // Rigidbody를 다시 비활성화하고 NavMeshAgent를 활성화
+  //    //  rb.isKinematic = true;
+  //    //  agent.updatePosition = true;
+  //    //  agent.updateRotation = true;
+  //    //  agent.isStopped = false;
+  //
+  //      // 상태를 Idle로 변경
+  //      ChangeState(State.Idle);
+  //  }
 
     protected virtual IEnumerator IdleThenWander() {
         yield return new WaitForSeconds(Random.Range(2, 5));
