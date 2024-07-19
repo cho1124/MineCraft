@@ -16,8 +16,7 @@ public class CameraSwitcher : MonoBehaviour
 
     void Update()
     {
-        if (!inventory_class.on_off_tr)
-        {
+        
             if (Input.GetKeyDown(KeyCode.C))
             {
                 currentCameraIndex++;
@@ -27,7 +26,7 @@ public class CameraSwitcher : MonoBehaviour
                 }
                 ActivateCamera(currentCameraIndex);
             }
-        }
+        
     }
 
     void ActivateCamera(int index)

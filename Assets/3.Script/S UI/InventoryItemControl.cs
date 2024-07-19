@@ -9,11 +9,12 @@ public class InventoryItemControl : MonoBehaviour, IBeginDragHandler, IDragHandl
     // ========== Inspector public ==========
 
     [SerializeField] private Image image = null;
-    [SerializeField] private Inventory Inventory_class = null;
 
     public static bool test_tr = false;
 
     // ========== Inspector private ==========
+
+    [HideInInspector] private Inventory Inventory_class = null;
 
     [HideInInspector] public Transform tm = null;
 

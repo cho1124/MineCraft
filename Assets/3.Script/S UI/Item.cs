@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    [SerializeField] private ItemInfo iteminfo_class = null;
+
     [SerializeField] private Transform find_inventory_slot = null;
 
     [SerializeField] private float speed = 100;

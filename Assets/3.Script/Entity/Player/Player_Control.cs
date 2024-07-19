@@ -15,9 +15,9 @@ public class Player_Control : MonoBehaviour
     private float temp_y = 0f;
 
     private float speed_current = 0f;
-    private float speed_walk = 2f; // player_data¿¡¼­ °¡Á®¿À±â
-    private float speed_sprint = 4f; // player_data¿¡¼­ °¡Á®¿À±â
-    private float jump_height = 1f; // player_data¿¡¼­ °¡Á®¿À±â
+    private float speed_walk = 2f; // player_dataï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private float speed_sprint = 4f; // player_dataï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private float jump_height = 1f; // player_dataï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private float gravity_velocity = 0f;
 
     private void Awake()
@@ -27,20 +27,14 @@ public class Player_Control : MonoBehaviour
         head_transform = transform.GetChild(1).transform;
     }
 
-    private void Update() // ÀÌ ºÎºÐ ³ª´« ÀÌÀ¯´Â.. ³ªÁß¿¡ lateupdate¸¦ ½á¾ßÇÒ ÀÏÀÌ »ý±æ¶§ ½á¾ßµÇ¼­ Áö±ÝÀº ÀÌ·¸°Ô ¾²´Â°Ô ÁÁÀ»µí ÇÕ´Ï´Ù....
+    private void Update() // ï¿½ï¿½ ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.. ï¿½ï¿½ï¿½ß¿ï¿½ lateupdateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½æ¶§ ï¿½ï¿½ßµÇ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Õ´Ï´ï¿½....
     {
-        if (!inventory_class.on_off_tr)
-        {
-            Move_Control();
-        }
+        Move_Control();
     }
 
-    private void LateUpdate() // ´ë°¡¸®
+    private void LateUpdate() // ï¿½ë°¡ï¿½ï¿½
     {
-        if(!inventory_class.on_off_tr)
-        {
-            Head_Body_Rotate();
-        }
+        Head_Body_Rotate();
     }
 
     private void Move_ani(float key_h, float key_v)
@@ -69,7 +63,7 @@ public class Player_Control : MonoBehaviour
 
     private void Move_Control()
     {
-        //¶¥ÀÎ°¡? Áß·ÂÀÎ°¡?
+        //ï¿½ï¿½ï¿½Î°ï¿½? ï¿½ß·ï¿½ï¿½Î°ï¿½?
         if (controller.isGrounded)
         {
             key_h = Input.GetAxis("Horizontal");
@@ -98,27 +92,27 @@ public class Player_Control : MonoBehaviour
             gravity_velocity += Physics.gravity.y * Time.deltaTime;
         }
 
-        // ¹æÇâ
+        // ï¿½ï¿½ï¿½ï¿½
         Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
 
-        //ÀÌ°Å ¾²½Ã¸é µË´Ï´ç.
-        //float speed = direction.normalized.magnitude; //ÇÙ½É!!! ¹æÇâ Á¤±ÔÈ­ÈÄ °ª ±¸ÇÏ±â
+        //ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½ ï¿½Ë´Ï´ï¿½.
+        //float speed = direction.normalized.magnitude; //ï¿½Ù½ï¿½!!! ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
         //speed = Input.GetKey(KeyCode.LeftControl) ? speed * 2f : speed;
         //if (key_v < 0f || key_h < 0f) speed = -speed;
 
-        // ¾Ö´Ï¸ÞÀÌ¼Ç
+        // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         //float speed_animation = Mathf.Sqrt(key_h * key_h + key_v * key_v) * speed_current;
         ////float speed_animation = speed_current;
         //if (key_v < 0f || key_h < 0f) speed_animation = -speed_animation;
         //animator.SetFloat("Speed", speed);
 
-        //¼Óµµ
+        //ï¿½Óµï¿½
         if (key_h == 0 && key_v == 0) speed_current = 0f;
         else if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
 
         Move_ani(key_h, key_v);
 
-        // ±âº» ¹æÇâ¿¡ Ä³¸¯ÅÍÀÇ ÀÌµ¿¼Óµµ¸¦ °öÇØ¼­ À¯¿¬ÇÑ ¼Óµµ ±¸Çö
+        // ï¿½âº» ï¿½ï¿½ï¿½â¿¡ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½
         direction.y = 0f;
         controller.Move(direction.normalized * speed_current * Time.deltaTime);
         controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);

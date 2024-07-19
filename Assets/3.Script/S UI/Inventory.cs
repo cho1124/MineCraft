@@ -18,12 +18,17 @@ public class Inventory : MonoBehaviour
     [Header("인벤토리")]
     [SerializeField] private GameObject on_off_obj = null;
 
+    [Header("슬롯 빈자리 찾기")]
+    [SerializeField] private Transform find_inventory_slot = null;
+
     public bool[] crafting_slot_tr = new bool[8];
 
     // ========== Inspector private ==========
 
-    [HideInInspector] public bool item_click_tr = false;
+    [HideInInspector] public List<ItemInfo> item_info_list = new List<ItemInfo>();
+
     [HideInInspector] public bool on_off_tr = false;
+    [HideInInspector] public bool item_click_tr = false;
 
     // ========== Test ==========
 
@@ -40,8 +45,8 @@ public class Inventory : MonoBehaviour
     {
         if (on_off_tr)
         {
-            CraftingSlot1(0, "Pickaxe item");
-            CraftingSlot1(4, "Shovel item");
+            // CraftingSlotCheck1(0, "Pickaxe item");
+            // CraftingSlotCheck1(4, "Shovel item");
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -52,7 +57,52 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void CraftingSlot1(int value, string item_name) // ?
+    private void OnTriggerEnter(Collider collision) // 아이템 획득하기
+    {
+        /* if (collision.gameObject.CompareTag("Item"))
+        {
+            ItemInfo out_item = collision.GetComponent<ItemInfo>();
+
+            for (int i = 0; i < find_inventory_slot.childCount; i++)
+            {
+                if (find_inventory_slot.GetChild(i).childCount == 0)
+                {
+                    GameObject new_item_obj = Instantiate(item_obj[out_item.item_id]);
+
+                    new_item_obj.transform.SetParent(find_inventory_slot.GetChild(i), false);
+
+                    new_item_obj.name = out_item.item_name;
+
+                    // collision.transform.SetParent(new_item_obj.transform, false);
+
+                    Destroy(collision.gameObject);
+
+                    Debug.Log($"{out_item.item_name} 아이템을 획득하였습니다!");
+
+                    break;
+                }
+            }
+        } */
+
+        if (collision.gameObject.CompareTag("Item"))
+        {
+            ItemInfo out_item = collision.GetComponent<ItemInfo>();
+
+            for (int i = 0; i < find_inventory_slot.childCount; i++)
+            {
+                if (find_inventory_slot.GetChild(i).childCount == 0)
+                {
+                    collision.transform.SetParent(find_inventory_slot.GetChild(0), false);
+
+                    Debug.Log($"{out_item.item_name} 아이템을 획득하였습니다!");
+
+                    break;
+                }
+            }
+        }
+    }
+
+    private void CraftingSlotCheck1(int value, string item_name) // 아이템 제작 체크1
     {
         for (int i = 0; i < 4; i++)
         {
@@ -69,16 +119,16 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        CraftingSlot2();
+        CraftingSlotCheck2();
     }
 
-    private void CraftingSlot2() // ?
+    private void CraftingSlotCheck2() // 아이템 제작 체크2
     {
         if (crafting_slot_tr.Length >= 4 && crafting_slot_tr[0] && crafting_slot_tr[1] && !crafting_slot_tr[2] && !crafting_slot_tr[3])
             NewItem(0, "Golden axe item");
     }
 
-    private void NewItem(int item_index, string item_name) // 아이템 생성
+    private void NewItem(int item_index, string item_name) // 제작 아이템 생성
     {
         if (result_crafting_slot_obj.transform.childCount == 0)
         {
@@ -90,11 +140,11 @@ public class Inventory : MonoBehaviour
 
             Debug.Log($"{item_name} 아이템 제작 완료!");
 
-            DeleteItem();
+            CraftingDeleteItem();
         }
     }
 
-    private void DeleteItem() // 아이템 삭제
+    private void CraftingDeleteItem() // 제작 아이템 삭제
     {
         for (int i = 0; i < crafting_slot.Length; i++)
         {
@@ -102,14 +152,6 @@ public class Inventory : MonoBehaviour
             {
                 Destroy(crafting_slot[i].GetChild(0).gameObject);
             }
-        }
-    }
-
-    private void Iteminfo() // 아이템 정보
-    {
-        for (int i = 0; i < crafting_slot.Length; i++)
-        {
-            // if (crafting_slot[i].GetChild(0).name == "Golden axe item")
         }
     }
 }
