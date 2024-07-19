@@ -25,6 +25,11 @@ public class ItemInfo : MonoBehaviour
         item_type = type;
         item_explanation = explanation;
         this.count_max = count_max;
-        count_current = 1;
+        // count_current = 1;
+    }
+
+    public void ItemCount(int count)
+    {
+        count_current = count;
     }
 }

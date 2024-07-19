@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
     // ========== Inspector public ==========
 
     [Header("아이템 종류")]
-    [SerializeField] private GameObject[] item_obj = null;
+    [SerializeField] public GameObject[] item_obj = null;
 
     [Header("조합 슬롯")]
     [SerializeField] private Transform[] crafting_slot = null;
@@ -54,12 +54,12 @@ public class Inventory : MonoBehaviour
             on_off_tr = !on_off_tr;
 
             on_off_obj.SetActive(on_off_tr);
-        }
+        }  
     }
 
     private void OnTriggerEnter(Collider collision) // 아이템 획득하기
     {
-        /* if (collision.gameObject.CompareTag("Item"))
+        if (collision.gameObject.CompareTag("Item"))
         {
             ItemInfo out_item = collision.GetComponent<ItemInfo>();
 
@@ -82,9 +82,9 @@ public class Inventory : MonoBehaviour
                     break;
                 }
             }
-        } */
+        }
 
-        if (collision.gameObject.CompareTag("Item"))
+        /* if (collision.gameObject.CompareTag("Item"))
         {
             ItemInfo out_item = collision.GetComponent<ItemInfo>();
 
@@ -99,7 +99,7 @@ public class Inventory : MonoBehaviour
                     break;
                 }
             }
-        }
+        } */
     }
 
     private void CraftingSlotCheck1(int value, string item_name) // 아이템 제작 체크1
