@@ -815,6 +815,7 @@ public class World : MonoBehaviour
 public class BlockType
 {
     public string blockName;
+    public VoxelMeshData meshData;
     public bool isSolid;
     public bool renderNeighborFaces;
     public float transparency;

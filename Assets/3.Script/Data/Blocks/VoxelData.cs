@@ -29,12 +29,12 @@ public static class VoxelData
     //
 
     // 블럭 6면 방향
-    public const int backFace = 0;
-    public const int frontFace = 1;
-    public const int topFace = 2;
-    public const int bottomFace = 3;
-    public const int leftFace = 4;
-    public const int rightFace = 5;
+    public const byte backFace = 0;
+    public const byte frontFace = 1;
+    public const byte topFace = 2;
+    public const byte bottomFace = 3;
+    public const byte leftFace = 4;
+    public const byte rightFace = 5;
 
 
 

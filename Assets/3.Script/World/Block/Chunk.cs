@@ -516,6 +516,7 @@ public class Chunk
         //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id;
         byte blockID = chunkData.map[x, y, z].id;
         //bool renderNeighborFaces = World.Instance.blockTypes[blockID].renderNeighborFaces;
+        VoxelState voxel = chunkData.map[x, y, z];
 
         // 블록은 6면체
         for (int p = 0; p < 6; p++)
