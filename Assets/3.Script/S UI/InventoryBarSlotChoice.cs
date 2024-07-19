@@ -13,12 +13,10 @@ public class InventoryBarSlotChoice : MonoBehaviour
 
     // ========== Inspector private ==========
 
-    private Vector3[] slot_choice_pos = null;
+    private Vector3[] slot_choice_pos = new Vector3[9];
 
     private void Start()
     {
-        slot_choice_pos = new Vector3[9];
-
         // 설계 사정으로 수동으로 좌표를 구했습니다.
 
         slot_choice_pos[0] = new Vector3(-400, -485, 0);
@@ -48,7 +46,7 @@ public class InventoryBarSlotChoice : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount < 0)
+                    if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount == 1)
                     {
                         Destroy(inventory_bar_slot[i].GetChild(0).gameObject);
 
