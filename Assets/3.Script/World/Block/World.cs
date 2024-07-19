@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
-using System.Diagnostics;
+//using System.Diagnostics;
 using System.IO;
 
 
@@ -21,7 +21,7 @@ public class World : MonoBehaviour
     // 플레이어
     public Transform player;
     public Vector3 spawnPoint;
-    public Camera camera;
+    public new Camera camera;
 
 
     //  ================================================== //
@@ -78,7 +78,7 @@ public class World : MonoBehaviour
 
     // player에 쓰일 디버그 스크린
     public GameObject debugScreen;
-    private Stopwatch stopwatch;
+    //private Stopwatch stopwatch;
 
 
 
@@ -114,8 +114,9 @@ public class World : MonoBehaviour
     //월드 생성
     private void Start()
     {
-        stopwatch = new Stopwatch();
-        stopwatch.Start();
+        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 50f, VoxelData.WorldCenter);
+        player.position = spawnPoint;
+
 
         worldData = SaveSystem.LoadWorld("Prototype");
         //json
@@ -143,13 +144,12 @@ public class World : MonoBehaviour
             chunkUpdateThread.Start();
         }
 
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 50f, VoxelData.WorldCenter);
-        player.position = spawnPoint;
+
 
         CheckViewDistance();
 
-        stopwatch.Stop();
-        UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+
+        //UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
 
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
         SetGlobalLightValue();
@@ -603,7 +603,7 @@ public class World : MonoBehaviour
 
         int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
 
-        int index;
+        ///int index;
 
         //if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 12345, 2f) > 0.5f)
         //    index = 0;
