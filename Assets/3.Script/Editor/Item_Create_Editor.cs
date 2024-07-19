@@ -13,7 +13,7 @@ public class Item_Create_Editor_Window : EditorWindow
 {
     private TextAsset item_json;
 
-    private string item_type;
+    private string item_type; //생각해봐야 할 것 -> 아이템의 종류에 따라 나올 수 있는게 다르도록 설계해야함
 
     private int item_ID;
     private string item_name;
