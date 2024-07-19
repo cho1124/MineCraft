@@ -63,7 +63,7 @@ public class World : MonoBehaviour
     public ChunkCoord playerChunkCoord;
     ChunkCoord playerLastChunkCoord;
 
-    List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
+    //List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
     public List<Chunk> chunksToUpdate = new List<Chunk>();
 
     bool applyingModifications = false;
@@ -142,7 +142,11 @@ public class World : MonoBehaviour
             chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
             chunkUpdateThread.Start();
         }
-        GenerateWorld();
+
+        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter);
+        player.position = spawnPoint;
+
+        CheckViewDistance();
 
         stopwatch.Stop();
         UnityEngine.Debug.Log($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
@@ -184,10 +188,10 @@ public class World : MonoBehaviour
         //    ApplyModifications();
         //}
 
-        if (chunksToCreate.Count > 0)
-        {
-            CreateChunk();
-        }
+        //if (chunksToCreate.Count > 0)
+        //{
+        //    CreateChunk();
+        //}
 
         //if (chunksToUpdate.Count > 0)
         //{
@@ -243,29 +247,6 @@ public class World : MonoBehaviour
     }
 
 
-    void GenerateWorld()
-    {
-
-        for (int x = VoxelData.worldSizeInChunks / 2 - settings.viewDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.viewDistance / 2; x++)
-        {
-            for (int z = VoxelData.worldSizeInChunks / 2 - settings.viewDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.viewDistance / 2; z++)
-            {
-
-                ChunkCoord newchunk = new ChunkCoord(x, z);
-                chunks[x, z] = new Chunk(new ChunkCoord(x, z));
-                //activeChunks.Add(new ChunkCoord(x, z));
-                chunksToCreate.Add(newchunk);
-
-
-            }
-        }
-
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter);
-        player.position = spawnPoint;
-
-        CheckViewDistance();
-
-    }
 
 
 
@@ -292,13 +273,6 @@ public class World : MonoBehaviour
 
     }
 
-    void CreateChunk()
-    {
-        ChunkCoord c = chunksToCreate[0];
-        chunksToCreate.RemoveAt(0);
-        //activeChunks.Add(c);
-        chunks[c.x, c.z].Init();
-    }
 
     //void UpdateChunks()
     //{
@@ -503,17 +477,9 @@ public class World : MonoBehaviour
                     if (chunks[x, z] == null)
                     {
                         chunks[x, z] = new Chunk(thisChunkCoord);
-                        chunksToCreate.Add(thisChunkCoord);
-
-                    }
-                    // chunk가 비활성화 된 경우엔 활성화 
-                    else if (!chunks[x, z].isActive)
-                    {
-                        chunks[x, z].isActive = true;
-                        //activeChunks.Add(new ChunkCoord(x, z));
                     }
 
-                    // 현재 chunk를 활성 chunk목록에 추가
+                    chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord);
                 }
 
@@ -553,33 +519,6 @@ public class World : MonoBehaviour
 
 
 
-    //public bool CheckIfVoxelTransparent(Vector3 pos)
-    //{
-    //
-    //    ChunkCoord thisChunk = new ChunkCoord(pos);
-    //    if (!IsChunkInWorld(thisChunk) || pos.y < 0 || pos.y >= VoxelData.ChunkHeight)
-    //    {
-    //        return false;
-    //    }
-    //
-    //
-    //    Chunk chunk = chunks[thisChunk.x, thisChunk.z];
-    //
-    //    if (chunk != null && chunk.isEditable)
-    //    {
-    //        int xCheck = Mathf.FloorToInt(pos.x) - (thisChunk.x * VoxelData.ChunkWidth);
-    //        int yCheck = Mathf.FloorToInt(pos.y);
-    //        int zCheck = Mathf.FloorToInt(pos.z) - (thisChunk.z * VoxelData.ChunkWidth);
-    //
-    //        if (chunk.IsVoxelInChunk(xCheck, yCheck, zCheck))
-    //        {
-    //            return blockTypes[chunk.voxelMap[xCheck, yCheck, zCheck].id].renderNeighborFaces;
-    //        }
-    //    }
-    //
-    //    return blockTypes[GetVoxel(pos)].renderNeighborFaces;
-    //
-    //}
 
 
 
@@ -818,7 +757,7 @@ public class BlockType
     public VoxelMeshData meshData;
     public bool isSolid;
     public bool renderNeighborFaces;
-    public float transparency;
+    public byte opacity;
 
     [Header("Texture IDs")]
     public int topFaceTexture;

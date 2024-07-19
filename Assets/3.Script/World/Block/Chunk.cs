@@ -126,17 +126,6 @@ public class Chunk
     {
 
         coord = _coord;
-
-        //isActive = true;
-
-        //chunkObject = new GameObject()
-    }
-
-
-
-    // Chunk 초기화
-    public void Init()
-    {
         chunkObject = new GameObject();
         //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
         meshFilter = chunkObject.AddComponent<MeshFilter>();
@@ -456,8 +445,11 @@ public class Chunk
 
                     VoxelState thisVoxel = chunkData.map[x, y, z];
 
-                    if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].transparency < lightRay)
-                        lightRay = World.Instance.blockTypes[thisVoxel.id].transparency;
+                    if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].opacity < lightRay)
+                        if (World.Instance.blockTypes[thisVoxel.id].opacity == 2)
+                            lightRay = World.Instance.blockTypes[thisVoxel.id].opacity * 0.25f;
+                        else
+                            lightRay = World.Instance.blockTypes[thisVoxel.id].opacity;
 
                     thisVoxel.globalLightPercent = lightRay;
 
@@ -730,31 +722,3 @@ public class ChunkCoord
 
     }
 }
-
-
-[System.Serializable]
-public class VoxelState
-{
-    public byte id;
-    public float globalLightPercent;
-
-    public VoxelState()
-    {
-        id = 0;
-        globalLightPercent = 0f;
-    }
-
-
-    public VoxelState(byte _id)
-    {
-        id = _id;
-        globalLightPercent = 0f;
-
-    }
-}
-
-//public struct ChunkData
-//{
-//    public ChunkCoord coord;
-//    public NativeArray<byte> chunkData.map; // Voxel 데이터
-//}
