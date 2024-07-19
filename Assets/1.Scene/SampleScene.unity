@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1072,6 +1072,12 @@ MonoBehaviour:
   position_anchor: {fileID: 556732890}
   rotation_anchor: {fileID: 1982182533}
   smoothTime: 0.1
+  Grounded: 1
+  GroundedOffset: -0.14
+  GroundedRadius: 0.28
+  GroundLayers:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!65 &1014434111
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1231,7 +1237,7 @@ GameObject:
   - component: {fileID: 1584981780}
   - component: {fileID: 1584981779}
   - component: {fileID: 1584981778}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}

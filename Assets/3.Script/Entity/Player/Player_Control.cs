@@ -27,6 +27,19 @@ public class Player_Control : MonoBehaviour
     public float smoothTime = 0.1f;
     private float velocity = 0f;
 
+    [Header("Player Grounded")]
+    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
+    public bool Grounded = true;
+
+    [Tooltip("Useful for rough ground")]
+    public float GroundedOffset = -0.14f;
+
+    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
+    public float GroundedRadius = 0.28f;
+
+    [Tooltip("What layers the character uses as ground")]
+    public LayerMask GroundLayers;
+
 
 
     private void Awake()
@@ -39,6 +52,7 @@ public class Player_Control : MonoBehaviour
     {
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
 
+        GroundedCheck();
         Attack_Control();
         Move_Control();
     }
@@ -47,6 +61,18 @@ public class Player_Control : MonoBehaviour
     {
         // 문제점 1. 머리의 회전 부분이 모델의 회전에 의해서 새롭게 덮어 씌워지는 치명적인 문제
         Rotation_Control();
+    }
+
+    private void GroundedCheck()
+    {
+        // set sphere position, with offset
+        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
+            transform.position.z);
+        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
+            QueryTriggerInteraction.Ignore);
+
+        // update animator if using character
+        
     }
 
 
@@ -93,7 +119,10 @@ public class Player_Control : MonoBehaviour
     }
     private void Move_Control()
     {
-        if (true)
+
+        //!!!!!! 그라운드 체크 해야함
+
+        if (Grounded)
         {
             if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
             {
