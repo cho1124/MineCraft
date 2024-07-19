@@ -122,65 +122,27 @@ public class Chunk
     //}
 
 
-    //public Chunk(ChunkCoord _coord)
-    //{
-    //
-    //    coord = _coord;
-    //
-    //    //isActive = true;
-    //
-    //    //chunkObject = new GameObject()
-    //
-    //    chunkObject = new GameObject();
-    //    //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
-    //    meshFilter = chunkObject.AddComponent<MeshFilter>();
-    //    meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-    //    //meshRenderer.material = World.Instance.material;
-    //    materials[0] = World.Instance.material;
-    //    materials[1] = World.Instance.transparentMaterial;
-    //
-    //    meshRenderer.materials = materials;
-    //    meshCollider = chunkObject.AddComponent<MeshCollider>();
-    //
-    //
-    //
-    //    chunkObject.transform.SetParent(World.Instance.transform);
-    //    chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
-    //    chunkObject.name = coord.x + ", " + coord.z;
-    //    position = chunkObject.transform.position;
-    //
-    //    chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
-    //    chunkData.chunk = this;
-    //    //PopulatechunkData.map();
-    //
-    //    //PopulatechunkData.map();
-    //    //UpdateChunk();
-    //
-    //
-    //    ////CreateMeshData();
-    //    //
-    //    ////CreateMesh();
-    //    World.Instance.AddChunkToUpdate(this);
-    //
-    //    // 시각적 메쉬 -> 충돌 메쉬 설정
-    //    meshCollider.sharedMesh = meshFilter.mesh;
-    //
-    //    //lock (World.Instance.ChunkUpdateThreadLock)
-    //    //    World.Instance.chunksToUpdate.Add(this);
-    //
-    //    
-    //}
-
     public Chunk(ChunkCoord _coord)
     {
+
         coord = _coord;
+
+        //isActive = true;
+
+        //chunkObject = new GameObject()
+
         chunkObject = new GameObject();
+        //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
+        //meshRenderer.material = World.Instance.material;
         materials[0] = World.Instance.material;
         materials[1] = World.Instance.transparentMaterial;
+
         meshRenderer.materials = materials;
         meshCollider = chunkObject.AddComponent<MeshCollider>();
+
+
 
         chunkObject.transform.SetParent(World.Instance.transform);
         chunkObject.transform.position = new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
@@ -189,10 +151,25 @@ public class Chunk
 
         chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
         chunkData.chunk = this;
+        //PopulatechunkData.map();
 
+        //PopulatechunkData.map();
+        //UpdateChunk();
+
+
+        ////CreateMeshData();
+        //
+        ////CreateMesh();
         World.Instance.AddChunkToUpdate(this);
-    }
 
+        // 시각적 메쉬 -> 충돌 메쉬 설정
+        meshCollider.sharedMesh = meshFilter.mesh;
+
+        //lock (World.Instance.ChunkUpdateThreadLock)
+        //    World.Instance.chunksToUpdate.Add(this);
+
+        
+    }
 
 
 
