@@ -25,16 +25,55 @@ public class VoxelState
 
         set
         {
-            if (value != _light)
+
+            if(value != _light)
             {
+
+                byte oldLightValue = _light;
+                byte oldCastValue = castLight;
+
                 _light = value;
 
+                if (_light < oldLightValue)
+                {
+                    List<int> neigboursToDarken = new List<int>();
+
+                    for(int p = 0; p<6;p++)
+                    {
+                        if(neighbours[p] != null)
+                        {
+
+
+                            if (neighbours[p].light <= oldCastValue)
+                            {
+                                neigboursToDarken.Add(p);
+                            }
+
+                            else
+                            {
+                                neighbours[p].PropogateLight();
+                            }
+
+
+
+
+                        }
+                    }
+
+                    foreach(int i in neigboursToDarken)
+                    {
+                        neighbours[i].light = 0;
+                    }
+
+                    if (chunkData.chunk != null)
+                        World.Instance.AddChunkToUpdate(chunkData.chunk);
+
+                }
+                else if (_light > 1)
+                    PropogateLight();
             }
 
-            if (_light > 1)
-            {
-                PropogateLight();
-            }
+
 
 
 
@@ -100,6 +139,8 @@ public class VoxelState
 
             }
 
+            if (chunkData.chunk != null)
+                World.Instance.AddChunkToUpdate(chunkData.chunk);
 
         }
 
