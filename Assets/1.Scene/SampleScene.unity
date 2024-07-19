@@ -511,7 +511,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     version: 0.0.01
-    loadDistance: 16
     viewDistance: 5
     enableThreading: 1
     mouseSensitivity: 5
@@ -533,7 +532,7 @@ MonoBehaviour:
   - blockName: Air
     isSolid: 0
     renderNeighborFaces: 1
-    opacity: 0
+    transparency: 1
     topFaceTexture: 0
     frontFaceTexture: 0
     backFaceTexture: 0
@@ -543,7 +542,7 @@ MonoBehaviour:
   - blockName: Bedrock
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 1
     frontFaceTexture: 1
     backFaceTexture: 1
@@ -553,7 +552,7 @@ MonoBehaviour:
   - blockName: Stone
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 0
     frontFaceTexture: 0
     backFaceTexture: 0
@@ -563,7 +562,7 @@ MonoBehaviour:
   - blockName: Grass
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 23
     frontFaceTexture: 18
     backFaceTexture: 18
@@ -573,7 +572,7 @@ MonoBehaviour:
   - blockName: Sand
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 2
     frontFaceTexture: 2
     backFaceTexture: 2
@@ -583,7 +582,7 @@ MonoBehaviour:
   - blockName: Dirt
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 11
     frontFaceTexture: 11
     backFaceTexture: 11
@@ -593,7 +592,7 @@ MonoBehaviour:
   - blockName: Glass
     isSolid: 1
     renderNeighborFaces: 1
-    opacity: 0
+    transparency: 1
     topFaceTexture: 19
     frontFaceTexture: 19
     backFaceTexture: 19
@@ -603,7 +602,7 @@ MonoBehaviour:
   - blockName: Brick
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 11
     frontFaceTexture: 11
     backFaceTexture: 11
@@ -613,7 +612,7 @@ MonoBehaviour:
   - blockName: Wood
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 22
     frontFaceTexture: 21
     backFaceTexture: 21
@@ -623,7 +622,7 @@ MonoBehaviour:
   - blockName: Leef
     isSolid: 1
     renderNeighborFaces: 1
-    opacity: 3
+    transparency: 0.8
     topFaceTexture: 8
     frontFaceTexture: 8
     backFaceTexture: 8
@@ -633,7 +632,7 @@ MonoBehaviour:
   - blockName: Cactus
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 12
     frontFaceTexture: 10
     backFaceTexture: 10
@@ -643,7 +642,7 @@ MonoBehaviour:
   - blockName: Cactus Top
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 9
     frontFaceTexture: 10
     backFaceTexture: 10
@@ -653,7 +652,7 @@ MonoBehaviour:
   - blockName: Coal
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 13
     frontFaceTexture: 13
     backFaceTexture: 13
@@ -663,7 +662,7 @@ MonoBehaviour:
   - blockName: Copper
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 14
     frontFaceTexture: 14
     backFaceTexture: 14
@@ -673,7 +672,7 @@ MonoBehaviour:
   - blockName: Iron
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 15
+    transparency: 0
     topFaceTexture: 15
     frontFaceTexture: 15
     backFaceTexture: 15
@@ -683,7 +682,7 @@ MonoBehaviour:
   - blockName: Cloud
     isSolid: 0
     renderNeighborFaces: 1
-    opacity: 0
+    transparency: 0.5
     topFaceTexture: 28
     frontFaceTexture: 28
     backFaceTexture: 28
@@ -693,7 +692,7 @@ MonoBehaviour:
   - blockName: Chest
     isSolid: 1
     renderNeighborFaces: 0
-    opacity: 0
+    transparency: 0
     topFaceTexture: 31
     frontFaceTexture: 29
     backFaceTexture: 30
@@ -704,10 +703,6 @@ MonoBehaviour:
   caveOffset: 1
   caveScale: 0.12
   debugScreen: {fileID: 329707792}
-  appPath: 
-  worldData:
-    worldName: 
-    seed: 0
 --- !u!1 &521844759
 GameObject:
   m_ObjectHideFlags: 0
