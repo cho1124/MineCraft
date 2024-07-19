@@ -126,6 +126,12 @@ public class Chunk
     {
 
         coord = _coord;
+    }
+
+    public void Init()
+    {
+
+   
         chunkObject = new GameObject();
         //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
         meshFilter = chunkObject.AddComponent<MeshFilter>();

@@ -63,7 +63,7 @@ public class World : MonoBehaviour
     public ChunkCoord playerChunkCoord;
     ChunkCoord playerLastChunkCoord;
 
-    //List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
+    List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
     public List<Chunk> chunksToUpdate = new List<Chunk>();
 
     bool applyingModifications = false;
@@ -143,7 +143,7 @@ public class World : MonoBehaviour
             chunkUpdateThread.Start();
         }
 
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 80f, VoxelData.WorldCenter);
+        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 50f, VoxelData.WorldCenter);
         player.position = spawnPoint;
 
         CheckViewDistance();
@@ -188,10 +188,10 @@ public class World : MonoBehaviour
         //    ApplyModifications();
         //}
 
-        //if (chunksToCreate.Count > 0)
-        //{
-        //    CreateChunk();
-        //}
+        if (chunksToCreate.Count > 0)
+        {
+            CreateChunk();
+        }
 
         //if (chunksToUpdate.Count > 0)
         //{
@@ -230,6 +230,13 @@ public class World : MonoBehaviour
             debugScreen.SetActive(!debugScreen.activeSelf);
     }
 
+    void CreateChunk()
+    {
+        ChunkCoord c = chunksToCreate[0];
+        chunksToCreate.RemoveAt(0);
+        //activeChunks.Add(c);
+        chunks[c.x, c.z].Init();
+    }
 
 
     ChunkCoord GetChunkCoordFromVector3(Vector3 pos)
@@ -477,9 +484,16 @@ public class World : MonoBehaviour
                     if (chunks[x, z] == null)
                     {
                         chunks[x, z] = new Chunk(thisChunkCoord);
-                    }
+                        chunksToCreate.Add(thisChunkCoord);
 
-                    chunks[x, z].isActive = true;
+                    }
+                    // 
+                    else if (!chunks[x, z].isActive)
+                    {
+                        chunks[x, z].isActive = true;
+                        //activeChunks.Add(new ChunkCoord(x, z));
+                    }
+                    //chunks[x, z].isActive = true;
                     activeChunks.Add(thisChunkCoord);
                 }
 

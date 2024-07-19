@@ -14,18 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockName: Standard Block
   faces:
-  - direction: Back
-    normal: {x: 0, y: 0, z: -1}
-    vertData:
-    - position: {x: 0, y: 0, z: 0}
-      uv: {x: 0, y: 0}
-    - position: {x: 0, y: 1, z: 0}
-      uv: {x: 0, y: 1}
-    - position: {x: 1, y: 1, z: 0}
-      uv: {x: 1, y: 1}
-    - position: {x: 1, y: 0, z: 0}
-      uv: {x: 1, y: 0}
-    triangles: 000000000100000003000000030000000100000002000000
   - direction: Front
     normal: {x: 0, y: 0, z: 1}
     vertData:
@@ -38,6 +26,18 @@ MonoBehaviour:
     - position: {x: 1, y: 0, z: 1}
       uv: {x: 1, y: 0}
     triangles: 000000000300000001000000010000000300000002000000
+  - direction: Back
+    normal: {x: 0, y: 0, z: -1}
+    vertData:
+    - position: {x: 0, y: 0, z: 0}
+      uv: {x: 0, y: 0}
+    - position: {x: 0, y: 1, z: 0}
+      uv: {x: 0, y: 1}
+    - position: {x: 1, y: 1, z: 0}
+      uv: {x: 1, y: 1}
+    - position: {x: 1, y: 0, z: 0}
+      uv: {x: 1, y: 0}
+    triangles: 000000000100000003000000030000000100000002000000
   - direction: Top
     normal: {x: 0, y: 1, z: 0}
     vertData:
