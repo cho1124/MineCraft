@@ -57,6 +57,8 @@ public class InventoryBarSlotChoice : MonoBehaviour
                 {
                     if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount == 1) // 
                     {
+
+
                         // inventory_bar_slot[i].GetChild(0).gameObject
 
                         // ItemInfo item = this.GetComponent<ItemInfo>();
