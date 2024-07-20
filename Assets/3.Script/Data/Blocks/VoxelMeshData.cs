@@ -9,10 +9,6 @@ public class VoxelMeshData : ScriptableObject
     public string blockName;
     public FaceMeshData[] faces;
 
-
-
-
-
 }
 
 [System.Serializable]

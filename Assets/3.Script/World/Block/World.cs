@@ -322,15 +322,28 @@ public class World : MonoBehaviour
     {
         while (true)
         {
+            try
+            {
+                if (!applyingModifications)
+                {
+                    ApplyModifications();
+                }
+                if (chunksToUpdate.Count > 0)
+                {
+                    UpdateChunks();
+                }
+            }
+            catch (ThreadAbortException ex)
+            {
+                Debug.Log("ThreadAbortException: " + ex.Message);
+                applyingModifications = false;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Log("Exception : " + ex.Message);
+                applyingModifications = false;
+            }
 
-            if (!applyingModifications)
-            {
-                ApplyModifications();
-            }
-            if (chunksToUpdate.Count > 0)
-            {
-                UpdateChunks();
-            }
 
         }
     }
@@ -348,7 +361,7 @@ public class World : MonoBehaviour
     {
         applyingModifications = true;
 
-        //UnityEngine.Debug.Log("Applying modifications...");
+        UnityEngine.Debug.Log("Applying modifications...");
 
         while (modifications.Count > 0)
         {
@@ -356,7 +369,7 @@ public class World : MonoBehaviour
 
             if (queue == null)
             {
-                //UnityEngine.Debug.LogError("Dequeued queue is null");
+                UnityEngine.Debug.LogError("Dequeued queue is null");
                 continue;
             }
 
@@ -390,7 +403,7 @@ public class World : MonoBehaviour
 
         applyingModifications = false;
 
-        //UnityEngine.Debug.Log("Finished applying modifications");
+        UnityEngine.Debug.Log("Finished applying modifications");
     }
 
 
