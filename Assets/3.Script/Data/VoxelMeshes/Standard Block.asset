@@ -15,7 +15,7 @@ MonoBehaviour:
   blockName: Standard Block
   faces:
   - direction: Back
-    normal: {x: 0, y: 0, z: -1}
+    normal: {x: -1, y: 0, z: 0}
     vertData:
     - position: {x: 0, y: 0, z: 0}
       uv: {x: 0, y: 0}
@@ -63,7 +63,7 @@ MonoBehaviour:
       uv: {x: 1, y: 0}
     triangles: 000000000300000001000000010000000300000002000000
   - direction: Left
-    normal: {x: -1, y: 0, z: 0}
+    normal: {x: 0, y: 0, z: -1}
     vertData:
     - position: {x: 0, y: 0, z: 0}
       uv: {x: 0, y: 0}
@@ -75,7 +75,7 @@ MonoBehaviour:
       uv: {x: 1, y: 0}
     triangles: 000000000300000001000000010000000300000002000000
   - direction: Right
-    normal: {x: 1, y: 0, z: 0}
+    normal: {x: 0, y: 0, z: 1}
     vertData:
     - position: {x: 1, y: 0, z: 0}
       uv: {x: 0, y: 0}

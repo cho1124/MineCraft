@@ -405,7 +405,7 @@ public class World : MonoBehaviour
 
         applyingModifications = false;
 
-        //UnityEngine.Debug.Log("Finished applying modifications");
+        UnityEngine.Debug.Log("Finished applying modifications");
     }
 
 
