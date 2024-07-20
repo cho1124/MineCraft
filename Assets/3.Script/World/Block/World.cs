@@ -322,7 +322,8 @@ public class World : MonoBehaviour
     {
         while (true)
         {
-
+            try
+            {
                 if (!applyingModifications)
                 {
                     ApplyModifications();
@@ -331,6 +332,19 @@ public class World : MonoBehaviour
                 {
                     UpdateChunks();
                 }
+            }
+            catch (ThreadAbortException ex)
+            {
+                Debug.Log("ThreadAbortException: " + ex.Message);
+                applyingModifications = false;
+                chunkUpdateThread.Abort();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Log("Exception : " + ex.Message);
+                applyingModifications = false;
+                chunkUpdateThread.Abort();
+            }
 
 
         }
@@ -349,7 +363,7 @@ public class World : MonoBehaviour
     {
         applyingModifications = true;
 
-        //UnityEngine.Debug.Log("Applying modifications...");
+        UnityEngine.Debug.Log("Applying modifications...");
 
         while (modifications.Count > 0)
         {
@@ -391,7 +405,7 @@ public class World : MonoBehaviour
 
         applyingModifications = false;
 
-        //UnityEngine.Debug.Log("Finished applying modifications");
+        UnityEngine.Debug.Log("Finished applying modifications");
     }
 
 
