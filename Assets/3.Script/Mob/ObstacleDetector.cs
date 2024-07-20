@@ -76,7 +76,7 @@ public class ObstacleDetector : MonoBehaviour
 
                     if (Physics.Raycast(transform.position, direction, out hit))
                     {
-                        Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
+                       // Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
 
                         if (hit.transform.CompareTag(playerTag) || (hit.transform.CompareTag(animalTag) && !monsterScript.IsChasingPlayer))
                         {

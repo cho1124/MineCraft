@@ -62,6 +62,7 @@ public class Monster : Entity
     public bool IsChasingPlayer { get; set; } = false; // 플레이어를 추적 중인지 여부를 저장
 
     private Coroutine stateCoroutine;
+    private bool isGrounded = true; // 몬스터가 바닥에 있는지 여부를 저장
 
     protected override void Start()
     {
@@ -119,6 +120,16 @@ public class Monster : Entity
         }
     }
 
+    private void OnCollisionEnter(Collision collision) {
+        if (collision.gameObject.CompareTag("Ground")) {
+            isGrounded = true; // 바닥에 착지했음을 표시
+        }
+
+        if (collision.gameObject.CompareTag("Tool")) {
+            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+        }
+    }
+
     private void ChangeState(MonsterState NewState) // 상태를 변경하는 메서드입니다.
     {
         if (stateCoroutine != null)
@@ -139,7 +150,10 @@ public class Monster : Entity
                 StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
             case MonsterState.Jump:
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                if (isGrounded) {
+                    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                    isGrounded = false; // 점프를 시작했음을 표시
+                }
                 StartCoroutine(StateDuration(MonsterState.Jump, 3f));
                 break;
             case MonsterState.Chase:
@@ -287,13 +301,5 @@ public class Monster : Entity
         ChangeState(GetRandomState());
     }
 
-  
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.gameObject.CompareTag("Tool"))
-        {
-            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
-        }
-    }
 }
     

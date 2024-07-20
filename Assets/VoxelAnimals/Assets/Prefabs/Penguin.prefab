@@ -175,8 +175,8 @@ GameObject:
   - component: {fileID: 65712882847760486}
   - component: {fileID: 54786317403076396}
   - component: {fileID: -3220157124405409727}
-  - component: {fileID: 567314669562886362}
   - component: {fileID: 5475096968953703423}
+  - component: {fileID: -5386010667490707104}
   m_Layer: 0
   m_Name: Penguin
   m_TagString: Untagged
@@ -271,7 +271,35 @@ MonoBehaviour:
   detectionAngle: 45
   detectionRays: 5
   wanderRadius: 30
---- !u!195 &567314669562886362
+--- !u!114 &5475096968953703423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755646104177140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e89eedc93e30d45b1da8e9798de2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adultPrefab: {fileID: 0}
+  babyPrefab: {fileID: 0}
+  walkRadius: 10
+  runSpeed: 4
+  idleTime: 3
+  minWalkTime: 5
+  maxWalkTime: 8
+  jumpForce: 4
+  detectionDistance: 3
+  ChaseDuration: 2
+  JumpDuration: 3
+  positionCheckInterval: 15
+  minPositionChange: 3
+  hungerLevel: 7
+  heartObjectPrefab: {fileID: 0}
+  shockObjectPrefab: {fileID: 0}
+--- !u!195 &-5386010667490707104
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,29 +321,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5475096968953703423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755646104177140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33e89eedc93e30d45b1da8e9798de2c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkRadius: 10
-  walkSpeed: 3
-  runSpeed: 4
-  idleTime: 3
-  minWalkTime: 5
-  maxWalkTime: 8
-  jumpForce: 4
-  detectionDistance: 3
-  ChaseDuration: 2
-  positionCheckInterval: 15
-  minPositionChange: 3
 --- !u!1 &1855729412434242
 GameObject:
   m_ObjectHideFlags: 0
