@@ -55,7 +55,7 @@ public class PopObject : MonoBehaviour
 
     private void ApplyBlockMeshAndTexture(byte blockID)
     {
-        Debug.Log("Applying mesh and texture for block ID: " + blockID);
+        //Debug.Log("Applying mesh and texture for block ID: " + blockID);
 
         // ÀÜµð¸é Ä¶¶§ ÈëÀ¸·Î ³ª¿È
         if (blockID == 3)
@@ -95,7 +95,7 @@ public class PopObject : MonoBehaviour
         meshFilter.mesh = mesh;
         meshRenderer.material = world.material;
 
-        Debug.Log("Mesh and texture applied successfully.");
+        //Debug.Log("Mesh and texture applied successfully.");
     }
 
     private void AddTexture(List<Vector2> uvs, int textureID)

@@ -13,7 +13,7 @@ public static class SaveSystem
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
 
-        Debug.Log("Saving " + world.worldName);
+        //Debug.Log("Saving " + world.worldName);
 
 
         BinaryFormatter formatter = new BinaryFormatter();
@@ -39,7 +39,7 @@ public static class SaveSystem
             count++;
 
         }
-        Debug.Log(count + " chunks saved.");
+        //Debug.Log(count + " chunks saved.");
 
     }
 
@@ -49,7 +49,7 @@ public static class SaveSystem
 
         if (File.Exists(loadPath + "world.world"))
         {
-            Debug.Log(worldName + " found. Loading from save.");
+            //Debug.Log(worldName + " found. Loading from save.");
 
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath + "world.world", FileMode.Open);
@@ -63,7 +63,7 @@ public static class SaveSystem
         }
         else
         {
-            Debug.Log(worldName + " not found. Creating new world.");
+            //Debug.Log(worldName + " not found. Creating new world.");
 
             WorldData world = new WorldData(worldName, seed);
             SaveWorld(world);

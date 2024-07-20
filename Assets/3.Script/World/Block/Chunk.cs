@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-//using System.Threading;
 using UnityEngine;
-using Unity.Burst;
 using Unity.Collections;
-using Unity.Jobs;
 public class Chunk
 {
 
@@ -421,18 +418,18 @@ public class Chunk
 
 
 
-    public VoxelState GetVoxelFromGlobalVector3(Vector3 pos)
-    {
-        int xCheck = Mathf.FloorToInt(pos.x);
-        int yCheck = Mathf.FloorToInt(pos.y);
-        int zCheck = Mathf.FloorToInt(pos.z);
-
-        xCheck -= Mathf.FloorToInt(position.x);
-        zCheck -= Mathf.FloorToInt(position.z);
-
-
-        return chunkData.map[xCheck, yCheck, zCheck];
-    }
+    //public VoxelState GetVoxelFromGlobalVector3(Vector3 pos)
+    //{
+    //    int xCheck = Mathf.FloorToInt(pos.x);
+    //    int yCheck = Mathf.FloorToInt(pos.y);
+    //    int zCheck = Mathf.FloorToInt(pos.z);
+    //
+    //    xCheck -= Mathf.FloorToInt(position.x);
+    //    zCheck -= Mathf.FloorToInt(position.z);
+    //
+    //
+    //    return chunkData.map[xCheck, yCheck, zCheck];
+    //}
 
     void CalculateLight()
     {
@@ -659,24 +656,24 @@ public class Chunk
 
     }
 
-    private void AddTextureForBlock(int textureID)
-    {
-        float y = textureID / VoxelData.textureAtlasSizeInBlocks;
-        float x = textureID - (y * VoxelData.textureAtlasSizeInBlocks);
-
-        // 텍스쳐 아틀라스 정규화
-        x *= VoxelData.normalizedBlockTextureSize;
-        y *= VoxelData.normalizedBlockTextureSize;
-
-        y = 1f - y - VoxelData.normalizedBlockTextureSize;
-
-
-        uvs.Add(new Vector2(x, y));
-        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
-        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
-        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
-
-    }
+    //private void AddTextureForBlock(int textureID)
+    //{
+    //    float y = textureID / VoxelData.textureAtlasSizeInBlocks;
+    //    float x = textureID - (y * VoxelData.textureAtlasSizeInBlocks);
+    //
+    //    // 텍스쳐 아틀라스 정규화
+    //    x *= VoxelData.normalizedBlockTextureSize;
+    //    y *= VoxelData.normalizedBlockTextureSize;
+    //
+    //    y = 1f - y - VoxelData.normalizedBlockTextureSize;
+    //
+    //
+    //    uvs.Add(new Vector2(x, y));
+    //    uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
+    //    uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
+    //    uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
+    //
+    //}
 
 
 }

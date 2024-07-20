@@ -117,7 +117,6 @@ public class World : MonoBehaviour
         spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 50f, VoxelData.WorldCenter);
         player.position = spawnPoint;
 
-
         worldData = SaveSystem.LoadWorld("Prototype");
         //json
         //string jsonExport = JsonUtility.ToJson(settings);
@@ -357,7 +356,7 @@ public class World : MonoBehaviour
 
             if (queue == null)
             {
-                UnityEngine.Debug.LogError("Dequeued queue is null");
+                //UnityEngine.Debug.LogError("Dequeued queue is null");
                 continue;
             }
 
@@ -794,7 +793,7 @@ public class BlockType
             case 5: return rightFaceTexture;
 
             default:
-                UnityEngine.Debug.Log("Error in GetTextureID; invalid face index"); ;
+                //UnityEngine.Debug.Log("Error in GetTextureID; invalid face index"); ;
                 return 0;
         }
 
