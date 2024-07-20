@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class InventoryBarSlotChoice : MonoBehaviour
 {
-    [SerializeField] Inventory inventory_class = null;
-
     // ========== Inspector public ==========
 
     [SerializeField] private Inventory Inventory_class = null;
@@ -55,17 +53,15 @@ public class InventoryBarSlotChoice : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount == 1) // 
+                    if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount == 1)
                     {
+                        ItemInfo iteminfo = inventory_bar_slot[i].GetChild(0).gameObject.GetComponent<ItemInfo>();
 
+                        GameObject new_item_obj = Instantiate(Inventory_class.item_obj[iteminfo.item_id]);
 
-                        // inventory_bar_slot[i].GetChild(0).gameObject
+                        new_item_obj.transform.SetParent(null);
 
-                        // ItemInfo item = this.GetComponent<ItemInfo>();
-
-                        // GameObject new_item_obj = Instantiate();
-
-                        // Destroy(inventory_bar_slot[i].GetChild(0).gameObject);
+                        Destroy(inventory_bar_slot[i].GetChild(0).gameObject);
 
                         Debug.Log("아이템 버리기 완료!");
 
