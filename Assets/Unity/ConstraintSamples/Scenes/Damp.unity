@@ -506,7 +506,7 @@ MonoBehaviour:
   m_Data:
     m_ConstrainedObject: {fileID: 384050254}
     m_Source: {fileID: 150719330}
-    m_DampPosition: 0.5
+    m_DampPosition: 0.669
     m_DampRotation: 0.5
     m_MaintainAim: 1
   m_SourceObjectsGUIToggle: 1
@@ -1203,6 +1203,7 @@ GameObject:
   - component: {fileID: 1044422072}
   - component: {fileID: 1044422071}
   - component: {fileID: 1044422073}
+  - component: {fileID: 1044422074}
   m_Layer: 0
   m_Name: root
   m_TagString: Untagged
@@ -1297,6 +1298,23 @@ MonoBehaviour:
   - {fileID: 307577075}
   - {fileID: 1672211362}
   - {fileID: 254639907}
+--- !u!114 &1044422074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044422069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d423f872b6510448a63f2468a44202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segments:
+  - {fileID: 150719330}
+  smoothTime: 0.3
+  maxSpeed: 10
+  moveSpeed: 5
 --- !u!850595691 &1168576959
 LightingSettings:
   m_ObjectHideFlags: 0
