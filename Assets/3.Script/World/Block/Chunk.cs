@@ -643,7 +643,7 @@ public class Chunk
                     faceVertCount++;
                 }
 
-                if (voxel.properties.renderNeighborFaces)
+                if (!voxel.properties.renderNeighborFaces)
                 {
                     for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
                         triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);

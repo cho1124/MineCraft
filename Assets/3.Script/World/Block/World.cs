@@ -337,11 +337,13 @@ public class World : MonoBehaviour
             {
                 Debug.Log("ThreadAbortException: " + ex.Message);
                 applyingModifications = false;
+                chunkUpdateThread.Abort();
             }
             catch (System.Exception ex)
             {
                 Debug.Log("Exception : " + ex.Message);
                 applyingModifications = false;
+                chunkUpdateThread.Abort();
             }
 
 
