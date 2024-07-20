@@ -128,7 +128,7 @@ public class Chunk
     public void Init()
     {
 
-
+   
         chunkObject = new GameObject();
         //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
         meshFilter = chunkObject.AddComponent<MeshFilter>();
@@ -166,7 +166,7 @@ public class Chunk
         lock (World.Instance.ChunkUpdateThreadLock)
             World.Instance.chunksToUpdate.Add(this);
 
-
+        
     }
 
 
@@ -498,116 +498,9 @@ public class Chunk
     }
 
 
-
+    // 아마 이 프로젝트에서 가장 중요한 메서드
     // 복셀의 각 면을 검사해서 보이는 면만 메쉬 데이터에 추가
     // 이 메소드를 UpdateChunk에서 for문을 3번으로 돌려서 한 Chunk에 보이는 면만 렌더링하니 게임성능이 최적화
-    //public void UpdateMeshData(Vector3 pos)
-    //{
-    //
-    //    int x = Mathf.FloorToInt(pos.x);
-    //    int y = Mathf.FloorToInt(pos.y);
-    //    int z = Mathf.FloorToInt(pos.z);
-    //
-    //    //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id;
-    //    byte blockID = chunkData.map[x, y, z].id;
-    //    //bool renderNeighborFaces = World.Instance.blockTypes[blockID].renderNeighborFaces;
-    //    VoxelState voxel = chunkData.map[x, y, z];
-    //
-    //    // 블록은 6면체
-    //    for (int p = 0; p < 6; p++)
-    //    {
-    //
-    //        // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
-    //        // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
-    //        // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-    //        VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
-    //
-    //        // 현재 면이 외부와 접해있는지 확인
-    //        if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
-    //        {
-    //            // 현재 Voxel의 ID를 가져옴
-    //            //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z];
-    //
-    //
-    //
-    //
-    //
-    //            // 각 면의 정점을 추가
-    //            // 한 면은 사각형이니까 4번...
-    //            for (int i = 0; i < 4; i++)
-    //            {
-    //                vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
-    //            }
-    //
-    //            for (int i = 0; i < 4; i++)
-    //            {
-    //                normals.Add(VoxelData.faceChecks[p]);
-    //            }
-    //            // 텍스쳐 좌표 추가
-    //            AddTexture(World.Instance.blockTypes[blockID].GetTextureID(p));
-    //
-    //            //float lightLevel;
-    //            //int yPos = (int)pos.y + 1;
-    //            //bool inShade = false;
-    //            //while (yPos < VoxelData.ChunkHeight)
-    //            //{
-    //            //    if (chunkData.map[(int)pos.x, yPos, (int)pos.z].id != 0)
-    //            //    {
-    //            //        inShade = true;
-    //            //        break;
-    //            //    }
-    //            //
-    //            //
-    //            //
-    //            //    yPos++;
-    //            //}
-    //            //
-    //            //if (inShade)
-    //            //{
-    //            //
-    //            //
-    //            //    lightLevel = 0.4f;
-    //            //}
-    //            //else
-    //            //{ lightLevel = 0f; }
-    //            float lightLevel = neighbor.globalLightPercent;
-    //
-    //            colors.Add(new Color(0, 0, 0, lightLevel));
-    //            colors.Add(new Color(0, 0, 0, lightLevel));
-    //            colors.Add(new Color(0, 0, 0, lightLevel));
-    //            colors.Add(new Color(0, 0, 0, lightLevel));
-    //
-    //            if (!World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
-    //            {
-    //                triangles.Add(vertexIndex);
-    //                triangles.Add(vertexIndex + 1);
-    //                triangles.Add(vertexIndex + 2);
-    //                triangles.Add(vertexIndex + 2);
-    //                triangles.Add(vertexIndex + 1);
-    //                triangles.Add(vertexIndex + 3);
-    //            }
-    //            else
-    //            {
-    //                transparentTriangles.Add(vertexIndex);
-    //                transparentTriangles.Add(vertexIndex + 1);
-    //                transparentTriangles.Add(vertexIndex + 2);
-    //                transparentTriangles.Add(vertexIndex + 2);
-    //                transparentTriangles.Add(vertexIndex + 1);
-    //                transparentTriangles.Add(vertexIndex + 3);
-    //
-    //                // 삼각형 인덱스 추가
-    //            }
-    //
-    //            // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
-    //            vertexIndex += 4;
-    //
-    //
-    //        }
-    //    }
-    //
-    //}
-
-
     public void UpdateMeshData(Vector3 pos)
     {
 
@@ -627,50 +520,92 @@ public class Chunk
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
+            VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
 
-            VoxelState neighbour = chunkData.map[x, y, z].neighbours[p];
-            if (neighbour != null && neighbour.properties.renderNeighborFaces)
+            // 현재 면이 외부와 접해있는지 확인
+            if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
             {
-                float lightLevel = neighbour.globalLightPercent;
-                int faceVertCount = 0;
+                // 현재 Voxel의 ID를 가져옴
+                //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z];
 
-                for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
+
+
+
+
+                // 각 면의 정점을 추가
+                // 한 면은 사각형이니까 4번...
+                for (int i = 0; i < 4; i++)
                 {
-                    vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
-                    normals.Add(voxel.properties.meshData.faces[p].normal);
-                    colors.Add(new Color(0, 0, 0, lightLevel));
-                    AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
-                    faceVertCount++;
+                    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
                 }
 
-                if (voxel.properties.renderNeighborFaces)
+                for (int i = 0; i < 4; i++)
                 {
-                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-                        triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+                    normals.Add(VoxelData.faceChecks[p]);
+                }
+                // 텍스쳐 좌표 추가
+                AddTexture(World.Instance.blockTypes[blockID].GetTextureID(p));
+
+                //float lightLevel;
+                //int yPos = (int)pos.y + 1;
+                //bool inShade = false;
+                //while (yPos < VoxelData.ChunkHeight)
+                //{
+                //    if (chunkData.map[(int)pos.x, yPos, (int)pos.z].id != 0)
+                //    {
+                //        inShade = true;
+                //        break;
+                //    }
+                //
+                //
+                //
+                //    yPos++;
+                //}
+                //
+                //if (inShade)
+                //{
+                //
+                //
+                //    lightLevel = 0.4f;
+                //}
+                //else
+                //{ lightLevel = 0f; }
+                float lightLevel = neighbor.globalLightPercent;
+
+                colors.Add(new Color(0, 0, 0, lightLevel));
+                colors.Add(new Color(0, 0, 0, lightLevel));
+                colors.Add(new Color(0, 0, 0, lightLevel));
+                colors.Add(new Color(0, 0, 0, lightLevel));
+
+                if (!World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
+                {
+                    triangles.Add(vertexIndex);
+                    triangles.Add(vertexIndex + 1);
+                    triangles.Add(vertexIndex + 2);
+                    triangles.Add(vertexIndex + 2);
+                    triangles.Add(vertexIndex + 1);
+                    triangles.Add(vertexIndex + 3);
                 }
                 else
                 {
-                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-                        transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+                    transparentTriangles.Add(vertexIndex);
+                    transparentTriangles.Add(vertexIndex + 1);
+                    transparentTriangles.Add(vertexIndex + 2);
+                    transparentTriangles.Add(vertexIndex + 2);
+                    transparentTriangles.Add(vertexIndex + 1);
+                    transparentTriangles.Add(vertexIndex + 3);
+
+                    // 삼각형 인덱스 추가
                 }
 
-                vertexIndex += faceVertCount;
+                // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
+                vertexIndex += 4;
+
+
             }
-
-
-
         }
 
     }
-
-
-
-
-
-
-
-
-
 
 
     /// 새로운 mesh 객체 생성 -> 이전에 수집된 정점, 삼각형 인덱스, UV 좌표를 mesh에 할당
@@ -700,7 +635,7 @@ public class Chunk
 
 
 
-    private void AddTexture(int textureID, Vector2 uv)
+    private void AddTexture(int textureID)
     {
 
         float y = textureID / VoxelData.textureAtlasSizeInBlocks;
@@ -713,16 +648,10 @@ public class Chunk
         y = 1f - y - VoxelData.normalizedBlockTextureSize;
 
 
-        x += VoxelData.normalizedBlockTextureSize * uv.x;
-        y += VoxelData.normalizedBlockTextureSize * uv.y;
-
         uvs.Add(new Vector2(x, y));
-
-
-        //uvs.Add(new Vector2(x, y));
-        //uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
-        //uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
-        //uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
 
 
     }
