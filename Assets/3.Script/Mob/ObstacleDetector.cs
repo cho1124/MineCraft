@@ -16,6 +16,7 @@ public class ObstacleDetector : MonoBehaviour
     private float lastAnimalDetectionTime = -Mathf.Infinity; // 마지막 동물 감지 시간
     private Coroutine chaseCoroutine;
 
+
     private void Start()
     {
         monsterScript = GetComponentInParent<Monster>();
