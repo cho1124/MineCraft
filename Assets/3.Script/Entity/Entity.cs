@@ -52,10 +52,16 @@ public class Entity : MonoBehaviour, IDamageable
 
             if(health <= 0)
             {
-                StartCoroutine(OnDie());
-                
+                Die();
+
             }
         }
+    }
+
+    private void Die() {
+        animator.SetBool("Die", true);
+        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        StartCoroutine(OnDie());
     }
 
     private IEnumerator BlinkRed() {
@@ -85,25 +91,17 @@ public class Entity : MonoBehaviour, IDamageable
     }
 
     protected virtual IEnumerator OnDie() {
-        if (animator != null) {
-            animator.SetBool("Die", true); // die 애니메이션 트리거
-            Debug.Log($"{name} 죽는 모션 실행!");
+        yield return new WaitForSeconds(3f); // 3초 대기
+        Debug.Log("애니메이션 대기 완료");
 
-            // 애니메이션 길이만큼 대기
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        Debug.Log($"{name} 현재 애니메이터 상태: {stateInfo.fullPathHash}, normalizedTime: {stateInfo.normalizedTime}, length: {stateInfo.length}");
 
-            // 애니메이션이 끝난 후 이펙트 생성
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
-        }
-        else {
-            // 애니메이터가 없는 경우 즉시 이펙트 생성
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
-        }
+        // 애니메이션이 끝난 후 엔티티 파괴
+        Destroy(gameObject);
     }
 
-    public  void TakeDamage(float damage) {
+    public void TakeDamage(float damage) {
         Health -= damage;
     }
 }
