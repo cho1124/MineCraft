@@ -15,10 +15,21 @@ public class Slime : Monster, IDamageable
     {
         base.Start();
            currentHealth = (int)Health; // 부모 클래스의 Health 초기값을 currentHealth에 저장
+        //DieAndSplit();
     }
 
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            DieAndSplit();
+        }
+    }
+
+
     private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
-        { 
+    { 
         base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
 
         // 충돌한 물체가 플레이어 또는 동물인지 확인

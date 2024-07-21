@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour, IDamageable 
+public class Entity : MonoBehaviour 
     {
     // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
     // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
