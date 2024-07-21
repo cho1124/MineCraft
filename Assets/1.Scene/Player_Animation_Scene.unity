@@ -337,7 +337,7 @@ Transform:
   m_GameObject: {fileID: 1284656901}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 1, z: 5}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -548,7 +548,9 @@ GameObject:
   - component: {fileID: 5866666021456575516}
   - component: {fileID: 919132149608119519}
   - component: {fileID: 919132149608119518}
+  - component: {fileID: 919132149608119521}
   - component: {fileID: 919132149608119517}
+  - component: {fileID: 919132149608119520}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -575,7 +577,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149608119516}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5806d282fe76e1f4f8093aba0de762a4, type: 3}
   m_Name: 
@@ -611,6 +613,96 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &919132149608119520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149608119516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 2fc64e047bb90dd45b5790fdc72fa9e9, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119521}
+        m_TargetAssemblyTypeName: Player_Input_Control, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a4912805-caf3-487a-9bd6-76f8f0cceef0
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119521}
+        m_TargetAssemblyTypeName: Player_Input_Control, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e45d6fe1-e134-451b-a055-9bffed572364
+    m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119521}
+        m_TargetAssemblyTypeName: Player_Input_Control, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 842f0b60-26e3-47b2-a324-2b22b3b6d5d7
+    m_ActionName: Player/Rotate[/Mouse/delta]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: PC
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &919132149608119521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149608119516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d8122d13d94dd847bdf5af42f098e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1781181434300684145
 Transform:
   m_ObjectHideFlags: 0

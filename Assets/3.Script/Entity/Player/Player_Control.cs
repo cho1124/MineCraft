@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player_Control : MonoBehaviour
 {
@@ -18,16 +19,13 @@ public class Player_Control : MonoBehaviour
     private float cursor_y = 0f;
     private float temp_y = 0f;
 
-    private float speed_current = 0f;
-    private float speed_walk = 2f; // player_data에서 가져오기
-    private float speed_sprint = 4f; // player_data에서 가져오기
+    //private float speed_current = 0f;
+    //private float speed_walk = 2f; // player_data에서 가져오기
+    //private float speed_sprint = 4f; // player_data에서 가져오기
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
     private float current_speed = 0f;
     private float velocity = 0f;
-
-
-
 
     private void Awake()
     {
@@ -95,7 +93,7 @@ public class Player_Control : MonoBehaviour
         {
             animator.SetBool("R_Attack", true);
         }
-
+    
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             animator.SetBool("Is_Guarding", true);
@@ -213,5 +211,48 @@ public class Player_Control : MonoBehaviour
         if (a < b) return b - a;
         else if (a > b) return a - b;
         else return 0;
+    }
+
+
+    private float input_key_h;
+    private float input_key_v;
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 input = context.ReadValue<Vector2>();
+        if (input != null)
+        {
+            input_key_h = input.x;
+            input_key_v = input.y;
+        }
+    }
+
+    private float input_cursor_h;
+    private float input_cursor_v;
+    public void OnRotate(InputAction.CallbackContext context)
+    {
+        Vector2 input = context.ReadValue<Vector2>();
+        if (input != null)
+        {
+            input_cursor_h = input.x;
+            input_cursor_v = input.y;
+        }
+    }
+
+
+    private bool input_key_jump;
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            
+        }
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+
+        }
     }
 }

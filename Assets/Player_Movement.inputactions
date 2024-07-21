@@ -1,0 +1,155 @@
+{
+    "name": "Input_System",
+    "maps": [
+        {
+            "name": "Player_Movement",
+            "id": "86ceabcc-5234-4a8c-907d-d6da44ba560a",
+            "actions": [
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "842f0b60-26e3-47b2-a324-2b22b3b6d5d7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "a4912805-caf3-487a-9bd6-76f8f0cceef0",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "eadd0314-32e8-4a39-b02a-d83ce54e8a32",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "e45d6fe1-e134-451b-a055-9bffed572364",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5cac4f13-8677-4d36-92cc-4c31f72ce574",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b555ccf0-85d8-4bf9-a467-670c1646b6eb",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "Hold(duration=0.25)",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "d36d81eb-173f-4536-be53-3d43a45a545e",
+                    "path": "2DVector(mode=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "c87fae60-5eaa-4510-94bd-0d3e2977d7c5",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "755676f8-9987-45f7-aac6-bdd80cd4f419",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "27f76c4f-1269-418d-ad99-09c7ad4776ce",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "d2a9fcdc-3dd9-4daa-b77d-4e979810019b",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "0c0c4c3e-d956-4998-83ac-0aaa0810c42b",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "NormalizeVector2",
+                    "groups": "PC",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "PC",
+            "bindingGroup": "PC",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
