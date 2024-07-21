@@ -525,6 +525,34 @@ public class Chunk
             // 현재 면이 외부와 접해있는지 확인
             if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
             {
+                float lightLevel = neighbor.globalLightPercent;
+                int faceVertCount = 0;
+                for (int i =0; i<voxel.properties.meshData.faces[p].vertData.Length; i++)
+                {
+                    vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
+                    normals.Add(voxel.properties.meshData.faces[p].normal);
+                    colors.Add(new Color(0, 0, 0, lightLevel));
+                    AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
+                    faceVertCount++;
+
+                }
+
+                if (!voxel.properties.renderNeighborFaces)
+                {
+
+                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+                        triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+
+                }
+                else
+                {
+
+                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+                        transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+
+                }
+
+                vertexIndex += faceVertCount;
                 // 현재 Voxel의 ID를 가져옴
                 //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z];
 
@@ -532,74 +560,50 @@ public class Chunk
 
 
 
-                // 각 면의 정점을 추가
-                // 한 면은 사각형이니까 4번...
-                for (int i = 0; i < 4; i++)
-                {
-                    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
-                }
-
-                for (int i = 0; i < 4; i++)
-                {
-                    normals.Add(VoxelData.faceChecks[p]);
-                }
-                // 텍스쳐 좌표 추가
-                AddTexture(World.Instance.blockTypes[blockID].GetTextureID(p));
-
-                //float lightLevel;
-                //int yPos = (int)pos.y + 1;
-                //bool inShade = false;
-                //while (yPos < VoxelData.ChunkHeight)
+                //// 각 면의 정점을 추가
+                //// 한 면은 사각형이니까 4번...
+                //for (int i = 0; i < 4; i++)
                 //{
-                //    if (chunkData.map[(int)pos.x, yPos, (int)pos.z].id != 0)
-                //    {
-                //        inShade = true;
-                //        break;
-                //    }
-                //
-                //
-                //
-                //    yPos++;
+                //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
                 //}
                 //
-                //if (inShade)
+                //for (int i = 0; i < 4; i++)
                 //{
+                //    normals.Add(VoxelData.faceChecks[p]);
+                //}
+                //// 텍스쳐 좌표 추가
+                //AddTexture(World.Instance.blockTypes[blockID].GetTextureID(p));
                 //
+                //float lightLevel = neighbor.globalLightPercent;
                 //
-                //    lightLevel = 0.4f;
+                //colors.Add(new Color(0, 0, 0, lightLevel));
+                //colors.Add(new Color(0, 0, 0, lightLevel));
+                //colors.Add(new Color(0, 0, 0, lightLevel));
+                //colors.Add(new Color(0, 0, 0, lightLevel));
+                //
+                //if (!World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
+                //{
+                //    triangles.Add(vertexIndex);
+                //    triangles.Add(vertexIndex + 1);
+                //    triangles.Add(vertexIndex + 2);
+                //    triangles.Add(vertexIndex + 2);
+                //    triangles.Add(vertexIndex + 1);
+                //    triangles.Add(vertexIndex + 3);
                 //}
                 //else
-                //{ lightLevel = 0f; }
-                float lightLevel = neighbor.globalLightPercent;
-
-                colors.Add(new Color(0, 0, 0, lightLevel));
-                colors.Add(new Color(0, 0, 0, lightLevel));
-                colors.Add(new Color(0, 0, 0, lightLevel));
-                colors.Add(new Color(0, 0, 0, lightLevel));
-
-                if (!World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
-                {
-                    triangles.Add(vertexIndex);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 3);
-                }
-                else
-                {
-                    transparentTriangles.Add(vertexIndex);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 2);
-                    transparentTriangles.Add(vertexIndex + 1);
-                    transparentTriangles.Add(vertexIndex + 3);
-
-                    // 삼각형 인덱스 추가
-                }
-
-                // 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
-                vertexIndex += 4;
+                //{
+                //    transparentTriangles.Add(vertexIndex);
+                //    transparentTriangles.Add(vertexIndex + 1);
+                //    transparentTriangles.Add(vertexIndex + 2);
+                //    transparentTriangles.Add(vertexIndex + 2);
+                //    transparentTriangles.Add(vertexIndex + 1);
+                //    transparentTriangles.Add(vertexIndex + 3);
+                //
+                //    // 삼각형 인덱스 추가
+                //}
+                //
+                //// 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
+                //vertexIndex += 4;
 
 
             }
@@ -635,7 +639,7 @@ public class Chunk
 
 
 
-    private void AddTexture(int textureID)
+    private void AddTexture(int textureID, Vector2 uv)
     {
 
         float y = textureID / VoxelData.textureAtlasSizeInBlocks;
@@ -648,10 +652,14 @@ public class Chunk
         y = 1f - y - VoxelData.normalizedBlockTextureSize;
 
 
+        x += VoxelData.normalizedBlockTextureSize * uv.x;
+        y += VoxelData.normalizedBlockTextureSize * uv.y;
+
         uvs.Add(new Vector2(x, y));
-        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
-        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
-        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
+        //uvs.Add(new Vector2(x, y));
+        //uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
+        //uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
+        //uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
 
 
     }
