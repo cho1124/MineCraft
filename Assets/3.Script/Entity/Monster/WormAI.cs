@@ -22,15 +22,20 @@ public class WormAI : MonoBehaviour
     {
         cart.m_Path = path;
         cart.m_Speed = speed;
-        StartCoroutine(FollowPath());
+        //StartCoroutine(FollowPath());
         player = FindObjectOfType<Player_Control>();
 
+        AI();
+    }
+
+    void AI()
+    {
+        UpdatePath();
+        StartCoroutine(FollowPath());
 
     }
 
 
-
-    
 
 
     //1번 패턴 : 기본 패턴
@@ -40,9 +45,75 @@ public class WormAI : MonoBehaviour
     {
         Vector3 playerPosition = player.transform.position + (player.GetComponent<Rigidbody>().velocity * 3);
         playerPosition.y = Mathf.Max(10, playerPosition.y);
-        Vector3 randomRange = Random.insideUnitSphere * 100;
+        Vector3 randomRange = Random.insideUnitSphere * 100; //공통 부분
+        int randNum = Random.Range(0, 3);
         randomRange.y = 0;
+
+
+        switch(randNum)
+        {
+            case 0:
+                Debug.Log("P1");
+                Pattern1(playerPosition, randomRange);
+                break;
+            case 1:
+                Debug.Log("P2");
+                Pattern2(playerPosition, randomRange);
+                break;
+            case 2:
+                //
+                break;
+            default:
+                Debug.Log("error");
+                break;
+        }
+        //Pattern1(playerPosition, randomRange);
+
+
+
+
+        //pattern 1
+
+        
+
+
+        //Pattern2(playerPosition, randomRange);
+        //startPosition = playerPosition + randomRange;
+        //
+        //
+        //endPosition = playerPosition - randomRange;
+        //
+        //if (Physics.Raycast(startPosition, Vector3.down, out hitInfo, 1000, terrainLayer.value))
+        //{
+        //    startPosition = hitInfo.point;
+        //
+        //}
+        //
+        //if (Physics.Raycast(endPosition, Vector3.down, out hitInfo, 1000, terrainLayer.value))
+        //{
+        //    endPosition = hitInfo.point;
+        //    //GroundDetection.Invoke(false, hitInfo.transform.CompareTag("Terrain") ? 0 : 1);
+        //}
+        //
+        //path.m_Waypoints[0].position = startPosition + (Vector3.down * 15);
+        //path.m_Waypoints[1].position = playerPosition + (Vector3.up * 10);
+        //path.m_Waypoints[2].position = endPosition + (Vector3.down * 45);
+        //
+        //path.InvalidateDistanceCache();
+        //cart.m_Position = 0;
+        //
+        ////speed
+        //cart.m_Speed = cart.m_Path.PathLength / 1500;
+
+        //OnBossReveal.Invoke(true);
+
+    }
+
+    private void Pattern1(Vector3 playerPosition, Vector3 randomRange)
+    {
         startPosition = playerPosition + randomRange;
+
+
         endPosition = playerPosition - randomRange;
 
         if (Physics.Raycast(startPosition, Vector3.down, out hitInfo, 1000, terrainLayer.value))
@@ -67,16 +138,39 @@ public class WormAI : MonoBehaviour
         //speed
         cart.m_Speed = cart.m_Path.PathLength / 1500;
 
-        //OnBossReveal.Invoke(true);
-
     }
 
-    void AI()
+    private void Pattern2(Vector3 playerPosition, Vector3 randomRange)
     {
-        UpdatePath();
-        StartCoroutine(FollowPath());
-        
+        startPosition = playerPosition + randomRange;
+
+
+        endPosition = startPosition;
+
+        if (Physics.Raycast(startPosition, Vector3.down, out hitInfo, 1000, terrainLayer.value))
+        {
+            startPosition = hitInfo.point;
+
+        }
+
+        if (Physics.Raycast(endPosition, Vector3.down, out hitInfo, 1000, terrainLayer.value))
+        {
+            endPosition = hitInfo.point;
+            //GroundDetection.Invoke(false, hitInfo.transform.CompareTag("Terrain") ? 0 : 1);
+        }
+
+        path.m_Waypoints[0].position = startPosition + (Vector3.down * 15);
+        path.m_Waypoints[1].position = startPosition + (Vector3.up * 50);
+        path.m_Waypoints[2].position = endPosition + (Vector3.down * 35);
+
+        path.InvalidateDistanceCache();
+        cart.m_Position = 0;
+
+        //speed
+        cart.m_Speed = cart.m_Path.PathLength / 1500;
     }
+
+
 
 
 
