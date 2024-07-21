@@ -23,22 +23,9 @@ public class Player_Control : MonoBehaviour
     private float speed_sprint = 4f; // player_data에서 가져오기
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
-    private float currentSpeed = 0f;
-    public float smoothTime = 0.1f;
+    private float current_speed = 0f;
     private float velocity = 0f;
 
-    [Header("Player Grounded")]
-    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-    public bool Grounded = true;
-
-    [Tooltip("Useful for rough ground")]
-    public float GroundedOffset = -0.14f;
-
-    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-    public float GroundedRadius = 0.28f;
-
-    [Tooltip("What layers the character uses as ground")]
-    public LayerMask GroundLayers;
 
 
 
@@ -53,44 +40,45 @@ public class Player_Control : MonoBehaviour
         //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
 
         GroundedCheck();
-        Attack_Control();
         Move_Control();
+        Attack_Control();
     }
 
     private void LateUpdate()
     {
-        // 문제점 1. 머리의 회전 부분이 모델의 회전에 의해서 새롭게 덮어 씌워지는 치명적인 문제
         Rotation_Control();
     }
 
+
+    [Header("Player Grounded")]
+    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
+    public bool Grounded;
+    
+    [Tooltip("Useful for rough ground")]
+    public float GroundedOffset;
+    
+    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
+    public Vector3 GroundedBoxSize;
+    
+    [Tooltip("What layers the character uses as ground")]
+    public LayerMask GroundLayers;
+    
+    [Header("Debug")]
+    [SerializeField] private bool drawGizmo;
     private void GroundedCheck()
     {
         // set sphere position, with offset
-        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
-            transform.position.z);
-        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
-            QueryTriggerInteraction.Ignore);
+        Vector3 box_position = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+        Grounded = Physics.CheckBox(box_position, GroundedBoxSize, transform.rotation, GroundLayers);
 
         // update animator if using character
-        
     }
-
-
-    private void Move_Animation(float key_h, float key_v)
+    private void OnDrawGizmos()
     {
-        float targetSpeed = new Vector2(key_h, key_v).magnitude;
-
-        // 대각선 문제 해결
-        if (targetSpeed > 1) targetSpeed = 1;
-
-        if (key_v < 0) targetSpeed = -targetSpeed;
-
-        targetSpeed = Input.GetKey(KeyCode.LeftControl) ? targetSpeed * 2 : targetSpeed;
-
-        // 부드러운 애니메이션 처리
-        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref velocity, smoothTime);
-
-        animator.SetFloat("Speed", currentSpeed);
+        if (!drawGizmo) return;
+    
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawCube(transform.position + (transform.up * GroundedOffset), GroundedBoxSize);
     }
 
     private void Attack_Control()
@@ -119,10 +107,8 @@ public class Player_Control : MonoBehaviour
     }
     private void Move_Control()
     {
-
         //!!!!!! 그라운드 체크 해야함
-
-        if (Grounded)
+        if (controller.isGrounded)
         {
             if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
             {
@@ -142,7 +128,8 @@ public class Player_Control : MonoBehaviour
                 if (Input.GetButtonDown("Jump"))
                 {
                     animator.SetBool("IsJump", true);
-                    gravity_velocity = Mathf.Sqrt(jump_height * -2f * Physics.gravity.y);
+                    animator.SetBool("IsGround", false);
+                    gravity_velocity = Mathf.Sqrt(-5f * jump_height * Physics.gravity.y);
                 }
             }
         }
@@ -152,19 +139,36 @@ public class Player_Control : MonoBehaviour
             gravity_velocity += Physics.gravity.y * Time.deltaTime;
         }
 
-        // 방향
-        Vector3 direction = head_transform.forward * key_v + head_transform.right * key_h;
-
-        //속도
-        if (key_h == 0 && key_v == 0) speed_current = 0f;
-        else if (key_h != 0 || key_v != 0) speed_current = Mathf.Min(direction.magnitude, 1.0f) * (Input.GetKey(KeyCode.LeftControl) ? speed_sprint : speed_walk);
-
         Move_Animation(key_h, key_v);
+        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
+    }
 
-        // 기본 방향에 캐릭터의 이동속도를 곱해서 유연한 속도 구현
-        //direction.y = 0f;
-        //if(!animator.GetBool("Is_Stop"))controller.Move(direction.normalized * speed_current * Time.deltaTime);
-        //controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
+    private void Move_Animation(float key_h, float key_v)
+    {
+        float target_speed = 0f;
+        if (key_h != 0f && key_v != 0f)
+        {
+            target_speed = Mathf.Sqrt(key_h * key_h + key_v * key_v);
+            if (key_v < 0) target_speed = -target_speed;
+        }
+        else if (key_h == 0f && key_v != 0f) target_speed = key_v;
+        else if (key_h != 0f && key_v == 0f) target_speed = key_h;
+        else target_speed = 0f;
+
+        target_speed = Input.GetKey(KeyCode.LeftControl) ? target_speed * 2f : target_speed;
+
+        current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.2f);
+
+        if (key_v != 0)
+        {
+            animator.SetFloat("Speed_V", current_speed);
+            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime));
+        }
+        else
+        {
+            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime));
+            animator.SetFloat("Speed_H", current_speed);
+        }
     }
 
     private void Rotation_Control()
@@ -178,7 +182,8 @@ public class Player_Control : MonoBehaviour
 
         if(key_h != 0 || key_v != 0)
         {
-            if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
+            if (key_v == 0) temp_y = cursor_x;
+            else if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
             else if (((key_h > 0) && !(key_v < 0)) || ((key_h < 0) && (key_v < 0))) temp_y = cursor_x + 45f;
             else if (key_v != 0 && key_h == 0) temp_y = cursor_x;
         }
@@ -199,7 +204,6 @@ public class Player_Control : MonoBehaviour
         if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
-            //head_transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
             head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
         }
     }
@@ -210,25 +214,4 @@ public class Player_Control : MonoBehaviour
         else if (a > b) return a - b;
         else return 0;
     }
-
-    //[Header("Boxcast Property")]
-    //[SerializeField] private Vector3 boxSize;
-    //[SerializeField] private float maxDistance;
-    //[SerializeField] private LayerMask groundLayer;
-    //
-    //[Header("Debug")]
-    //[SerializeField] private bool drawGizmo;
-    //
-    //private void OnDrawGizmos()
-    //{
-    //    if (!drawGizmo) return;
-    //
-    //    Gizmos.color = Color.cyan;
-    //    Gizmos.DrawCube(transform.position - transform.up * maxDistance, boxSize);
-    //}
-    //
-    //public bool IsGrounded()
-    //{
-    //    return Physics.BoxCast(transform.position, boxSize, -transform.up, transform.rotation, maxDistance);
-    //}
 }
