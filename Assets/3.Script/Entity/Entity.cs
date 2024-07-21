@@ -58,7 +58,8 @@ public class Entity : MonoBehaviour, IDamageable
         }
     }
 
-    private void Die() {
+    protected virtual void Die() {
+        Debug.Log("죽어버림ㅜㅜ");
         animator.SetBool("Die", true);
         Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
         StartCoroutine(OnDie());
@@ -90,19 +91,22 @@ public class Entity : MonoBehaviour, IDamageable
         }
     }
 
-    protected virtual IEnumerator OnDie() {
+    protected virtual IEnumerator OnDie() // virtual 키워드 추가
+    {
+        animator.SetBool("Die", true);
         yield return new WaitForSeconds(3f); // 3초 대기
         Debug.Log("애니메이션 대기 완료");
 
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        Debug.Log($"{name} 현재 애니메이터 상태: {stateInfo.fullPathHash}, normalizedTime: {stateInfo.normalizedTime}, length: {stateInfo.length}");
-
-        // 애니메이션이 끝난 후 엔티티 파괴
-        Destroy(gameObject);
+        // 애니메이션 이벤트에 의해 호출될 함수
+        OnAnimationEnd();
     }
 
     public void TakeDamage(float damage) {
         Health -= damage;
+    }
+
+    public virtual void OnAnimationEnd() {
+        Destroy(gameObject);
     }
 }
 
