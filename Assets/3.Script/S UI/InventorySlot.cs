@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+
     // ========== Inspector public ==========
 
     [Header("슬롯 색 조절")]
