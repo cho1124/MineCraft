@@ -51,57 +51,48 @@ public class InventoryBarSlotChoice : MonoBehaviour
                 {
                     if (this.transform.localPosition == slot_choice_pos[i] && inventory_bar_slot[i].childCount == 1)
                     {
-                        // 아이템 정보를 가져옵니다.
                         Transform itemTransform = inventory_bar_slot[i].GetChild(0);
+
                         if (itemTransform == null)
                         {
-                            Debug.LogWarning("아이템이 존재하지 않습니다.");
                             return;
                         }
 
                         GameObject item = itemTransform.gameObject;
+
                         ItemInfo iteminfo = item.GetComponent<ItemInfo>();
+
                         if (iteminfo == null)
                         {
-                            Debug.LogWarning("아이템 정보가 없습니다.");
                             Destroy(item);
+
                             return;
                         }
 
-                        // Ensure the item_id is valid
                         if (iteminfo.item_id < 0 || iteminfo.item_id >= item_obj.Length || item_obj[iteminfo.item_id] == null)
                         {
-                            Debug.LogWarning("유효하지 않은 item_id.");
                             Destroy(item);
+
                             return;
                         }
 
-                        // 새 아이템 오브젝트를 인스턴스화 합니다.
                         GameObject new_item_obj = Instantiate(item_obj[iteminfo.item_id]);
 
-                        // 플레이어의 앞쪽에 아이템을 배치
                         Vector3 playerPosition = player.transform.position;
                         Vector3 playerForward = player.transform.forward;
                         Vector3 dropPosition = playerPosition + playerForward * throwDistance;
+
                         new_item_obj.transform.position = dropPosition;
 
-                        // 아이템 오브젝트를 씬으로 이동합니다.
                         new_item_obj.transform.SetParent(null);
 
-                        // Add force for throwing
                         Rigidbody ry = new_item_obj.GetComponent<Rigidbody>();
-                        if (ry != null)
-                        {
-                            ry.AddForce(playerForward * throwing_power, ForceMode.Impulse);
-                        }
-                        else
-                        {
-                            Debug.LogWarning("새 아이템 오브젝트에 Rigidbody가 없습니다.");
-                        }
 
-                        // 아이템 제거 후 로그 출력
+                        ry.AddForce(playerForward * throwing_power, ForceMode.Impulse);
+
                         Destroy(item);
-                        Debug.Log("아이템 버리기 완료!");
+
+                        Debug.Log($"{item.name} 아이템을 버렸습니다.");
 
                         break;
                     }

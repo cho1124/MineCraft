@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-
     // ========== Inspector public ==========
 
     [Header("슬롯 색 조절")]
@@ -34,6 +33,10 @@ public class InventorySlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
             InventoryItemControl item = obj.GetComponent<InventoryItemControl>();
 
             item.tm = this.transform;
+        }
+        else
+        {
+            Debug.Log("추가!");
         }
     }
 

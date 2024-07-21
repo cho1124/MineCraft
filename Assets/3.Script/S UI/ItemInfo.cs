@@ -28,8 +28,13 @@ public class ItemInfo : MonoBehaviour
         // count_current = 1;
     }
 
-    public void ItemCount(int count)
+    public void SetAddItemCount(int add_count)
     {
-        count_current = count;
+        count_current += add_count;
+    }
+
+    public void SetLoseItemCount(int lose_count)
+    {
+        count_current -= lose_count;
     }
 }
