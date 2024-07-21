@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour
-{
+public class Entity : MonoBehaviour, IDamageable 
+    {
     // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
     // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
     // entity가 공격받을때 빨갛게 변함
@@ -52,47 +52,66 @@ public class Entity : MonoBehaviour
 
             if(health <= 0)
             {
-                OnDie();
+                StartCoroutine(OnDie());
+                
             }
         }
     }
 
-    private IEnumerator BlinkRed()
-    {
+    private IEnumerator BlinkRed() {
         float elapsedTime = 0;
         bool isRed = false;
 
-        while(elapsedTime<2f)
-        {
-            for (int i = 0; i < entityRenderer.Length; i++)
-            {
+        while (elapsedTime < 2f) {
+            for (int i = 0; i < entityRenderer.Length; i++) {
+                // ObstacleDetector 컴포넌트를 가진 오브젝트는 제외
+                if (entityRenderer[i].GetComponent<ObstacleDetector>() != null) {
+                    continue;
+                }
+
                 entityRenderer[i].material.color = isRed ? originalColor[i] : Color.red;
             }
-                isRed = !isRed;
-            elapsedTime += 0.3f;  //깜박이는 속도
+            isRed = !isRed;
+            elapsedTime += 0.3f; // 깜박이는 속도
             yield return new WaitForSeconds(0.3f);
         }
-        for (int i = 0; i < entityRenderer.Length; i++)
-        {
+        for (int i = 0; i < entityRenderer.Length; i++) {
+            if (entityRenderer[i].GetComponent<ObstacleDetector>() != null) {
+                continue;
+            }
+
             entityRenderer[i].material.color = originalColor[i];
         }
     }
 
-    protected virtual void OnDie()
-    {
-        Debug.Log($"{name} 이 죽었습니다. ");
-        if (animator != null)
-        {
+    protected virtual IEnumerator OnDie() {
+        if (animator != null) {
             animator.SetBool("Die", true); // die 애니메이션 트리거
+            Debug.Log($"{name} 죽는 모션 실행!");
+
+            // 애니메이션 길이만큼 대기
+            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+            // 애니메이션이 끝난 후 이펙트 생성
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
         }
-        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject,1f);
+        else {
+            // 애니메이터가 없는 경우 즉시 이펙트 생성
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
-    public void TakeDamage(float damage) {
+    public  void TakeDamage(float damage) {
         Health -= damage;
     }
 }
+
+public interface IDamageable {
+    void TakeDamage(float damage);
+}
+
 /*
  
 ★초기상태 필요하면 복붙해서 원복하기★

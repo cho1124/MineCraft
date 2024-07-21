@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Animal : Entity
-{
+public class Animal : Entity, IDamageable {
     //동물도 자유롭게 구현하면 될거에용
 
     /*
@@ -584,32 +583,14 @@ public class Animal : Entity
         }
     }
 
-  //  protected virtual IEnumerator JumpThenIdle() {
-  //
-  //     // // NavMeshAgent 비활성화
-  //     // agent.updatePosition = false;
-  //     // agent.updateRotation = false;
-  //     // agent.isStopped = true;
-  //
-  //      // Rigidbody 사용하여 점프
-  //    //  rb.isKinematic = false;
-  //    //  rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
-  //
-  //    //  // 점프 지속 시간 동안 대기
-  //    //  yield return new WaitForSeconds(3f);
-  //
-  //    //  // Rigidbody를 다시 비활성화하고 NavMeshAgent를 활성화
-  //    //  rb.isKinematic = true;
-  //    //  agent.updatePosition = true;
-  //    //  agent.updateRotation = true;
-  //    //  agent.isStopped = false;
-  //
-  //      // 상태를 Idle로 변경
-  //      ChangeState(State.Idle);
-  //  }
-
     protected virtual IEnumerator IdleThenWander() {
         yield return new WaitForSeconds(Random.Range(2, 5));
         ChangeState(State.Wander);
+    }
+
+    public void TakeDamage(float damage) 
+    {
+        Health -= damage;
+        StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
     }
 }

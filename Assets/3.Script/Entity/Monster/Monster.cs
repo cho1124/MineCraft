@@ -120,7 +120,7 @@ public class Monster : Entity
         }
     }
 
-    private void OnCollisionEnter(Collision collision) {
+    protected void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.CompareTag("Ground")) {
             isGrounded = true; // 바닥에 착지했음을 표시
         }
