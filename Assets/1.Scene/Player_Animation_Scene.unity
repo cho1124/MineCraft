@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -548,7 +548,6 @@ GameObject:
   - component: {fileID: 5866666021456575516}
   - component: {fileID: 919132149608119519}
   - component: {fileID: 919132149608119518}
-  - component: {fileID: 919132149608119521}
   - component: {fileID: 919132149608119517}
   - component: {fileID: 919132149608119520}
   m_Layer: 0
@@ -577,7 +576,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149608119516}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5806d282fe76e1f4f8093aba0de762a4, type: 3}
   m_Name: 
@@ -640,8 +639,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 919132149608119521}
-        m_TargetAssemblyTypeName: Player_Input_Control, Assembly-CSharp
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -656,8 +655,8 @@ MonoBehaviour:
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 919132149608119521}
-        m_TargetAssemblyTypeName: Player_Input_Control, Assembly-CSharp
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
         m_Arguments:
@@ -672,8 +671,8 @@ MonoBehaviour:
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 919132149608119521}
-        m_TargetAssemblyTypeName: Player_Input_Control, Assembly-CSharp
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
         m_MethodName: OnRotate
         m_Mode: 0
         m_Arguments:
@@ -686,23 +685,75 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 842f0b60-26e3-47b2-a324-2b22b3b6d5d7
     m_ActionName: Player/Rotate[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
+        m_MethodName: OnSprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: eadd0314-32e8-4a39-b02a-d83ce54e8a32
+    m_ActionName: Player_Movement/Sprint[/Keyboard/ctrl]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
+        m_MethodName: OnClickLeft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: aac7ce7f-8bb7-400d-a313-b091121ce569
+    m_ActionName: Player_Movement/Click_Left[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
+        m_MethodName: OnClickRight
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 65de5a22-d6df-493d-b0ab-83de57c754f3
+    m_ActionName: Player_Movement/Click_Right[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 919132149608119518}
+        m_TargetAssemblyTypeName: Player_Control, Assembly-CSharp
+        m_MethodName: OnShift
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4ce82f2d-73a6-4ea4-a6cc-38ae7490006a
+    m_ActionName: Player_Movement/Shift[/Keyboard/shift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: PC
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: Player_Input_Control
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &919132149608119521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132149608119516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d8122d13d94dd847bdf5af42f098e06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1781181434300684145
 Transform:
   m_ObjectHideFlags: 0

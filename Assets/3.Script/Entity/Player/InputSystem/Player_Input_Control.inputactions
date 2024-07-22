@@ -1,8 +1,8 @@
 {
-    "name": "Input_System",
+    "name": "Player_Input_Control",
     "maps": [
         {
-            "name": "Player_Movement",
+            "name": "Player_Input_Control",
             "id": "86ceabcc-5234-4a8c-907d-d6da44ba560a",
             "actions": [
                 {
@@ -40,6 +40,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Click_Left",
+                    "type": "Button",
+                    "id": "aac7ce7f-8bb7-400d-a313-b091121ce569",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Click_Right",
+                    "type": "Button",
+                    "id": "65de5a22-d6df-493d-b0ab-83de57c754f3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Shift",
+                    "type": "Button",
+                    "id": "4ce82f2d-73a6-4ea4-a6cc-38ae7490006a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -58,7 +85,7 @@
                     "name": "",
                     "id": "b555ccf0-85d8-4bf9-a467-670c1646b6eb",
                     "path": "<Keyboard>/ctrl",
-                    "interactions": "Hold(duration=0.25)",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "PC",
                     "action": "Sprint",
@@ -128,6 +155,39 @@
                     "processors": "NormalizeVector2",
                     "groups": "PC",
                     "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4469c46e-7cf7-4f84-961b-39df7df884cf",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Click_Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec696f5f-f711-4cd9-8bbe-0630d0e7f5e1",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Click_Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "276dee8b-d362-45f5-a76c-9c2217880c52",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Shift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

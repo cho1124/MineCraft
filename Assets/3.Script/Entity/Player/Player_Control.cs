@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Experimental;
 
 public class Player_Control : MonoBehaviour
 {
@@ -27,6 +29,28 @@ public class Player_Control : MonoBehaviour
     private float current_speed = 0f;
     private float velocity = 0f;
 
+    private float input_cursor_h;
+    private float input_cursor_v;
+    
+    private float input_key_h;
+    private float input_key_v;
+
+    private bool input_key_sprint = false;
+    private bool input_key_jump = false;
+
+    private bool is_L_down = false;
+    private bool is_R_down = false;
+
+    private bool is_guard_down = false;
+
+    public bool Grounded;
+    public float GroundedOffset;
+    public Vector3 GroundedBoxSize;
+    public LayerMask GroundLayers;
+    
+    [Header("Debug")]
+    [SerializeField] private bool drawGizmo;
+
     private void Awake()
     {
         TryGetComponent(out controller);
@@ -48,27 +72,11 @@ public class Player_Control : MonoBehaviour
     }
 
 
-    [Header("Player Grounded")]
-    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-    public bool Grounded;
-    
-    [Tooltip("Useful for rough ground")]
-    public float GroundedOffset;
-    
-    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-    public Vector3 GroundedBoxSize;
-    
-    [Tooltip("What layers the character uses as ground")]
-    public LayerMask GroundLayers;
-    
-    [Header("Debug")]
-    [SerializeField] private bool drawGizmo;
     private void GroundedCheck()
     {
         // set sphere position, with offset
         Vector3 box_position = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckBox(box_position, GroundedBoxSize, transform.rotation, GroundLayers);
-
         // update animator if using character
     }
     private void OnDrawGizmos()
@@ -78,104 +86,13 @@ public class Player_Control : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawCube(transform.position + (transform.up * GroundedOffset), GroundedBoxSize);
     }
-
-    private void Attack_Control()
-    {
-        if((Input.GetMouseButton(0) && Input.GetMouseButtonDown(1)) || (Input.GetMouseButtonDown(0) && Input.GetMouseButton(1)))
-        {
-            animator.SetBool("LR_Attack", true);
-        }
-        if (Input.GetMouseButton(0) && !Input.GetMouseButton(1))
-        {
-            animator.SetBool("L_Attack", true);
-        }
-        if (Input.GetMouseButton(1) && !Input.GetMouseButton(0))
-        {
-            animator.SetBool("R_Attack", true);
-        }
-    
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            animator.SetBool("Is_Guarding", true);
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            animator.SetBool("Is_Guarding", false);
-        }
-    }
-    private void Move_Control()
-    {
-        //!!!!!! ±×¶ó¿îµå Ã¼Å© ÇØ¾ßÇÔ
-        if (controller.isGrounded)
-        {
-            if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
-            {
-                key_h = Input.GetAxis("Horizontal");
-                key_v = Input.GetAxis("Vertical");
-
-                if(key_h != 0 && (animator.GetInteger("Moveset_Number") == 2 || animator.GetInteger("Moveset_Number") == -2))
-                {
-                    if (key_h < 0) animator.SetInteger("Moveset_Number", -2);
-                    if (key_h > 0) animator.SetInteger("Moveset_Number", 2);
-                }
-
-                animator.SetBool("IsGround", true);
-                animator.SetBool("IsJump", false);
-
-                // Â«Çª
-                if (Input.GetButtonDown("Jump"))
-                {
-                    animator.SetBool("IsJump", true);
-                    animator.SetBool("IsGround", false);
-                    gravity_velocity = Mathf.Sqrt(-5f * jump_height * Physics.gravity.y);
-                }
-            }
-        }
-        else
-        {
-            animator.SetBool("IsGround", false);
-            gravity_velocity += Physics.gravity.y * Time.deltaTime;
-        }
-
-        Move_Animation(key_h, key_v);
-        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
-    }
-
-    private void Move_Animation(float key_h, float key_v)
-    {
-        float target_speed = 0f;
-        if (key_h != 0f && key_v != 0f)
-        {
-            target_speed = Mathf.Sqrt(key_h * key_h + key_v * key_v);
-            if (key_v < 0) target_speed = -target_speed;
-        }
-        else if (key_h == 0f && key_v != 0f) target_speed = key_v;
-        else if (key_h != 0f && key_v == 0f) target_speed = key_h;
-        else target_speed = 0f;
-
-        target_speed = Input.GetKey(KeyCode.LeftControl) ? target_speed * 2f : target_speed;
-
-        current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.2f);
-
-        if (key_v != 0)
-        {
-            animator.SetFloat("Speed_V", current_speed);
-            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime));
-        }
-        else
-        {
-            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime));
-            animator.SetFloat("Speed_H", current_speed);
-        }
-    }
-
     private void Rotation_Control()
     {
-        cursor_h = Input.GetAxis("Mouse X");
-        cursor_v = Input.GetAxis("Mouse Y");
+        cursor_h = input_cursor_h; //new
+        cursor_v = input_cursor_v; //new
         
-        cursor_x += cursor_h * 3f;
-        cursor_y += cursor_v * 1.5f;
+        cursor_x += cursor_h;
+        cursor_y += cursor_v;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
 
         if(key_h != 0 || key_v != 0)
@@ -205,29 +122,98 @@ public class Player_Control : MonoBehaviour
             head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
         }
     }
-
     private float Difference(float a, float b)
     {
         if (a < b) return b - a;
         else if (a > b) return a - b;
         else return 0;
     }
-
-
-    private float input_key_h;
-    private float input_key_v;
-    public void OnMove(InputAction.CallbackContext context)
+    private void Move_Control()
     {
-        Vector2 input = context.ReadValue<Vector2>();
-        if (input != null)
+        if (controller.isGrounded)
         {
-            input_key_h = input.x;
-            input_key_v = input.y;
+            if (!animator.GetBool("Is_Attacking"))
+            {
+                key_h = input_key_h;
+                key_v = input_key_v;
+
+                if(key_h != 0 && (animator.GetInteger("Moveset_Number") == 2 || animator.GetInteger("Moveset_Number") == -2))
+                {
+                    if (key_h < 0) animator.SetInteger("Moveset_Number", -2);
+                    if (key_h > 0) animator.SetInteger("Moveset_Number", 2);
+                }
+
+                animator.SetBool("IsGround", true);
+                animator.SetBool("IsJump", false);
+
+                // Â«Çª
+                if (input_key_jump)
+                {
+                    animator.SetBool("IsJump", true);
+                    animator.SetBool("IsGround", false);
+                    gravity_velocity = Mathf.Sqrt(-5f * jump_height * Physics.gravity.y);
+                }
+            }
+        }
+        else
+        {
+            animator.SetBool("IsGround", false);
+            gravity_velocity += Physics.gravity.y * Time.deltaTime;
+        }
+
+        Move_Animation(key_h, key_v);
+        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
+    }
+    private void Move_Animation(float key_h, float key_v)
+    {
+        float target_speed = 0f;
+        if (key_h != 0f && key_v != 0f)
+        {
+            target_speed = Mathf.Sqrt(key_h * key_h + key_v * key_v);
+            if (key_v < 0) target_speed = -target_speed;
+        }
+        else if (key_h == 0f && key_v != 0f) target_speed = key_v;
+        else if (key_h != 0f && key_v == 0f) target_speed = key_h;
+        else target_speed = 0f;
+
+        target_speed = input_key_sprint ? target_speed * 2f : target_speed;
+
+        current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.2f);
+
+        if (key_v != 0)
+        {
+            animator.SetFloat("Speed_V", current_speed);
+            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime));
+        }
+        else
+        {
+            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime));
+            animator.SetFloat("Speed_H", current_speed);
+        }
+    }
+    private void Attack_Control()
+    {
+        if(is_L_down && is_R_down && !animator.GetBool("Is_Attacking") && !animator.GetBool("Is_Guarding"))
+        {
+            animator.SetBool("LR_Attack", true);
+        }
+        else if (is_L_down && !animator.GetBool("Is_Attacking") && !animator.GetBool("Is_Guarding"))
+        {
+            animator.SetBool("L_Attack", true);
+        }
+        else if (is_R_down && !animator.GetBool("Is_Attacking") && !animator.GetBool("Is_Guarding"))
+        {
+            animator.SetBool("R_Attack", true);
+        }
+
+        if(!animator.GetBool("Is_Attacking"))
+        {
+            animator.SetBool("Guard", is_guard_down);
         }
     }
 
-    private float input_cursor_h;
-    private float input_cursor_v;
+
+
     public void OnRotate(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
@@ -237,22 +223,56 @@ public class Player_Control : MonoBehaviour
             input_cursor_v = input.y;
         }
     }
-
-
-    private bool input_key_jump;
-    public void OnJump(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        Vector2 input = context.ReadValue<Vector2>();
+        if (input != null)
         {
-            
+            input_key_h = input.x;
+            input_key_v = input.y;
         }
     }
-
     public void OnSprint(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
+        if (context.performed) input_key_sprint = true;
+        else if (context.canceled) input_key_sprint = false;
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed) input_key_jump = true;
+        else input_key_jump = false;
+    }
 
-        }
+    public void OnShift(InputAction.CallbackContext context)
+    {
+        if (context.performed) is_guard_down = true;
+        else if (context.canceled) is_guard_down = false;
+    }
+    public void OnClickLeft(InputAction.CallbackContext context)
+    {
+        if (context.performed) is_L_down = true;
+        else if (context.canceled) is_L_down = false;
+    }
+    public void OnClickRight(InputAction.CallbackContext context)
+    {
+        if (context.performed) is_R_down = true;
+        else if (context.canceled) is_R_down = false;
+    }
+
+    public void On_Attack_Trigger_Enter()
+    {
+        animator.SetBool("Is_Attacking", true);
+    }
+    public void On_Attack_Trigger_Exit()
+    {
+        animator.SetBool("Is_Attacking", false);
+    }
+    public void On_Guard_Trigger_Enter()
+    {
+        animator.SetBool("Is_Guarding", true);
+    }
+    public void On_Guard_Trigger_Exit()
+    {
+        animator.SetBool("Is_Guarding", false);
     }
 }
