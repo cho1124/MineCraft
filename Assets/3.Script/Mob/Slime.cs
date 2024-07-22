@@ -25,8 +25,8 @@ public class Slime : Monster, IDamageable
         }
 
         base.Start();
-           currentHealth = (int)Health; // 부모 클래스의 Health 초기값을 currentHealth에 저장
-       // DieAndSplit();
+           currentHealth = (int)entity.Health; // 부모 클래스의 Health 초기값을 currentHealth에 저장
+                                               // DieAndSplit();
     }
 
 
@@ -66,9 +66,13 @@ public class Slime : Monster, IDamageable
             // 생성된 슬라임의 속성을 초기화
             InitializeNewSlime(newSlime1);
             InitializeNewSlime(newSlime2);
+
+        // OnDie 코루틴 호출
+        StartCoroutine(entity.OnDie());
     }
 
-    private void InitializeNewSlime(GameObject newSlime)
+    private void InitializeNewSlime(GameObject newSlime) //슬라임 애니메이션 클립에서 scale 조정하고 있어서 안 작아지는거였음 새로 애니메이션컨트롤러 만들어서 
+                                                         // 복제된 슬라임의 컨트롤러를 scale 작아진 컨트롤러(slime_s)로 바꿈
     {
         Debug.Log("슬라임 초기화!");
 

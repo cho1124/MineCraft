@@ -111,7 +111,7 @@ public class Test1 : MonoBehaviour
                 if (entity != null)
                 {
                     // HP를 20 감소시키기
-                    entity.TakeDamage(20);
+                    entity.TakeDamage(100);
                     Debug.Log($"{entity.name} 를 때림");
                 }
 

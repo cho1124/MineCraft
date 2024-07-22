@@ -65,7 +65,6 @@ public class Entity : MonoBehaviour
     {
         Debug.Log("죽어버림ㅜㅜ");
         OnDeath?.Invoke(); // 죽음 이벤트 호출
-        StartCoroutine(OnDie());
     }
 
     private IEnumerator BlinkRed()
@@ -100,7 +99,7 @@ public class Entity : MonoBehaviour
         }
     }
 
-    protected virtual IEnumerator OnDie() // virtual 키워드 추가
+    public virtual IEnumerator OnDie() // virtual 키워드 추가
     {
         animator.SetTrigger("Die");
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
