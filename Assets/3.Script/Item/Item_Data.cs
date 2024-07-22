@@ -31,6 +31,8 @@ public class Item_Dictionary
     }
 }
 
+
+[System.Serializable]
 public class Item_Data : MonoBehaviour
 {
     public int item_ID { get; protected set; } //아이템 아이디
@@ -47,6 +49,7 @@ public class Item_Data : MonoBehaviour
     }
 }
 
+[System.Serializable]
 public class Item_Stackable_Data : Item_Data
 {
     public int stack_max { get; protected set; } //겹칠 수 있는 최대 개수
@@ -64,6 +67,8 @@ public class Item_Stackable_Data : Item_Data
         this.stack_current = stack_current;
     }
 }
+
+[System.Serializable]
 public class Item_Consumable_Data : Item_Stackable_Data
 {
     public float hunger_amount { get; protected set; } //먹었을 때 회복되는 배고픔 수치
@@ -92,6 +97,7 @@ public class Item_Consumable_Data : Item_Stackable_Data
     }
 }
 
+[System.Serializable]
 public class Item_Placeable_Data : Item_Stackable_Data
 {
     public Equipment_Type require_tool_type { get; protected set; } //해당 블럭을 파괴하기 위해 필요한 도구의 타입
@@ -122,7 +128,7 @@ public class Item_Placeable_Data : Item_Stackable_Data
     }
 }
 
-
+[System.Serializable]
 public class Item_Equipment_Data : Item_Data
 {
     public Equipment_Type equipment_type { get; protected set; } //장비의 타입
