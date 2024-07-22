@@ -3,7 +3,7 @@ using Cinemachine;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    [SerializeField] private Inventory inventory_class;
+    // [SerializeField] private Inventory inventory_class;
 
     public CinemachineVirtualCamera[] cameras;
     private int currentCameraIndex;

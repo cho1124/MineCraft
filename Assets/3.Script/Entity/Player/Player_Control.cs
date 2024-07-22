@@ -7,7 +7,7 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    [SerializeField] private Inventory inventory_class;
+    // [SerializeField] private Inventory inventory_class;
 
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;

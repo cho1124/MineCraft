@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EffectItem : MonoBehaviour
 {
-    [SerializeField] private float speed = 100;
+    private float speed = 100;
 
     private void Update()
     {
