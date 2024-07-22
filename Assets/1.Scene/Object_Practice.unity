@@ -10633,8 +10633,8 @@ MonoBehaviour:
   - {fileID: 978895335}
   - {fileID: 8165280620215791838, guid: c7584c81515f62343bef76dc371c547b, type: 3}
   plane: {fileID: 785045208}
-  minObjects: 20
-  maxObjects: 100
+  minObjects: 10
+  maxObjects: 12
 --- !u!114 &785045215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25162,12 +25162,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1954791239}
-  m_LocalRotation: {x: -0.06428185, y: 0.9155747, z: -0.36229828, w: -0.16226743}
-  m_LocalPosition: {x: -42.598038, y: 8.4150715, z: -35.765167}
+  m_LocalRotation: {x: -0.35503826, y: -0.040291034, z: 0.015374974, w: -0.93385667}
+  m_LocalPosition: {x: 0.513855, y: 6.3185487, z: -3.6482391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_Father: {fileID: 5253725523802143101}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: -44.286, y: -145.812, z: -499.89502}
 --- !u!114 &1954791243
 MonoBehaviour:
@@ -84243,6 +84243,7 @@ Transform:
   - {fileID: 6851890266811887139}
   - {fileID: 2197100780365494678}
   - {fileID: 6023466731213694398}
+  - {fileID: 1954791242}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -97755,7 +97756,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -97774,7 +97775,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -97793,7 +97794,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1

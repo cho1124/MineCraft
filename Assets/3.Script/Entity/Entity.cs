@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
 public class Entity : MonoBehaviour
 {
     // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
-    // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
     // entity가 공격받을때 빨갛게 변함
-    // 죽을때 파티클로 이펙트 넣으려고 하는중
+    // 죽을때 파티클로 이펙트
     // Start is called before the first frame update
 
+    public string entityType;
+    public float damage = 10;
     private float maxHealth = 100;
     private float health;
     private float posture;
@@ -27,6 +29,7 @@ public class Entity : MonoBehaviour
 
     protected virtual void Start()
     {
+
         health = maxHealth;
         animator = GetComponent<Animator>();
         entityRenderer = GetComponentsInChildren<Renderer>();
@@ -116,6 +119,13 @@ public class Entity : MonoBehaviour
     {
         Health -= damage;
     }
+    public void Attack(Entity target)
+    {
+        if (target != null && target is IDamageable)
+        {
+            ((IDamageable)target).TakeDamage(damage);
+        }
+    }
 
 }
 
@@ -123,42 +133,3 @@ public interface IDamageable {
     void TakeDamage(float damage);
 }
 
-/*
- 
-★초기상태 필요하면 복붙해서 원복하기★
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Entity : MonoBehaviour
-{
-    // Start is called before the first frame update
-    private float maxHealth;
-    private float health;
-    private float posture;
-    private float defence;
-    private float weight;
-    private float speed;
-
-    public float Health
-    {
-        get
-        {
-            return health;
-        }
-        set
-        {
-            health = value;
-
-            if(health <= 0)
-            {
-                //Ondie 메서드 만들기
-            }
-        }
-    }
-    //나머지는 커스텀 해서 구현 할 것
-
-}
- 
- */
