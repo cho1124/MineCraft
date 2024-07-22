@@ -10,7 +10,7 @@ public class WormAI : MonoBehaviour
     [SerializeField] private CinemachineDollyCart cart;
     [SerializeField] LayerMask terrainLayer = default;
     [SerializeField] private float speed = 1f;
-    [SerializeField] private Player_Control player;
+    [SerializeField] private GameObject player;
 
     private Vector3 startPosition;
     private Vector3 endPosition;
@@ -23,7 +23,11 @@ public class WormAI : MonoBehaviour
         cart.m_Path = path;
         cart.m_Speed = speed;
         //StartCoroutine(FollowPath());
-        player = FindObjectOfType<Player_Control>();
+        //player = FindObjectOfType<Player_Control>();
+        if(player == null)
+        {
+
+        }
 
         AI();
     }
