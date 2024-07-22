@@ -13,11 +13,14 @@ public class SkyDome : MonoBehaviour
 
     public float rotationSpeed = 10f;  // 해의 회전 속도
     private float time;
+    private float offsetValue;
 
     private void Start()
     {
+        skyMaterial.mainTextureOffset = new Vector2(0.62f, 0);
+        offsetValue = 0.62f;
         // 달의 초기 위치를 태양의 반대편에 설정
-        SetMoonInitialPosition();
+        //SetMoonInitialPosition();
     }
 
     private void Update()
@@ -29,10 +32,16 @@ public class SkyDome : MonoBehaviour
     private void DaySet()
     {
         gameObject.transform.position = new Vector3(player.transform.position.x, 0, player.transform.position.z);
-        time += Time.deltaTime;
-        float normalizedTime = (time % dayDuration) / dayDuration;
+        //time += Time.deltaTime;
 
-        Vector2 offset = new Vector2(normalizedTime, 0);
+        offsetValue += Time.deltaTime / dayDuration * (1.25f - 0.62f);
+
+
+        Vector2 offset = new Vector2(offsetValue, 0);
+
+
+
+
         skyMaterial.mainTextureOffset = offset;
     }
 
@@ -54,7 +63,7 @@ public class SkyDome : MonoBehaviour
     private void SetMoonInitialPosition()
     {
         // 달의 위치를 태양의 반대편에 설정
-        Vector3 sunToPlayer = player.transform.position - sun.transform.position;
+        Vector3 sunToPlayer = player.transform.position - sun.transform.localPosition;
         moon.transform.position = player.transform.position + sunToPlayer;
     }
 }

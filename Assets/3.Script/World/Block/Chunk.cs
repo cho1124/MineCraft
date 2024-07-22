@@ -25,10 +25,7 @@ public class Chunk
     MeshCollider meshCollider;
 
 
-
     int vertexIndex = 0;
-
-
 
 
     // 정점 -> 여러 버텍스를 모아 폴리곤 -> 메쉬데이터

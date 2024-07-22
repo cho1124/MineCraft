@@ -114,7 +114,7 @@ public class World : MonoBehaviour
     //월드 생성
     private void Start()
     {
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 50f, VoxelData.WorldCenter);
+        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 120f, VoxelData.WorldCenter);
         player.position = spawnPoint;
 
         worldData = SaveSystem.LoadWorld("Prototype");
