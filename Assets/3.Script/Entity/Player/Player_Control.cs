@@ -11,7 +11,6 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
-    [SerializeField] private Inventory inventory_class;
     [SerializeField] private GameObject position_anchor;
     [SerializeField] private GameObject rotation_anchor;
 
@@ -154,6 +153,11 @@ public class Player_Control : MonoBehaviour
                     gravity_velocity = Mathf.Sqrt(-5f * jump_height * Physics.gravity.y);
                 }
             }
+            else
+            {
+                key_h = 0f;
+                key_v = 0f;
+            }
         }
         else animator.SetBool("IsGround", false);
 
@@ -261,13 +265,20 @@ public class Player_Control : MonoBehaviour
         else if (context.canceled) is_R_down = false;
     }
 
+    public void On_Attack_Ended()
+    {
+        Debug.Log("Ended");
+    }
+
     public void On_Attack_Trigger_Enter()
     {
         animator.SetBool("Is_Attacking", true);
+        Debug.Log("True");
     }
     public void On_Attack_Trigger_Exit()
     {
         animator.SetBool("Is_Attacking", false);
+        Debug.Log("False");
     }
     public void On_Guard_Trigger_Enter()
     {
