@@ -810,7 +810,7 @@ GameObject:
   - component: {fileID: -2815101361065574711}
   - component: {fileID: 8184430710977216128}
   m_Layer: 0
-  m_Name: slime
+  m_Name: slime_s
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -825,7 +825,7 @@ Transform:
   m_GameObject: {fileID: 7401732072854609404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.98, y: 0.513, z: -16.393}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4499446347743319798}
   - {fileID: 8532406580460147353}
@@ -933,7 +933,7 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
-  slimePrefab: {fileID: 7401732072854609404}
+  slimePrefab: {fileID: 7401732072854609404, guid: 8cdc4f8f10d316b408a24e0a5b81980e, type: 3}
   deathAnimationDuration: 2
   slimeAnimatorController: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
   splitSlimeAnimatorController: {fileID: 9100000, guid: 3743d5f2860959442ad2bbb10e543329, type: 2}

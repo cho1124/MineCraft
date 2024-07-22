@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class Entity : MonoBehaviour 
-    {
+public class Entity : MonoBehaviour
+{
     // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
     // 원본 코드 하단에 있어서 필요시 복붙으로 수정 가능합니다.
     // entity가 공격받을때 빨갛게 변함
     // 죽을때 파티클로 이펙트 넣으려고 하는중
     // Start is called before the first frame update
 
-    private float maxHealth=100;
+    private float maxHealth = 100;
     private float health;
     private float posture;
     private float defence;
@@ -21,6 +22,8 @@ public class Entity : MonoBehaviour
     protected Animator animator;
     private Renderer[] entityRenderer;
     private Color[] originalColor;
+
+    public event Action OnDeath; // 죽음 이벤트 선언
 
     protected virtual void Start()
     {
@@ -43,14 +46,14 @@ public class Entity : MonoBehaviour
         }
         set
         {
-            if(health > value)
+            if (health > value)
             {
                 StartCoroutine(BlinkRed());
             }
 
             health = value;
 
-            if(health <= 0)
+            if (health <= 0)
             {
                 Die();
 
@@ -58,21 +61,25 @@ public class Entity : MonoBehaviour
         }
     }
 
-    protected virtual void Die() {
+    protected virtual void Die()
+    {
         Debug.Log("죽어버림ㅜㅜ");
-        animator.SetBool("Die", true);
-        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        OnDeath?.Invoke(); // 죽음 이벤트 호출
         StartCoroutine(OnDie());
     }
 
-    private IEnumerator BlinkRed() {
+    private IEnumerator BlinkRed()
+    {
         float elapsedTime = 0;
         bool isRed = false;
 
-        while (elapsedTime < 2f) {
-            for (int i = 0; i < entityRenderer.Length; i++) {
+        while (elapsedTime < 2f)
+        {
+            for (int i = 0; i < entityRenderer.Length; i++)
+            {
                 // ObstacleDetector 컴포넌트를 가진 오브젝트는 제외
-                if (entityRenderer[i].GetComponent<ObstacleDetector>() != null) {
+                if (entityRenderer[i].GetComponent<ObstacleDetector>() != null)
+                {
                     continue;
                 }
 
@@ -82,8 +89,10 @@ public class Entity : MonoBehaviour
             elapsedTime += 0.3f; // 깜박이는 속도
             yield return new WaitForSeconds(0.3f);
         }
-        for (int i = 0; i < entityRenderer.Length; i++) {
-            if (entityRenderer[i].GetComponent<ObstacleDetector>() != null) {
+        for (int i = 0; i < entityRenderer.Length; i++)
+        {
+            if (entityRenderer[i].GetComponent<ObstacleDetector>() != null)
+            {
                 continue;
             }
 
@@ -93,21 +102,22 @@ public class Entity : MonoBehaviour
 
     protected virtual IEnumerator OnDie() // virtual 키워드 추가
     {
-        animator.SetBool("Die", true);
-        yield return new WaitForSeconds(3f); // 3초 대기
+        animator.SetTrigger("Die");
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        yield return new WaitForSeconds(stateInfo.length);
         Debug.Log("애니메이션 대기 완료");
 
-        // 애니메이션 이벤트에 의해 호출될 함수
-        OnAnimationEnd();
+
+        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+
     }
 
-    public void TakeDamage(float damage) {
+    public void TakeDamage(float damage)
+    {
         Health -= damage;
     }
 
-    public virtual void OnAnimationEnd() {
-        Destroy(gameObject);
-    }
 }
 
 public interface IDamageable {

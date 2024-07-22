@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -23294,7 +23294,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6514976256196198889}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.1079855, y: 0, z: -6.2243714}
+  m_LocalPosition: {x: 8.092, y: 0.143, z: -6.2243714}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 517282263057848524}
@@ -105925,6 +105925,8 @@ MonoBehaviour:
   minPositionChange: 3
   slimePrefab: {fileID: 7401732072854609404, guid: 8cdc4f8f10d316b408a24e0a5b81980e, type: 3}
   deathAnimationDuration: 2
+  slimeAnimatorController: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
+  splitSlimeAnimatorController: {fileID: 9100000, guid: 3743d5f2860959442ad2bbb10e543329, type: 2}
 --- !u!23 &7403908893813220953
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -114016,8 +114018,10 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
-  slimePrefab: {fileID: 7401732072741211820}
+  slimePrefab: {fileID: 7401732072854609404, guid: 8cdc4f8f10d316b408a24e0a5b81980e, type: 3}
   deathAnimationDuration: 2
+  slimeAnimatorController: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
+  splitSlimeAnimatorController: {fileID: 9100000, guid: 3743d5f2860959442ad2bbb10e543329, type: 2}
 --- !u!114 &8184430711329413188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114044,8 +114048,10 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
-  slimePrefab: {fileID: 7401732073038494520}
+  slimePrefab: {fileID: 7401732072854609404, guid: 8cdc4f8f10d316b408a24e0a5b81980e, type: 3}
   deathAnimationDuration: 2
+  slimeAnimatorController: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
+  splitSlimeAnimatorController: {fileID: 9100000, guid: 3743d5f2860959442ad2bbb10e543329, type: 2}
 --- !u!33 &8185796769736563308
 MeshFilter:
   m_ObjectHideFlags: 0

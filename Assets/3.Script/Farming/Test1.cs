@@ -120,16 +120,6 @@ public class Test1 : MonoBehaviour
                 {
                     return;
                 }
-
-                // 충돌한 오브젝트의 위치와 회전 값을 저장
-                Vector3 position = currentCollider.transform.position;
-                Quaternion rotation = currentCollider.transform.rotation;
-
-                //충돌한 오브젝트의 이름에 따라 고기 개수 결정
-                string animalName = currentCollider.gameObject.name;
-
-                // 기존 동물 오브젝트를 삭제
-                Destroy(currentCollider.gameObject);
             }
 
             // 충돌한 오브젝트가 "Grass" 태그를 가지고 있는지 확인

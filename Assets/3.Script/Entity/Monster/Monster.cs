@@ -127,6 +127,7 @@ public class Monster : Entity
 
         if (collision.gameObject.CompareTag("Tool")) {
             TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+            Debug.Log($"{collision}에게 {name}공격받음~~");
         }
     }
 
@@ -267,7 +268,7 @@ public class Monster : Entity
             }
         }
     
-    private void CheckPositionChange()  // 위치 변화를 체크하는 메서드입니다.
+    private void CheckPositionChange()  // 위치 변화를 체크하는 메서드입니다. (한곳에만 장시간 있는것을 방지하기 위해)
     {
         if (Time.time - lastPositionCheckTime >= positionCheckInterval) // 마지막으로 위치를 체크한 시간에서 일정 시간이 지났는지 확인합니다.
         {
