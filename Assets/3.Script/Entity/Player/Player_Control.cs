@@ -130,7 +130,7 @@ public class Player_Control : MonoBehaviour
     }
     private void Move_Control()
     {
-        if (controller.isGrounded)
+        if (Grounded)
         {
             if (!animator.GetBool("Is_Attacking"))
             {
@@ -155,13 +155,10 @@ public class Player_Control : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            animator.SetBool("IsGround", false);
-            gravity_velocity += Physics.gravity.y * Time.deltaTime;
-        }
+        else animator.SetBool("IsGround", false);
 
         Move_Animation(key_h, key_v);
+        gravity_velocity += Physics.gravity.y * Time.deltaTime;
         controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
     private void Move_Animation(float key_h, float key_v)
@@ -178,17 +175,19 @@ public class Player_Control : MonoBehaviour
 
         target_speed = input_key_sprint ? target_speed * 2f : target_speed;
 
-        current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.2f);
+        current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.35f);
 
         if (key_v != 0)
         {
             animator.SetFloat("Speed_V", current_speed);
             animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime));
+            if (-0.1f < animator.GetFloat("Speed_H") && animator.GetFloat("Speed_H") < 0.1f) animator.SetFloat("Speed_H", 0f);
         }
         else
         {
             animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime));
             animator.SetFloat("Speed_H", current_speed);
+            if (-0.1f < animator.GetFloat("Speed_V") && animator.GetFloat("Speed_V") < 0.1f) animator.SetFloat("Speed_V", 0f);
         }
     }
     private void Attack_Control()
