@@ -249,25 +249,20 @@ public class Player_Control : MonoBehaviour
         else input_key_jump = false;
     }
 
-    public void OnShift(InputAction.CallbackContext context)
+    public void OnGuard(InputAction.CallbackContext context)
     {
         if (context.performed) is_guard_down = true;
         else if (context.canceled) is_guard_down = false;
     }
-    public void OnClickLeft(InputAction.CallbackContext context)
+    public void OnLAttack(InputAction.CallbackContext context)
     {
         if (context.performed) is_L_down = true;
         else if (context.canceled) is_L_down = false;
     }
-    public void OnClickRight(InputAction.CallbackContext context)
+    public void OnRAttack(InputAction.CallbackContext context)
     {
         if (context.performed) is_R_down = true;
         else if (context.canceled) is_R_down = false;
-    }
-
-    public void On_Attack_Ended()
-    {
-        Debug.Log("Ended");
     }
 
     public void On_Attack_Trigger_Enter()

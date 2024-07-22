@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Click_Left",
+                    "name": "L_Attack",
                     "type": "Button",
                     "id": "aac7ce7f-8bb7-400d-a313-b091121ce569",
                     "expectedControlType": "Button",
@@ -51,7 +51,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Click_Right",
+                    "name": "R_Attack",
                     "type": "Button",
                     "id": "65de5a22-d6df-493d-b0ab-83de57c754f3",
                     "expectedControlType": "Button",
@@ -60,7 +60,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shift",
+                    "name": "Guard",
                     "type": "Button",
                     "id": "4ce82f2d-73a6-4ea4-a6cc-38ae7490006a",
                     "expectedControlType": "Button",
@@ -165,7 +165,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Click_Left",
+                    "action": "L_Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -176,7 +176,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Click_Right",
+                    "action": "R_Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -187,7 +187,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Shift",
+                    "action": "Guard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
