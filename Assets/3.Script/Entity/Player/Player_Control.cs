@@ -177,17 +177,20 @@ public class Player_Control : MonoBehaviour
 
         current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.35f);
 
-        if (key_v != 0)
+        if (key_v != 0f)
         {
             animator.SetFloat("Speed_V", current_speed);
-            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime));
-            if (-0.1f < animator.GetFloat("Speed_H") && animator.GetFloat("Speed_H") < 0.1f) animator.SetFloat("Speed_H", 0f);
+            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_H") && animator.GetFloat("Speed_H") < 0.1f) animator.SetFloat("Speed_H", 0f);
+        }
+        else if (key_h != 0f)
+        {
+            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_V") && animator.GetFloat("Speed_V") < 0.1f) animator.SetFloat("Speed_V", 0f);
+            animator.SetFloat("Speed_H", current_speed);
         }
         else
         {
-            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime));
-            animator.SetFloat("Speed_H", current_speed);
-            if (-0.1f < animator.GetFloat("Speed_V") && animator.GetFloat("Speed_V") < 0.1f) animator.SetFloat("Speed_V", 0f);
+            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_V") && animator.GetFloat("Speed_V") < 0.1f) animator.SetFloat("Speed_V", 0f);
+            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_H") && animator.GetFloat("Speed_H") < 0.1f) animator.SetFloat("Speed_H", 0f);
         }
     }
     private void Attack_Control()
