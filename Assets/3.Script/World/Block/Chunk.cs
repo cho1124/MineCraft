@@ -166,7 +166,7 @@ public class Chunk
         
     }
 
-
+    
 
     // 여기에 populatechunkData.map이 있었다 20240717
     // Chunk 내의 각 위치에 어떤 블록이 있을지 채운다
