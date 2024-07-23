@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public TextAsset itemJsonFile; // 견본
-
+    
 
     //이 부분 딕셔너리로 수정 예정
 
@@ -37,20 +37,33 @@ public class ItemManager : MonoBehaviour
 
     void Start()
     {
-        LoadItemsFromJson(itemJsonFile.text);
-        
-        
+        //LoadItemsFromJson(itemJsonFile.text);
+
+        //testDic = Item_Dictionary.item_dictionary;
+        //testDic.ContainsKey(5);
+        //Debug.Log(Item_Dictionary.item_dictionary.ContainsKey(5));
+
+
 
     }
 
-    void LoadItemsFromJson(string json)
+    /*void LoadItemsFromJson(string json)
     {
         // 역직렬화
-        ItemDataList itemDataList = JsonUtility.FromJson<ItemDataList>(json);
+        Item_List itemList = JsonUtility.FromJson<Item_List>(json);
+
+        
+
+
+
+        Debug.Log(itemList.item_Consumable_Datas.Count + ", " + itemList.item_Equipment_Datas.Count);
 
         // 스택 가능 아이템 로드
-        foreach (var item in itemDataList.stackableItems)
+        foreach (var item in itemList.item_Stackable_Datas)
         {
+
+            Debug.Log("112");
+
             Item_Dictionary.Add(item.item_ID, new Item_Stackable_Data(
                 item.item_ID,
                 item.item_name,
@@ -62,7 +75,7 @@ public class ItemManager : MonoBehaviour
         }
 
         // 소비 아이템 로드
-        foreach (var item in itemDataList.consumableItems)
+        foreach (var item in itemList.item_Consumable_Datas)
         {
             Item_Dictionary.Add(item.item_ID, new Item_Consumable_Data(
                 item.item_ID,
@@ -80,7 +93,7 @@ public class ItemManager : MonoBehaviour
         }
 
         // 설치 가능 아이템 로드
-        foreach (var item in itemDataList.placeableItems)
+        foreach (var item in itemList.item_Placeable_Datas)
         {
             Item_Dictionary.Add(item.item_ID, new Item_Placeable_Data(
                 item.item_ID,
@@ -98,82 +111,62 @@ public class ItemManager : MonoBehaviour
         }
 
         // 장비 아이템 로드
-        foreach (var item in itemDataList.equipmentItems)
+        foreach (var item in itemList.item_Equipment_Datas)
         {
-            Item_Dictionary.Add(item.item_ID, new Item_Gear_Data(
-                item.item_ID,
-                item.item_name,
-                item.item_model_in_world,
-                item.item_model_in_inventory,
-                item.equipment_type,
-                item.weight,
-                item.durability_max,
-                item.durability_current,
-                item.item_model_in_equip,
-                item.melee_damage,
-                item.melee_speed,
-                item.guard_rate,
-                item.tool_tier
-            ));
+            switch (item.equipment_type)
+            {
+                case Equipment_Type.HELMET:
+                    //Item_Dictionary.Add(item.item_ID, new Item_Armor_Data())
+                    break;
+                case Equipment_Type.CHESTPLATE:
+                    break;
+                case Equipment_Type.LEGGINGS:
+                    break;
+                case Equipment_Type.BOOTS:
+                    break;
+                case Equipment_Type.SHIELD:
+                    break;
+                case Equipment_Type.ONE_HANDED_SWORD:
+                    break;
+                case Equipment_Type.ONE_HANDED_AXE:
+                    break;
+                case Equipment_Type.ONE_HANDED_HAMMER:
+                    break;
+                case Equipment_Type.TWO_HANDED_SWORD:
+                    break;
+                case Equipment_Type.TWO_HANDED_AXE:
+                    break;
+                case Equipment_Type.TWO_HANDED_HAMMER:
+                    break;
+                case Equipment_Type.BOW:
+                    break;
+                case Equipment_Type.PICKAXE:
+                    break;
+                case Equipment_Type.SHOVEL:
+                    break;
+                case Equipment_Type.HOE:
+                    break;
+            }
+
+
+            //Item_Dictionary.Add(item.item_ID, new Item_Gear_Data(
+            //    item.item_ID,
+            //    item.item_name,
+            //    item.item_model_in_world,
+            //    item.item_model_in_inventory,
+            //    item.equipment_type,
+            //    item.weight,
+            //    item.durability_max,
+            //    item.durability_current,
+            //    item.item_model_in_equip,
+            //    item.melee_damage,
+            //    item.melee_speed,
+            //    item.guard_rate,
+            //    item.tool_tier
+            //));
         }
     }
+    */
 }
 
-[System.Serializable]
-public class ItemDataList
-{
-    public List<ItemJsonStackable> stackableItems;
-    public List<ItemJsonConsumable> consumableItems;
-    public List<ItemJsonPlaceable> placeableItems;
-    public List<ItemJsonEquipment> equipmentItems;
-}
-
-[System.Serializable]
-public class ItemJsonStackable
-{
-    public int item_ID;
-    public string item_name;
-    public string item_model_in_world;
-    public string item_model_in_inventory;
-    public int stack_max;
-    public int stack_current;
-}
-
-[System.Serializable]
-public class ItemJsonConsumable : ItemJsonStackable
-{
-    public float hunger_amount;
-    public float thirst_amount;
-    public float fatigue_amount;
-    public float freshment_max;
-    public float freshment_current;
-}
-
-[System.Serializable]
-public class ItemJsonPlaceable : ItemJsonStackable
-{
-    public Equipment_Type require_tool_type;
-    public int require_tool_tier;
-    public float durability_max;
-    public float durability_current;
-    public string item_model_in_place;
-}
-
-[System.Serializable]
-public class ItemJsonEquipment
-{
-    public int item_ID;
-    public string item_name;
-    public string item_model_in_world;
-    public string item_model_in_inventory;
-    public Equipment_Type equipment_type;
-    public float weight;
-    public float durability_max;
-    public float durability_current;
-    public string item_model_in_equip;
-    public float melee_damage;
-    public float melee_speed;
-    public float guard_rate;
-    public int tool_tier;
-}
 

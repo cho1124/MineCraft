@@ -21,15 +21,45 @@ public enum Equipment_Type
     HOE
 }
 
-public class Item_Dictionary
+public enum Equipment_Armor_Type
 {
-    public static Dictionary<int, Item_Data> item_dictionary { get; private set; }
+    HELMET,
+    CHESTPLATE,
+    LEGGINGS,
+    BOOTS,
+    SHIELD
 
-    public static void Add(int item_ID, Item_Data item_data)
-    {
-        item_dictionary.Add(item_ID, item_data);
-    }
 }
+public enum Equipment_Weapon_Type
+{
+    ONE_HANDED_SWORD,
+    ONE_HANDED_AXE,
+    ONE_HANDED_HAMMER,
+    TWO_HANDED_SWORD,
+    TWO_HANDED_AXE,
+    TWO_HANDED_HAMMER,
+    BOW,
+    PICKAXE,
+    SHOVEL,
+    HOE
+}
+
+
+
+
+
+
+[System.Serializable]
+public class Item_List
+{
+    public List<Item_Stackable_Data> item_Stackable_Datas;
+    
+    public List<Item_Consumable_Data> item_Consumable_Datas;
+    public List<Item_Placeable_Data> item_Placeable_Datas;
+    public List<Item_Equipment_Data> item_Equipment_Datas;
+    //이부분 흠...
+}
+
 
 
 [System.Serializable]
@@ -39,6 +69,8 @@ public class Item_Data : MonoBehaviour
     public string item_name { get; protected set; } //아이템 이름
     public string item_model_in_world { get; protected set; } //바닥에 떨어져있을 때 보여질 아이템의 형태
     public string item_model_in_inventory { get; protected set; } //인벤토리에서 보여질 아이템의 형태
+
+    
 
     public Item_Data(int item_ID, string item_name, string item_model_in_world, string item_model_in_inventory)
     {
@@ -55,6 +87,8 @@ public class Item_Stackable_Data : Item_Data
     public int stack_max { get; protected set; } //겹칠 수 있는 최대 개수
     public int stack_current { get; protected set; }
 
+    
+
     public Item_Stackable_Data(int item_ID, string item_name, string item_model_in_world, string item_model_in_inventory, int stack_max, int stack_current) : 
         base(item_ID, item_name, item_model_in_world,item_model_in_inventory)
     {
@@ -67,6 +101,13 @@ public class Item_Stackable_Data : Item_Data
         this.stack_current = stack_current;
     }
 }
+
+[System.Serializable]
+public class StackableItems
+{
+    public Item_Stackable_Data[] stackableItems;
+}
+
 
 [System.Serializable]
 public class Item_Consumable_Data : Item_Stackable_Data
