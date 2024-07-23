@@ -20,24 +20,36 @@ public class TestParser : MonoBehaviour
 
         public static Dictionary<int, StackableItem> item_dictionary { get; private set; }
 
+        public static void SpawnItem()
+        {
+            Instantiate(item_dictionary[7].item_model_in_worlds, Vector3.zero, Quaternion.identity);
+        }
+
         public static void Add(int item_ID, StackableItem item_data)
         {
             if (!item_dictionary.ContainsKey(item_ID))
             {
                 item_dictionary.Add(item_ID, item_data);
+
+                item_dictionary[item_ID].item_model_in_worlds = Resources.Load<GameObject>(item_dictionary[item_ID].item_model_in_world);
+                item_dictionary[item_ID].item_model_in_inv = Resources.Load<Image>(item_dictionary[item_ID].item_model_in_inventory);
+
+
             }
             else
             {
                 Debug.LogWarning($"Item ID {item_ID} already exists in the dictionary.");
             }
         }
+
+       
+
     }
 
 
 
     void Start()
     {
-
 
         //테스트용 json 파일 >> 나중에는 json 읽어서 해야 해요
         string jsonString = @"
@@ -190,7 +202,12 @@ public class TestParser : MonoBehaviour
 
         Dic_Add(itemData.equipmentItems);
 
-        Debug.Log(Item_Dictionary.item_dictionary[1].item_name);
+        Debug.Log(Item_Dictionary.item_dictionary[7].item_model_in_world);
+
+        Item_Dictionary.SpawnItem();
+
+
+
     }
 
     private void Dic_Add(List<StackableItem> stackableItems)
@@ -288,11 +305,7 @@ public class TestParser : MonoBehaviour
     }
 
 
-    public GameObject GetItemPrefab(string itemName)
-    {
-        GameObject prefab = Resources.Load<GameObject>(itemName);
-        return prefab;
-    }
+    
 
     public Image GetItemImage(string itemName_Inv)
     {
@@ -315,10 +328,10 @@ public class StackableItem
     public string item_name { get; set; }
     public string item_model_in_world { get; set; }
 
-    public GameObject item_model_in_worlds;
-    public Image item_model_in_inv;
 
     public string item_model_in_inventory { get; set; }
+    public GameObject item_model_in_worlds;
+    public Image item_model_in_inv;
     public int stack_max { get; set; }
     public int stack_current { get; set; }
 
