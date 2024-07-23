@@ -51,6 +51,7 @@ public class World : MonoBehaviour
     // blocks
     public Material material;
     public Material transparentMaterial;
+    public Material waterMaterial;
 
     public BlockType[] blockTypes;
     public GameObject ItemBlock;
@@ -76,6 +77,10 @@ public class World : MonoBehaviour
     // 동굴 생성
     public float caveOffset;
     public float caveScale;
+
+
+    // Water
+    public int waterHeight;
 
     // player에 쓰일 디버그 스크린
     public GameObject debugScreen;
@@ -518,7 +523,10 @@ public class World : MonoBehaviour
         }
         else if (yPos > terrainHeight)
         {
-            return 0;
+            if (yPos <= waterHeight)
+                return 20;
+            else
+                return 0;
         }
         else
         {
@@ -625,6 +633,7 @@ public class BlockType
     public string blockName;
     public VoxelMeshData meshData;
     public bool isSolid;
+    public bool isWater;
     public bool renderNeighborFaces;
     public byte opacity;
     public int blockDurability;

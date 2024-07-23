@@ -32,10 +32,11 @@ public class Chunk
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
     List<int> transparentTriangles = new List<int>();
+    List<int> waterTriangles = new List<int>();
 
     List<Color> colors = new List<Color>();
 
-    Material[] materials = new Material[2];
+    Material[] materials = new Material[3];
 
 
 
@@ -60,7 +61,7 @@ public class Chunk
     {
 
         get { return _isActive; }
-    
+
         set
         {
 
@@ -80,7 +81,7 @@ public class Chunk
     public void Init()
     {
 
-   
+
         chunkObject = new GameObject();
 
         meshFilter = chunkObject.AddComponent<MeshFilter>();
@@ -88,6 +89,7 @@ public class Chunk
 
         materials[0] = World.Instance.material;
         materials[1] = World.Instance.transparentMaterial;
+        materials[2] = World.Instance.waterMaterial;
 
         meshRenderer.materials = materials;
         meshCollider = chunkObject.AddComponent<MeshCollider>();
@@ -109,10 +111,10 @@ public class Chunk
         lock (World.Instance.ChunkUpdateThreadLock)
             World.Instance.chunksToUpdate.Add(this);
 
-        
+
     }
 
-    
+
 
     // 여기에 populatechunkData.map이 있었다 20240717
     // Chunk 내의 각 위치에 어떤 블록이 있을지 채운다
@@ -155,6 +157,7 @@ public class Chunk
         vertices.Clear();
         triangles.Clear();
         transparentTriangles.Clear();
+        waterTriangles.Clear();
         uvs.Clear();
         colors.Clear();
         normals.Clear();
@@ -389,7 +392,11 @@ public class Chunk
 
 
             // 현재 면이 외부와 접해있는지 확인
-            if (neighbour != null && World.Instance.blockTypes[neighbour.id].renderNeighborFaces)
+            if (
+                neighbour != null && 
+                World.Instance.blockTypes[neighbour.id].renderNeighborFaces && 
+                !(voxel.properties.isWater && chunkData.map[x,y+1,z].properties.isWater)
+                )
             {
                 float lightLevel = neighbour.globalLightPercent;
                 int faceVertCount = 0;
@@ -401,7 +408,15 @@ public class Chunk
                     vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
                     normals.Add(VoxelData.faceChecks[p]);
                     colors.Add(new Color(0, 0, 0, lightLevel));
-                    AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
+                    if (voxel.properties.isWater)
+                    {
+                        uvs.Add(voxel.properties.meshData.faces[p].vertData[i].uv);
+                    }
+                    else
+                    {
+                        AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
+                    }
+
                     faceVertCount++;
 
 
@@ -417,9 +432,19 @@ public class Chunk
                 }
                 else
                 {
+                    if (voxel.properties.isWater)
+                    {
 
-                    for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-                        transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+                        for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+                            waterTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+
+                    }
+                    else
+                    {
+
+                        for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+                            transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+                    }
 
                 }
 
@@ -443,10 +468,11 @@ public class Chunk
         mesh.vertices = vertices.ToArray();
         // mesh.triangles = triangles.ToArray();
 
-        mesh.subMeshCount = 2;
+        mesh.subMeshCount = 3;
 
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
+        mesh.SetTriangles(waterTriangles.ToArray(), 2);
         mesh.uv = uvs.ToArray();
         mesh.colors = colors.ToArray();
         mesh.normals = normals.ToArray();
