@@ -325,9 +325,10 @@ public class Chunk
         // 현재 블록 ID 저장
         byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck].id;
 
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, World.Instance._player.orientation);
         // 새로운 블록 ID로 설정
-        chunkData.map[xCheck, yCheck, zCheck].id = newID;
-        World.Instance.worldData.AddToModifiedChunkList(chunkData);
+        //chunkData.map[xCheck, yCheck, zCheck].id = newID;
+        //World.Instance.worldData.AddToModifiedChunkList(chunkData);
 
 
         lock (World.Instance.ChunkUpdateThreadLock)
@@ -498,6 +499,68 @@ public class Chunk
     // 아마 이 프로젝트에서 가장 중요한 메서드
     // 복셀의 각 면을 검사해서 보이는 면만 메쉬 데이터에 추가
     // 이 메소드를 UpdateChunk에서 for문을 3번으로 돌려서 한 Chunk에 보이는 면만 렌더링하니 게임성능이 최적화
+    //public void UpdateMeshData(Vector3 pos)
+    //{
+    //
+    //    int x = Mathf.FloorToInt(pos.x);
+    //    int y = Mathf.FloorToInt(pos.y);
+    //    int z = Mathf.FloorToInt(pos.z);
+    //
+    //    //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id;
+    //    byte blockID = chunkData.map[x, y, z].id;
+    //    //bool renderNeighborFaces = World.Instance.blockTypes[blockID].renderNeighborFaces;
+    //    VoxelState voxel = chunkData.map[x, y, z];
+    //
+    //    // 블록은 6면체
+    //    for (int p = 0; p < 6; p++)
+    //    {
+    //
+    //        // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
+    //        // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
+    //        // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
+    //        VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
+    //
+    //        // 현재 면이 외부와 접해있는지 확인
+    //        if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
+    //        {
+    //            float lightLevel = neighbor.globalLightPercent;
+    //            int faceVertCount = 0;
+    //            for (int i =0; i<voxel.properties.meshData.faces[p].vertData.Length; i++)
+    //            {
+    //                //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
+    //                vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].GetRotatedPosition(new Vector3(0,180f,0)));
+    //                //normals.Add(voxel.properties.meshData.faces[p].normal);
+    //                normals.Add(VoxelData.faceChecks[p]);
+    //                colors.Add(new Color(0, 0, 0, lightLevel));
+    //                AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
+    //                faceVertCount++;
+    //
+    //            }
+    //
+    //            if (!voxel.properties.renderNeighborFaces)
+    //            {
+    //
+    //                for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+    //                    triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+    //
+    //            }
+    //            else
+    //            {
+    //
+    //                for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
+    //                    transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
+    //
+    //            }
+    //
+    //            vertexIndex += faceVertCount;
+    //
+    //
+    //
+    //        }
+    //    }
+    //
+    //}
+
     public void UpdateMeshData(Vector3 pos)
     {
 
@@ -510,9 +573,59 @@ public class Chunk
         //bool renderNeighborFaces = World.Instance.blockTypes[blockID].renderNeighborFaces;
         VoxelState voxel = chunkData.map[x, y, z];
 
+
+        float rot = 0f;
+        switch (voxel.orientation)
+        {
+            case 0:
+                rot = 180f;
+                break;
+            case 5:
+                rot = 270f;
+                break;
+            case 1:
+                rot = 0f;
+                break;
+            default:
+                rot = 90f;
+                break;
+        }
+
+
+
+
         // 블록은 6면체
         for (int p = 0; p < 6; p++)
         {
+
+
+            int translatedP = p;
+            
+            if (voxel.orientation != 1)
+            {
+                if (voxel.orientation == 0)
+                {
+                    if (p == 0) translatedP = 1;
+                    else if (p == 1) translatedP = 0;
+                    else if (p == 4) translatedP = 5;
+                    else if (p == 5) translatedP = 4;
+                }
+                else if (voxel.orientation == 5)
+                {
+                    if (p == 0) translatedP = 5;
+                    else if (p == 1) translatedP = 4;
+                    else if (p == 4) translatedP = 0;
+                    else if (p == 5) translatedP = 1;
+                }
+                else if (voxel.orientation == 4)
+                {
+                    if (p == 0) translatedP = 4;
+                    else if (p == 1) translatedP = 5;
+                    else if (p == 4) translatedP = 1;
+                    else if (p == 5) translatedP = 0;
+                }
+            }
+
 
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
@@ -524,13 +637,25 @@ public class Chunk
             {
                 float lightLevel = neighbor.globalLightPercent;
                 int faceVertCount = 0;
-                for (int i =0; i<voxel.properties.meshData.faces[p].vertData.Length; i++)
+
+
+                for (int i = 0; i < voxel.properties.meshData.faces[p].vertData.Length; i++)
                 {
-                    vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
-                    normals.Add(voxel.properties.meshData.faces[p].normal);
+                    VertData vertData = voxel.properties.meshData.faces[p].GetVertData(i);
+                    vertices.Add(pos + vertData.GetRotatedPosition(new Vector3(0, rot, 0)));
+                    normals.Add(VoxelData.faceChecks[p]);
                     colors.Add(new Color(0, 0, 0, lightLevel));
-                    AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
+                    AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
                     faceVertCount++;
+
+
+                    //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
+                    //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].GetRotatedPosition(new Vector3(0, 180f, 0)));
+                    //normals.Add(voxel.properties.meshData.faces[p].normal);
+
+
+
+
 
                 }
 
@@ -550,57 +675,7 @@ public class Chunk
                 }
 
                 vertexIndex += faceVertCount;
-                // 현재 Voxel의 ID를 가져옴
-                //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z];
 
-
-
-
-
-                //// 각 면의 정점을 추가
-                //// 한 면은 사각형이니까 4번...
-                //for (int i = 0; i < 4; i++)
-                //{
-                //    vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, i]]);
-                //}
-                //
-                //for (int i = 0; i < 4; i++)
-                //{
-                //    normals.Add(VoxelData.faceChecks[p]);
-                //}
-                //// 텍스쳐 좌표 추가
-                //AddTexture(World.Instance.blockTypes[blockID].GetTextureID(p));
-                //
-                //float lightLevel = neighbor.globalLightPercent;
-                //
-                //colors.Add(new Color(0, 0, 0, lightLevel));
-                //colors.Add(new Color(0, 0, 0, lightLevel));
-                //colors.Add(new Color(0, 0, 0, lightLevel));
-                //colors.Add(new Color(0, 0, 0, lightLevel));
-                //
-                //if (!World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
-                //{
-                //    triangles.Add(vertexIndex);
-                //    triangles.Add(vertexIndex + 1);
-                //    triangles.Add(vertexIndex + 2);
-                //    triangles.Add(vertexIndex + 2);
-                //    triangles.Add(vertexIndex + 1);
-                //    triangles.Add(vertexIndex + 3);
-                //}
-                //else
-                //{
-                //    transparentTriangles.Add(vertexIndex);
-                //    transparentTriangles.Add(vertexIndex + 1);
-                //    transparentTriangles.Add(vertexIndex + 2);
-                //    transparentTriangles.Add(vertexIndex + 2);
-                //    transparentTriangles.Add(vertexIndex + 1);
-                //    transparentTriangles.Add(vertexIndex + 3);
-                //
-                //    // 삼각형 인덱스 추가
-                //}
-                //
-                //// 다음면의 첫번째 정점 인덱스 설정하기 위해 4만큼 증가
-                //vertexIndex += 4;
 
 
             }

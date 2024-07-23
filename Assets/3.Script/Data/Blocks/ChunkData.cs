@@ -20,12 +20,6 @@ public class ChunkData
             y = value.y;
         }
 
-
-
-
-
-
-
     }
 
 
@@ -35,9 +29,6 @@ public class ChunkData
 
     [HideInInspector]
     public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-
-
-
 
     public void Populate()
     {
@@ -59,6 +50,24 @@ public class ChunkData
         }
 
         World.Instance.worldData.AddToModifiedChunkList(this);
+
+
+    }
+
+    public void ModifyVoxel (Vector3Int pos, byte _id, int direction)
+    {
+        if (map[pos.x, pos.y, pos.z].id == _id)
+            return;
+
+        VoxelState voxel = map[pos.x, pos.y, pos.z];
+        BlockType newVoxel = World.Instance.blockTypes[_id];
+
+        voxel.id = _id;
+        voxel.orientation = direction;
+
+        //chunkData.map[xCheck, yCheck, zCheck].id = newID;
+        World.Instance.worldData.AddToModifiedChunkList(this);
+
 
 
     }

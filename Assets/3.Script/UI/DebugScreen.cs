@@ -30,6 +30,26 @@ public class DebugScreen : MonoBehaviour
         debugtext += "\n\n";
         debugtext += "XYZ : " + Mathf.FloorToInt(world.player.transform.position.x) + " / " + Mathf.FloorToInt(world.player.transform.position.y) + " / " + Mathf.FloorToInt(world.player.transform.position.z) + "\n";
         //debugtext += "Chunk : " + world.playerChunkCoord.x + " / " + world.playerChunkCoord.z;
+        
+        string direction = "";
+        switch(world._player.orientation)
+        {
+            case 0:
+                direction = "South";
+                break;
+            case 5:
+                direction = "East";
+                break;
+            case 1:
+                direction = "North";
+                break;
+            default:
+                direction = "West";
+                break;
+        }
+
+        debugtext += "\n";
+        debugtext += "Direction Facing : " + direction + "\n";
         text.text = debugtext;
 
         if (timer > 1f)

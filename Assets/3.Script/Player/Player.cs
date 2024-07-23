@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     public Text selectedBlockText;
     public byte selectedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
 
+    public int orientation;
 
 
 
@@ -92,6 +93,17 @@ public class Player : MonoBehaviour
     {
         GetPlayerInputs();
         PlaceCursorBlocks();
+
+        Vector3 XZDirection = transform.forward;
+        XZDirection.y = 0;
+        if (Vector3.Angle(XZDirection, Vector3.forward) <= 45)
+            orientation = 0;
+        else if (Vector3.Angle(XZDirection, Vector3.right) <= 45)
+            orientation = 5;
+        else if (Vector3.Angle(XZDirection, Vector3.back) <= 45)
+            orientation = 1;
+        else
+            orientation = 4;
     }
 
 

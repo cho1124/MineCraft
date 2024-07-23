@@ -20,6 +20,7 @@ public class World : MonoBehaviour
 
     // 플레이어
     public Transform player;
+    public Player _player;
     public Vector3 spawnPoint;
     public new Camera camera;
 
@@ -103,6 +104,8 @@ public class World : MonoBehaviour
 
 
         appPath = Application.persistentDataPath;
+
+        _player = player.GetComponent<Player>();
     }
 
     public WorldData worldData;
@@ -262,22 +265,22 @@ public class World : MonoBehaviour
 
 
 
-    void LoadWorld()
-    {
-
-        for (int x = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; x++)
-        {
-            for (int z = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; z++)
-            {
-                worldData.LoadChunk(new Vector2Int(x, z));
-
-
-            }
-        }
-
-
-
-    }
+    //void LoadWorld()
+    //{
+    //
+    //    for (int x = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; x++)
+    //    {
+    //        for (int z = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; z++)
+    //        {
+    //            worldData.LoadChunk(new Vector2Int(x, z));
+    //
+    //
+    //        }
+    //    }
+    //
+    //
+    //
+    //}
 
 
     //void UpdateChunks()
@@ -364,7 +367,7 @@ public class World : MonoBehaviour
             {
                 VoxelMod v = queue.Dequeue();
 
-                worldData.SetVoxel(v.position, v.id);
+                worldData.SetVoxel(v.position, v.id, 1);
 
                 //if (v == null)
                 //{
