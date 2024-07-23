@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8330188244525651748}
   - component: {fileID: 8496470476502958843}
   m_Layer: 0
-  m_Name: chicken_Baby
+  m_Name: Chicken_Baby
   m_TagString: Animals
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14a8024aec2ceee42be937a8805782b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   babyPrefab: {fileID: 740167545552832187}
   hungerLevel: 10
@@ -124,7 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   babyPrefab: {fileID: 740167545552832187}
   hungerLevel: 10

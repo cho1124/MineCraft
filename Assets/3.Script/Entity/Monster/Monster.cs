@@ -15,24 +15,21 @@ public class Monster : Entity
     ===>(혹시 어딘가 끼어 움직이지 못하고 있는 상황 대비) 15초간 3f이상의 좌표 변동이 없으면 180도 회전 하도록 해둠 
     ====> 플레이어 감지하면 플레이어에게 raycast 쏘면서 한동안 chase(7초) 함 
     =====> 플레이어 움직임 좀더 자연스럽게 움직이도록 일정 시간마다 랜덤 방향으로 회전하고 이동하고 또 일정 이후 상태 변경하도록
-
-
-    확인할것
-    ★ 시작하고 일정시간 지나면 갑자기 다들 제자리에서....발광함...(매우큰문제..)
-    GetRandomPosition()  에 있는 목적지 생성 로그 무한으로 찎힘
-
-
-    확인한것
-    1. 왠지 모르겠는데 시작하자마자 볼링공처럼 한번씩 엎어짐
-    => 시작 상태 walk인거를 idle로 고쳤더니 괜찮아짐 
  
-    3. 플레이어랑 오브젝트들 인지하지 못하는 것 같음 
-    => 플레이어는 정확하게 인식하고 있음
- 
+    <공격>
+    몬스터는 ObstacleDetector 스크립트(몬스터에게 있는 오브젝트인 투명한 큐브에 있음)를 
+    사용하여 플레이어와 동물을 감지
+    플레이어인지 동물인지 확인하고 chaseTarget코루틴을 시작함
+    chaseTarget코루틴에서는 raycast를 통해 일정시간 목표를 추적하고,
+    목표가 감지되면 목표의 위치를 settarget 메서드를 활용해 몬스터에 전달->몬스터는 chase 상태가 됨->목표위치로 이동하고 공격 범위 내면 attack상태
+    최대추적거리 내에 있는 동안 계속 추적
+    목표가 범위를 벗어나거나 시간이 경과하면 추적을 종료하고, EndChaseAndWander 메서드를 호출하여 다시 랜덤 상태로 전환
+
+
     */
 
     //상태 및 동작 관련 변수
-    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight }
+    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight,Attack }
     private MonsterState currentState; // 몬스터의 현재상태 
 
     //참조를 위한 변수
@@ -64,11 +61,27 @@ public class Monster : Entity
     private Coroutine stateCoroutine;
     private bool isGrounded = true; // 몬스터가 바닥에 있는지 여부를 저장
 
+    public float attackRange = 1.5f; // 공격 범위
+
+    private Vector3 originalColliderSize;
+    private Vector3 expandedColliderSize;
+
+    private BoxCollider boxCollider;
+
+    //플레이어와 동물 감지 추적 관련
+    private float lastPlayerDetectionTime;
+    private float lastAnimalDetectionTime;
+    public float detectionCooldown = 2f; // 감지 쿨다운 시간
+    private Coroutine chaseCoroutine;
+
     protected override void Start()
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
         rb = GetComponent<Rigidbody>();
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
+        boxCollider = GetComponent<BoxCollider>();
+        originalColliderSize = boxCollider.size;
+        expandedColliderSize = originalColliderSize * 3;
         ChangeState(MonsterState.Idle);
         lastPosition = transform.position;
         lastPositionCheckTime = Time.time;
@@ -99,6 +112,9 @@ public class Monster : Entity
             case MonsterState.TurnRight:
                 TurnRight();
                 break;
+            case MonsterState.Attack:
+                AttackTarget();
+                break;
         }
     }
 
@@ -125,7 +141,7 @@ public class Monster : Entity
             isGrounded = true; // 바닥에 착지했음을 표시
         }
 
-        if (collision.gameObject.CompareTag("Tool")) {
+        if (collision.gameObject.CompareTag("Weapon")) {
             TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
             Debug.Log($"{collision}에게 {name}공격받음~~");
         }
@@ -166,6 +182,9 @@ public class Monster : Entity
             case MonsterState.TurnRight:
                 StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
                 break;
+            case MonsterState.Attack:
+                StartCoroutine(StateDuration(MonsterState.Attack, 2f));
+                break;
         }
     }
 
@@ -204,9 +223,13 @@ public class Monster : Entity
     private void Chase() 
     {
         MoveTowardsTarget(runSpeed);
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < attackRange)
         {
-            EndChaseAndWander(); // 추적 종료 후 다른 상태로 전환
+            ChangeState(MonsterState.Attack);
+        }
+        else if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            EndChaseAndWander();
         }
     }
 
@@ -219,22 +242,32 @@ public class Monster : Entity
         Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
 
         // 몬스터의 현재 위치를 newPosition으로 업데이트
-        transform.position = newPosition;
+        rb.MovePosition(newPosition);
+        //Rigidbody를 사용하여 객체를 이동시키는 방법입니다. 이는 물리 엔진을 통해 이동을 처리하므로, 충돌 및 기타 물리적 상호작용을 고려하여 객체를 이동시킵니다. 
 
         // 몬스터가 이동할 때 바라보는 방향을 갱신
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    private Vector3 GetRandomPosition() //몬스터가 이동할 새로운 랜덤 위치를 생성
+    private Vector3 GetRandomPosition()
     {
         Vector3 randomPosition;
+        int attempt = 0;
         do
         {
             float randomDistance = Random.Range(1f, walkRadius);
             float randomAngle = Random.Range(0f, 360f);
             Vector3 randomDirection = new Vector3(Mathf.Sin(randomAngle), 0, Mathf.Cos(randomAngle)).normalized;
             randomPosition = transform.position + randomDirection * randomDistance;
+
+            attempt++;
+            if (attempt > 10)
+            {
+                // 너무 많은 시도 후에도 유효한 위치를 찾지 못하면 현재 위치 반환
+                return transform.position;
+            }
         } while (Vector3.Distance(transform.position, randomPosition) < 1f);
+
         return randomPosition;
     }
 
@@ -296,11 +329,68 @@ public class Monster : Entity
         ChangeState(GetRandomState());
     }
 
+    private void AttackTarget()
+    {
+        // 몬스터와 목표 위치 사이의 거리가 공격 범위 내에 있는지 확인합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < attackRange)
+        {
+            Debug.Log($"Agent{name} 가 공격중.!");
+            animator.SetBool("Fight", true); // 공격 애니메이션 bool 파라미터 설정
+                                             // 머리 위치에서 앞 방향으로 레이캐스트를 발사하여 공격을 시도합니다.
+
+            // 일시적으로 콜라이더 크기를 늘립니다.
+            StartCoroutine(ExpandCollider());
+
+            RaycastHit hit;
+            if (Physics.Raycast(head.position, head.forward, out hit, attackRange))
+            {
+                // 레이캐스트가 충돌한 객체가 IDamageable 인터페이스를 구현하고 있는지 확인합니다.
+                if (hit.transform.GetComponent<IDamageable>() != null)
+                {
+                    // 충돌한 객체에 데미지를 입힙니다.
+                    hit.transform.GetComponent<IDamageable>().TakeDamage(damage);
+                }
+            }
+        }
+        EndChaseAndWander();
+    }
+
+    private IEnumerator ExpandCollider()
+    {
+        boxCollider.size = expandedColliderSize;
+        yield return new WaitForSeconds(1f); // 콜라이더를 확장된 상태로 유지할 시간
+        boxCollider.size = originalColliderSize;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<IDamageable>() != null)
+        {
+            other.GetComponent<IDamageable>().TakeDamage(damage);
+        }
+    }
+
     public void JumpAndChangeState()
     {
         ChangeState(MonsterState.Jump);
         ChangeState(GetRandomState());
     }
 
+    private IEnumerator ChaseTarget(Transform target, bool isPlayer)
+    {
+        float chaseDuration = isPlayer ? ChaseDuration : ChaseDuration / 2; // 플레이어는 더 오래 추적
+        float startTime = Time.time;
+
+        while (Time.time < startTime + chaseDuration)
+        {
+            if (target != null)
+            {
+                SetTarget(target.position);
+            }
+            yield return null;
+        }
+
+        EndChaseAndWander();
+    }
 }
     

@@ -25,26 +25,27 @@ public class Creeper : Monster, IDamageable
 
     }
 
-    private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
-    {
-        base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
-
-        // 충돌한 물체가 플레이어 또는 동물인지 확인
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals"))
-        {
-            IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-            if (damageable != null)
-            {
-                damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
-            }
-        }
-    }
+  //  private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
+  //  {
+  //      base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
+  //
+  //      // 충돌한 물체가 플레이어 또는 동물인지 확인
+  //      if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals"))
+  //      {
+  //          IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+  //          if (damageable != null)
+  //          {
+  //              damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
+  //          }
+  //      }
+  //  }
 
     private void HandleDeath()
     {
         /*
         크리퍼의 콜라이더가 3배로 천천히 커지면서 
-        콜라이더에 닿는 오브젝트들을 모두 파괴시켜야함 
+        콜라이더에 감지된 오브젝트가 동물이나 플레이어 태그를 가지고 있으면 체력을 100감소
+        이외의 콜라이더에 닿는 오브젝트들을 모두 파괴시켜야함 
         파티클로 폭발하는듯한 이펙트가 나와야함 (파티클은 큐브모양. material은 creeper 와 같은 material로 
         */
         StartCoroutine(ExplosionSequence());
@@ -78,28 +79,31 @@ public class Creeper : Monster, IDamageable
         {
             if (hitCollider.gameObject != gameObject) // 자기 자신은 제외
             {
-                // Rigidbody가 있는 경우 폭발력을 가함
-                Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    Vector3 explosionDirection = hitCollider.transform.position - transform.position;
-                    rb.AddExplosionForce(explosionForce, transform.position, coll.bounds.extents.magnitude);
-                    // Rigidbody가 있는 경우, 폭발력을 가합니다. AddExplosionForce는 지정된 힘으로 오브젝트를 밀어냅니다.
-                }
-
                 // Player 또는 Animals 태그를 가진 물체의 체력 감소
                 if (hitCollider.gameObject.CompareTag("Player") || hitCollider.gameObject.CompareTag("Animals"))
                 {
                     IDamageable damageable = hitCollider.GetComponent<IDamageable>();
                     if (damageable != null)
                     {
-                        damageable.TakeDamage(50); // 체력 50 감소
+                        damageable.TakeDamage(100); // 체력 100 감소
                         Debug.Log($"체력 감소: {hitCollider.gameObject.name}");
                     }
                 }
-                // 폭발 범위 내의 모든 오브젝트 파괴
-                Destroy(hitCollider.gameObject);
-                Debug.Log($"오브젝트 파괴: {hitCollider.gameObject.name}");
+                else
+                {
+                    // Rigidbody가 있는 경우 폭발력을 가함
+                    Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        Vector3 explosionDirection = hitCollider.transform.position - transform.position;
+                        rb.AddExplosionForce(explosionForce, transform.position, coll.bounds.extents.magnitude);
+                        // Rigidbody가 있는 경우, 폭발력을 가합니다. AddExplosionForce는 지정된 힘으로 오브젝트를 밀어냅니다.
+                    }
+
+                    // Player 또는 Animals 태그가 아닌 모든 오브젝트 파괴
+                    Destroy(hitCollider.gameObject);
+                    Debug.Log($"오브젝트 파괴: {hitCollider.gameObject.name}");
+                }
             }
         }
 
@@ -119,16 +123,6 @@ public class Creeper : Monster, IDamageable
 
         // OnDie 코루틴 호출
         StartCoroutine(entity.OnDie());
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (coll != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, coll.bounds.extents.magnitude * explosionScaleFactor);
-            // Gizmos를 사용하여 크리퍼의 위치를 중심으로 콜라이더의 반경에 해당하는 와이어 프레임 구를 그립니다.
-        }
     }
 
 }

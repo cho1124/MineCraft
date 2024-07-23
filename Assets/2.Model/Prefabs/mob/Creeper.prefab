@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2416197615417609654}
   - component: {fileID: -668679899345818498}
   m_Layer: 0
-  m_Name: creeper
+  m_Name: Creeper
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,6 +78,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffad103a0fa49c4b90f2e5403a3b768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 2015929771698643318}
   walkRadius: 10
@@ -105,7 +107,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 84cb34e71404cfa468384153961aab3c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -123,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4beed0dca6eaf419a8c0f9c41e5060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 2015929771698643318}
   walkRadius: 5
@@ -141,6 +145,8 @@ MonoBehaviour:
   explosionEffectPrefab: {fileID: 8790660282031537731, guid: b44945912a87a15418eeba76d4b69a53, type: 3}
   explosionScaleFactor: 3
   explosionDuration: 2
+  explosionForce: 100000
+  showExplosionRange: 1
 --- !u!1 &4032110391933622099
 GameObject:
   m_ObjectHideFlags: 0

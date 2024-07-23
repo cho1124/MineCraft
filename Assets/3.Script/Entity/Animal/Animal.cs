@@ -19,6 +19,8 @@ public class Animal : Entity, IDamageable {
      
      */
 
+    public GameObject beafPrefab; // beaf 프리팹을 인스펙터에서 설정
+
     // 성장 관련 변수들
     public GameObject adultPrefab; //  성인 상태의 프리팹
     public GameObject babyPrefab; // 새끼 상태의 프리팹
@@ -40,7 +42,7 @@ public class Animal : Entity, IDamageable {
     // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
     private float spawnCooldown = 30f; // 쿨타임 시간
-    private const int collisionThreshold = 5; // 충돌 임계값
+    private const int collisionThreshold = 10; // 충돌 임계값
     protected Queue<int> recentAnimals = new Queue<int>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<int, int> animalCount = new Dictionary<int, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
@@ -592,5 +594,55 @@ public class Animal : Entity, IDamageable {
     {
         Health -= damage;
         StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
+
+        if (Health <= 0)
+        {
+            OnDeath();
+        }
+
+    }
+
+    protected virtual void OnDeath()
+    {
+        // 죽었을 때 고기로 변하는 로직 추가
+        Vector3 position = transform.position;
+        Quaternion rotation = transform.rotation;
+
+        int meatCount = 1; // 기본값
+
+        // 충돌한 오브젝트의 이름에 따라 고기 개수 결정
+        string animalName = gameObject.name;
+
+        if (animalName.Contains("Cat"))
+        {
+            meatCount = Random.Range(1, 3);
+        }
+        else if (animalName.Contains("Dog"))
+        {
+            meatCount = Random.Range(2, 4);
+        }
+        else if (animalName.Contains("Chicken"))
+        {
+            meatCount = Random.Range(1, 4);
+        }
+        else if (animalName.Contains("Lion"))
+        {
+            meatCount = Random.Range(3, 6);
+        }
+
+        if (animalName.Contains("Baby"))
+        {
+            meatCount = Mathf.CeilToInt(meatCount / 2.0f);
+        }
+
+        // 기존 동물 오브젝트를 삭제
+        Destroy(gameObject);
+
+        // 새로운 beaf 프리팹 인스턴스 생성
+        for (int i = 0; i < meatCount; i++)
+        {
+            Vector3 spawnPosition = position + new Vector3(i * 0.5f, 0, 0);
+            Instantiate(beafPrefab, spawnPosition, rotation);
+        }
     }
 }

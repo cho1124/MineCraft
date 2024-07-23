@@ -582,6 +582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffad103a0fa49c4b90f2e5403a3b768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 4123892497744069405}
   walkRadius: 10
@@ -609,7 +611,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 895316790d3b47f46841bddf3f3e5e36, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1

@@ -29,13 +29,12 @@ using Newtonsoft.Json;
     }
 
     [System.Serializable]
-    public class EntityData {
+    public class EntityData
+    {
         public List<Entity> entities = new List<Entity>();
     }
 
-
-
-    public class EntityEditor : EditorWindow {
+public class EntityEditor : EditorWindow {
         private EntityData entityData = new EntityData();
         private string jsonFilePath = "Entities.json";
 

@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 920090740847476986}
   - component: {fileID: 5737227684897110945}
   m_Layer: 0
-  m_Name: penguin_Baby
+  m_Name: Penguin_Baby
   m_TagString: Animals
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -342,22 +342,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e89eedc93e30d45b1da8e9798de2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adultPrefab: {fileID: 0}
-  babyPrefab: {fileID: 0}
-  walkRadius: 10
-  runSpeed: 4
-  idleTime: 3
-  minWalkTime: 5
-  maxWalkTime: 8
-  jumpForce: 4
-  detectionDistance: 1
-  ChaseDuration: 2
-  JumpDuration: 3
-  positionCheckInterval: 15
-  minPositionChange: 3
+  type: 
+  damage: 10
+  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
+  adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
+  babyPrefab: {fileID: 6172145746540233397}
   hungerLevel: 7
-  heartObjectPrefab: {fileID: 0}
-  shockObjectPrefab: {fileID: 0}
+  baseSpeed: 0
+  dynamicNavMesh: {fileID: 0}
+  heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
+  shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
+  detectionDistance: 1
+  detectionAngle: 45
+  detectionRays: 5
+  wanderRadius: 30
 --- !u!114 &920090740847476986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +369,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
   babyPrefab: {fileID: 6172145746540233397}
   hungerLevel: 6

@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 6389368554289155211}
   - component: {fileID: 3262329574997193558}
   m_Layer: 0
-  m_Name: lion
+  m_Name: Lion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -508,7 +508,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea0edd52946548f4cb81e685c311b1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1553991042791506}
   babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
   hungerLevel: 6
@@ -532,7 +535,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e532fce7b6785b2488b48b4bee44d720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  damage: 10
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1553991042791506}
   babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
   hungerLevel: 6

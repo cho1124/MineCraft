@@ -39,23 +39,23 @@ public class Slime : Monster, IDamageable
    // }
 
 
-    private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
-    { 
-        base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
-
-        // 충돌한 물체가 플레이어 또는 동물인지 확인
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals")) {
-            IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-            if (damageable != null) {
-                damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
-            }
-        }
-    }
+   // private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
+   // { 
+   //     base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
+   //
+   //     // 충돌한 물체가 플레이어 또는 동물인지 확인
+   //     if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals")) {
+   //         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+   //         if (damageable != null) {
+   //             damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
+   //             Debug.Log($"{collision}에게 공격!");
+   //         }
+   //     }
+   // }
 
     private void HandleDeath() 
     {
         deathPosition = transform.position; // 죽은 위치 저장
-        Debug.Log("슬라임 분열 시작");
 
             Vector3 spawnPosition1 = deathPosition + new Vector3(-0.5f, 0, 0);
         Vector3 spawnPosition2 = deathPosition + new Vector3(0.5f, 0, 0);
@@ -74,8 +74,6 @@ public class Slime : Monster, IDamageable
     private void InitializeNewSlime(GameObject newSlime) //슬라임 애니메이션 클립에서 scale 조정하고 있어서 안 작아지는거였음 새로 애니메이션컨트롤러 만들어서 
                                                          // 복제된 슬라임의 컨트롤러를 scale 작아진 컨트롤러(slime_s)로 바꿈
     {
-        Debug.Log("슬라임 초기화!");
-
         // 슬라임의 크기를 반으로 줄임
         newSlime.transform.localScale = transform.localScale * 0.5f;
 
