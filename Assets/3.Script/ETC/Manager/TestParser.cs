@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using System;
+using UnityEngine.UI;
 
 public class TestParser : MonoBehaviour
 {
@@ -19,23 +20,38 @@ public class TestParser : MonoBehaviour
 
         public static Dictionary<int, StackableItem> item_dictionary { get; private set; }
 
+        public static void SpawnItem()
+        {
+            Instantiate(item_dictionary[7].item_model_in_worlds, Vector3.zero, Quaternion.identity);
+        }
+
         public static void Add(int item_ID, StackableItem item_data)
         {
             if (!item_dictionary.ContainsKey(item_ID))
             {
                 item_dictionary.Add(item_ID, item_data);
+
+                item_dictionary[item_ID].item_model_in_worlds = Resources.Load<GameObject>(item_dictionary[item_ID].item_model_in_world);
+                item_dictionary[item_ID].item_model_in_inv = Resources.Load<Image>(item_dictionary[item_ID].item_model_in_inventory);
+
+
             }
             else
             {
                 Debug.LogWarning($"Item ID {item_ID} already exists in the dictionary.");
             }
         }
+
+       
+
     }
 
 
 
     void Start()
     {
+
+        //테스트용 json 파일 >> 나중에는 json 읽어서 해야 해요
         string jsonString = @"
         {
             ""stackableItems"": [
@@ -177,27 +193,65 @@ public class TestParser : MonoBehaviour
         ItemData itemData = JsonConvert.DeserializeObject<ItemData>(jsonString);
 
         // 파싱된 데이터 사용 예제
-        foreach (var item in itemData.stackableItems)
-        {
-            Debug.Log("SADAUSHVUC : " +  item.item_ID);
+        
+        Dic_Add(itemData.stackableItems); 
 
-            Item_Dictionary.Add(item.item_ID, item);
+        Dic_Add(itemData.consumableItems);
+
+        Dic_Add(itemData.placeableItems);
+
+        Dic_Add(itemData.equipmentItems);
+
+        Debug.Log(Item_Dictionary.item_dictionary[7].item_model_in_world);
+
+        Item_Dictionary.SpawnItem();
+
+
+
+    }
+
+    private void Dic_Add(List<StackableItem> stackableItems)
+    {
+        foreach (var item in stackableItems)
+        {
+            Debug.Log("SADAUSHVUC : " + item.item_ID);
+
             
 
 
-        }
+            Item_Dictionary.Add(item.item_ID, item);
 
-        foreach (var item in itemData.consumableItems)
+
+        }
+    }
+
+    private void Dic_Add(List<ConsumableItem> consumableItems)
+    {
+        foreach (var item in consumableItems)
         {
             Debug.Log("Consumable Item Name: " + item.item_name);
-        }
 
-        foreach (var item in itemData.placeableItems)
+            Item_Dictionary.Add(item.item_ID, item);
+
+        }
+    }
+
+    private void Dic_Add(List<PlaceableItem> placeableItems)
+    {
+
+        foreach (var item in placeableItems)
         {
             Debug.Log("Placeable Item Name: " + item.item_name);
+
+            Item_Dictionary.Add(item.item_ID, item);
         }
 
-        foreach (var item in itemData.equipmentItems)
+
+    }
+
+    private void Dic_Add(List<EquipmentItem> equipmentItems)
+    {
+        foreach (var item in equipmentItems)
         {
             Debug.Log("Equipment Item ID: " + item.item_ID);
 
@@ -248,10 +302,18 @@ public class TestParser : MonoBehaviour
 
             Item_Dictionary.Add(item.item_ID, item);
         }
-        Debug.Log(Item_Dictionary.item_dictionary[1].item_name);
-
-
     }
+
+
+    
+
+    public Image GetItemImage(string itemName_Inv)
+    {
+        Image image = Resources.Load<Image>(itemName_Inv);
+        return image;
+    }
+
+
 }
 public class Voxel
 {
@@ -260,13 +322,16 @@ public class Voxel
     public int z { get; set; }
     public string type { get; set; }
 }
-
 public class StackableItem
 {
     public int item_ID { get; set; }
     public string item_name { get; set; }
     public string item_model_in_world { get; set; }
+
+
     public string item_model_in_inventory { get; set; }
+    public GameObject item_model_in_worlds;
+    public Image item_model_in_inv;
     public int stack_max { get; set; }
     public int stack_current { get; set; }
 
