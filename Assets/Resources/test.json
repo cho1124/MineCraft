@@ -1,25 +1,133 @@
 {
-    "entities": [
+  "stackableItems": [
+    {
+      "item_ID": 1,
+      "item_name": "Iron Ore",
+      "item_model_in_world": "Prefabs/IronOre",
+      "item_model_in_inventory": "Icons/IronOre",
+      "stack_max": 64,
+      "stack_current": 10
+    },
+    {
+      "item_ID": 2,
+      "item_name": "Gold Ore",
+      "item_model_in_world": "Prefabs/GoldOre",
+      "item_model_in_inventory": "Icons/GoldOre",
+      "stack_max": 64,
+      "stack_current": 5
+    }
+  ],
+  "consumableItems": [
+    {
+      "item_ID": 3,
+      "item_name": "Bread",
+      "item_model_in_world": "Prefabs/Bread",
+      "item_model_in_inventory": "Icons/Bread",
+      "stack_max": 10,
+      "stack_current": 5,
+      "hunger_amount": 20.0,
+      "thirst_amount": 0.0,
+      "fatigue_amount": 5.0,
+      "freshment_max": 100.0,
+      "freshment_current": 50.0
+    },
+    {
+      "item_ID": 4,
+      "item_name": "Apple",
+      "item_model_in_world": "Prefabs/Apple",
+      "item_model_in_inventory": "Icons/Apple",
+      "stack_max": 20,
+      "stack_current": 10,
+      "hunger_amount": 10.0,
+      "thirst_amount": 5.0,
+      "fatigue_amount": 2.0,
+      "freshment_max": 80.0,
+      "freshment_current": 40.0
+    }
+  ],
+  "placeableItems": [
+    {
+      "item_ID": 5,
+      "item_name": "Stone Block",
+      "item_model_in_world": "Prefabs/StoneBlock",
+      "item_model_in_inventory": "Icons/StoneBlock",
+      "stack_max": 64,
+      "stack_current": 20,
+      "require_tool_type": "PICKAXE",
+      "require_tool_tier": 1,
+      "durability_max": 100.0,
+      "durability_current": 100.0,
+      "item_model_in_place": "Models/StoneBlock",
+      "voxels": [
         {
-            "type": "Player",
-            "name": "Hero",
-            "health": 100,
-            "damage": 25,
-            "experience": 1000
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "type": "stone"
         },
         {
-            "type": "Animal",
-            "name": "Wolf",
-            "health": 80,
-            "damage": 10,
-            "isDomestic": false
-        },
-        {
-            "type": "Monster",
-            "name": "Zombie",
-            "health": 150,
-            "damage": 20,
-            "spawnLocation": "Graveyard"
+          "x": 1,
+          "y": 0,
+          "z": 0,
+          "type": "stone"
         }
-    ]
+      ]
+    },
+    {
+      "item_ID": 6,
+      "item_name": "Wooden Block",
+      "item_model_in_world": "Prefabs/WoodenBlock",
+      "item_model_in_inventory": "Icons/WoodenBlock",
+      "stack_max": 64,
+      "stack_current": 15,
+      "require_tool_type": "AXE",
+      "require_tool_tier": 1,
+      "durability_max": 50.0,
+      "durability_current": 50.0,
+      "item_model_in_place": "Models/WoodenBlock",
+      "voxels": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "type": "wood"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "z": 0,
+          "type": "wood"
+        }
+      ]
+    }
+  ],
+  "equipmentItems": [
+    {
+      "item_ID": 7,
+      "item_name": "Iron Sword",
+      "item_model_in_world": "Prefabs/IronSword",
+      "item_model_in_inventory": "Icons/IronSword",
+      "equipment_type": "ONE_HANDED_SWORD",
+      "weight": 5.0,
+      "durability_max": 100.0,
+      "durability_current": 100.0,
+      "item_model_in_equip": "Models/IronSword",
+      "melee_damage": 10.0,
+      "melee_speed": 1.5,
+      "guard_rate": 0.5,
+      "tool_tier": 2
+    },
+    {
+      "item_ID": 8,
+      "item_name": "Steel Shield",
+      "item_model_in_world": "Prefabs/SteelShield",
+      "item_model_in_inventory": "Icons/SteelShield",
+      "equipment_type": "SHIELD",
+      "weight": 8.0,
+      "durability_max": 120.0,
+      "durability_current": 120.0,
+      "item_model_in_equip": "Models/SteelShield",
+      "armor_defense": 15.0
+    }
+  ]
 }
