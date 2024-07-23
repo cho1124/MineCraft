@@ -25,16 +25,16 @@ public class Monster : Entity
     최대추적거리 내에 있는 동안 계속 추적
     목표가 범위를 벗어나거나 시간이 경과하면 추적을 종료하고, EndChaseAndWander 메서드를 호출하여 다시 랜덤 상태로 전환
 
+    ★몬스터들 몬스터 스크립트 빼면 안움직이고 안죽습니다...★
 
     */
 
     //상태 및 동작 관련 변수
-    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight,Attack }
+    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight, Attack }
     private MonsterState currentState; // 몬스터의 현재상태 
 
     //참조를 위한 변수
     private Vector3 targetPosition; //몬스터 목적지
-    private Rigidbody rb;
     private ObstacleDetector obstacleDetector; //장애물감지 큐브
     public Transform head; //몬스터의 머리(head) 참조
 
@@ -67,6 +67,7 @@ public class Monster : Entity
     private Vector3 expandedColliderSize;
 
     private BoxCollider boxCollider;
+    private Rigidbody rb;
 
     //플레이어와 동물 감지 추적 관련
     private float lastPlayerDetectionTime;
@@ -77,11 +78,11 @@ public class Monster : Entity
     protected override void Start()
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
-        rb = GetComponent<Rigidbody>();
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
         boxCollider = GetComponent<BoxCollider>();
+        rb = GetComponent<Rigidbody>();
         originalColliderSize = boxCollider.size;
-        expandedColliderSize = originalColliderSize * 3;
+        expandedColliderSize = originalColliderSize * 2;
         ChangeState(MonsterState.Idle);
         lastPosition = transform.position;
         lastPositionCheckTime = Time.time;
@@ -92,7 +93,7 @@ public class Monster : Entity
     {
         CheckPositionChange(); // 일정 간격으로 위치 변화를 체크합니다.
         switch (currentState) // 현재 상태에 따라 다른 행동을 수행합니다.
-        { 
+        {
             case MonsterState.Walk:
                 Walk();
                 break;
@@ -136,12 +137,15 @@ public class Monster : Entity
         }
     }
 
-    protected void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Ground")) {
+    protected void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
             isGrounded = true; // 바닥에 착지했음을 표시
         }
 
-        if (collision.gameObject.CompareTag("Weapon")) {
+        if (collision.gameObject.CompareTag("Weapon"))
+        {
             TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
             Debug.Log($"{collision}에게 {name}공격받음~~");
         }
@@ -157,7 +161,7 @@ public class Monster : Entity
         switch (currentState)
         {
             case MonsterState.Walk:
-               targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
+                targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
                 StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Idle:
@@ -167,14 +171,15 @@ public class Monster : Entity
                 StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
             case MonsterState.Jump:
-                if (isGrounded) {
+                if (isGrounded)
+                {
                     rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                     isGrounded = false; // 점프를 시작했음을 표시
                 }
                 StartCoroutine(StateDuration(MonsterState.Jump, 3f));
                 break;
             case MonsterState.Chase:
-              //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
+                //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
                 break;
             case MonsterState.TurnLeft:
                 StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
@@ -200,27 +205,27 @@ public class Monster : Entity
     private void Run()  // 달리기 상태에서 수행할 행동을 정의하는 메서드입니다.
     {
         MoveTowardsTarget(runSpeed); // 목표 위치로 달리기 속도로 이동합니다.
-        if (Vector3.Distance(transform.position,targetPosition)<0.1f) // 목표 위치에 도달했는지 확인합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
         {
             ChangeState(MonsterState.Idle); // Idle 상태로 변경
         }
     }
 
-    private void TurnLeft() 
+    private void TurnLeft()
     {
         // 몬스터를 왼쪽으로 회전
         transform.Rotate(0, -90, 0);
         ChangeState(MonsterState.Walk);
     }
 
-    private void TurnRight() 
+    private void TurnRight()
     {
         // 몬스터를 오른쪽으로 회전
         transform.Rotate(0, 90, 0);
         ChangeState(MonsterState.Walk);
     }
 
-    private void Chase() 
+    private void Chase()
     {
         MoveTowardsTarget(runSpeed);
         if (Vector3.Distance(transform.position, targetPosition) < attackRange)
@@ -274,7 +279,7 @@ public class Monster : Entity
     private IEnumerator StateDuration(MonsterState state, float duration) //몬스터가 특정 상태를 일정 시간 동안 유지하게
     {
         // 지정된 시간(duration)만큼 대기
-        yield return new WaitForSeconds(duration+5f);
+        yield return new WaitForSeconds(duration + 5f);
         // 다음 상태를 랜덤하게 선택
         MonsterState nextState = GetRandomState();
 
@@ -284,23 +289,24 @@ public class Monster : Entity
 
     private MonsterState GetRandomState()  // 랜덤 상태를 선택하는 메서드입니다.
     {
-            int randomIndex = Random.Range(0, 5); // jump 상태를 제외한 상태 선택
-            switch (randomIndex) {
-                case 0:
-                    return MonsterState.Walk;
-                case 1:
-                    return MonsterState.Run;
-                case 2:
-                    return MonsterState.Idle;
-                case 3:
-                    return MonsterState.TurnLeft;
-                case 4:
-                    return MonsterState.TurnRight;
-                default:
-                    return MonsterState.Walk;
-            }
+        int randomIndex = Random.Range(0, 5); // jump 상태를 제외한 상태 선택
+        switch (randomIndex)
+        {
+            case 0:
+                return MonsterState.Walk;
+            case 1:
+                return MonsterState.Run;
+            case 2:
+                return MonsterState.Idle;
+            case 3:
+                return MonsterState.TurnLeft;
+            case 4:
+                return MonsterState.TurnRight;
+            default:
+                return MonsterState.Walk;
         }
-    
+    }
+
     private void CheckPositionChange()  // 위치 변화를 체크하는 메서드입니다. (한곳에만 장시간 있는것을 방지하기 위해)
     {
         if (Time.time - lastPositionCheckTime >= positionCheckInterval) // 마지막으로 위치를 체크한 시간에서 일정 시간이 지났는지 확인합니다.
@@ -344,10 +350,8 @@ public class Monster : Entity
             RaycastHit hit;
             if (Physics.Raycast(head.position, head.forward, out hit, attackRange))
             {
-                // 레이캐스트가 충돌한 객체가 IDamageable 인터페이스를 구현하고 있는지 확인합니다.
-                if (hit.transform.GetComponent<IDamageable>() != null)
+                if (hit.transform.GetComponent<IDamageable>() != null && hit.transform != this.transform && !hit.transform.CompareTag("Monster"))
                 {
-                    // 충돌한 객체에 데미지를 입힙니다.
                     hit.transform.GetComponent<IDamageable>().TakeDamage(damage);
                 }
             }
@@ -364,7 +368,7 @@ public class Monster : Entity
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<IDamageable>() != null)
+        if (other.GetComponent<IDamageable>() != null && other.transform != this.transform && !other.CompareTag("Monster"))
         {
             other.GetComponent<IDamageable>().TakeDamage(damage);
         }
@@ -376,21 +380,21 @@ public class Monster : Entity
         ChangeState(GetRandomState());
     }
 
-    private IEnumerator ChaseTarget(Transform target, bool isPlayer)
-    {
-        float chaseDuration = isPlayer ? ChaseDuration : ChaseDuration / 2; // 플레이어는 더 오래 추적
-        float startTime = Time.time;
-
-        while (Time.time < startTime + chaseDuration)
-        {
-            if (target != null)
-            {
-                SetTarget(target.position);
-            }
-            yield return null;
-        }
-
-        EndChaseAndWander();
-    }
+  //  private IEnumerator ChaseTarget(Transform target, bool isPlayer)
+  //  {
+  //      float chaseDuration = isPlayer ? ChaseDuration : ChaseDuration / 2; // 플레이어는 더 오래 추적
+  //      float startTime = Time.time;
+  //
+  //      while (Time.time < startTime + chaseDuration)
+  //      {
+  //          if (target != null)
+  //          {
+  //              SetTarget(target.position);
+  //          }
+  //          yield return null;
+  //      }
+  //
+  //      EndChaseAndWander();
+  //  }
 }
-    
+

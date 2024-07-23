@@ -48,7 +48,6 @@ public class Animal : Entity, IDamageable {
 
     // 컴포넌트 관련 변수들
     protected NavMeshAgent agent;
-    protected Rigidbody rb;
     public DynamicNavMesh dynamicNavMesh;//동적인 NavMesh 업데이트를 관리하는 컴포넌트입니다.
     public GameObject heartObjectPrefab; // 하트 오브젝트 프리팹
     public GameObject shockObjectPrefab; // 충격 오브젝트 프리팹
@@ -83,7 +82,6 @@ public class Animal : Entity, IDamageable {
 
         //컴포넌트 초기화
         agent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
         Collider col = GetComponent<Collider>();
 
         // NavMesh 위에 있는지 확인
@@ -233,6 +231,12 @@ public class Animal : Entity, IDamageable {
 
         GameObject otherAnimal = collision.gameObject;
         AddToRecentAnimals(otherAnimal);
+
+        // 플레이어 무기와 충돌 시 데미지 입기
+        if (collision.gameObject.CompareTag("Weapon"))
+        {
+            TakeDamage(10);
+        }
     }
 
     //같은 종의 동물이 5회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
@@ -445,7 +449,7 @@ public class Animal : Entity, IDamageable {
         Gizmos.color = Color.red;
 
         // Y축으로 1만큼 위의 위치에서 레이캐스트 시작
-        Vector3 startPosition = transform.position + Vector3.up * 3;
+        Vector3 startPosition = transform.position + Vector3.up * 5;
 
         for (int i = 0; i < detectionRays; i++) {
             float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;

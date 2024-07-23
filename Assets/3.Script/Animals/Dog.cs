@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Dog : Animal {
     private Transform playerTransform;
+    private int currentHealth; 
 
     protected override void Update() {
         base.Update();

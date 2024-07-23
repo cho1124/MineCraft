@@ -513,6 +513,7 @@ GameObject:
   - component: {fileID: 6086126368442328691}
   - component: {fileID: 5917821463045448123}
   - component: {fileID: 1909501268656922201}
+  - component: {fileID: 8782087595199697087}
   m_Layer: 0
   m_Name: enderman
   m_TagString: Monster
@@ -584,6 +585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 
   damage: 10
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 4123892497744069405}
   walkRadius: 10
@@ -598,6 +600,8 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
 --- !u!95 &1909501268656922201
 Animator:
   serializedVersion: 3
@@ -617,6 +621,37 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8782087595199697087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6392624918292962084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d141b67cb0d4db4584aea41452b095f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  damage: 10
+  health: 0
+  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  head: {fileID: 4123892497744069405}
+  walkRadius: 5
+  walkSpeed: 3
+  runSpeed: 4
+  idleTime: 4
+  minWalkTime: 6
+  maxWalkTime: 12
+  jumpForce: 4
+  detectionDistance: 2
+  ChaseDuration: 5
+  turnDuration: 4
+  positionCheckInterval: 15
+  minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
 --- !u!1 &6676483470790809109
 GameObject:
   m_ObjectHideFlags: 0

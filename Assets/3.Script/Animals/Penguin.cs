@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Penguin : Animal 
     {
+
     protected override void Update() {
         base.Update();
     }

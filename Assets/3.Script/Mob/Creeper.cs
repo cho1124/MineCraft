@@ -8,6 +8,7 @@ public class Creeper : Monster, IDamageable
     public Collider coll;
     private Entity entity;
     public GameObject explosionEffectPrefab;
+    private int currentHealth; // 슬라임의 현재 체력, 필요에 따라 초기화
     public float explosionScaleFactor = 10;
     public float explosionDuration = 5f;
     public float explosionForce = 100000f; // 폭발력이 얼마나 강력할지 설정

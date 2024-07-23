@@ -15,7 +15,7 @@ public class Entity : MonoBehaviour, IDamageable {
 
         public string type;
         public float damage = 10;
-        private float maxHealth = 100;
+    public float maxHealth = 100;
         public float health;
         private float posture;
         private float defence;
@@ -27,7 +27,7 @@ public class Entity : MonoBehaviour, IDamageable {
         private Renderer[] entityRenderer;
         private Color[] originalColor;
 
-        private Rigidbody rb;
+    private Rigidbody rb;
         private Vector3 originalPosition; // 공격 시 위치를 저장할 변수
       
         public event Action OnDeath; // 죽음 이벤트 선언
@@ -39,11 +39,13 @@ public class Entity : MonoBehaviour, IDamageable {
 
     protected virtual void Start() {
 
+        
             health = maxHealth;
             animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         entityRenderer = GetComponentsInChildren<Renderer>();
-            originalColor = new Color[entityRenderer.Length];
+      //  LoadEntityData();
+        originalColor = new Color[entityRenderer.Length];
             for (int i = 0; i < entityRenderer.Length; i++) {
                 originalColor[i] = entityRenderer[i].material.color;
             }
@@ -112,8 +114,9 @@ public class Entity : MonoBehaviour, IDamageable {
 
         }
 
-        public void TakeDamage(float damage) {
-            Health -= damage;
+        public virtual void TakeDamage(float damage) {
+        Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {health}");
+        Health -= damage;
         }
     public void Attack(Entity target)
     {
@@ -167,7 +170,7 @@ public class Entity : MonoBehaviour, IDamageable {
         string jsonFilePath = "Entities.json";
         EntityData entityData = JsonHelper.LoadFromJson(jsonFilePath);
         Entity jsonEntity = entityData.entities.Find(e => e.name == this.name && e.type == this.type);
-
+   
         if (jsonEntity != null)
         {
             Initialize(jsonEntity);
@@ -175,6 +178,16 @@ public class Entity : MonoBehaviour, IDamageable {
         else
         {
             Debug.LogError($"Entity data not found for {this.name} of type {this.type}");
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            Gizmos.DrawWireCube(col.bounds.center, col.bounds.size);
         }
     }
 }
@@ -195,14 +208,6 @@ public static class JsonHelper
             return new EntityData();
         }
     }
-
-    public static void SaveToJson(EntityData data, string path)
-    {
-        string fullPath = Path.Combine(Application.dataPath, path);
-        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-        File.WriteAllText(fullPath, json);
-    }
-
 }
 
     public interface IDamageable //데미지 입는 인터페이스 

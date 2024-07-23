@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Cat : Animal
 {
+
     protected override void Update() {
         base.Update();
     }

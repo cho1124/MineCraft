@@ -7,7 +7,7 @@ public class Slime : Monster, IDamageable
 
     public GameObject slimePrefab; // 원래 크기의 슬라임 프리팹
     public float deathAnimationDuration = 2f; // 죽는 애니메이션의 지속 시간
-    private int currentHealth = 20; // 슬라임의 현재 체력, 필요에 따라 초기화
+    private int currentHealth; // 슬라임의 현재 체력, 필요에 따라 초기화
     public RuntimeAnimatorController slimeAnimatorController; // 기존 슬라임 애니메이터 컨트롤러
     public RuntimeAnimatorController splitSlimeAnimatorController; // 분열된 슬라임 애니메이터 컨트롤러
 
@@ -24,37 +24,43 @@ public class Slime : Monster, IDamageable
             entity.OnDeath += HandleDeath; // 죽음 이벤트 구독
         }
 
-        base.Start();
-           currentHealth = (int)entity.Health; // 부모 클래스의 Health 초기값을 currentHealth에 저장
-                                               // DieAndSplit();
     }
 
 
-   // private void Update()
-   // {
-   //     if(Input.GetKeyDown(KeyCode.Q))
-   //     {
-   //         DieAndSplit();
-   //     }
-   // }
+    // private void Update()
+    // {
+    //     if(Input.GetKeyDown(KeyCode.Q))
+    //     {
+    //         DieAndSplit();
+    //     }
+    // }
 
 
-   // private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
-   // { 
-   //     base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
-   //
-   //     // 충돌한 물체가 플레이어 또는 동물인지 확인
-   //     if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals")) {
-   //         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-   //         if (damageable != null) {
-   //             damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
-   //             Debug.Log($"{collision}에게 공격!");
-   //         }
-   //     }
-   // }
+    // private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
+    // { 
+    //     base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
+    //
+    //     // 충돌한 물체가 플레이어 또는 동물인지 확인
+    //     if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals")) {
+    //         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+    //         if (damageable != null) {
+    //             damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
+    //             Debug.Log($"{collision}에게 공격!");
+    //         }
+    //     }
+    // }
 
-    private void HandleDeath() 
+    private void HandleDeath() //슬라임의 죽음 위치를 기준으로 새로운 슬라임을 두 마리 생성합니다.
     {
+
+        // 슬라임의 크기가 0.5 이하일 경우 더 이상 분열하지 않음
+        if (transform.localScale.x <= 0.5f)
+        {
+            StartCoroutine(entity.OnDie());
+            return;
+        }
+
+
         deathPosition = transform.position; // 죽은 위치 저장
 
             Vector3 spawnPosition1 = deathPosition + new Vector3(-0.5f, 0, 0);
@@ -103,5 +109,4 @@ public class Slime : Monster, IDamageable
             }
         }
     }
-
 }
