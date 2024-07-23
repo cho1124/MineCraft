@@ -9,31 +9,68 @@ public class ItemManager : MonoBehaviour
 
     public TextAsset text1;
 
-
     public static class Item_Dictionary
     {
         // 딕셔너리 초기화
         static Item_Dictionary()
         {
-            item_dictionary = new Dictionary<int, StackableItem>();
+            item_dictionary = new Dictionary<int, Original_Item>();
         }
 
-        public static Dictionary<int, StackableItem> item_dictionary { get; private set; }
+        public static Dictionary<int, Original_Item> item_dictionary { get; private set; }
 
-        public static void SpawnItem()
+        public static void SpawnItem(int itemID, Vector3 position)
         {
-            Instantiate(item_dictionary[7].item_model_in_worlds, Vector3.zero, Quaternion.identity);
+            if (item_dictionary.ContainsKey(itemID))
+            {
+                GameObject itemPrefab = item_dictionary[itemID].item_model_in_worlds;
+                if (itemPrefab != null)
+                {
+                    GameObject spawnedItem = Instantiate(itemPrefab, position, Quaternion.identity);
+                    ItemComponent itemComponent = spawnedItem.AddComponent<ItemComponent>();
+
+                    Original_Item itemData = item_dictionary[itemID];
+                    if (itemData is ConsumableItem consumableItem)
+                    {
+                        itemComponent.Initialize(consumableItem);
+                    }
+                    else if (itemData is PlaceableItem placeableItem)
+                    {
+                        itemComponent.Initialize(placeableItem);
+                    }
+                    else if (itemData is EquipmentItem equipmentItem)
+                    {
+                        itemComponent.Initialize(equipmentItem);
+                    }
+                    else if (itemData is StackableItem stackableItem)
+                    {
+                        itemComponent.Initialize(stackableItem);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"타입이 뭔지 모르겠어잉 {itemID}.");
+                    }
+
+                }
+                else
+                {
+                    Debug.LogWarning($"Item ID {itemID} 프리팹 없어잉");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Item ID {itemID} 없어잉");
+            }
         }
 
-        public static void Add(int item_ID, StackableItem item_data)
+        public static void Add(int item_ID, Original_Item item_data)
         {
             if (!item_dictionary.ContainsKey(item_ID))
             {
                 item_dictionary.Add(item_ID, item_data);
 
                 item_dictionary[item_ID].item_model_in_worlds = Resources.Load<GameObject>(item_dictionary[item_ID].item_model_in_world);
-                item_dictionary[item_ID].item_model_in_inv = Resources.Load<Image>(item_dictionary[item_ID].item_model_in_inventory);
-
+                item_dictionary[item_ID].item_model_in_inv = Resources.Load<Sprite>(item_dictionary[item_ID].item_model_in_inventory);
 
             }
             else
@@ -42,10 +79,7 @@ public class ItemManager : MonoBehaviour
             }
         }
 
-
-
     }
-
 
 
     void Start()
@@ -61,11 +95,13 @@ public class ItemManager : MonoBehaviour
         // JSON 파일의 텍스트 내용을 문자열로 변환
         string jsonString = jsonFile.text;
 
-
-
-
         // JSON 문자열을 ItemData 객체로 파싱
         ItemData itemData = JsonConvert.DeserializeObject<ItemData>(jsonString);
+
+        
+        Debug.Log("consume : " +itemData.consumableItems[0].item_name);
+        Debug.Log("place : " + itemData.placeableItems.Count);
+        Debug.Log("equipmentitemcount : " + itemData.equipmentItems.Count);
 
         // 파싱된 데이터 사용 예제
 
@@ -77,9 +113,9 @@ public class ItemManager : MonoBehaviour
 
         Dic_Add(itemData.equipmentItems);
 
-        Debug.Log(Item_Dictionary.item_dictionary[7].item_model_in_world);
+        Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
-        Item_Dictionary.SpawnItem();
+        Item_Dictionary.SpawnItem(7, Vector3.zero);
 
 
 
@@ -89,7 +125,7 @@ public class ItemManager : MonoBehaviour
     {
         foreach (var item in stackableItems)
         {
-            Debug.Log("SADAUSHVUC : " + item.item_ID);
+            Debug.Log("SADAUSHVUC : " + item.item_name);
 
 
 
@@ -179,12 +215,9 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-
-
-
-    public Image GetItemImage(string itemName_Inv)
+    public Sprite GetItemImage(string itemName_Inv)
     {
-        Image image = Resources.Load<Image>(itemName_Inv);
+        Sprite image = Resources.Load<Sprite>(itemName_Inv);
         return image;
     }
 
@@ -197,16 +230,23 @@ public class Voxel
     public int z { get; set; }
     public string type { get; set; }
 }
-public class StackableItem
+
+
+public class Original_Item
 {
-    public int item_ID { get; set; }
-    public string item_name { get; set; }
-    public string item_model_in_world { get; set; }
+    public int item_ID { get;  set; } //아이템 아이디
+    public string item_name { get;  set; } //아이템 이름
+    public string item_model_in_world { get;  set; } //바닥에 떨어져있을 때 보여질 아이템의 형태
+    public string item_model_in_inventory { get;  set; } //인벤토리에서 보여질 아이템의 형태
 
-
-    public string item_model_in_inventory { get; set; }
     public GameObject item_model_in_worlds;
-    public Image item_model_in_inv;
+    public Sprite item_model_in_inv;
+}
+
+
+public class StackableItem : Original_Item
+{
+    
     public int stack_max { get; set; }
     public int stack_current { get; set; }
 
@@ -240,7 +280,7 @@ public class PlaceableItem : StackableItem
     public List<Voxel> voxels { get; set; }
 }
 
-public class EquipmentItem : StackableItem
+public class EquipmentItem : Original_Item
 {
     public string equipment_type { get; set; }
     public float weight { get; set; }
