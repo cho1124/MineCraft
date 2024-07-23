@@ -9,6 +9,7 @@ public class VoxelState
 
     public byte id;
     public int orientation;
+    
     //[System.NonSerialized] private byte _light;
     public float globalLightPercent;
 
@@ -25,6 +26,7 @@ public class VoxelState
         id = _id;
         orientation = 1;
         chunkData = _chunkData;
+
         neighbours = new VoxelNeighbours(this);
         position = _position;
         globalLightPercent = 0f;
