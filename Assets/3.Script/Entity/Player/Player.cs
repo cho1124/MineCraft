@@ -9,6 +9,9 @@ public class Player : Entity
     private float thirst_max, thirst_current;
     private float fatigue_max, fatigue_current;
 
+    private float VIT, END, STR, DEX, AGI;
+
+
     private float health_max, health_current;
     private float posture_max, posture_current;
 
