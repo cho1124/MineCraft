@@ -199,17 +199,11 @@ public class Player_Control : MonoBehaviour
     }
     private void Attack_Control()
     {
-        if(is_L_down && is_R_down && !animator.GetBool("Is_Attacking") && !animator.GetBool("Is_Guarding"))
+        if (!animator.GetBool("Is_Guarding"))
         {
-            animator.SetBool("LR_Attack", true);
-        }
-        else if (is_L_down && !animator.GetBool("Is_Attacking") && !animator.GetBool("Is_Guarding"))
-        {
-            animator.SetBool("L_Attack", true);
-        }
-        else if (is_R_down && !animator.GetBool("Is_Attacking") && !animator.GetBool("Is_Guarding"))
-        {
-            animator.SetBool("R_Attack", true);
+            animator.SetBool("LR_Attack", is_L_down && is_R_down);
+            animator.SetBool("L_Attack", is_L_down);
+            animator.SetBool("R_Attack", is_R_down);
         }
 
         if(!animator.GetBool("Is_Attacking"))
