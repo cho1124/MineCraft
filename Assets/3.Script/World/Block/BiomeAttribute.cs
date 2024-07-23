@@ -10,7 +10,6 @@ public class BiomeAttribute : ScriptableObject
     public int offset;
     public float scale;
 
-    //public int solidGroundHeight;
     public int terrainHeight;
 
     // 노이즈에 들어갈꺼

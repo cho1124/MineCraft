@@ -238,18 +238,7 @@ public class Player : MonoBehaviour
 
         if (highlightBlock.gameObject.activeSelf)
         {
-            //// 블록 파괴 Destroy block
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    Vector3 destroyPos = highlightBlock.position;
-            //    byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
-            //
-            //    // 블록 아이템 생성
-            //    GameObject popObjectInstance = Instantiate(Resources.Load("PopObject"), destroyPos, Quaternion.identity) as GameObject;
-            //    PopObject popObject = popObjectInstance.GetComponent<PopObject>();
-            //    popObject.Initialize(world, destroyPos, destroyedBlockID);
-            //}
-            //
+
 
             // 블록 파괴 Destroy block
             if (Input.GetMouseButtonDown(0))
@@ -258,11 +247,6 @@ public class Player : MonoBehaviour
                 byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
 
                 GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject");
-                //if (popObjectPrefab == null)
-                //{
-                //    Debug.LogError("PopObject prefab not found!");
-                //    return;
-                //}
 
                 GameObject popObjectInstance = Instantiate(popObjectPrefab, destroyPos, Quaternion.identity);
                 PopObject popObject = popObjectInstance.GetComponent<PopObject>();

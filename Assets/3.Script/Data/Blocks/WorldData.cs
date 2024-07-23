@@ -94,8 +94,7 @@ public class WorldData
         ChunkData chunk = RequestChunk(new Vector2Int(x, z), true);
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z -z));
         chunk.ModifyVoxel(voxel, value, direction);
-        //chunk.map[voxel.x, voxel.y, voxel.z].id = value;
-        //AddToModifiedChunkList(chunk);
+
 
     }
 

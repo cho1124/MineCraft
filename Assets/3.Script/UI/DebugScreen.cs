@@ -13,7 +13,7 @@ public class DebugScreen : MonoBehaviour
     float timer;
 
 
-    // Start is called before the first frame update
+
     void Start()
     {
         world = GameObject.Find("World").GetComponent<World>();
@@ -21,7 +21,7 @@ public class DebugScreen : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         string debugtext = "";
@@ -29,7 +29,6 @@ public class DebugScreen : MonoBehaviour
         debugtext += frameRate + " fps ";
         debugtext += "\n\n";
         debugtext += "XYZ : " + Mathf.FloorToInt(world.player.transform.position.x) + " / " + Mathf.FloorToInt(world.player.transform.position.y) + " / " + Mathf.FloorToInt(world.player.transform.position.z) + "\n";
-        //debugtext += "Chunk : " + world.playerChunkCoord.x + " / " + world.playerChunkCoord.z;
         
         string direction = "";
         switch(world._player.orientation)

@@ -93,13 +93,9 @@ public class VoxelNeighbours
     void ReturnNeighbour(int index)
     {
 
-        // Can't set our neighbour's neighbour if the neighbour is null.
         if (_neighbours[index] == null)
             return;
 
-        // If the opposite neighbour of our voxel is null, set it to this voxel.
-        // The opposite neighbour will perform the same check but that check will return true
-        // because this neighbour is already set, so we won't run into an endless loop, freezing Unity.
         if (_neighbours[index].neighbours[VoxelData.revFaceCheckIndex[index]] != parent)
             _neighbours[index].neighbours[VoxelData.revFaceCheckIndex[index]] = parent;
 

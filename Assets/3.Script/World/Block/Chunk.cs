@@ -45,31 +45,22 @@ public class Chunk
 
 
 
-    // Voxel맵, Chunk 안에 어떤 블록을 넣을껀지 byte단위의 3차원 배열
-    //public byte[,,] chunkData.map = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    //public VoxelState[,,] chunkData.map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-
-    //public Queue<VoxelMod> modifications = new Queue<VoxelMod>();
-
-    //World.Instance World.Instance;
-
     // chunk의 활성화 여부 -> 최적화
     private bool _isActive;
 
-    //// voxel맵이 채워졌는지 여부
-    //public bool ischunkData.mapPopulated = false;
+
 
     ChunkData chunkData;
 
 
     List<Vector3> normals = new List<Vector3>();
-    //private bool threadLocked = false;
+
 
     public bool isActive
     {
-        //get { return chunkObject.activeSelf; }
+
         get { return _isActive; }
-        //set { chunkObject.SetActive(value); }
+    
         set
         {
 
@@ -79,41 +70,6 @@ public class Chunk
         }
 
     }
-
-    //public Vector3 position
-    //{
-    //    get { return chunkObject.transform.position; }
-    //}
-
-    //public bool isEditable
-    //{
-    //    get
-    //    {
-    //
-    //        if (!ischunkData.mapPopulated)
-    //            return false;
-    //        else
-    //            return true;
-    //    }
-    //}
-
-    // 생성자
-    //public Chunk(ChunkCoord _coord, World.Instance _World.Instance, bool generateOnLoad)
-    //{
-    //
-    //    coord = _coord;
-    //    World.Instance = _World.Instance;
-    //    isActive = true;
-    //
-    //
-    //    if (generateOnLoad)
-    //    {
-    //        Init();
-    //    }
-    //
-    //    //chunkObject = new GameObject()
-    //}
-
 
     public Chunk(ChunkCoord _coord)
     {
@@ -126,10 +82,10 @@ public class Chunk
 
    
         chunkObject = new GameObject();
-        //ItemBlock = Resources.Load<GameObject>("2.Model/Prefabs/ItemBlock");
+
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-        //meshRenderer.material = World.Instance.material;
+
         materials[0] = World.Instance.material;
         materials[1] = World.Instance.transparentMaterial;
 
@@ -145,15 +101,6 @@ public class Chunk
 
         chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
 
-        //PopulatechunkData.map();
-
-        //PopulatechunkData.map();
-        //UpdateChunk();
-
-
-        ////CreateMeshData();
-        //
-        ////CreateMesh();
 
 
         // 시각적 메쉬 -> 충돌 메쉬 설정
@@ -169,59 +116,13 @@ public class Chunk
 
     // 여기에 populatechunkData.map이 있었다 20240717
     // Chunk 내의 각 위치에 어떤 블록이 있을지 채운다
-    //void PopulatechunkData.map()
-    //{
-    //
-    //    for (int y = 0; y < VoxelData.ChunkHeight; y++)
-    //    {
-    //        for (int x = 0; x < VoxelData.ChunkWidth; x++)
-    //        {
-    //            for (int z = 0; z < VoxelData.ChunkWidth; z++)
-    //            {
-    //                chunkData.map[x, y, z] = new VoxelState(World.Instance.GetVoxel(new Vector3(x, y, z) + position));
-    //                //Debug.Log($"Position: {chunkData.map[x,y,z]}, Noise Value: {noiseValue}, Voxel Value: {voxelValue}");
-    //
-    //
-    //
-    //            }
-    //        }
-    //    }
-    //    //UpdateChunk();
-    //    ischunkData.mapPopulated = true;
-    //
-    //
-    //    lock (World.Instance.ChunkUpdateThreadLock)
-    //    {
-    //
-    //        World.Instance.chunksToUpdate.Add(this);
-    //    }
-    //
-    //}
 
-    //public void UpdateChunk()
-    //{
-    //    //_updateChunk();
-    //    if (World.Instance.enableThreading)
-    //    {
-    //        Thread myThread = new Thread(new ThreadStart(_updateChunk));
-    //        myThread.Start();
-    //    }
-    //    else
-    //        _updateChunk();
-    //}
 
 
     // Chunk 업데이트 (블럭부분만), 메쉬 생성 
     public void UpdateChunk()
     {
-        //threadLocked = true;
 
-        //while (modifications.Count > 0)
-        //{
-        //    VoxelMod v = modifications.Dequeue();
-        //    Vector3 pos = v.position -= position;
-        //    chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id = v.id;
-        //}
 
 
         ClearMeshData();
@@ -236,20 +137,15 @@ public class Chunk
                     if (World.Instance.blockTypes[chunkData.map[x, y, z].id].isSolid)
                     {
                         UpdateMeshData(new Vector3(x, y, z));
-                        //AddVoxelDataToChunk(new Vector3(x, y, z)); 
+
                     }
 
                 }
             }
         }
 
-        //lock (World.Instance.ChunksToDraw)
-        //{
-        //CreateMesh();
         World.Instance.ChunksToDraw.Enqueue(this);
-        //}
-        //
-        //threadLocked = false;
+
     }
 
     // 메쉬 데이터 초기화
@@ -277,40 +173,7 @@ public class Chunk
 
     }
 
-    // Voxel 편집
-    //public void EditVoxel(Vector3 pos, byte newID)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //
-    //    // Chunk의 위치를 빼서 월드좌표 -> 청크내의 상대좌표로 변환
-    //    xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
-    //    zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
-    //
-    //    byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck];
-    //    //byte voxelBlock = chunkData.map[xCheck, yCheck, zCheck];
-    //    //GameObject tempBlock = GameObject.Instantiate(voxelBlock)
-    //    if (newID == 0)
-    //    {
-    //        GameObject.Instantiate(World.Instance.ItemBlock, new Vector3(pos.x, pos.y, pos.z) , Quaternion.identity);
-    //        for (int p = 0; p < 6; p++)
-    //        {
-    //            int textureID = World.Instance.blockTypes[currentBlockID].GetTextureID(p);
-    //            //AddTextureForBlock(World.Instance.blockTypes[currentBlockID].GetTextureID(p));
-    //            Debug.Log($"Block at ({pos.x}, {pos.y}, {pos.z}) replaced. TextureID of face {p}: {textureID}");
-    //        }
-    //        Debug.Log($"x : {pos.x}, y : {pos.y}, z : {pos.z}");
-    //    }
-    //
-    //    chunkData.map[xCheck, yCheck, zCheck] = newID;
-    //
-    //    // 변경된 주변 Voxel 업데이트
-    //    UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-    //
-    //    // Chunk 업데이트
-    //    UpdateChunk();
-    //}
+
     public byte EditVoxel(Vector3 pos, byte newID)
     {
         int xCheck = Mathf.FloorToInt(pos.x);
@@ -326,8 +189,7 @@ public class Chunk
 
         chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, World.Instance._player.orientation);
         // 새로운 블록 ID로 설정
-        //chunkData.map[xCheck, yCheck, zCheck].id = newID;
-        //World.Instance.worldData.AddToModifiedChunkList(chunkData);
+
 
 
         lock (World.Instance.ChunkUpdateThreadLock)
@@ -337,27 +199,12 @@ public class Chunk
             UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
         }
         //// Chunk 업데이트
-        //UpdateChunk();
+
 
         // 현재 블록 ID 반환
         return currentBlockID;
     }
 
-    //public byte EditVoxelCave(Vector3 pos, byte newID)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //    chunkData.map[xCheck, yCheck, zCheck] = newID;
-    //
-    //    // 변경된 주변 Voxel 업데이트
-    //    UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
-    //
-    //    // Chunk 업데이트
-    //    UpdateChunk();
-    //    byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck];
-    //    return currentBlockID;
-    //}
 
 
 
@@ -386,19 +233,6 @@ public class Chunk
 
     // 빈공간인지 아닌지 판단 -> 그래야 보이는 면만 그리니까...
     // 이건 Chunk 내부에서만 검사
-    //bool CheckVoxel(Vector3 pos)
-    //{
-    //
-    //    int x = Mathf.FloorToInt(pos.x);
-    //    int y = Mathf.FloorToInt(pos.y);
-    //    int z = Mathf.FloorToInt(pos.z);
-    //
-    //    if (!IsVoxelInChunk(x, y, z))
-    //        return World.Instance.CheckIfVoxelTransparent(pos + position);//World.Instance.blockTypes[World.Instance.GetVoxel(pos + position)].isSolid;
-    //
-    //    return World.Instance.blockTypes[chunkData.map[x, y, z].id].renderNeighborFaces;
-    //
-    //}
     VoxelState CheckVoxel(Vector3 pos)
     {
 
@@ -413,20 +247,6 @@ public class Chunk
 
     }
 
-
-
-    //public VoxelState GetVoxelFromGlobalVector3(Vector3 pos)
-    //{
-    //    int xCheck = Mathf.FloorToInt(pos.x);
-    //    int yCheck = Mathf.FloorToInt(pos.y);
-    //    int zCheck = Mathf.FloorToInt(pos.z);
-    //
-    //    xCheck -= Mathf.FloorToInt(position.x);
-    //    zCheck -= Mathf.FloorToInt(position.z);
-    //
-    //
-    //    return chunkData.map[xCheck, yCheck, zCheck];
-    //}
 
     void CalculateLight()
     {
@@ -495,70 +315,8 @@ public class Chunk
     }
 
 
-    // 아마 이 프로젝트에서 가장 중요한 메서드
     // 복셀의 각 면을 검사해서 보이는 면만 메쉬 데이터에 추가
-    // 이 메소드를 UpdateChunk에서 for문을 3번으로 돌려서 한 Chunk에 보이는 면만 렌더링하니 게임성능이 최적화
-    //public void UpdateMeshData(Vector3 pos)
-    //{
-    //
-    //    int x = Mathf.FloorToInt(pos.x);
-    //    int y = Mathf.FloorToInt(pos.y);
-    //    int z = Mathf.FloorToInt(pos.z);
-    //
-    //    //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id;
-    //    byte blockID = chunkData.map[x, y, z].id;
-    //    //bool renderNeighborFaces = World.Instance.blockTypes[blockID].renderNeighborFaces;
-    //    VoxelState voxel = chunkData.map[x, y, z];
-    //
-    //    // 블록은 6면체
-    //    for (int p = 0; p < 6; p++)
-    //    {
-    //
-    //        // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
-    //        // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
-    //        // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-    //        VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
-    //
-    //        // 현재 면이 외부와 접해있는지 확인
-    //        if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
-    //        {
-    //            float lightLevel = neighbor.globalLightPercent;
-    //            int faceVertCount = 0;
-    //            for (int i =0; i<voxel.properties.meshData.faces[p].vertData.Length; i++)
-    //            {
-    //                //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
-    //                vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].GetRotatedPosition(new Vector3(0,180f,0)));
-    //                //normals.Add(voxel.properties.meshData.faces[p].normal);
-    //                normals.Add(VoxelData.faceChecks[p]);
-    //                colors.Add(new Color(0, 0, 0, lightLevel));
-    //                AddTexture(voxel.properties.GetTextureID(p), voxel.properties.meshData.faces[p].vertData[i].uv);
-    //                faceVertCount++;
-    //
-    //            }
-    //
-    //            if (!voxel.properties.renderNeighborFaces)
-    //            {
-    //
-    //                for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-    //                    triangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
-    //
-    //            }
-    //            else
-    //            {
-    //
-    //                for (int i = 0; i < voxel.properties.meshData.faces[p].triangles.Length; i++)
-    //                    transparentTriangles.Add(vertexIndex + voxel.properties.meshData.faces[p].triangles[i]);
-    //
-    //            }
-    //
-    //            vertexIndex += faceVertCount;
-    //
-    //
-    //
-    //        }
-    //    }
-    //
-    //}
+    // UpdateChunk에서 for문을 3번으로 돌려서 한 Chunk에 보이는 면만 렌더링해서 게임성능을 최적화
 
     public void UpdateMeshData(Vector3 pos)
     {
@@ -567,9 +325,7 @@ public class Chunk
         int y = Mathf.FloorToInt(pos.y);
         int z = Mathf.FloorToInt(pos.z);
 
-        //byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z].id;
         byte blockID = chunkData.map[x, y, z].id;
-        //bool renderNeighborFaces = World.Instance.blockTypes[blockID].renderNeighborFaces;
         VoxelState voxel = chunkData.map[x, y, z];
 
 
@@ -630,7 +386,7 @@ public class Chunk
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
             VoxelState neighbour = CheckVoxel(pos + VoxelData.faceChecks[translatedP]);
-            //VoxelState neighbour = chunkData.map[x, y, z].neighbours[translatedP];
+
 
             // 현재 면이 외부와 접해있는지 확인
             if (neighbour != null && World.Instance.blockTypes[neighbour.id].renderNeighborFaces)
@@ -648,10 +404,6 @@ public class Chunk
                     AddTexture(voxel.properties.GetTextureID(p), vertData.uv);
                     faceVertCount++;
 
-
-                    //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
-                    //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].GetRotatedPosition(new Vector3(0, 180f, 0)));
-                    //normals.Add(voxel.properties.meshData.faces[p].normal);
 
 
                 }
@@ -732,25 +484,6 @@ public class Chunk
 
 
     }
-
-    //private void AddTextureForBlock(int textureID)
-    //{
-    //    float y = textureID / VoxelData.textureAtlasSizeInBlocks;
-    //    float x = textureID - (y * VoxelData.textureAtlasSizeInBlocks);
-    //
-    //    // 텍스쳐 아틀라스 정규화
-    //    x *= VoxelData.normalizedBlockTextureSize;
-    //    y *= VoxelData.normalizedBlockTextureSize;
-    //
-    //    y = 1f - y - VoxelData.normalizedBlockTextureSize;
-    //
-    //
-    //    uvs.Add(new Vector2(x, y));
-    //    uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
-    //    uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
-    //    uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
-    //
-    //}
 
 
 }

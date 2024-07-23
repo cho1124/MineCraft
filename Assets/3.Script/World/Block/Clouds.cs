@@ -77,7 +77,7 @@ public class Clouds : MonoBehaviour
             {
 
                 Vector3 position = new Vector3(x, cloudHeight, y);
-                //CreateCloudTile(CreateCloudMesh(x,y),new Vector3(x,0,z) + transform.position + offset);
+
                 clouds.Add(CloudTilePosFromV3(position), CreateCloudTile(CreateCloudMesh(x, y), position));
             }
         }
@@ -188,8 +188,8 @@ public class Clouds : MonoBehaviour
     private int CloudTileCoordFromFloat(float value)
     {
         float a = value / (float)cloudTexWidth;
-        a -= Mathf.FloorToInt(a); // Subtract Whole numbers to get  a 0-1 value representing position in cloud texture.
-        int b = Mathf.FloorToInt((float)cloudTexWidth * a); // Multiple cloud texture width by a to get position in texture globally
+        a -= Mathf.FloorToInt(a); 
+        int b = Mathf.FloorToInt((float)cloudTexWidth * a); 
         return b;
     }
 

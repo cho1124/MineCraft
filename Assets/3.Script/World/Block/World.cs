@@ -121,12 +121,6 @@ public class World : MonoBehaviour
         player.position = spawnPoint;
 
         worldData = SaveSystem.LoadWorld("Prototype");
-        //json
-        //string jsonExport = JsonUtility.ToJson(settings);
-        //UnityEngine.Debug.Log(jsonExport);
-        //
-        //
-        //File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
 
         string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
         settings = JsonUtility.FromJson<Settings>(jsonImport);
@@ -182,23 +176,12 @@ public class World : MonoBehaviour
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
             CheckViewDistance();
 
-        //if (chunksToCreate.Count > 0 && !isCreatingChunks)
-        //    StartCoroutine(CreateChunks_co());
-
-        //if (!applyingModifications)
-        //{
-        //    ApplyModifications();
-        //}
-
         if (chunksToCreate.Count > 0)
         {
             CreateChunk();
         }
 
-        //if (chunksToUpdate.Count > 0)
-        //{
-        //    UpdateChunks();
-        //}
+
 
         if (ChunksToDraw.Count > 0)
         {
@@ -224,7 +207,6 @@ public class World : MonoBehaviour
 
 
 
-
         if (Input.GetKeyDown(KeyCode.F1))
             SaveSystem.SaveWorld(worldData);
 
@@ -245,14 +227,14 @@ public class World : MonoBehaviour
     public void AddChunkToUpdate(Chunk chunk, bool insert)
     {
 
-        // Lock list to ensure only one thing is using the list at a time.
+
         lock (ChunkUpdateThreadLock)
         {
 
-            // Make sure update list doesn't already contain chunk.
+
             if (!chunksToUpdate.Contains(chunk))
             {
-                // If insert is true, chunk gets inserted at the top of the list.
+
                 if (insert)
                     chunksToUpdate.Insert(0, chunk);
                 else
@@ -287,54 +269,6 @@ public class World : MonoBehaviour
         int z = Mathf.FloorToInt(pos.z / VoxelData.ChunkWidth);
         return chunks[x, z];
     }
-
-
-
-
-
-
-
-
-
-
-
-    //void LoadWorld()
-    //{
-    //
-    //    for (int x = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; x < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; x++)
-    //    {
-    //        for (int z = VoxelData.worldSizeInChunks / 2 - settings.loadDistance / 2; z < VoxelData.worldSizeInChunks / 2 + settings.loadDistance / 2; z++)
-    //        {
-    //            worldData.LoadChunk(new Vector2Int(x, z));
-    //
-    //
-    //        }
-    //    }
-    //
-    //
-    //
-    //}
-
-
-    //void UpdateChunks()
-    //{
-    //    bool updated = false;
-    //    int index = 0;
-    //    while(!updated && index < chunksToUpdate.Count - 1)
-    //    {
-    //        if (chunksToUpdate[index].isVoxelMapPopulated)
-    //        {
-    //            chunksToUpdate[index].UpdateChunk();
-    //            chunksToUpdate.RemoveAt(index);
-    //            updated = true;
-    //        }
-    //        else
-    //        {
-    //            index++;
-    //        }
-    //    }
-    //}
-
 
     void UpdateChunks()
     {
@@ -402,54 +336,13 @@ public class World : MonoBehaviour
 
                 worldData.SetVoxel(v.position, v.id, 1);
 
-                //if (v == null)
-                //{
-                //    UnityEngine.Debug.LogError("Dequeued VoxelMod is null");
-                //    continue;
-                //}
-                //
-                //ChunkCoord c = GetChunkCoordFromVector3(v.position);
-                //
-                //if (chunks[c.x, c.z] == null)
-                //{
-                //    chunks[c.x, c.z] = new Chunk(c);
-                //    chunksToCreate.Add(c);
-                //    //activeChunks.Add(c);
-                //}
-                //
-                //
-                //
-                //chunks[c.x, c.z].modifications.Enqueue(v);
 
             }
         }
 
         applyingModifications = false;
 
-        //UnityEngine.Debug.Log("Finished applying modifications");
     }
-
-
-
-
-
-
-    //IEnumerator CreateChunks_co()
-    //{
-    //    isCreatingChunks = true;
-    //
-    //
-    //    while (chunksToCreate.Count > 0)
-    //    {
-    //        chunks[chunksToCreate[0].x, chunksToCreate[0].z].Init();
-    //        chunksToCreate.RemoveAt(0);
-    //        yield return null;
-    //    }
-    //
-    //
-    //    isCreatingChunks = false;
-    //
-    //}
 
 
     // 보여할 chunk 만 활성화해서 최적화
@@ -468,42 +361,6 @@ public class World : MonoBehaviour
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
 
         activeChunks.Clear();
-
-
-        //// 플레이어 시야 거리 내의 청크 검사
-        //for (int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++)
-        //{
-        //    for (int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++)
-        //    {
-        //        // chunk 가 월드 내에 있는지 확인
-        //        if (IsChunkInWorld(new ChunkCoord(x, z)))
-        //        {
-        //            // chunk가 없으면 새로운 chunk 생성
-        //            if (chunks[x, z] == null)
-        //            {
-        //                chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
-        //                chunksToCreate.Add(new ChunkCoord(x, z));
-        //
-        //            }
-        //            // chunk가 비활성화 된 경우엔 활성화 
-        //            else if (!chunks[x, z].isActive)
-        //            {
-        //                chunks[x, z].isActive = true;
-        //                //activeChunks.Add(new ChunkCoord(x, z));
-        //            }
-        //
-        //            // 현재 chunk를 활성 chunk목록에 추가
-        //            activeChunks.Add(new ChunkCoord(x, z));
-        //        }
-        //
-        //        // 이전 활성화 된 chunk 목록에서 제거
-        //        for (int i = 0; i < previouslyActiveChunks.Count; i++)
-        //        {
-        //            if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
-        //                previouslyActiveChunks.RemoveAt(i);
-        //        }
-        //    }
-        //}
 
         // 플레이어 시야 거리 내의 청크 검사
         for (int x = coord.x - settings.viewDistance; x < coord.x + settings.viewDistance; x++)
@@ -543,7 +400,6 @@ public class World : MonoBehaviour
 
 
 
-
         // 시야에 벗어난 chunk를 비활성화
         foreach (ChunkCoord c in previouslyActiveChunks)
             chunks[c.x, c.z].isActive = false;
@@ -565,10 +421,6 @@ public class World : MonoBehaviour
     {
         return worldData.GetVoxel(pos);
     }
-
-
-
-
 
 
 
@@ -638,12 +490,6 @@ public class World : MonoBehaviour
 
         int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
 
-        ///int index;
-
-        //if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 12345, 2f) > 0.5f)
-        //    index = 0;
-        //else
-        //    index = 1;
 
         //BiomeAttribute biome = biomes[index];
 
@@ -652,21 +498,8 @@ public class World : MonoBehaviour
         // =============================================================================================================================================== //
 
         // 펄린 노이즈 사용해서...
-        //int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + solidGroundHeight;
 
         byte voxelValue = 0;
-
-
-
-
-
-        //if (yPos == cloudHeight)
-        //{
-        //    if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, 08f) > 0.8f)
-        //    {
-        //        voxelValue = 15; // cloud
-        //    }
-        //}
 
 
 
@@ -735,8 +568,6 @@ public class World : MonoBehaviour
 
 
 
-
-
         }
 
 
@@ -759,16 +590,7 @@ public class World : MonoBehaviour
         }
 
 
-
-
-
-
-
         return voxelValue;
-
-
-
-
 
     }
 
@@ -792,8 +614,6 @@ public class World : MonoBehaviour
                pos.z >= 0 && pos.z < VoxelData.worldSizeInBlocks;
     }
 }
-
-
 
 
 
@@ -829,7 +649,6 @@ public class BlockType
             case 5: return rightFaceTexture;
 
             default:
-                //UnityEngine.Debug.Log("Error in GetTextureID; invalid face index"); ;
                 return 0;
         }
 

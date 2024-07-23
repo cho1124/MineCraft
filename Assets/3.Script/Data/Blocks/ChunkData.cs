@@ -43,9 +43,6 @@ public class ChunkData
                 {
                     Vector3 voxelGlobalPos = new Vector3(x + position.x, y, z + position.y);
                     map[x, y, z] = new VoxelState(World.Instance.GetVoxel(voxelGlobalPos), this, new Vector3Int(x,y,z));
-                    //Debug.Log($"Position: {voxelMap[x,y,z]}, Noise Value: {noiseValue}, Voxel Value: {voxelValue}");
-
-
 
                 }
             }
