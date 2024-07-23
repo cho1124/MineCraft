@@ -22,7 +22,7 @@ public class Chunk
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
-    MeshCollider meshCollider;
+    //MeshCollider meshCollider;
 
 
     int vertexIndex = 0;
@@ -92,7 +92,7 @@ public class Chunk
         materials[2] = World.Instance.waterMaterial;
 
         meshRenderer.materials = materials;
-        meshCollider = chunkObject.AddComponent<MeshCollider>();
+        //meshCollider = chunkObject.AddComponent<MeshCollider>();
 
 
 
@@ -105,8 +105,8 @@ public class Chunk
 
 
 
-        // 시각적 메쉬 -> 충돌 메쉬 설정
-        meshCollider.sharedMesh = meshFilter.mesh;
+        //// 시각적 메쉬 -> 충돌 메쉬 설정
+        //meshCollider.sharedMesh = meshFilter.mesh;
 
         lock (World.Instance.ChunkUpdateThreadLock)
             World.Instance.chunksToUpdate.Add(this);
