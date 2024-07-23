@@ -33,7 +33,18 @@ public class EntityManager : MonoBehaviour //JSON 데이터를 로드하고 엔티티들을 �
         foreach (var sceneEntity in sceneEntities) {
             if (entities.ContainsKey(sceneEntity.name)) {
                 Entity jsonEntity = entities[sceneEntity.name];
-                sceneEntity.Initialize(jsonEntity);
+                if (sceneEntity is Player player && jsonEntity is Player jsonPlayer) {
+                    player.Initialize(jsonPlayer);
+                }
+                else if (sceneEntity is Animal animal && jsonEntity is Animal jsonAnimal) {
+                    animal.Initialize(jsonAnimal);
+                }
+                else if (sceneEntity is Monster monster && jsonEntity is Monster jsonMonster) {
+                    monster.Initialize(jsonMonster);
+                }
+                else {
+                    sceneEntity.Initialize(jsonEntity);
+                }
             }
         }
     }

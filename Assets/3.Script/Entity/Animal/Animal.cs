@@ -8,11 +8,8 @@ public class Animal : Entity, IDamageable {
 
     /*
       ★현재 문제점 
-     -   네비메쉬와 리지드바디 충돌문제로 player 태그를 인식하면 하늘로 솟구쳐오르는 문제가 있음
-     -   갑자기 스케이트 타듯 미끄러지는 듯한 움직임이 있음
-     -   다이나믹네비메쉬(네비메쉬를 계속 업데이트하여 변화를 탐지하는 기능) 키면 너무 느려져서 꺼둠. 
-         -> 동물들이 지면의 변화를 인지할수가 없음 -> 3f이내의 장소에서 10f동안 변화가 없으면 네비메쉬상 목적지를
-             바꾸게 해둠(방향을 바꿀 수 있게)
+     - 플레이어 무기에 달려있는 test1 스크립트 만진 이후 플레이어가 동물을 
+    공격할 수 없게 됨... 공격해도 반응이 없음. 그러나 현재 몬스터들은 동물들에게 데미지를 주고 죽이기도 함.
 
 
      => 점프모션만 하고, y축 이동 제외
@@ -445,18 +442,18 @@ public class Animal : Entity, IDamageable {
         return detected;
     }
 
-    void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-
-        // Y축으로 1만큼 위의 위치에서 레이캐스트 시작
-        Vector3 startPosition = transform.position + Vector3.up * 5;
-
-        for (int i = 0; i < detectionRays; i++) {
-            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            Gizmos.DrawRay(transform.position, direction * detectionDistance);
-        }
-    }
+   // void OnDrawGizmos() {
+   //     Gizmos.color = Color.red;
+   //
+   //     // Y축으로 1만큼 위의 위치에서 레이캐스트 시작
+   //     Vector3 startPosition = transform.position + Vector3.up * 5;
+   //
+   //     for (int i = 0; i < detectionRays; i++) {
+   //         float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
+   //         Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+   //         Gizmos.DrawRay(transform.position, direction * detectionDistance);
+   //     }
+   // }
 
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
@@ -585,7 +582,7 @@ public class Animal : Entity, IDamageable {
         }
         else
         {
-            Debug.LogWarning("Failed to find a valid NavMesh position!");
+            Debug.LogWarning("적절한 네비메쉬 위치 찾기 실패!");
         }
     }
 
@@ -594,7 +591,7 @@ public class Animal : Entity, IDamageable {
         ChangeState(State.Wander);
     }
 
-    public void TakeDamage(float damage) 
+    public override void TakeDamage(float damage) 
     {
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
         Health -= damage;

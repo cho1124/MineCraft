@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour, IDamageable {
         // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
         // entity가 공격받을때 빨갛게 변함
         // 죽을때 파티클로 이펙트
-        // awake에서 entityeditor 에 있는 정보 적용
+        // awake에서 entityeditor 에 있는 정보 적용 ★아직안되고있음...
         //
 
         public string type;
@@ -26,16 +26,16 @@ public class Entity : MonoBehaviour, IDamageable {
         protected Animator animator;
         private Renderer[] entityRenderer;
         private Color[] originalColor;
-
-    private Rigidbody rb;
-        private Vector3 originalPosition; // 공격 시 위치를 저장할 변수
+    protected Rigidbody rb;
+        protected  Vector3 originalPosition; // 공격 시 위치를 저장할 변수
       
         public event Action OnDeath; // 죽음 이벤트 선언
+    protected bool isDead = false; // 생사 여부를 확인하기 위한 플래그
 
-      //  protected virtual void Awake()
-      //  {
-      //      LoadEntityData();
-      //  }
+    //  protected virtual void Awake()
+    //  {
+    //      LoadEntityData();
+    //  }
 
     protected virtual void Start() {
 
@@ -63,17 +63,19 @@ public class Entity : MonoBehaviour, IDamageable {
 
                 health = value;
 
-                if (health <= 0) {
-                    Die();
+                if (health <= 0&& !isDead) {
+                isDead = true;
+                Die();
 
                 }
             }
         }
 
         protected virtual void Die() {
-            Debug.Log("죽어버림ㅜㅜ");
-            OnDeath?.Invoke(); // 죽음 이벤트 호출
-        }
+            Debug.Log($"{name}죽어버림ㅜㅜ");
+        OnDeath?.Invoke(); // 죽음 이벤트 호출
+
+    }
 
         private IEnumerator BlinkRed() {
             float elapsedTime = 0;
@@ -164,53 +166,9 @@ public class Entity : MonoBehaviour, IDamageable {
             this.maxHealth = jsonEntity.health; // assuming maxHealth should be set to the loaded health
             this.damage = jsonEntity.damage;
         }
-
-    private void LoadEntityData()
-    {
-        string jsonFilePath = "Entities.json";
-        EntityData entityData = JsonHelper.LoadFromJson(jsonFilePath);
-        Entity jsonEntity = entityData.entities.Find(e => e.name == this.name && e.type == this.type);
-   
-        if (jsonEntity != null)
-        {
-            Initialize(jsonEntity);
-        }
-        else
-        {
-            Debug.LogError($"Entity data not found for {this.name} of type {this.type}");
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Collider col = GetComponent<Collider>();
-        if (col != null)
-        {
-            Gizmos.DrawWireCube(col.bounds.center, col.bounds.size);
-        }
-    }
 }
 
-public static class JsonHelper
-{
-    public static EntityData LoadFromJson(string path)
-    {
-        string fullPath = Path.Combine(Application.dataPath, path);
-        if (File.Exists(fullPath))
-        {
-            string json = File.ReadAllText(fullPath);
-            return JsonConvert.DeserializeObject<EntityData>(json);
-        }
-        else
-        {
-            Debug.LogError("JSON file not found");
-            return new EntityData();
-        }
-    }
-}
-
-    public interface IDamageable //데미지 입는 인터페이스 
+public interface IDamageable //데미지 입는 인터페이스 
     {
         void TakeDamage(float damage);
     }

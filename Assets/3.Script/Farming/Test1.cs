@@ -37,169 +37,26 @@ public class Test1 : MonoBehaviour
         currentCollider = other;
     }
   
-    private void Update()
-    {
+    private void Update() {
         // 마우스 왼쪽 클릭 확인
-        if (Input.GetMouseButtonDown(0) && currentCollider != null)
-        {
-           // // 충돌한 오브젝트가 "Animals" 태그를 가지고 있는지 확인
-           // if (currentCollider.gameObject.CompareTag("Animals"))
-           // {
-           //
-           //     // Health 컴포넌트 가져오기
-           //     Entity entity = currentCollider.GetComponent<Entity>();
-           //     if (entity != null) {
-           //         // HP를 20 감소시키기
-           //         entity.TakeDamage(20);
-           //         Debug.Log($"{entity.name} 를 때림");
-           //     }
-           //
-           //     // HP가 감소된 후의 동물 오브젝트의 HP가 0이 되지 않았을 경우, 아래 로직을 실행하지 않음
-           //     if (entity == null || entity.Health > 0) {
-           //         return;
-           //     }
-           //
-           //     // 충돌한 오브젝트의 위치와 회전 값을 저장
-           //     Vector3 position = currentCollider.transform.position;
-           //     Quaternion rotation = currentCollider.transform.rotation;
-           //
-           //     // 고기 프리팹의 개수를 정하는 로직 추가
-           //     int meatCount = 1;//기본값
-           //
-           //     //충돌한 오브젝트의 이름에 따라 고기 개수 결정
-           //     string animalName = currentCollider.gameObject.name;
-           //
-           //         if (animalName.Contains("Cat"))
-           //         {
-           //             meatCount = Random.Range(1, 3);
-           //         }
-           //         else if (animalName.Contains("Dog"))
-           //         {
-           //             meatCount = Random.Range(2, 4);
-           //         }
-           //         else if (animalName.Contains("Chicken"))
-           //         {
-           //             meatCount = Random.Range(1, 4);
-           //         }
-           //         else if (animalName.Contains("Lion"))
-           //         {
-           //             meatCount = Random.Range(3, 6);
-           //         }
-           //
-           //         if(animalName.Contains("Baby"))
-           //     {
-           //         meatCount = Mathf.CeilToInt(meatCount / 2.0f);
-           //     }
-           //
-           //     // 기존 동물 오브젝트를 삭제
-           //     Destroy(currentCollider.gameObject);
-           //
-           //     // 새로운 beaf 프리팹 인스턴스 생성
-           //     for (int i = 0; i < meatCount; i++)
-           //     {
-           //         Vector3 spawnPosition = position + new Vector3(i*0.5f, 0, 0);
-           //         Instantiate(beafPrefab, spawnPosition, rotation);
-           //     }
-           // }
-  
-            // 충돌한 오브젝트가 "Monster" 태그를 가지고 있는지 확인
-            if (currentCollider.gameObject.CompareTag("Monster"))
-            {
-  
+        if (Input.GetMouseButtonDown(0) && currentCollider != null) {
+            // Monster 또는 Animals 태그를 가진 오브젝트인지 확인
+            if (currentCollider.gameObject.CompareTag("Monster") || currentCollider.gameObject.CompareTag("Animals")) {
                 // Health 컴포넌트 가져오기
                 Entity entity = currentCollider.GetComponent<Entity>();
-                if (entity != null)
-                {
-                    // HP를 20 감소시키기
+                if (entity != null) {
+                    // HP를 100 감소시키기
                     entity.TakeDamage(100);
                     Debug.Log($"{entity.name} 를 때림");
-                }
-  
-                // HP가 감소된 후의 동물 오브젝트의 HP가 0이 되지 않았을 경우, 아래 로직을 실행하지 않음
-                if (entity == null || entity.Health > 0)
-                {
-                    return;
+
+                    // HP가 감소된 후의 오브젝트가 여전히 존재하는지 확인
+                    if (entity.Health <= 0) {
+                        // 특정 로직 처리 (예: 제거)
+                        Debug.Log($"{entity.name} 가 죽었습니다.");
+                    }
                 }
             }
-  
-          //  // 충돌한 오브젝트가 "Grass" 태그를 가지고 있는지 확인
-          //  if (currentCollider.gameObject.CompareTag("Grass"))
-          //  {
-          //      // 충돌한 오브젝트의 위치와 회전 값을 저장
-          //      Vector3 position = currentCollider.transform.position;
-          //      Quaternion rotation = currentCollider.transform.rotation;
-          //
-          //      // 기존 동물 오브젝트를 삭제
-          //      Destroy(currentCollider.gameObject);
-          //
-          //      // 새로운 beaf 프리팹 인스턴스 생성
-          //      Instantiate(melonSeedPrefab, position, rotation);
-          //  }
-          //
-          //  // 충돌한 오브젝트가 "Grass" 태그를 가지고 있는지 확인
-          //  if (currentCollider.gameObject.CompareTag("Ground"))
-          //  {
-          //      //충돌한 오브젝트의 Renderer 컴포넌트를 가져옴
-          //      renderer = currentCollider.gameObject.GetComponent<Renderer>();
-          //      if(renderer !=null)
-          //      {
-          //          if (renderer.material == brownLightMaterial)
-          //          {
-          //              Debug.Log("비료를 주었습니다");
-          //              //메터리얼을 바꿈
-          //              renderer.material = brownDarkMaterial;
-          //
-          //              if(fertilizedGrounds.ContainsKey(currentCollider.gameObject))
-          //              {
-          //                  StopCoroutine(fertilizedGrounds[currentCollider.gameObject]);
-          //                  fertilizedGrounds.Remove(currentCollider.gameObject);
-          //
-          //              }
-          //
-          //              //300f 후에 멜론으로 변경
-          //              StartCoroutine(ChangeToMelonAfterTime(currentCollider.gameObject, 300f));
-          //
-          //          }
-          //          else
-          //          {
-          //              //연한 갈색으로 변경
-          //              renderer.material = brownLightMaterial;
-          //          }
-          //      }
-          //  }
-  
-            // 충돌 정보 초기화
             currentCollider = null;
         }
     }
-  
-   // private IEnumerator ChangeToMelonAfterTime(GameObject ground, float time)
-   // {
-   //     float elapsedTime = 0f;
-   //     Renderer groundRenderer = ground.GetComponent<Renderer>();
-   //
-   //     while (elapsedTime < time)
-   //     {
-   //         elapsedTime += Time.deltaTime;
-   //
-   //         // 60f 동안 변화가 없으면 연한 갈색으로 변경
-   //         if (elapsedTime >= 60f && groundRenderer.material == brownDarkMaterial)
-   //         {
-   //             groundRenderer.material = brownLightMaterial;
-   //             yield break;
-   //         }
-   //
-   //         yield return null;
-   //     }
-   //
-   //     // 300f 후에 멜론으로 변경
-   //     if (groundRenderer.material == brownDarkMaterial)
-   //     {
-   //         Vector3 position = ground.transform.position;
-   //         Quaternion rotation = ground.transform.rotation;
-   //         Destroy(ground);
-   //         Instantiate(melonPrefab, position, rotation);
-   //     }
-   // }
 }
-

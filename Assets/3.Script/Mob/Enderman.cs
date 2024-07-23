@@ -4,14 +4,29 @@ using UnityEngine;
 
 public class Enderman : Monster, IDamageable
 {
+    /*
+    현재 엔더맨 체력이 0이하로 줄어들어도 핸들데스 메서드 이벤트에
+    호출되지 않고있음, 체력 -까지 계속 뜸
+    
+    => 이벤트 말고 Entity 클래스의 TakeDamage 메서드를 오버라이드하여 체력이 0 이하일 때 직접 Die 메서드를 호출하도록
+    => 그러나 여전히 차이는 없음...
+    */
 
+    private void Start() {
+        base.Start();
+       // OnDeath += HandleDeath; // OnDeath 이벤트에 HandleDeath 메서드를 등록
+        Debug.Log("Enderman Start 호출됨");
+
+    }
     private void HandleDeath()
     {
+        Debug.Log("HandleDeath 호출됨");
         StartCoroutine(OnDie());
     }
 
     public override IEnumerator OnDie()
     {
+        Debug.Log($"{name}사망시작.");
         // 사망 애니메이션을 트리거합니다.
         animator.SetTrigger("Die");
 
@@ -29,9 +44,8 @@ public class Enderman : Monster, IDamageable
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-        if (health <= 0)
-        {
-            Debug.Log($"{name}이(가) 죽음.");
+        if (Health <= 0 && !isDead) {
+            isDead = true;
             HandleDeath();
         }
     }

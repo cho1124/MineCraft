@@ -67,7 +67,6 @@ public class Monster : Entity
     private Vector3 expandedColliderSize;
 
     private BoxCollider boxCollider;
-    private Rigidbody rb;
 
     //플레이어와 동물 감지 추적 관련
     private float lastPlayerDetectionTime;
@@ -81,8 +80,12 @@ public class Monster : Entity
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
         boxCollider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
+        if (rb == null) {
+            Debug.LogError("Rigidbody가 null입니다.");
+            return;
+        }
         originalColliderSize = boxCollider.size;
-        expandedColliderSize = originalColliderSize * 2;
+        expandedColliderSize = originalColliderSize * 2; //몬스터와 주변 사물이 잘 충돌이 안일어나는거같아서 전투시만 콜라이더 2배크기로
         ChangeState(MonsterState.Idle);
         lastPosition = transform.position;
         lastPositionCheckTime = Time.time;
@@ -190,6 +193,9 @@ public class Monster : Entity
             case MonsterState.Attack:
                 StartCoroutine(StateDuration(MonsterState.Attack, 2f));
                 break;
+                default:
+                      StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f)));
+                break;
         }
     }
 
@@ -240,6 +246,16 @@ public class Monster : Entity
 
     private void MoveTowardsTarget(float speed) //몬스터를 targetPosition으로 이동시키는 기능
     {
+
+        if (rb == null) {
+            Debug.LogError("Rigidbody가 null입니다.");
+            return;
+        }
+
+        if (targetPosition == null) {
+            Debug.LogError("targetPosition이 null입니다.");
+            return;
+        }
         // targetPosition과 현재 위치의 차이를 구하고, 방향 벡터로 변환
         Vector3 direction = (targetPosition - transform.position).normalized;
 
@@ -268,8 +284,9 @@ public class Monster : Entity
             attempt++;
             if (attempt > 10)
             {
-                // 너무 많은 시도 후에도 유효한 위치를 찾지 못하면 현재 위치 반환
-                return transform.position;
+                // 너무 많은 시도 후에도 유효한 위치를 찾지 못하면 최소한의 이동을 함
+                randomPosition = transform.position + new Vector3(1f, 0, 1f).normalized * walkRadius;
+                break;
             }
         } while (Vector3.Distance(transform.position, randomPosition) < 1f);
 
@@ -314,7 +331,6 @@ public class Monster : Entity
             float distance = Vector3.Distance(transform.position, lastPosition);// 현재 위치와 마지막 위치 사이의 거리를 계산합니다.
             if (distance < minPositionChange)// 최소 위치 변화보다 적으면
             {
-                transform.Rotate(0, 180, 0); // 몬스터를 180도 회전시킵니다.
                 targetPosition = transform.position + transform.forward * walkRadius; // 새로운 목표 위치를 설정합니다.
                 ChangeState(MonsterState.Walk); // 걷기 상태로 변경합니다.
             }
@@ -377,7 +393,11 @@ public class Monster : Entity
     public void JumpAndChangeState()
     {
         ChangeState(MonsterState.Jump);
-        ChangeState(GetRandomState());
+
+        if (stateCoroutine != null) {
+            StopCoroutine(stateCoroutine);
+        }
+        stateCoroutine = StartCoroutine(StateDuration(GetRandomState(), 0.5f));
     }
 
   //  private IEnumerator ChaseTarget(Transform target, bool isPlayer)

@@ -105,22 +105,22 @@ public class EntityEditor : EditorWindow {
         }
     }
     public static class JsonHelper {
-        public static EntityData LoadFromJson(string path) {
-            string fullPath = Path.Combine(Application.dataPath, path);
-            if (File.Exists(fullPath)) {
-                string json = File.ReadAllText(fullPath);
-                return JsonConvert.DeserializeObject<EntityData>(json);
-            }
-            else {
-                Debug.LogError("JSON file not found");
-                return new EntityData();
-            }
+    public static EntityData LoadFromJson(string path) {
+        string fullPath = Path.Combine(Application.dataPath, path);
+        if (File.Exists(fullPath)) {
+            string json = File.ReadAllText(fullPath);
+            return JsonConvert.DeserializeObject<EntityData>(json);
         }
-
-        public static void SaveToJson(EntityData data, string path) {
-            string fullPath = Path.Combine(Application.dataPath, path);
-            string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-            File.WriteAllText(fullPath, json);
+        else {
+            Debug.LogError("JSON file not found");
+            return new EntityData();
         }
     }
+
+    public static void SaveToJson(EntityData data, string path) {
+        string fullPath = Path.Combine(Application.dataPath, path);
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        File.WriteAllText(fullPath, json);
+    }
+}
 

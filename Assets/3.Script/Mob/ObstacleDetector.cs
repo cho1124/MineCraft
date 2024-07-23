@@ -47,8 +47,9 @@ public class ObstacleDetector : MonoBehaviour
         }
         else
         {
-            // 플레이어나 동물이 아닌 경우 점프
-            monsterScript.JumpAndChangeState();
+            if (monsterScript != null) {
+                monsterScript.JumpAndChangeState();
+            }
         }
     }
 
