@@ -27,6 +27,8 @@ public class ChunkData
     public ChunkData(int _x, int _y) { x = _x; y = _y; }
 
 
+    [System.NonSerialized] public Chunk chunk;
+
     [HideInInspector]
     public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
@@ -49,6 +51,7 @@ public class ChunkData
             }
         }
 
+        
         World.Instance.worldData.AddToModifiedChunkList(this);
 
 
@@ -68,6 +71,8 @@ public class ChunkData
         //chunkData.map[xCheck, yCheck, zCheck].id = newID;
         World.Instance.worldData.AddToModifiedChunkList(this);
 
+        if (chunk != null)
+            World.Instance.AddChunkToUpdate(chunk);
 
 
     }

@@ -62,7 +62,6 @@ public class Chunk
     ChunkData chunkData;
 
 
-
     List<Vector3> normals = new List<Vector3>();
     //private bool threadLocked = false;
 
@@ -600,7 +599,7 @@ public class Chunk
 
 
             int translatedP = p;
-            
+
             if (voxel.orientation != 1)
             {
                 if (voxel.orientation == 0)
@@ -630,12 +629,13 @@ public class Chunk
             // face check(면이 바라보는 방향으로 +1 이동하여 확인) 했을때
             // soild(빈공간이 아닌)가 아닌경우에만 큐브의 면이 그려지도록....
             // -> 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록 최적화 
-            VoxelState neighbor = CheckVoxel(pos + VoxelData.faceChecks[p]);
+            VoxelState neighbour = CheckVoxel(pos + VoxelData.faceChecks[translatedP]);
+            //VoxelState neighbour = chunkData.map[x, y, z].neighbours[translatedP];
 
             // 현재 면이 외부와 접해있는지 확인
-            if (neighbor != null && World.Instance.blockTypes[neighbor.id].renderNeighborFaces)
+            if (neighbour != null && World.Instance.blockTypes[neighbour.id].renderNeighborFaces)
             {
-                float lightLevel = neighbor.globalLightPercent;
+                float lightLevel = neighbour.globalLightPercent;
                 int faceVertCount = 0;
 
 
@@ -652,9 +652,6 @@ public class Chunk
                     //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].position);
                     //vertices.Add(pos + voxel.properties.meshData.faces[p].vertData[i].GetRotatedPosition(new Vector3(0, 180f, 0)));
                     //normals.Add(voxel.properties.meshData.faces[p].normal);
-
-
-
 
 
                 }

@@ -2,28 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
-[System.Serializable]
-public class VoxelState
-{
-    public byte id;
-    public float globalLightPercent;
-
-    public VoxelState()
-    {
-        id = 0;
-        globalLightPercent = 0f;
-    }
-
-
-    public VoxelState(byte _id)
-    {
-        id = _id;
-        globalLightPercent = 0f;
-
-    }
-}*/
-
 
 [System.Serializable]
 public class VoxelState

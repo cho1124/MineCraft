@@ -230,7 +230,40 @@ public class World : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F3))
             debugScreen.SetActive(!debugScreen.activeSelf);
+    
+    
     }
+
+
+    public void AddChunkToUpdate(Chunk chunk)
+    {
+
+        AddChunkToUpdate(chunk, false);
+
+    }
+
+    public void AddChunkToUpdate(Chunk chunk, bool insert)
+    {
+
+        // Lock list to ensure only one thing is using the list at a time.
+        lock (ChunkUpdateThreadLock)
+        {
+
+            // Make sure update list doesn't already contain chunk.
+            if (!chunksToUpdate.Contains(chunk))
+            {
+                // If insert is true, chunk gets inserted at the top of the list.
+                if (insert)
+                    chunksToUpdate.Insert(0, chunk);
+                else
+                    chunksToUpdate.Add(chunk);
+
+            }
+        }
+    }
+
+
+
 
     void CreateChunk()
     {
