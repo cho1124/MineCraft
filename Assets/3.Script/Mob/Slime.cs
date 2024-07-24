@@ -18,6 +18,8 @@ public class Slime : Monster, IDamageable
 
     protected override void Start() 
     {
+        base.Start();
+
         entity = GetComponent<Entity>();
         if (entity != null)
         {

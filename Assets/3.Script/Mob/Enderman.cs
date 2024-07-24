@@ -16,6 +16,8 @@ public class Enderman : Monster, IDamageable
 
     protected override void Start()
     {
+        base.Start();
+
         entity = GetComponent<Entity>();
         if (entity != null)
         {
@@ -24,28 +26,35 @@ public class Enderman : Monster, IDamageable
         Debug.Log("Enderman Start 호출됨");
 
     }
+
+    private void Update()
+    {
+        Damaged_ender();
+    }
+
+
     private void HandleDeath()
     {
         Debug.Log("HandleDeath 호출됨");
         StartCoroutine(OnDie());
     }
 
-    public override IEnumerator OnDie()
-    {
-        Debug.Log($"{name}사망시작.");
-        // 사망 애니메이션을 트리거합니다.
-        animator.SetTrigger("Die");
-
-        // 사망 애니메이션의 길이를 얻어 대기합니다.
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        yield return new WaitForSeconds(stateInfo.length);
-
-        // 사망 효과를 생성합니다.
-        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-
-        // 엔더맨 오브젝트를 파괴합니다.
-        Destroy(gameObject);
-    }
+    //public override IEnumerator OnDie()
+    //{
+    //    Debug.Log($"{name}사망시작.");
+    //    // 사망 애니메이션을 트리거합니다.
+    //    animator.SetTrigger("Die");
+    //
+    //    // 사망 애니메이션의 길이를 얻어 대기합니다.
+    //    AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+    //    yield return new WaitForSeconds(stateInfo.length);
+    //
+    //    // 사망 효과를 생성합니다.
+    //    Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+    //
+    //    // 엔더맨 오브젝트를 파괴합니다.
+    //    Destroy(gameObject);
+    //}
 
     public override void TakeDamage(int damage)
     {
@@ -54,4 +63,13 @@ public class Enderman : Monster, IDamageable
             HandleDeath();
         }
     }
+
+    private void Damaged_ender()
+    {
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            TakeDamage(50);
+        }
+    }
+
 }

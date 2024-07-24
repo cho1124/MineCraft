@@ -74,7 +74,7 @@ public class Monster : Entity
     public float detectionCooldown = 2f; // 감지 쿨다운 시간
     private Coroutine chaseCoroutine;
 
-    protected override void Start()
+    protected virtual void Start()
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
@@ -150,7 +150,7 @@ public class Monster : Entity
         if (collision.gameObject.CompareTag("Weapon"))
         {
             TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
-            Debug.Log($"{collision}에게 {name}공격받음~~");
+            Debug.Log($"{collision}에게 {transform.name}공격받음~~");
         }
     }
 

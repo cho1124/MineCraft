@@ -40,8 +40,8 @@ public class Entity : MonoBehaviour, IDamageable {
     protected virtual void Start() {
 
         
-            health = maxHealth;
-            animator = GetComponent<Animator>();
+        health = maxHealth;
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         entityRenderer = GetComponentsInChildren<Renderer>();
       //  LoadEntityData();
