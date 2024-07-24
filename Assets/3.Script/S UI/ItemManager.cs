@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
+    #region 싱글톤
+
     public static ItemManager instance = null;
 
     private void Awake()
@@ -14,7 +16,13 @@ public class ItemManager : MonoBehaviour
 
             DontDestroyOnLoad(this.gameObject);
         }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
+
+    #endregion
 
     public List<ItemInfo> item_data_list = new List<ItemInfo>();
 }

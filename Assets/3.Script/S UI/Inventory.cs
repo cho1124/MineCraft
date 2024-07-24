@@ -10,36 +10,36 @@ public class Inventory : MonoBehaviour
     public Onchangeitem onchangeitem; // ?
     public delegate void Onchangeitem(); // ?
     public Transform[] slots = null; // Slots 오브젝트 선언
-    [SerializeField] private List<ItemInfo> item_list = new List<ItemInfo>(); // 인벤토리 아이템 리스트 선언
+    public List<ItemInfo> item_list = new List<ItemInfo>(); // 인벤토리 아이템 리스트 선언
     [SerializeField] private GameObject[] on_off_obj = null; // 인벤토리, Dead UI ON, OFF 선언 (Gameobject)
 
     // ========== Inspector private ==========
 
     [HideInInspector] public bool on_off_tr = false; // 인벤토리, Dead UI ON, OFF 선언 (Bool)
 
-    private void Start()
+    private void Start() // 한번만 실행되는 생명 주기 메소드
     {
-        on_off_obj[1].SetActive(on_off_tr);
+        on_off_obj[1].SetActive(on_off_tr); // 바로 인벤토리, Dead UI ON, OFF 상태 변경
     }
 
-    private void Update()
+    private void Update() // 프레임마다 실행되는 생명 주기 메소드
     {
         if (Input.GetKeyDown(KeyCode.E)) // E키를 누른다면
         {
-            on_off_tr = !on_off_tr; // 인벤토리 UI ON, OFF (Bool)
+            on_off_tr = !on_off_tr; // 인벤토리 UI ON, OFF 체크
 
-            on_off_obj[0].SetActive(on_off_tr); // 인벤토리 UI ON, OFF (Gameobject)
+            on_off_obj[0].SetActive(on_off_tr); // 인벤토리 UI ON, OFF 기능
         }
 
         if (Input.GetKeyDown(KeyCode.P)) // P키를 누른다면 ////////// Test
         {
-            on_off_tr = !on_off_tr; // Dead UI ON, OFF (Bool)
+            on_off_tr = !on_off_tr; // Dead UI ON, OFF 체크
 
-            on_off_obj[1].SetActive(on_off_tr); // Dead UI ON, OFF (Bool)
+            on_off_obj[1].SetActive(on_off_tr); // Dead UI ON, OFF 기능
         }
     }
 
-    public bool AddItem(ItemInfo iteminfo)
+    public bool AddItem(ItemInfo iteminfo) // 인벤토리 아이템 추가 메소드
     {
         float slots_count = slots[0].childCount + slots[1].childCount; // Slots1, Slots2 자식 오브젝트들의 총 합
 
@@ -52,15 +52,15 @@ public class Inventory : MonoBehaviour
                 onchangeitem.Invoke();
             }
 
-            return true;
+            return true; // 반환 값 True
         }
 
-        return false;
+        return false; // 반환 값 False
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collision) // 트리거 메소드
     {
-        if (collision.gameObject.CompareTag("Item"))
+        if (collision.gameObject.CompareTag("Item")) // Item 태그 닿으면
         {
             Item item = collision.GetComponent<Item>();
 

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1842469482754892090}
   - component: {fileID: 6466240906783216337}
   - component: {fileID: 3062306290094948314}
+  - component: {fileID: -6724629376306797414}
   m_Layer: 0
   m_Name: Slot
   m_TagString: Untagged
@@ -159,6 +160,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9119b0ff001e4a2bb7338b2b45a6853, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item_icon: {fileID: 5987297113102147486}
+  iteminfo_class:
+    item_name: 
+    item_image: {fileID: 0}
+    item_type: 0
+--- !u!114 &-6724629376306797414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138374965506606791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 222acbd0efdc4be42a0b9c2254580b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 8504585907647284811}
 --- !u!1 &5148923563924326141
 GameObject:
   m_ObjectHideFlags: 0

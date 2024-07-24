@@ -19,6 +19,10 @@ public class ItemInfo
 
     public bool ItemUse()
     {
+        bool isUsed = false;
+
+        isUsed = true;
+
         return false;
     }
 }
