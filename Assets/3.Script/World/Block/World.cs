@@ -175,7 +175,7 @@ public class World : MonoBehaviour
         //camera.backgroundColor = Color.Lerp(day, night, globalLightLevel);
         //
         //// 쉐이더 글로벌라이트 연결
-        //Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
+        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
 
 
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
