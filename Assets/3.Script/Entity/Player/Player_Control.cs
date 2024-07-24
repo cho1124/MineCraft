@@ -14,6 +14,9 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private GameObject position_anchor;
     [SerializeField] private GameObject rotation_anchor;
 
+    [SerializeField] private GameObject anchor_left;
+    [SerializeField] private GameObject anchor_right;
+
     private Quaternion target_rotation;
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
@@ -68,6 +71,17 @@ public class Player_Control : MonoBehaviour
     private void LateUpdate()
     {
         Rotation_Control();
+
+        if (animator.GetInteger("Moveset_Number") == 3)
+        {
+            anchor_right.transform.LookAt(anchor_left.transform);
+            anchor_right.transform.Rotate(new Vector3(-60f, 0 - 45f, 0f));
+        }
+        if (animator.GetInteger("Moveset_Number") == -3)
+        {
+            anchor_left.transform.LookAt(anchor_right.transform);
+            anchor_left.transform.Rotate(new Vector3(-60f, -45f, 0f));
+        }
     }
 
 
@@ -94,6 +108,7 @@ public class Player_Control : MonoBehaviour
         cursor_y += cursor_v;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
 
+        //예상 해결 위치
         if(key_h != 0 || key_v != 0)
         {
             if (key_v == 0) temp_y = cursor_x;
@@ -115,7 +130,7 @@ public class Player_Control : MonoBehaviour
         rotation_anchor.transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
 
 
-        if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding"))
+        if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding")) //예상 해결 위치
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
             head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
