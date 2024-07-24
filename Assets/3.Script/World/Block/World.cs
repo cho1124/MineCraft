@@ -422,6 +422,15 @@ public class World : MonoBehaviour
             return false;
 
     }
+    public bool CheckWaterForVoxel(Vector3 pos)
+    {
+        VoxelState voxel = worldData.GetVoxel(pos);
+        if (blockTypes[voxel.id].isWater)
+            return true;
+        else
+            return false;
+
+    }
     public VoxelState GetVoxelState(Vector3 pos)
     {
         return worldData.GetVoxel(pos);

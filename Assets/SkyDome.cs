@@ -51,13 +51,13 @@ public class SkyDome : MonoBehaviour
         Vector3 sunRelativePos = player.transform.position - sun.transform.position;
         Quaternion sunRotation = Quaternion.LookRotation(sunRelativePos);
         sun.transform.rotation = Quaternion.Lerp(sun.transform.rotation, sunRotation, Time.deltaTime * rotationSpeed);
-        sun.transform.RotateAround(player.transform.position, Vector3.right, (180f / dayDuration) * Time.deltaTime);
+        sun.transform.RotateAround(player.transform.position, Vector3.back, (180f / dayDuration) * Time.deltaTime);
 
         // 달 회전 (해의 반대편에 위치하도록 설정)
         Vector3 moonRelativePos = player.transform.position - moon.transform.position;
         Quaternion moonRotation = Quaternion.LookRotation(moonRelativePos);
         moon.transform.rotation = Quaternion.Lerp(moon.transform.rotation, moonRotation, Time.deltaTime * rotationSpeed);
-        moon.transform.RotateAround(player.transform.position, Vector3.right, (180f / dayDuration) * Time.deltaTime);
+        moon.transform.RotateAround(player.transform.position, Vector3.back, (180f / dayDuration) * Time.deltaTime);
     }
 
     private void SetMoonInitialPosition()

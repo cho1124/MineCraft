@@ -273,8 +273,20 @@ public class Player : MonoBehaviour
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)) ||
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)))
         {
-            isGrounded = true;
-            return 0;
+            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)))
+            {
+                isGrounded = false;
+                return downSpeed;
+
+            }
+            else
+            {
+                isGrounded = true;
+                return 0;
+            }
         }
         else
         {
@@ -291,7 +303,13 @@ public class Player : MonoBehaviour
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)) ||
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)))
         {
-            return 0;
+            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)))
+                return upSpeed;
+            else
+                return 0;
         }
         else
         {
@@ -305,36 +323,105 @@ public class Player : MonoBehaviour
     ///                    true 면 블록이 있다는 뜻
     ///                    false 면 블록이 없다는 뜻
 
+
+
+
     public bool front
     {
         get
         {
-            return World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
-                   World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth));
+            if (World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
+               World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth)))
+            {
+                if (World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth))||
+                    World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth)))
+                    return false;
+                else
+                    return true;
+
+            }
+            else
+            {
+                return false;
+            }    
+
+            //return World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
+            //       World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth));
         }
     }
     public bool back
     {
         get
         {
-            return World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
-                   World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth));
+
+            if (World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
+                World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth)))
+            {
+                if (World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
+                    World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth)))
+                    return false;
+                else
+                    return true;
+
+            }
+            else
+            {
+                return false;
+            }
+            //return World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
+            //       World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth));
         }
     }
     public bool left
     {
         get
         {
-            return world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
-                   world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z));
+
+            if (World.Instance.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
+                World.Instance.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z)))
+            {
+                if (World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
+                    World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z)))
+                    return false;
+                else
+                    return true;
+
+            }
+            else
+            {
+                return false;
+            }
+
+
+
+            //return world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
+            //       world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z));
         }
     }
     public bool right
     {
         get
         {
-            return world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
-                   world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z));
+
+            if (World.Instance.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
+                World.Instance.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z)))
+            {
+                if (World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
+                    World.Instance.CheckWaterForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z)))
+                    return false;
+                else
+                    return true;
+
+            }
+            else
+            {
+                return false;
+            }
+
+
+
+            //return world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
+            //       world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z));
         }
     }
 }
