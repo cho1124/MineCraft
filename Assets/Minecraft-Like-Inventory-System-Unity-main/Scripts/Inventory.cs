@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] InventorySlot[] inventorySlots;
     [SerializeField] InventorySlot[] hotbarSlots;
 
-    // 0=Head, 1=Chest, 2=Legs, 3=Feet
+    // 0: Head, 1: Chest, 2: Legs, 3: Feet, 4: Weapon, 5: Accessories
     [SerializeField] InventorySlot[] equipmentSlots;
 
     [SerializeField] Transform draggablesTransform;
@@ -73,6 +73,10 @@ public class Inventory : MonoBehaviour
             case SlotTag.Legs:
                 break;
             case SlotTag.Feet:
+                break;
+            case SlotTag.Weapon:
+                break;
+            case SlotTag.Accessories:
                 break;
         }
     }
