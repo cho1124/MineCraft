@@ -4,30 +4,26 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private Transform find_inventory_slot = null;
+    // ========== Inspector public ==========
 
-    [SerializeField] private float speed = 100;
+    [SerializeField] private ItemInfo iteminfo = null;
+    [SerializeField] private SpriteRenderer image = null;
 
-    private void Update()
+    public void SetItemInfo(ItemInfo iteminfo)
     {
-        this.transform.Rotate(0, Time.deltaTime * speed, 0);
+        this.iteminfo.item_name = iteminfo.item_name;
+        this.iteminfo.item_image = iteminfo.item_image;
+        this.iteminfo.item_type = iteminfo.item_type;
+        this.image.sprite = iteminfo.item_image;
     }
 
-    private void OnTriggerEnter(Collider collision)
+    public ItemInfo GetItemInfo()
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            for (int i = 0; i <= find_inventory_slot.childCount; i++)
-            {
-                if (find_inventory_slot.GetChild(i).childCount == 0)
-                {
-                    this.transform.SetParent(find_inventory_slot.GetChild(i));
+        return iteminfo;
+    }
 
-                    break;
-
-                    // 수정 필요
-                }
-            }
-        }
+    public void DestroyItem()
+    {
+        Destroy(this.gameObject);
     }
 }

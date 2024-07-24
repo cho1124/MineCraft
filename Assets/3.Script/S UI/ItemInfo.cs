@@ -2,21 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemInfoManager : MonoBehaviour
+public enum ItemType
 {
-    public static ItemInfoManager instance = null;
+    Weapon,
+    Equipment,
+    Item,
+    Use,
+}
 
-    private void Awake()
+[System.Serializable]
+public class ItemInfo
+{
+    public string item_name;
+    public Sprite item_image;
+    public ItemType item_type;
+
+    public bool ItemUse()
     {
-        if (instance == null)
-        {
-            instance = this;
+        bool isUsed = false;
 
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        isUsed = true;
+
+        return false;
     }
 }
