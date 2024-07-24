@@ -42,6 +42,7 @@ public class Player_Control : MonoBehaviour
     private bool input_key_inventory = false;
     private bool input_key_die_test = false;
 
+    private float draw_rate = 0f;
 
     private bool is_L_down = false;
     private bool is_R_down = false;
@@ -78,7 +79,7 @@ public class Player_Control : MonoBehaviour
         if (animator.GetInteger("Moveset_Number") == 3)
         {
             anchor_right.transform.LookAt(anchor_left.transform);
-            anchor_right.transform.Rotate(new Vector3(-60f, 0 - 45f, 0f));
+            anchor_right.transform.Rotate(new Vector3(-60f, -45f, 0f));
         }
         if (animator.GetInteger("Moveset_Number") == -3)
         {
@@ -111,8 +112,11 @@ public class Player_Control : MonoBehaviour
         cursor_y += cursor_v;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
 
-        //예상 해결 위치
-        if(key_h != 0 || key_v != 0)
+        if(!animator.GetBool("Is_Attacking") && (animator.GetBool("LR_Attack") || animator.GetBool("L_Attack") || animator.GetBool("R_Attack")) || animator.GetBool("Is_Guarding") || animator.GetBool("Is_Drawing"))
+        {
+            temp_y = cursor_x;
+        }
+        else if(key_h != 0 || key_v != 0)
         {
             if (key_v == 0) temp_y = cursor_x;
             else if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
@@ -133,7 +137,7 @@ public class Player_Control : MonoBehaviour
         rotation_anchor.transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
 
 
-        if (!animator.GetBool("Is_Attacking") || animator.GetBool("Is_Guarding")) //예상 해결 위치
+        if (!animator.GetBool("Is_Attacking"))
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
             head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
@@ -287,6 +291,16 @@ public class Player_Control : MonoBehaviour
         animator.SetBool("Is_Attacking", false);
         Debug.Log("False");
     }
+    public void Draw_Rate_Increase()
+    {
+        animator.SetBool("Is_Drawing", true);
+        draw_rate += 0.1f;
+    }
+    public void Draw_Rate_Reset()
+    {
+        animator.SetBool("Is_Drawing", false);
+        draw_rate = 0f;
+    }
     public void On_Guard_Trigger_Enter()
     {
         animator.SetBool("Is_Guarding", true);
@@ -294,5 +308,10 @@ public class Player_Control : MonoBehaviour
     public void On_Guard_Trigger_Exit()
     {
         animator.SetBool("Is_Guarding", false);
+    }
+
+    public void On_Attack(bool hand, GameObject victim)
+    {
+        Debug.Log($"{hand}, {victim.name}");
     }
 }
