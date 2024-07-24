@@ -15,29 +15,26 @@ public class Monster : Entity
     ===>(혹시 어딘가 끼어 움직이지 못하고 있는 상황 대비) 15초간 3f이상의 좌표 변동이 없으면 180도 회전 하도록 해둠 
     ====> 플레이어 감지하면 플레이어에게 raycast 쏘면서 한동안 chase(7초) 함 
     =====> 플레이어 움직임 좀더 자연스럽게 움직이도록 일정 시간마다 랜덤 방향으로 회전하고 이동하고 또 일정 이후 상태 변경하도록
-
-
-    확인할것
-    ★ 시작하고 일정시간 지나면 갑자기 다들 제자리에서....발광함...(매우큰문제..)
-    GetRandomPosition()  에 있는 목적지 생성 로그 무한으로 찎힘
-
-
-    확인한것
-    1. 왠지 모르겠는데 시작하자마자 볼링공처럼 한번씩 엎어짐
-    => 시작 상태 walk인거를 idle로 고쳤더니 괜찮아짐 
  
-    3. 플레이어랑 오브젝트들 인지하지 못하는 것 같음 
-    => 플레이어는 정확하게 인식하고 있음
- 
+    <공격>
+    몬스터는 ObstacleDetector 스크립트(몬스터에게 있는 오브젝트인 투명한 큐브에 있음)를 
+    사용하여 플레이어와 동물을 감지
+    플레이어인지 동물인지 확인하고 chaseTarget코루틴을 시작함
+    chaseTarget코루틴에서는 raycast를 통해 일정시간 목표를 추적하고,
+    목표가 감지되면 목표의 위치를 settarget 메서드를 활용해 몬스터에 전달->몬스터는 chase 상태가 됨->목표위치로 이동하고 공격 범위 내면 attack상태
+    최대추적거리 내에 있는 동안 계속 추적
+    목표가 범위를 벗어나거나 시간이 경과하면 추적을 종료하고, EndChaseAndWander 메서드를 호출하여 다시 랜덤 상태로 전환
+
+    ★몬스터들 몬스터 스크립트 빼면 안움직이고 안죽습니다...★
+
     */
 
     //상태 및 동작 관련 변수
-    private enum MonsterState { Idle, Walk, Run, Jump,Chase, TurnLeft, TurnRight }
+    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight, Attack }
     private MonsterState currentState; // 몬스터의 현재상태 
 
     //참조를 위한 변수
     private Vector3 targetPosition; //몬스터 목적지
-    private Rigidbody rb;
     private ObstacleDetector obstacleDetector; //장애물감지 큐브
     public Transform head; //몬스터의 머리(head) 참조
 
@@ -62,12 +59,42 @@ public class Monster : Entity
     public bool IsChasingPlayer { get; set; } = false; // 플레이어를 추적 중인지 여부를 저장
 
     private Coroutine stateCoroutine;
+    private bool isGrounded = true; // 몬스터가 바닥에 있는지 여부를 저장
 
-    protected override void Start()
+    public float attackRange = 1.5f; // 공격 범위
+
+    private Vector3 originalColliderSize;
+    private Vector3 expandedColliderSize;
+
+    private BoxCollider boxCollider;
+
+    //플레이어와 동물 감지 추적 관련
+    private float lastPlayerDetectionTime;
+    private float lastAnimalDetectionTime;
+    public float detectionCooldown = 2f; // 감지 쿨다운 시간
+    private Coroutine chaseCoroutine;
+
+    protected virtual void Start()
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
-        rb = GetComponent<Rigidbody>();
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
+        if (obstacleDetector == null)
+        {
+            Debug.LogError("ObstacleDetector가 null입니다.");
+        }
+
+        boxCollider = GetComponent<BoxCollider>();
+        if (boxCollider == null)
+        {
+            Debug.LogError("BoxCollider가 null입니다.");
+        }
+        rb = GetComponent<Rigidbody>();
+        if (rb == null) {
+            Debug.LogError("Rigidbody가 null입니다.");
+            return;
+        }
+        originalColliderSize = boxCollider.size;
+        expandedColliderSize = originalColliderSize * 2; //몬스터와 주변 사물이 잘 충돌이 안일어나는거같아서 전투시만 콜라이더 2배크기로
         ChangeState(MonsterState.Idle);
         lastPosition = transform.position;
         lastPositionCheckTime = Time.time;
@@ -78,7 +105,7 @@ public class Monster : Entity
     {
         CheckPositionChange(); // 일정 간격으로 위치 변화를 체크합니다.
         switch (currentState) // 현재 상태에 따라 다른 행동을 수행합니다.
-        { 
+        {
             case MonsterState.Walk:
                 Walk();
                 break;
@@ -98,6 +125,9 @@ public class Monster : Entity
             case MonsterState.TurnRight:
                 TurnRight();
                 break;
+            case MonsterState.Attack:
+                AttackTarget();
+                break;
         }
     }
 
@@ -109,6 +139,7 @@ public class Monster : Entity
             rb.AddTorque(Vector3.right * 10f); // 힘을 가해서 자연스럽게 스도록 유도하는 방법
 
             /*
+            뒤집힌걸 세울 수 있는 다른 코드
             rb.angularVelocity = Vector3.zero;
             rb.velocity = Vector3.zero;
             transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
@@ -118,38 +149,61 @@ public class Monster : Entity
         }
     }
 
+    protected void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true; // 바닥에 착지했음을 표시
+        }
+
+        if (collision.gameObject.CompareTag("Weapon"))
+        {
+            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+            Debug.Log($"{collision}에게 {transform.name}공격받음~~");
+        }
+    }
+
     private void ChangeState(MonsterState NewState) // 상태를 변경하는 메서드입니다.
     {
         if (stateCoroutine != null)
         {
             StopCoroutine(stateCoroutine);
         }
-
         currentState = NewState; // 현재 상태를 새로운 상태로 변경합니다.
         switch (currentState)
         {
             case MonsterState.Walk:
-               targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
-                StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
+                targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Idle:
-                StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Run:
-                StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
             case MonsterState.Jump:
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                StartCoroutine(StateDuration(MonsterState.Jump, 3f));
+                if (isGrounded)
+                {
+                    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                    isGrounded = false; // 점프를 시작했음을 표시
+                }
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Jump, 3f));
                 break;
             case MonsterState.Chase:
-              //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
+                //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
                 break;
             case MonsterState.TurnLeft:
-                StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
                 break;
             case MonsterState.TurnRight:
-                StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
+                break;
+            case MonsterState.Attack:
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Attack, 2f));
+                break;
+                default:
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f)));
                 break;
         }
     }
@@ -166,37 +220,51 @@ public class Monster : Entity
     private void Run()  // 달리기 상태에서 수행할 행동을 정의하는 메서드입니다.
     {
         MoveTowardsTarget(runSpeed); // 목표 위치로 달리기 속도로 이동합니다.
-        if (Vector3.Distance(transform.position,targetPosition)<0.1f) // 목표 위치에 도달했는지 확인합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
         {
             ChangeState(MonsterState.Idle); // Idle 상태로 변경
         }
     }
 
-    private void TurnLeft() 
+    private void TurnLeft()
     {
         // 몬스터를 왼쪽으로 회전
         transform.Rotate(0, -90, 0);
         ChangeState(MonsterState.Walk);
     }
 
-    private void TurnRight() 
+    private void TurnRight()
     {
         // 몬스터를 오른쪽으로 회전
         transform.Rotate(0, 90, 0);
         ChangeState(MonsterState.Walk);
     }
 
-    private void Chase() 
+    private void Chase()
     {
         MoveTowardsTarget(runSpeed);
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < attackRange)
         {
-            EndChaseAndWander(); // 추적 종료 후 다른 상태로 전환
+            ChangeState(MonsterState.Attack);
+        }
+        else if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            EndChaseAndWander();
         }
     }
 
     private void MoveTowardsTarget(float speed) //몬스터를 targetPosition으로 이동시키는 기능
     {
+
+        if (rb == null) {
+            Debug.LogError("Rigidbody가 null입니다.");
+            return;
+        }
+
+        if (targetPosition == null) {
+            Debug.LogError("targetPosition이 null입니다.");
+            return;
+        }
         // targetPosition과 현재 위치의 차이를 구하고, 방향 벡터로 변환
         Vector3 direction = (targetPosition - transform.position).normalized;
 
@@ -204,63 +272,69 @@ public class Monster : Entity
         Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
 
         // 몬스터의 현재 위치를 newPosition으로 업데이트
-        transform.position = newPosition;
+        rb.MovePosition(newPosition);
+        //Rigidbody를 사용하여 객체를 이동시키는 방법입니다. 이는 물리 엔진을 통해 이동을 처리하므로, 충돌 및 기타 물리적 상호작용을 고려하여 객체를 이동시킵니다. 
 
         // 몬스터가 이동할 때 바라보는 방향을 갱신
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    private Vector3 GetRandomPosition() //몬스터가 이동할 새로운 랜덤 위치를 생성
+    private Vector3 GetRandomPosition()
     {
-        Debug.Log($"{name}새로운 목적지를 생성하겠습니다.");
-        float randomAngle = Random.Range(0, 360);// 랜덤 각도를 생성합니다.
-        Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward; // 랜덤 방향을 생성합니다.
         Vector3 randomPosition;
+        int attempt = 0;
         do
         {
-            randomPosition = transform.position + randomDirection * walkRadius; // 현재 위치에서 랜덤 방향으로 walkRadius만큼 떨어진 위치를 반환합니다.
-        } while (Vector3.Distance(transform.position, randomPosition) < 3f); // 최소 거리 조건 추가
+            float randomDistance = Random.Range(1f, walkRadius);
+            float randomAngle = Random.Range(0f, 360f);
+            Vector3 randomDirection = new Vector3(Mathf.Sin(randomAngle), 0, Mathf.Cos(randomAngle)).normalized;
+            randomPosition = transform.position + randomDirection * randomDistance;
+
+            attempt++;
+            if (attempt > 10)
+            {
+                // 너무 많은 시도 후에도 유효한 위치를 찾지 못하면 최소한의 이동을 함
+                randomPosition = transform.position + new Vector3(1f, 0, 1f).normalized * walkRadius;
+                break;
+            }
+        } while (Vector3.Distance(transform.position, randomPosition) < 1f);
+
         return randomPosition;
     }
 
-    private IEnumerator StateDuration(MonsterState state, float duration) //몬스터가 특정 상태를 일정 시간 동안 유지하게
+    private IEnumerator StateDuration(MonsterState state, float duration)
     {
-        // 지정된 시간(duration)만큼 대기
-        yield return new WaitForSeconds(duration+5f);
-        // 다음 상태를 랜덤하게 선택
-        MonsterState nextState = GetRandomState();
-
-        // 새로운 상태로 변경
-        ChangeState(nextState);
+        yield return new WaitForSeconds(duration);
+        ChangeState(GetRandomState());
     }
 
     private MonsterState GetRandomState()  // 랜덤 상태를 선택하는 메서드입니다.
     {
-            int randomIndex = Random.Range(0, 5); // jump 상태를 제외한 상태 선택
-            switch (randomIndex) {
-                case 0:
-                    return MonsterState.Walk;
-                case 1:
-                    return MonsterState.Run;
-                case 2:
-                    return MonsterState.Idle;
-                case 3:
-                    return MonsterState.TurnLeft;
-                case 4:
-                    return MonsterState.TurnRight;
-                default:
-                    return MonsterState.Walk;
-            }
+        int randomIndex = Random.Range(0, 5); // jump 상태를 제외한 상태 선택
+        switch (randomIndex)
+        {
+            case 0:
+                return MonsterState.Walk;
+            case 1:
+                return MonsterState.Run;
+            case 2:
+                return MonsterState.Idle;
+            case 3:
+                return MonsterState.TurnLeft;
+            case 4:
+                return MonsterState.TurnRight;
+            default:
+                return MonsterState.Walk;
         }
-    
-    private void CheckPositionChange()  // 위치 변화를 체크하는 메서드입니다.
+    }
+
+    private void CheckPositionChange()  // 위치 변화를 체크하는 메서드입니다. (한곳에만 장시간 있는것을 방지하기 위해)
     {
         if (Time.time - lastPositionCheckTime >= positionCheckInterval) // 마지막으로 위치를 체크한 시간에서 일정 시간이 지났는지 확인합니다.
         {
             float distance = Vector3.Distance(transform.position, lastPosition);// 현재 위치와 마지막 위치 사이의 거리를 계산합니다.
             if (distance < minPositionChange)// 최소 위치 변화보다 적으면
             {
-                transform.Rotate(0, 180, 0); // 몬스터를 180도 회전시킵니다.
                 targetPosition = transform.position + transform.forward * walkRadius; // 새로운 목표 위치를 설정합니다.
                 ChangeState(MonsterState.Walk); // 걷기 상태로 변경합니다.
             }
@@ -281,20 +355,54 @@ public class Monster : Entity
         ChangeState(GetRandomState());
     }
 
+    private void AttackTarget()
+    {
+        // 몬스터와 목표 위치 사이의 거리가 공격 범위 내에 있는지 확인합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < attackRange)
+        {
+            Debug.Log($"Agent{name} 가 공격중.!");
+            animator.SetBool("Fight", true); // 공격 애니메이션 bool 파라미터 설정
+                                             // 머리 위치에서 앞 방향으로 레이캐스트를 발사하여 공격을 시도합니다.
+
+            // 일시적으로 콜라이더 크기를 늘립니다.
+            StartCoroutine(ExpandCollider());
+
+            RaycastHit hit;
+            if (Physics.Raycast(head.position, head.forward, out hit, attackRange))
+            {
+                if (hit.transform.GetComponent<IDamageable>() != null && hit.transform != this.transform && !hit.transform.CompareTag("Monster"))
+                {
+                    hit.transform.GetComponent<IDamageable>().TakeDamage(damage);
+                }
+            }
+        }
+        EndChaseAndWander();
+    }
+
+    private IEnumerator ExpandCollider()
+    {
+        boxCollider.size = expandedColliderSize;
+        yield return new WaitForSeconds(1f); // 콜라이더를 확장된 상태로 유지할 시간
+        boxCollider.size = originalColliderSize;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<IDamageable>() != null && other.transform != this.transform && !other.CompareTag("Monster"))
+        {
+            other.GetComponent<IDamageable>().TakeDamage(damage);
+        }
+    }
+
     public void JumpAndChangeState()
     {
         ChangeState(MonsterState.Jump);
-        ChangeState(GetRandomState());
-    }
 
-   
-
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.gameObject.CompareTag("Tool"))
-        {
-            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+        if (stateCoroutine != null) {
+            StopCoroutine(stateCoroutine);
         }
+        stateCoroutine = StartCoroutine(StateDuration(GetRandomState(), 0.5f));
     }
+
 }
-    
+

@@ -808,8 +808,9 @@ GameObject:
   - component: {fileID: 7672257771420419128}
   - component: {fileID: 5501483357301923496}
   - component: {fileID: -2815101361065574711}
+  - component: {fileID: 8184430710977216128}
   m_Layer: 0
-  m_Name: slime
+  m_Name: Slime
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -824,7 +825,7 @@ Transform:
   m_GameObject: {fileID: 7401732072854609404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.98, y: 0.513, z: -16.393}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4499446347743319798}
   - {fileID: 8532406580460147353}
@@ -873,6 +874,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffad103a0fa49c4b90f2e5403a3b768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  name: 
+  damage: 10
+  maxHealth: 50
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662160098818}
   walkRadius: 10
@@ -887,6 +893,8 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
 --- !u!95 &-2815101361065574711
 Animator:
   serializedVersion: 3
@@ -900,12 +908,49 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8184430710977216128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7401732072854609404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b6bae3b9629c1a46810c0bd0c65c642, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  name: 
+  damage: 10
+  maxHealth: 50
+  health: 0
+  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  head: {fileID: 7796825662160098818}
+  walkRadius: 5
+  walkSpeed: 3
+  runSpeed: 4
+  idleTime: 4
+  minWalkTime: 6
+  maxWalkTime: 12
+  jumpForce: 4
+  detectionDistance: 2
+  ChaseDuration: 5
+  turnDuration: 4
+  positionCheckInterval: 15
+  minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
+  slimePrefab: {fileID: 7401732072854609404}
+  deathAnimationDuration: 2
+  slimeAnimatorController: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}
+  splitSlimeAnimatorController: {fileID: 9100000, guid: 3743d5f2860959442ad2bbb10e543329, type: 2}
 --- !u!1 &8944656964792782805
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Dog : Animal {
     private Transform playerTransform;
+    private int currentHealth;
 
+    protected override void Start()
+    {
+        base.Start();
+    }
     protected override void Update() {
         base.Update();
     }
@@ -19,7 +24,6 @@ public class Dog : Animal {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) {
             playerTransform = player.transform;
-            Debug.Log("Player detected and FleeSequence started"); // 로그 추가
             StartCoroutine(FleeSequence());
         }
         else {
@@ -59,12 +63,12 @@ public class Dog : Animal {
                 SetRandomDestination();
                 break;
             case State.Jump:
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-                rb.isKinematic = false;
+             //   agent.isStopped = true;
+             //   agent.updatePosition = false;
+             //   agent.updateRotation = false;
+             //   rb.isKinematic = false;
                 animator.Play("Jump");
-                StartCoroutine(JumpThenIdle());
+               // StartCoroutine(JumpThenIdle());
                 break;
             case State.Idle:
                 agent.ResetPath();

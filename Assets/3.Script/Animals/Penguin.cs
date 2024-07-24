@@ -2,30 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //  ★★프리팹과 이름을 맞추기위해 펭귄이라 써놨지만 참새입니다!!!★★
-public class Penguin : Animal
-{
-    private bool isSecondJump = false; // 두 번째 점프 여부
+// 참새는 애니멀 상속 안받고 움직임 만들어보는중
+
+public class Penguin : Animal 
+    {
+
+    protected override void Start()
+    {
+        base.Start();
+    }
     protected override void Update() {
         base.Update();
-    }
-
-    protected override State GetRandomState() {
-        int random = Random.Range(0, 100);
-        if (random < 25) {
-            return State.Jump; // 25% 확률로 일반 점프 상태로 전환
-        }
-        else if (random < 50) {
-            return State.DoubleJump; // 25% 확률로 2단 점프 상태로 전환
-        }
-        else if (random < 75) {
-            return State.Run; // 25% 확률로 달리기 상태로 전환
-        }
-        else if (random < 90) {
-            return State.Idle; // 15% 확률로 대기 상태로 전환
-        }
-        else {
-            return State.Wander; // 10% 확률로 배회 상태로 전환
-        }
     }
 
     protected override void OnPlayerDetected() {
@@ -33,70 +20,21 @@ public class Penguin : Animal
         // Animal 클래스의 기본 동작 수행
         canDetectPlayer = false; // 탐지 비활성화
         StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
-
         StartCoroutine(FleeSequence());
-    }
-
-    protected override void ChangeState(State newState) {
-        currentState = newState;
-
-        switch (currentState) {
-            case State.Wander:
-                agent.speed = baseSpeed;
-                animator.SetInteger("Walk", 1);
-                SetRandomDestination();
-                break;
-            case State.Jump:
-                animator.Play("Jump");
-                StartCoroutine(JumpThenIdle());
-                break;
-            case State.DoubleJump:
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-                rb.isKinematic = false;
-                animator.Play("Jump");
-                StartCoroutine(DoubleJumpThenIdle());
-                break;
-            case State.Idle:
-                agent.ResetPath();
-                animator.Play("Idle");
-                StartCoroutine(IdleThenWander());
-                break;
-            case State.Run:
-                agent.speed = baseSpeed * 2;
-                animator.SetInteger("Walk", 1);
-                SetRandomDestination();
-                break;
-        }
-    }
-
-    protected IEnumerator DoubleJumpThenIdle() {
-        rb.AddForce(Vector3.up * 3f, ForceMode.Impulse); // 첫 번째 점프
-        yield return new WaitForSeconds(1f); // 첫 번째 점프 후 잠시 대기
-
-        rb.AddForce(Vector3.up * 3f, ForceMode.Impulse); // 두 번째 점프
-        yield return new WaitForSeconds(1f); // 두 번째 점프 후 잠시 대기
-
-        agent.updatePosition = true;
-        agent.updateRotation = true;
-        agent.isStopped = false;
-        rb.isKinematic = true;
-        ChangeState(State.Idle);
     }
 
     IEnumerator FleeSequence() {
         // Jump
-    //    ChangeState(State.Jump);
-    //    yield return new WaitForSeconds(1.1f); // Jump duration
+        //  ChangeState(State.Jump);
+        //  yield return new WaitForSeconds(1.1f); // Jump duration
 
 
         // NavMeshAgent의 회전을 수동으로 업데이트
         Vector3 newDirection = -transform.forward; // 180도 회전
         transform.rotation = Quaternion.LookRotation(newDirection);
 
-        ChangeState(State.Jump);
-        yield return new WaitForSeconds(1.1f); // Jump duration
+        //  ChangeState(State.Jump);
+        //  yield return new WaitForSeconds(1.1f); // Jump duration
 
         // Run twice
         ChangeState(State.Run);
