@@ -21,7 +21,7 @@ public class ItemComponent : MonoBehaviour
     public int requireToolTier;
     
     public string itemModelInPlace;
-    public List<Voxel> voxels;
+    
 
     // EquipmentItem 필드
     public string equipmentType;
@@ -75,7 +75,7 @@ public class ItemComponent : MonoBehaviour
         durabilityMax = item.durability_max;
         durabilityCurrent = item.durability_current;
         itemModelInPlace = item.item_model_in_place;
-        voxels = item.voxels;
+       
     }
 
     // EquipmentItem 초기화 메서드

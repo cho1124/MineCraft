@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-/*
+
 [CustomEditor(typeof(ItemComponent))]
 public class ItemComponentEditor : Editor
 {
@@ -23,7 +23,7 @@ public class ItemComponentEditor : Editor
     SerializedProperty durabilityMax;
     SerializedProperty durabilityCurrent;
     SerializedProperty itemModelInPlace;
-    SerializedProperty voxels;
+    
 
     SerializedProperty equipmentType;
     SerializedProperty weight;
@@ -57,7 +57,7 @@ public class ItemComponentEditor : Editor
         durabilityMax = serializedObject.FindProperty("durabilityMax");
         durabilityCurrent = serializedObject.FindProperty("durabilityCurrent");
         itemModelInPlace = serializedObject.FindProperty("itemModelInPlace");
-        voxels = serializedObject.FindProperty("voxels");
+        
 
         equipmentType = serializedObject.FindProperty("equipmentType");
         weight = serializedObject.FindProperty("weight");
@@ -136,7 +136,7 @@ public class ItemComponentEditor : Editor
         EditorGUILayout.PropertyField(durabilityMax);
         EditorGUILayout.PropertyField(durabilityCurrent);
         EditorGUILayout.PropertyField(itemModelInPlace);
-        EditorGUILayout.PropertyField(voxels, true);
+        
     }
 
     private void DrawEquipmentItemFields()
@@ -157,4 +157,3 @@ public class ItemComponentEditor : Editor
         EditorGUILayout.PropertyField(armorDefense);
     }
 }
-*/

@@ -8,6 +8,8 @@ public class Item_Manager : MonoBehaviour
 {
 
     public TextAsset text1;
+    [Header("테스트 해보세용")]
+    public int TestKey = 7;
 
     public static class Item_Dictionary
     {
@@ -127,7 +129,7 @@ public class Item_Manager : MonoBehaviour
 
         Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
-        Item_Dictionary.SpawnItem(7, Vector3.zero);
+        Item_Dictionary.SpawnItem(TestKey, Vector3.zero);
 
 
 
@@ -226,14 +228,6 @@ public class Item_Manager : MonoBehaviour
 
 
 }
-public class Voxel
-{
-    public int x { get; set; }
-    public int y { get; set; }
-    public int z { get; set; }
-    public string type { get; set; }
-}
-
 
 public class Original_Item
 {
@@ -280,7 +274,7 @@ public class PlaceableItem : StackableItem
     public float durability_max { get; set; }
     public float durability_current { get; set; }
     public string item_model_in_place { get; set; }
-    public List<Voxel> voxels { get; set; }
+    
 }
 
 public class EquipmentItem : Original_Item
