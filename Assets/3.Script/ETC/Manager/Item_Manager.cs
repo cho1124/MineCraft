@@ -4,20 +4,32 @@ using Newtonsoft.Json;
 using System;
 using UnityEngine.UI;
 
-public class ItemManager : MonoBehaviour
+public class Item_Manager : MonoBehaviour
 {
 
     public TextAsset text1;
 
     public static class Item_Dictionary
     {
+        public static Dictionary<int, Original_Item> item_dictionary { get; private set; }
         // 딕셔너리 초기화
         static Item_Dictionary()
         {
             item_dictionary = new Dictionary<int, Original_Item>();
+            LoadResources();
         }
 
-        public static Dictionary<int, Original_Item> item_dictionary { get; private set; }
+        private static void LoadResources()
+        {
+            // 모든 아이템의 리소스를 미리 로드
+            foreach (var item in item_dictionary.Values)
+            {
+                item.item_model_in_worlds = Resources.Load<GameObject>(item.item_model_in_world);
+                item.item_model_in_inv = Resources.Load<Sprite>(item.item_model_in_inventory);
+            }
+        }
+
+
 
         public static void SpawnItem(int itemID, Vector3 position)
         {
@@ -170,38 +182,17 @@ public class ItemManager : MonoBehaviour
             EquipmentItem equipmentItem = item;
             if (equipmentItem != null)
             {
+                // TryParse를 사용하여 안전하게 열거형으로 변환
+                equipmentItem.Weapon_Type = ParseWeaponType(equipmentItem.equipment_type);
+                equipmentItem.Armor_Type = ParseArmorType(equipmentItem.equipment_type);
 
-                //열거형 타입 두 부분으로 나눠서 처리함
-                //먼저 무기형 열거형과 일치하면 방어구 열거형은 null
-                //반대의 경우도 존재
-
-                // 문자열 비교를 통해 열거형 값을 설정
-                if (equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.ONE_HANDED_SWORD) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.ONE_HANDED_AXE) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.ONE_HANDED_HAMMER) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.TWO_HANDED_SWORD) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.TWO_HANDED_AXE) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.TWO_HANDED_HAMMER) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.BOW) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.PICKAXE) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.SHOVEL) ||
-                    equipmentItem.equipment_type == nameof(Equipment_Weapon_Type.HOE))
+                if (equipmentItem.Weapon_Type.HasValue)
                 {
-                    equipmentItem.Weapon_Type = (Equipment_Weapon_Type)Enum.Parse(typeof(Equipment_Weapon_Type), equipmentItem.equipment_type);
-                    equipmentItem.Armor_Type = null; // 무기일 경우 방어구 타입은 null로 설정
-
                     // 무기 속성 설정
                     Debug.Log($"Weapon Item: {equipmentItem.item_name}, Damage: {equipmentItem.melee_damage}, Speed: {equipmentItem.melee_speed}, Guard Rate: {equipmentItem.guard_rate}, Tool Tier: {equipmentItem.tool_tier}");
                 }
-                else if (equipmentItem.equipment_type == nameof(Equipment_Armor_Type.HELMET) ||
-                         equipmentItem.equipment_type == nameof(Equipment_Armor_Type.CHESTPLATE) ||
-                         equipmentItem.equipment_type == nameof(Equipment_Armor_Type.LEGGINGS) ||
-                         equipmentItem.equipment_type == nameof(Equipment_Armor_Type.BOOTS) ||
-                         equipmentItem.equipment_type == nameof(Equipment_Armor_Type.SHIELD))
+                else if (equipmentItem.Armor_Type.HasValue)
                 {
-                    equipmentItem.Armor_Type = (Equipment_Armor_Type)Enum.Parse(typeof(Equipment_Armor_Type), equipmentItem.equipment_type);
-                    equipmentItem.Weapon_Type = null; // 방어구일 경우 무기 타입은 null로 설정
-
                     // 방어구 속성 설정
                     Debug.Log($"Armor Item: {equipmentItem.item_name}, Defense: {equipmentItem.armor_defense}");
                 }
@@ -214,6 +205,18 @@ public class ItemManager : MonoBehaviour
             Item_Dictionary.Add(item.item_ID, item);
         }
     }
+
+    //enum parse 개편한 것
+    private Equipment_Weapon_Type? ParseWeaponType(string type)
+    {
+        return Enum.TryParse(type, out Equipment_Weapon_Type result) ? result : (Equipment_Weapon_Type?)null;
+    }
+
+    private Equipment_Armor_Type? ParseArmorType(string type)
+    {
+        return Enum.TryParse(type, out Equipment_Armor_Type result) ? result : (Equipment_Armor_Type?)null;
+    }
+
 
     public Sprite GetItemImage(string itemName_Inv)
     {

@@ -17,12 +17,12 @@ public class ItemInfo
     public Sprite item_image;
     public ItemType item_type;
 
-    public bool ItemUse()
+    public bool ItemUse() //trye 
     {
         bool isUsed = false;
 
         isUsed = true;
 
-        return false;
+        return isUsed;
     }
 }
