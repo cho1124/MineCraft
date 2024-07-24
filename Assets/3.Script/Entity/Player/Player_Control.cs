@@ -39,6 +39,9 @@ public class Player_Control : MonoBehaviour
 
     private bool input_key_sprint = false;
     private bool input_key_jump = false;
+    private bool input_key_inventory = false;
+    private bool input_key_die_test = false;
+
 
     private bool is_L_down = false;
     private bool is_R_down = false;

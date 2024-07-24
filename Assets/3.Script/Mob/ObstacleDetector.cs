@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObstacleDetector : MonoBehaviour
 {
+    //공간에 플레이어나 동물 태그를 가진 오브젝트가 감지되면 5초간 그 방향으로
+    // raycast를 쏘다가 이전 상태로 돌아감
     public string playerTag = "Player";
     public string animalTag = "Animals";
     public float chaseDuration = 7f;
@@ -12,10 +14,16 @@ public class ObstacleDetector : MonoBehaviour
     private Monster monsterScript;
     private float lastPlayerDetectionTime = -Mathf.Infinity; // 마지막 플레이어 감지 시간
     private float lastAnimalDetectionTime = -Mathf.Infinity; // 마지막 동물 감지 시간
+    private Coroutine chaseCoroutine;
+
 
     private void Start()
     {
         monsterScript = GetComponentInParent<Monster>();
+        if (monsterScript == null)
+        {
+            Debug.LogError("MonsterScript가 null입니다.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,24 +33,34 @@ public class ObstacleDetector : MonoBehaviour
             if (other.CompareTag(playerTag) && Time.time > lastPlayerDetectionTime + detectionCooldown)
             {
                 lastPlayerDetectionTime = Time.time; // 플레이어 감지 시간을 업데이트
-                StartCoroutine(ChaseTarget(other.transform, true));
+                if (chaseCoroutine != null)
+                {
+                    StopCoroutine(chaseCoroutine);
+                }
+                chaseCoroutine = StartCoroutine(ChaseTarget(other.transform, true));
             }
             else if (other.CompareTag(animalTag) && Time.time > lastAnimalDetectionTime + detectionCooldown)
             {
                 lastAnimalDetectionTime = Time.time; // 동물 감지 시간을 업데이트
-                StartCoroutine(ChaseTarget(other.transform, false));
+                if (chaseCoroutine != null)
+                {
+                    StopCoroutine(chaseCoroutine);
+                }
+                chaseCoroutine = StartCoroutine(ChaseTarget(other.transform, false));
             }
         }
         else
         {
-            // 플레이어나 동물이 아닌 경우 점프
-            monsterScript.JumpAndChangeState();
+            if (monsterScript != null) {
+                monsterScript.JumpAndChangeState();
+            }
         }
     }
 
     private IEnumerator ChaseTarget(Transform target, bool isPlayer)
     {
         float startTime = Time.time;
+        float raycastEndTime = startTime + 5f; // 5초 후 Raycast를 멈추기 위한 타이머
         monsterScript.IsChasingPlayer = isPlayer;
 
         while (Time.time < startTime + chaseDuration)
@@ -57,16 +75,19 @@ public class ObstacleDetector : MonoBehaviour
                     break;
                 }
 
-                RaycastHit hit;
-                Vector3 direction = (target.position - transform.position).normalized;
-
-                if (Physics.Raycast(transform.position, direction, out hit))
+                if (Time.time < raycastEndTime)
                 {
-                    Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
+                    RaycastHit hit;
+                    Vector3 direction = (target.position - transform.position).normalized;
 
-                    if (hit.transform.CompareTag(playerTag) || (hit.transform.CompareTag(animalTag) && !monsterScript.IsChasingPlayer))
+                    if (Physics.Raycast(transform.position, direction, out hit))
                     {
-                        monsterScript.SetTarget(target.position);
+                       // Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
+
+                        if (hit.transform.CompareTag(playerTag) || (hit.transform.CompareTag(animalTag) && !monsterScript.IsChasingPlayer))
+                        {
+                            monsterScript.SetTarget(target.position);
+                        }
                     }
                 }
             }

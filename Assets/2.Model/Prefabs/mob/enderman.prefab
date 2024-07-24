@@ -513,8 +513,9 @@ GameObject:
   - component: {fileID: 6086126368442328691}
   - component: {fileID: 5917821463045448123}
   - component: {fileID: 1909501268656922201}
+  - component: {fileID: 8782087595199697087}
   m_Layer: 0
-  m_Name: enderman
+  m_Name: Enderman
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,7 +529,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6392624918292962084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6527595, y: 0.457, z: -18.69258}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7900268597035609167}
@@ -582,6 +583,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffad103a0fa49c4b90f2e5403a3b768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  name: 
+  damage: 20
+  maxHealth: 100
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 4123892497744069405}
   walkRadius: 10
@@ -596,6 +602,8 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
 --- !u!95 &1909501268656922201
 Animator:
   serializedVersion: 3
@@ -609,12 +617,45 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 895316790d3b47f46841bddf3f3e5e36, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8782087595199697087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6392624918292962084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d141b67cb0d4db4584aea41452b095f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  name: 
+  damage: 20
+  maxHealth: 100
+  health: 0
+  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
+  head: {fileID: 4123892497744069405}
+  walkRadius: 5
+  walkSpeed: 3
+  runSpeed: 4
+  idleTime: 4
+  minWalkTime: 6
+  maxWalkTime: 12
+  jumpForce: 4
+  detectionDistance: 2
+  ChaseDuration: 5
+  turnDuration: 4
+  positionCheckInterval: 15
+  minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
 --- !u!1 &6676483470790809109
 GameObject:
   m_ObjectHideFlags: 0

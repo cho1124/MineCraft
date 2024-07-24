@@ -1,115 +1,73 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
     // ========== Inspector public ==========
 
-    [Header("아이템 종류")]
-    [SerializeField] private GameObject[] item_obj = null;
-
-    [Header("조합 슬롯")]
-    [SerializeField] private Transform[] crafting_slot = null;
-
-    [Header("결과 조합 슬롯")]
-    [SerializeField] private GameObject result_crafting_slot_obj = null;
-
-    [Header("인벤토리")]
-    [SerializeField] private GameObject on_off_obj = null;
-
-    public bool[] crafting_slot_tr = new bool[8];
+    public Onchangeitem onchangeitem; // ?
+    public delegate void Onchangeitem(); // ?
+    public Transform[] slots = null; // Slots 오브젝트 선언
+    public List<ItemInfo> item_list = new List<ItemInfo>(); // 인벤토리 아이템 리스트 선언
+    [SerializeField] private GameObject[] on_off_obj = null; // 인벤토리, Dead UI ON, OFF 선언 (Gameobject)
 
     // ========== Inspector private ==========
 
-    [HideInInspector] public bool item_click_tr = false;
-    [HideInInspector] public bool on_off_tr = false;
+    [HideInInspector] public bool on_off_tr = false; // 인벤토리, Dead UI ON, OFF 선언 (Bool)
 
-    // ========== Test ==========
-
-    private int[] item_id = new int[4]; // test
-    private bool[] item_tr = new bool[4]; // test
-
-    private void Start()
+    private void Start() // 한번만 실행되는 생명 주기 메소드
     {
-        on_off_obj.SetActive(false);
-        result_crafting_slot_obj.SetActive(false);
+        on_off_obj[1].SetActive(on_off_tr); // 바로 인벤토리, Dead UI ON, OFF 상태 변경
     }
 
-    private void Update()
+    private void Update() // 프레임마다 실행되는 생명 주기 메소드
     {
-        if (on_off_tr)
+        if (Input.GetKeyDown(KeyCode.E)) // E키를 누른다면
         {
-            CraftingSlot1(0, "Pickaxe item");
-            CraftingSlot1(4, "Shovel item");
+            on_off_tr = !on_off_tr; // 인벤토리 UI ON, OFF 체크
+
+            on_off_obj[0].SetActive(on_off_tr); // 인벤토리 UI ON, OFF 기능
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.P)) // P키를 누른다면 ////////// Test
         {
-            on_off_tr = !on_off_tr;
+            on_off_tr = !on_off_tr; // Dead UI ON, OFF 체크
 
-            on_off_obj.SetActive(on_off_tr);
+            on_off_obj[1].SetActive(on_off_tr); // Dead UI ON, OFF 기능
         }
     }
 
-    private void CraftingSlot1(int value, string item_name) // ?
+    public bool AddItem(ItemInfo iteminfo) // 인벤토리 아이템 추가 메소드
     {
-        for (int i = 0; i < 4; i++)
+        float slots_count = slots[0].childCount + slots[1].childCount; // Slots1, Slots2 자식 오브젝트들의 총 합
+
+        if (item_list.Count <= slots_count) // 인벤토리 아이템 개수보다 슬롯 개수가 크거나 같다면
         {
-            if (i + value < crafting_slot.Length)
+            item_list.Add(iteminfo); // 인벤토리 아이템 리스트 넣기
+
+            if (onchangeitem != null)
             {
-                if (crafting_slot[i + value].childCount == 1 && crafting_slot[i + value].GetChild(0).name == item_name)
-                {
-                    crafting_slot_tr[i + value] = true;
-                }
-                else
-                {
-                    crafting_slot_tr[i + value] = false;
-                }
+                onchangeitem.Invoke();
             }
+
+            return true; // 반환 값 True
         }
 
-        CraftingSlot2();
+        return false; // 반환 값 False
     }
 
-    private void CraftingSlot2() // ?
+    private void OnTriggerEnter(Collider collision) // 트리거 메소드
     {
-        if (crafting_slot_tr.Length >= 4 && crafting_slot_tr[0] && crafting_slot_tr[1] && !crafting_slot_tr[2] && !crafting_slot_tr[3])
-            NewItem(0, "Golden axe item");
-    }
-
-    private void NewItem(int item_index, string item_name) // 아이템 생성
-    {
-        if (result_crafting_slot_obj.transform.childCount == 0)
+        if (collision.gameObject.CompareTag("Item")) // Item 태그 닿으면
         {
-            result_crafting_slot_obj.SetActive(true);
+            Item item = collision.GetComponent<Item>();
 
-            GameObject item = Instantiate(item_obj[item_index]);
-            item.transform.localScale = new Vector3(5, 5, 1); // test
-            item.transform.SetParent(result_crafting_slot_obj.transform);
-
-            Debug.Log($"{item_name} 아이템 제작 완료!");
-
-            DeleteItem();
-        }
-    }
-
-    private void DeleteItem() // 아이템 삭제
-    {
-        for (int i = 0; i < crafting_slot.Length; i++)
-        {
-            if (i < crafting_slot_tr.Length && crafting_slot_tr[i] && item_click_tr)
+            if (AddItem(item.GetItemInfo()))
             {
-                Destroy(crafting_slot[i].GetChild(0).gameObject);
+                item.DestroyItem();
             }
-        }
-    }
-
-    private void Iteminfo() // 아이템 정보
-    {
-        for (int i = 0; i < crafting_slot.Length; i++)
-        {
-            // if (crafting_slot[i].GetChild(0).name == "Golden axe item")
         }
     }
 }

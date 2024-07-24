@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Chicken : Animal
 {
+
+    protected override void Start()
+    {
+        base.Start();
+    }
     protected override void Update() {
         base.Update();
     }
@@ -26,8 +31,8 @@ public class Chicken : Animal
         Vector3 newDirection = -transform.forward; // 180µµ È¸Àü
         transform.rotation = Quaternion.LookRotation(newDirection);
 
-        ChangeState(State.Jump);
-        yield return new WaitForSeconds(1.1f); // Jump duration
+      //  ChangeState(State.Jump);
+      //  yield return new WaitForSeconds(1.1f); // Jump duration
 
         // Run twice
         ChangeState(State.Run);

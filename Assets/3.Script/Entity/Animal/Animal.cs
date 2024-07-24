@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Animal : Entity
-{
+public class Animal : Entity, IDamageable {
     //동물도 자유롭게 구현하면 될거에용
 
     /*
       ★현재 문제점 
-     -   네비메쉬와 리지드바디 충돌문제로 player 태그를 인식하면 하늘로 솟구쳐오르는 문제가 있음
-     -   갑자기 스케이트 타듯 미끄러지는 듯한 움직임이 있음
-     -   다이나믹네비메쉬(네비메쉬를 계속 업데이트하여 변화를 탐지하는 기능) 키면 너무 느려져서 꺼둠. 
-         -> 동물들이 지면의 변화를 인지할수가 없음 -> 3f이내의 장소에서 10f동안 변화가 없으면 네비메쉬상 목적지를
-             바꾸게 해둠(방향을 바꿀 수 있게)
+     - 플레이어 무기에 달려있는 test1 스크립트 만진 이후 플레이어가 동물을 
+    공격할 수 없게 됨... 공격해도 반응이 없음. 그러나 현재 몬스터들은 동물들에게 데미지를 주고 죽이기도 함.
+
+
+     => 점프모션만 하고, y축 이동 제외
      
      */
+
+    private bool isInvincible = false; // 무적 상태 변수(동물이 태어나자마 몬스터와 부딧쳐 죽는 경우가 많아서)
+    // animalspawner 스크립트에 무적상태 2초로 설정하여 태어나서 2초동안은 무적이 되도록
+
+    public GameObject beafPrefab; // beaf 프리팹을 인스펙터에서 설정
 
     // 성장 관련 변수들
     public GameObject adultPrefab; //  성인 상태의 프리팹
@@ -38,15 +42,15 @@ public class Animal : Entity
     // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
     private float spawnCooldown = 30f; // 쿨타임 시간
-    private const int collisionThreshold = 5; // 충돌 임계값
+    private const int collisionThreshold = 10; // 충돌 임계값
     protected Queue<int> recentAnimals = new Queue<int>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<int, int> animalCount = new Dictionary<int, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
     // 컴포넌트 관련 변수들
     protected NavMeshAgent agent;
-    protected Animator animator;
-    protected Rigidbody rb;
     public DynamicNavMesh dynamicNavMesh;//동적인 NavMesh 업데이트를 관리하는 컴포넌트입니다.
+    public GameObject heartObjectPrefab; // 하트 오브젝트 프리팹
+    public GameObject shockObjectPrefab; // 충격 오브젝트 프리팹
 
     // 탐지 관련 변수들
     public float detectionDistance = 3f; //동물이 탐지할 수 있는 최대 거리입니다.
@@ -70,14 +74,17 @@ public class Animal : Entity
     private float idleTimeLimit = 10f; // 10초 동안 위치가 변하지 않으면 이동
     private const float positionThreshold = 3f; // 위치 변화 허용 범위(10초동안 이 범위 안에만 있으면 네비메쉬목적지변경)
 
+    private GameObject activeEffect;
+
     protected override void Start() {
 
         base.Start();
 
+        // Entity의 OnDeath 이벤트에 Die 메서드를 구독
+        OnDeath += Die;
+
         //컴포넌트 초기화
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
         Collider col = GetComponent<Collider>();
 
         // NavMesh 위에 있는지 확인
@@ -136,6 +143,12 @@ public class Animal : Entity
             }
         }
 
+        // Detect 메서드 호출(동물들 머리에 하트나 느낌표 띄우는거)
+        if (Detect())
+        {
+            return;
+        }
+
         // 배고픔 상태에 따른 성장 타이머 초기화
         if (!isFull) {
             growthTimeGaze = 0f;
@@ -152,11 +165,6 @@ public class Animal : Entity
       //  if (dynamicNavMesh != null) {
       //      dynamicNavMesh.UpdateNavMesh();
       //  }
-
-        if (DetectPlayer()) {
-            OnPlayerDetected();
-            return;
-        }
 
         // 현재 상태에 따라 행동 수행
         switch (currentState) {
@@ -199,7 +207,6 @@ public class Animal : Entity
         // idleTime이 idleTimeLimit을 초과한 경우 새로운 랜덤 목적지를 설정합니다.
         if (idleTime >= idleTimeLimit) {
             SetRandomDestination();
-            Debug.Log($"{name}가 10초동안 위치 변화가 없으므로 랜덤목적지를 변경합니다.");
             idleTime = 0f;
         }
     }
@@ -226,9 +233,10 @@ public class Animal : Entity
 
         GameObject otherAnimal = collision.gameObject;
         AddToRecentAnimals(otherAnimal);
+
     }
 
-    //같은 종의 동물이 5회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
+    //같은 종의 동물이 10회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
     protected virtual void AddToRecentAnimals(GameObject animal) {
 
         int animalId = animal.GetInstanceID();
@@ -330,7 +338,7 @@ public class Animal : Entity
         }
 
         // 배고픔 상태 관리
-        if (hungerLevel > 5) {
+        if (hungerLevel > 6) {
             isHungry = false;
             isFull = true;
             detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
@@ -400,36 +408,101 @@ public class Animal : Entity
         }
     }
 
-    protected virtual bool DetectPlayer() {
-        for (int i = 0; i < detectionRays; i++) {
+    protected virtual bool Detect()
+    {
+        bool detected = false;
+
+        for (int i = 0; i < detectionRays; i++)
+        {
             float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
             Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
-                if (hitInfo.collider.CompareTag("Player")) {
-                    Debug.Log("플레이어를 발견했습니다!");
-                    return true;
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance))
+            {
+                if (hitInfo.collider.CompareTag("Player"))
+                {
+                  //  Debug.Log("플레이어를 발견했습니다!");
+                    if (activeEffect == null || activeEffect.tag != "Heart")
+                    {
+                        OnPlayerDetected();
+                        detected = true;
+                    }
+                }
+                else if (hitInfo.collider.CompareTag("Monster"))
+                {
+                  //  Debug.Log("몬스터를 발견했습니다!");
+                    if (activeEffect == null || activeEffect.tag != "Shock")
+                    {
+                        OnMonsterDetected();
+                        detected = true;
+                    }
                 }
             }
         }
-        return false;
-    }
 
-    void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-
-        // Y축으로 1만큼 위의 위치에서 레이캐스트 시작
-        Vector3 startPosition = transform.position + Vector3.up * 3;
-
-        for (int i = 0; i < detectionRays; i++) {
-            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            Gizmos.DrawRay(transform.position, direction * detectionDistance);
-        }
+        return detected;
     }
 
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
-        Debug.Log("Animal: OnPlayerDetected 호출됨");
+       // Debug.Log("Animal: OnPlayerDetected 호출됨");
+        if (activeEffect == null || activeEffect.tag != "Shock")
+        {
+            StartCoroutine(DisplayHeartAndRun());
+        }
+    }
+
+    protected virtual void OnMonsterDetected()
+    {
+       // Debug.Log("Animal: OnMonsterDetected 호출됨");
+        if (activeEffect == null || activeEffect.tag != "Heart")
+        {
+            StartCoroutine(DisplayShockAndRun());
+        }
+    }
+
+    private IEnumerator DisplayHeartAndRun()
+    {
+        ClearActiveEffect(); // 기존 효과 제거
+
+        activeEffect = Instantiate(heartObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        activeEffect.transform.SetParent(transform);
+        activeEffect.tag = "Heart";
+
+        ChangeState(State.Idle);
+        yield return new WaitForSeconds(2f);
+
+        transform.Rotate(0, 180, 0);
+
+        ChangeState(State.Run);
+
+        ClearActiveEffect(); // 효과 제거
+    }
+
+    private IEnumerator DisplayShockAndRun()
+    {
+        ClearActiveEffect(); // 기존 효과 제거
+
+        activeEffect = Instantiate(shockObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        activeEffect.transform.SetParent(transform);
+        activeEffect.tag = "Shock";
+
+        ChangeState(State.Idle);
+        yield return new WaitForSeconds(2f);
+
+        transform.Rotate(0, 180, 0);
+
+        ChangeState(State.Run);
+
+        ClearActiveEffect(); // 효과 제거
+    }
+
+    private void ClearActiveEffect()
+    {
+        if (activeEffect != null)
+        {
+            Destroy(activeEffect);
+            activeEffect = null;
+        }
     }
 
     protected IEnumerator PlayerDetectionCooldown() {
@@ -449,7 +522,7 @@ public class Animal : Entity
                 break;
             case State.Jump:
                 animator.Play("Jump");
-                StartCoroutine(JumpThenIdle());
+              //  StartCoroutine(JumpThenIdle());
                 break;
             case State.Idle:
                 agent.ResetPath();
@@ -496,36 +569,85 @@ public class Animal : Entity
         }
         else
         {
-            Debug.LogWarning("Failed to find a valid NavMesh position!");
+            Debug.LogWarning("적절한 네비메쉬 위치 찾기 실패!");
         }
-    }
-
-    protected virtual IEnumerator JumpThenIdle() {
-
-        // NavMeshAgent 비활성화
-        agent.updatePosition = false;
-        agent.updateRotation = false;
-        agent.isStopped = true;
-
-        // Rigidbody 사용하여 점프
-        rb.isKinematic = false;
-        rb.AddForce(Vector3.up * 2f, ForceMode.Impulse);
-
-        // 점프 지속 시간 동안 대기
-        yield return new WaitForSeconds(3f);
-
-        // Rigidbody를 다시 비활성화하고 NavMeshAgent를 활성화
-        rb.isKinematic = true;
-        agent.updatePosition = true;
-        agent.updateRotation = true;
-        agent.isStopped = false;
-
-        // 상태를 Idle로 변경
-        ChangeState(State.Idle);
     }
 
     protected virtual IEnumerator IdleThenWander() {
         yield return new WaitForSeconds(Random.Range(2, 5));
         ChangeState(State.Wander);
     }
+
+    public override void TakeDamage(int damage) 
+    {
+
+        if (isInvincible)
+        {
+            Debug.Log($"{name}은(는) 무적 상태입니다. 데미지를 받지 않습니다.");
+            return;
+        }
+
+        Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
+        Health -= damage;
+        StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
+
+      //  if (Health <= 0)
+      //  {
+      //      Die();
+      //  }
+
+    }
+
+    protected override void Die()
+    {
+        Vector3 position = transform.position;
+        Quaternion rotation = transform.rotation;
+
+        int meatCount = 1;
+        string animalName = gameObject.name;
+
+        if (animalName.Contains("Cat"))
+        {
+            meatCount = Random.Range(1, 3);
+        }
+        else if (animalName.Contains("Dog"))
+        {
+            meatCount = Random.Range(2, 4);
+        }
+        else if (animalName.Contains("Chicken"))
+        {
+            meatCount = Random.Range(1, 4);
+        }
+        else if (animalName.Contains("Lion"))
+        {
+            meatCount = Random.Range(3, 6);
+        }
+
+        if (animalName.Contains("Baby"))
+        {
+            meatCount = Mathf.CeilToInt(meatCount / 2.0f);
+        }
+
+        Destroy(gameObject);
+
+        for (int i = 0; i < meatCount; i++)
+        {
+            Vector3 spawnPosition = position + new Vector3(i * 0.5f, 0, 0);
+            Instantiate(beafPrefab, spawnPosition, rotation);
+        }
+        StartCoroutine(OnDie());
+    }
+
+    public void SetInvincible(float duration)
+    {
+        StartCoroutine(InvincibilityCoroutine(duration));
+    }
+
+    private IEnumerator InvincibilityCoroutine(float duration)
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(duration);
+        isInvincible = false;
+    }
+
 }

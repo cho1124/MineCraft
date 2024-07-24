@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-
+/*
 [CustomEditor(typeof(ItemComponent))]
 public class ItemComponentEditor : Editor
 {
@@ -157,3 +157,4 @@ public class ItemComponentEditor : Editor
         EditorGUILayout.PropertyField(armorDefense);
     }
 }
+*/
