@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//아이템 데이터 재활용좀 할게용
 public enum Equipment_Type
 {
+    NONE,
     HELMET,
     CHESTPLATE,
     LEGGINGS,
@@ -20,6 +23,9 @@ public enum Equipment_Type
     SHOVEL,
     HOE
 }
+
+//아이템을 부수기 위해 필요한 타입에 대한 피드백 필요
+
 
 public enum Equipment_Armor_Type
 {
@@ -43,10 +49,6 @@ public enum Equipment_Weapon_Type
     SHOVEL,
     HOE
 }
-
-
-
-
 
 
 [System.Serializable]
