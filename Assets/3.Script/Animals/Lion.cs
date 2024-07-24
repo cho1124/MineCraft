@@ -15,24 +15,6 @@ public class Lion : Animal
         base.Update();
     }
 
-    protected override void OnPlayerDetected() {
-        // 플레이어의 Transform을 태그를 사용하여 가져옴
-
-        // Animal 클래스의 기본 동작 수행
-        canDetectPlayer = false; // 탐지 비활성화
-        StartCoroutine(PlayerDetectionCooldown()); // 쿨타임 시작
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) {
-            playerTransform = player.transform;
-            Debug.Log("Player detected and FleeSequence started"); // 로그 추가
-            StartCoroutine(FleeSequence());
-        }
-        else {
-            Debug.LogWarning("Player not found");
-        }
-    }
-
     IEnumerator FleeSequence() {
         // 플레이어 주위를 한 바퀴 도는 동안의 시간
         float circleDuration = 7f;

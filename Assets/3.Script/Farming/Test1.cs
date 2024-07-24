@@ -18,13 +18,8 @@ public class Test1 : MonoBehaviour
     [멜론seed 이용방법 고민중]
     */
   
-    public GameObject melonSeedPrefab;
-    public GameObject melonPrefab;
     public GameObject beafPrefab; // beaf 프리팹을 인스펙터에서 설정
-    public Material brownLightMaterial;
-    public Material brownDarkMaterial;
   
-    private Renderer renderer;
     private Collider currentCollider;
     private Dictionary<GameObject, Coroutine> fertilizedGrounds = new Dictionary<GameObject, Coroutine>();
   
@@ -46,14 +41,10 @@ public class Test1 : MonoBehaviour
                 Entity entity = currentCollider.GetComponent<Entity>();
                 if (entity != null) {
                     // HP를 100 감소시키기
+                    Debug.Log("플레이어 무기로 공격당함");
                     entity.TakeDamage(100);
                     Debug.Log($"{entity.name} 를 때림");
 
-                    // HP가 감소된 후의 오브젝트가 여전히 존재하는지 확인
-                    if (entity.Health <= 0) {
-                        // 특정 로직 처리 (예: 제거)
-                        Debug.Log($"{entity.name} 가 죽었습니다.");
-                    }
                 }
             }
             currentCollider = null;

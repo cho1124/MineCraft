@@ -395,8 +395,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.37, z: 1.6}
-  m_Center: {x: 0, y: 0.68, z: 0}
+  m_Size: {x: 1, y: 1.6888322, z: 1.700965}
+  m_Center: {x: -4.3985604e-10, y: 0.8394161, z: 0.050482478}
 --- !u!95 &95598690723424096
 Animator:
   serializedVersion: 3
@@ -429,7 +429,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
-  damage: 10
+  name: 
+  damage: 6
+  maxHealth: 50
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1417258215064542}
@@ -478,7 +481,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
-  damage: 10
+  name: 
+  damage: 6
+  maxHealth: 50
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1417258215064542}

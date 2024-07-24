@@ -810,7 +810,7 @@ GameObject:
   - component: {fileID: -2815101361065574711}
   - component: {fileID: 8184430710977216128}
   m_Layer: 0
-  m_Name: slime_s
+  m_Name: Slime_s
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -875,7 +875,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
+  name: 
   damage: 10
+  maxHealth: 25
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662160098818}
   walkRadius: 10
@@ -890,6 +893,8 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
 --- !u!95 &-2815101361065574711
 Animator:
   serializedVersion: 3
@@ -922,7 +927,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
+  name: 
   damage: 10
+  maxHealth: 25
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662160098818}
   walkRadius: 5
@@ -937,6 +945,8 @@ MonoBehaviour:
   turnDuration: 4
   positionCheckInterval: 15
   minPositionChange: 3
+  attackRange: 1.5
+  detectionCooldown: 2
   slimePrefab: {fileID: 7401732072854609404, guid: 8cdc4f8f10d316b408a24e0a5b81980e, type: 3}
   deathAnimationDuration: 2
   slimeAnimatorController: {fileID: 9100000, guid: 3fbda8763c700944a959c24ab5ce8ed7, type: 2}

@@ -78,7 +78,16 @@ public class Monster : Entity
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
+        if (obstacleDetector == null)
+        {
+            Debug.LogError("ObstacleDetector가 null입니다.");
+        }
+
         boxCollider = GetComponent<BoxCollider>();
+        if (boxCollider == null)
+        {
+            Debug.LogError("BoxCollider가 null입니다.");
+        }
         rb = GetComponent<Rigidbody>();
         if (rb == null) {
             Debug.LogError("Rigidbody가 null입니다.");
@@ -165,13 +174,13 @@ public class Monster : Entity
         {
             case MonsterState.Walk:
                 targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
-                StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Idle:
-                StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
                 break;
             case MonsterState.Run:
-                StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
             case MonsterState.Jump:
                 if (isGrounded)
@@ -179,22 +188,22 @@ public class Monster : Entity
                     rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                     isGrounded = false; // 점프를 시작했음을 표시
                 }
-                StartCoroutine(StateDuration(MonsterState.Jump, 3f));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Jump, 3f));
                 break;
             case MonsterState.Chase:
                 //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
                 break;
             case MonsterState.TurnLeft:
-                StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
                 break;
             case MonsterState.TurnRight:
-                StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
                 break;
             case MonsterState.Attack:
-                StartCoroutine(StateDuration(MonsterState.Attack, 2f));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Attack, 2f));
                 break;
                 default:
-                      StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f)));
+                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f)));
                 break;
         }
     }
@@ -293,15 +302,10 @@ public class Monster : Entity
         return randomPosition;
     }
 
-    private IEnumerator StateDuration(MonsterState state, float duration) //몬스터가 특정 상태를 일정 시간 동안 유지하게
+    private IEnumerator StateDuration(MonsterState state, float duration)
     {
-        // 지정된 시간(duration)만큼 대기
-        yield return new WaitForSeconds(duration + 5f);
-        // 다음 상태를 랜덤하게 선택
-        MonsterState nextState = GetRandomState();
-
-        // 새로운 상태로 변경
-        ChangeState(nextState);
+        yield return new WaitForSeconds(duration);
+        ChangeState(GetRandomState());
     }
 
     private MonsterState GetRandomState()  // 랜덤 상태를 선택하는 메서드입니다.
@@ -400,21 +404,5 @@ public class Monster : Entity
         stateCoroutine = StartCoroutine(StateDuration(GetRandomState(), 0.5f));
     }
 
-  //  private IEnumerator ChaseTarget(Transform target, bool isPlayer)
-  //  {
-  //      float chaseDuration = isPlayer ? ChaseDuration : ChaseDuration / 2; // 플레이어는 더 오래 추적
-  //      float startTime = Time.time;
-  //
-  //      while (Time.time < startTime + chaseDuration)
-  //      {
-  //          if (target != null)
-  //          {
-  //              SetTarget(target.position);
-  //          }
-  //          yield return null;
-  //      }
-  //
-  //      EndChaseAndWander();
-  //  }
 }
 

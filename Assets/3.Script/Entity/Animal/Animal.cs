@@ -16,6 +16,9 @@ public class Animal : Entity, IDamageable {
      
      */
 
+    private bool isInvincible = false; // 무적 상태 변수(동물이 태어나자마 몬스터와 부딧쳐 죽는 경우가 많아서)
+    // animalspawner 스크립트에 무적상태 2초로 설정하여 태어나서 2초동안은 무적이 되도록
+
     public GameObject beafPrefab; // beaf 프리팹을 인스펙터에서 설정
 
     // 성장 관련 변수들
@@ -77,6 +80,9 @@ public class Animal : Entity, IDamageable {
 
         base.Start();
 
+        // Entity의 OnDeath 이벤트에 Die 메서드를 구독
+        OnDeath += Die;
+
         //컴포넌트 초기화
         agent = GetComponent<NavMeshAgent>();
         Collider col = GetComponent<Collider>();
@@ -137,6 +143,12 @@ public class Animal : Entity, IDamageable {
             }
         }
 
+        // Detect 메서드 호출(동물들 머리에 하트나 느낌표 띄우는거)
+        if (Detect())
+        {
+            return;
+        }
+
         // 배고픔 상태에 따른 성장 타이머 초기화
         if (!isFull) {
             growthTimeGaze = 0f;
@@ -153,12 +165,6 @@ public class Animal : Entity, IDamageable {
       //  if (dynamicNavMesh != null) {
       //      dynamicNavMesh.UpdateNavMesh();
       //  }
-
-        if (Detect()) {
-          //  OnPlayerDetected();
-          //  OnMonsterDetected();
-            return;
-        }
 
         // 현재 상태에 따라 행동 수행
         switch (currentState) {
@@ -201,7 +207,6 @@ public class Animal : Entity, IDamageable {
         // idleTime이 idleTimeLimit을 초과한 경우 새로운 랜덤 목적지를 설정합니다.
         if (idleTime >= idleTimeLimit) {
             SetRandomDestination();
-            Debug.Log($"{name}가 10초동안 위치 변화가 없으므로 랜덤목적지를 변경합니다.");
             idleTime = 0f;
         }
     }
@@ -229,14 +234,9 @@ public class Animal : Entity, IDamageable {
         GameObject otherAnimal = collision.gameObject;
         AddToRecentAnimals(otherAnimal);
 
-        // 플레이어 무기와 충돌 시 데미지 입기
-        if (collision.gameObject.CompareTag("Weapon"))
-        {
-            TakeDamage(10);
-        }
     }
 
-    //같은 종의 동물이 5회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
+    //같은 종의 동물이 10회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
     protected virtual void AddToRecentAnimals(GameObject animal) {
 
         int animalId = animal.GetInstanceID();
@@ -442,19 +442,6 @@ public class Animal : Entity, IDamageable {
         return detected;
     }
 
-   // void OnDrawGizmos() {
-   //     Gizmos.color = Color.red;
-   //
-   //     // Y축으로 1만큼 위의 위치에서 레이캐스트 시작
-   //     Vector3 startPosition = transform.position + Vector3.up * 5;
-   //
-   //     for (int i = 0; i < detectionRays; i++) {
-   //         float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-   //         Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-   //         Gizmos.DrawRay(transform.position, direction * detectionDistance);
-   //     }
-   // }
-
     protected virtual void OnPlayerDetected() {
         // 플레이어를 발견했을 때의 기본 동작
        // Debug.Log("Animal: OnPlayerDetected 호출됨");
@@ -593,26 +580,30 @@ public class Animal : Entity, IDamageable {
 
     public override void TakeDamage(int damage) 
     {
+
+        if (isInvincible)
+        {
+            Debug.Log($"{name}은(는) 무적 상태입니다. 데미지를 받지 않습니다.");
+            return;
+        }
+
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
         Health -= damage;
         StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
 
-        if (Health <= 0)
-        {
-            OnDeath();
-        }
+      //  if (Health <= 0)
+      //  {
+      //      Die();
+      //  }
 
     }
 
-    protected virtual void OnDeath()
+    protected override void Die()
     {
-        // 죽었을 때 고기로 변하는 로직 추가
         Vector3 position = transform.position;
         Quaternion rotation = transform.rotation;
 
-        int meatCount = 1; // 기본값
-
-        // 충돌한 오브젝트의 이름에 따라 고기 개수 결정
+        int meatCount = 1;
         string animalName = gameObject.name;
 
         if (animalName.Contains("Cat"))
@@ -637,14 +628,26 @@ public class Animal : Entity, IDamageable {
             meatCount = Mathf.CeilToInt(meatCount / 2.0f);
         }
 
-        // 기존 동물 오브젝트를 삭제
         Destroy(gameObject);
 
-        // 새로운 beaf 프리팹 인스턴스 생성
         for (int i = 0; i < meatCount; i++)
         {
             Vector3 spawnPosition = position + new Vector3(i * 0.5f, 0, 0);
             Instantiate(beafPrefab, spawnPosition, rotation);
         }
+        StartCoroutine(OnDie());
     }
+
+    public void SetInvincible(float duration)
+    {
+        StartCoroutine(InvincibilityCoroutine(duration));
+    }
+
+    private IEnumerator InvincibilityCoroutine(float duration)
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(duration);
+        isInvincible = false;
+    }
+
 }

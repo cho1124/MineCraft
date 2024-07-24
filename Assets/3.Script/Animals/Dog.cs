@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Dog : Animal {
     private Transform playerTransform;
-    private int currentHealth; 
+    private int currentHealth;
 
+    protected override void Start()
+    {
+        base.Start();
+    }
     protected override void Update() {
         base.Update();
     }
@@ -20,7 +24,6 @@ public class Dog : Animal {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) {
             playerTransform = player.transform;
-            Debug.Log("Player detected and FleeSequence started"); // 로그 추가
             StartCoroutine(FleeSequence());
         }
         else {

@@ -7,13 +7,16 @@ using System;
 
 
 public class Entity : MonoBehaviour, IDamageable {
-        // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
-        // entity가 공격받을때 빨갛게 변함
-        // 죽을때 파티클로 이펙트
-        // awake에서 entityeditor 에 있는 정보 적용 ★아직안되고있음...
-        //
+    // 데미지를 입으면 3초간 빨간색으로 깜박거리는 코드 (필요시 삭제수정해주세요)
+    // entity가 공격받을때 빨갛게 변함
+    // 죽을때 파티클로 이펙트
+    // awake에서 entityeditor 에 있는 정보 적용 =>프리팹 수기로 체력 데미지 조정함
+    // 동물과 몬스터 공격과 데미지 처리 하는 부분 해당 클래스에 구현
+    //TakeDamage 메서드가 실행될 때 체력이 0 이하가 되면 Die 메서드가 호출되며, 이는 OnDeath 이벤트를 트리거합니다.
 
-        public string type;
+
+
+    public string type;
         public string name;
         public int damage = 10;
         public int maxHealth = 100;
@@ -74,9 +77,25 @@ public class Entity : MonoBehaviour, IDamageable {
             Debug.Log($"{name}죽어버림ㅜㅜ");
         OnDeath?.Invoke(); // 죽음 이벤트 호출
 
+       // if (OnDeath != null)
+       // {
+       //     StartCoroutine(DelayedDie()); // 코루틴 호출
+       // }
+       // else
+       // {
+       //     StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
+       // }
+
     }
 
-        private IEnumerator BlinkRed() {
+  //  private IEnumerator DelayedDie()
+  //  {
+  //      // OnDeath 이벤트가 완료될 때까지 대기
+  //      yield return new WaitForEndOfFrame();
+  //      StartCoroutine(OnDie()); // OnDie 코루틴 호출
+  //  }
+
+    private IEnumerator BlinkRed() {
             float elapsedTime = 0;
             bool isRed = false;
 
@@ -108,11 +127,11 @@ public class Entity : MonoBehaviour, IDamageable {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             yield return new WaitForSeconds(stateInfo.length);
             Debug.Log("애니메이션 대기 완료");
-
-
+      
+      
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
-
+      
         }
 
         public virtual void TakeDamage(int damage) {
@@ -159,13 +178,12 @@ public class Entity : MonoBehaviour, IDamageable {
         animator.SetBool("Fight", false);
     }
 
-    public void Initialize(Entity jsonEntity) {
-            this.type = jsonEntity.type;
-            this.name = jsonEntity.name;
-            this.health = jsonEntity.health;
-            this.maxHealth = jsonEntity.health; // assuming maxHealth should be set to the loaded health
-            this.damage = jsonEntity.damage;
-        }
+  //  public void Initialize(Entity jsonEntity)
+  //  {
+  //      this.health = jsonEntity.health;
+  //      this.maxHealth = jsonEntity.health;
+  //      this.damage = jsonEntity.damage;
+  //  }
 }
 
 public interface IDamageable //데미지 입는 인터페이스 

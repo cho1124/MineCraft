@@ -51,8 +51,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.672118, z: 1.1705894}
-  m_Center: {x: -0, y: 0.8424798, z: -0.08529472}
+  m_Size: {x: 1, y: 1.7168314, z: 1.3061562}
+  m_Center: {x: -0, y: 0.8648366, z: -0.101644516}
 --- !u!54 &5795456304039030212
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -101,7 +101,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
-  damage: 10
+  name: 
+  damage: 5
+  maxHealth: 10
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
@@ -128,7 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
-  damage: 10
+  name: 
+  damage: 5
+  maxHealth: 10
+  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}

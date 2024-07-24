@@ -8,7 +8,6 @@ public class Creeper : Monster, IDamageable
     public Collider coll;
     private Entity entity;
     public GameObject explosionEffectPrefab;
-    private int currentHealth; // 슬라임의 현재 체력, 필요에 따라 초기화
     public float explosionScaleFactor = 10;
     public float explosionDuration = 5f;
     public float explosionForce = 100000f; // 폭발력이 얼마나 강력할지 설정
@@ -25,21 +24,6 @@ public class Creeper : Monster, IDamageable
         base.Start();
 
     }
-
-  //  private void OnCollisionEnter(Collision collision) //충돌시 다른 오브젝트에게 데미지를 줌 
-  //  {
-  //      base.OnCollisionEnter(collision); // Monster 클래스의 OnCollisionEnter 메서드 호출
-  //
-  //      // 충돌한 물체가 플레이어 또는 동물인지 확인
-  //      if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Animals"))
-  //      {
-  //          IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-  //          if (damageable != null)
-  //          {
-  //              damageable.TakeDamage(10); // 닿은 물체에게 10의 데미지를 입힘
-  //          }
-  //      }
-  //  }
 
     private void HandleDeath()
     {
@@ -66,7 +50,7 @@ public class Creeper : Monster, IDamageable
             coll.transform.localScale = Vector3.Lerp(originalScale, targetScale, elapsedTime / explosionDuration);
             // 경과 시간에 비례하여 콜라이더의 크기를 원래 크기에서 목표 크기로 점진적으로 증가시킵니다.
             elapsedTime += Time.deltaTime;
-            Debug.Log($"콜라이더 크기 증가 중: {coll.transform.localScale}");
+            Debug.Log("콜라이더 크기 증가 중");
             yield return null;
         }
 

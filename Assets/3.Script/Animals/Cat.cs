@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Cat : Animal
 {
-
+    protected override void Start()
+    {
+        base.Start();
+    }
     protected override void Update() {
         base.Update();
     }
@@ -19,7 +22,6 @@ public class Cat : Animal
     }
 
     IEnumerator FleeSequence() {
-        Debug.Log("Cat:FleeSequence Ω√¿€");
         // Jump
       //  ChangeState(State.Jump);
       //  yield return new WaitForSeconds(1.1f); // Jump duration

@@ -20,6 +20,10 @@ public class ObstacleDetector : MonoBehaviour
     private void Start()
     {
         monsterScript = GetComponentInParent<Monster>();
+        if (monsterScript == null)
+        {
+            Debug.LogError("MonsterScript가 null입니다.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
