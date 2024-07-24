@@ -591,7 +591,7 @@ public class Animal : Entity, IDamageable {
         ChangeState(State.Wander);
     }
 
-    public override void TakeDamage(float damage) 
+    public override void TakeDamage(int damage) 
     {
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
         Health -= damage;

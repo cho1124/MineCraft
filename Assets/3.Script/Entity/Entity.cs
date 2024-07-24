@@ -14,9 +14,10 @@ public class Entity : MonoBehaviour, IDamageable {
         //
 
         public string type;
-        public float damage = 10;
-    public float maxHealth = 100;
-        public float health;
+        public string name;
+        public int damage = 10;
+        public int maxHealth = 100;
+        public int health;
         private float posture;
         private float defence;
         private float weight;
@@ -30,7 +31,6 @@ public class Entity : MonoBehaviour, IDamageable {
         protected  Vector3 originalPosition; // 공격 시 위치를 저장할 변수
       
         public event Action OnDeath; // 죽음 이벤트 선언
-    protected bool isDead = false; // 생사 여부를 확인하기 위한 플래그
 
     //  protected virtual void Awake()
     //  {
@@ -52,7 +52,7 @@ public class Entity : MonoBehaviour, IDamageable {
 
         }
 
-        public float Health {
+        public int Health {
             get {
                 return health;
             }
@@ -63,8 +63,7 @@ public class Entity : MonoBehaviour, IDamageable {
 
                 health = value;
 
-                if (health <= 0&& !isDead) {
-                isDead = true;
+                if (health <= 0) {
                 Die();
 
                 }
@@ -116,10 +115,11 @@ public class Entity : MonoBehaviour, IDamageable {
 
         }
 
-        public virtual void TakeDamage(float damage) {
+        public virtual void TakeDamage(int damage) {
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {health}");
         Health -= damage;
         }
+
     public void Attack(Entity target)
     {
         if (target != null && target is IDamageable)
@@ -170,7 +170,7 @@ public class Entity : MonoBehaviour, IDamageable {
 
 public interface IDamageable //데미지 입는 인터페이스 
     {
-        void TakeDamage(float damage);
+        void TakeDamage(int damage);
     }
 
 

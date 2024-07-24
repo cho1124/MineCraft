@@ -12,9 +12,15 @@ public class Enderman : Monster, IDamageable
     => 그러나 여전히 차이는 없음...
     */
 
-    private void Start() {
-        base.Start();
-       // OnDeath += HandleDeath; // OnDeath 이벤트에 HandleDeath 메서드를 등록
+    private Entity entity;
+
+    protected override void Start()
+    {
+        entity = GetComponent<Entity>();
+        if (entity != null)
+        {
+            entity.OnDeath += HandleDeath; // 죽음 이벤트 구독
+        }
         Debug.Log("Enderman Start 호출됨");
 
     }
@@ -41,11 +47,10 @@ public class Enderman : Monster, IDamageable
         Destroy(gameObject);
     }
 
-    public override void TakeDamage(float damage)
+    public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-        if (Health <= 0 && !isDead) {
-            isDead = true;
+        if (Health <= 0 ) {
             HandleDeath();
         }
     }
