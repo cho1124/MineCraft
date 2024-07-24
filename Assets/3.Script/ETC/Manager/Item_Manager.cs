@@ -243,9 +243,9 @@ public class Original_Item
 
 public class StackableItem : Original_Item
 {
-    
-    public int stack_max { get; set; }
-    public int stack_current { get; set; }
+
+    public int stack_max { get; set; } = 64;
+    public int stack_current { get; set; } = 1;
 
     //public StackableItem(string item_name, string item_model_in_world, string item_model_in_inventory, int stack_max, int stack_current)
     //{
@@ -260,41 +260,40 @@ public class StackableItem : Original_Item
 
 public class ConsumableItem : StackableItem
 {
-    public float hunger_amount { get; set; }
-    public float thirst_amount { get; set; }
-    public float fatigue_amount { get; set; }
-    public float freshment_max { get; set; }
-    public float freshment_current { get; set; }
+    public float hunger_amount { get; set; } = 0.0f;
+    public float thirst_amount { get; set; } = 0.0f;
+    public float fatigue_amount { get; set; } = 0.0f;
+    public float freshment_max { get; set; } = 100.0f;
+    public float freshment_current { get; set; } = 100.0f;
 }
 
 public class PlaceableItem : StackableItem
 {
-    public Equipment_Type require_tool_type { get; set; }
-    public int require_tool_tier { get; set; }
-    public float durability_max { get; set; }
-    public float durability_current { get; set; }
-    public string item_model_in_place { get; set; }
-    
+    public Equipment_Type require_tool_type { get; set; } = Equipment_Type.NONE;
+    public int require_tool_tier { get; set; } = 1;
+    public float durability_max { get; set; } = 100.0f;
+    public float durability_current { get; set; } = 100.0f;
+    public string item_model_in_place { get; set; } = "";
+
 }
 
 public class EquipmentItem : Original_Item
 {
-    public string equipment_type { get; set; }
-    public float weight { get; set; }
-    public float durability_max { get; set; }
-    public float durability_current { get; set; }
-    public string item_model_in_equip { get; set; }
+    public string equipment_type { get; set; } = "";
+    public float weight { get; set; } = 1.0f;
+    public float durability_max { get; set; } = 100.0f;
+    public float durability_current { get; set; } = 100.0f;
+    public string item_model_in_equip { get; set; } = "";
 
-    public Equipment_Armor_Type? Armor_Type { get; set; }
-    public Equipment_Weapon_Type? Weapon_Type { get; set; }
+    public Equipment_Armor_Type? Armor_Type { get; set; } = null;
+    public Equipment_Weapon_Type? Weapon_Type { get; set; } = null;
 
+    public float melee_damage { get; set; } = 0.0f;
+    public float melee_speed { get; set; } = 1.0f;
+    public float guard_rate { get; set; } = 0.0f;
+    public int tool_tier { get; set; } = 1;
 
-    public float melee_damage { get; set; }
-    public float melee_speed { get; set; }
-    public float guard_rate { get; set; }
-    public int tool_tier { get; set; }
-
-    public float armor_defense { get; set; }
+    public float armor_defense { get; set; } = 0.0f;
 }
 
 public class ItemData
