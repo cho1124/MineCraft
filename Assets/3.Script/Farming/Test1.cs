@@ -21,33 +21,25 @@ public class Test1 : MonoBehaviour
     public GameObject beafPrefab; // beaf 프리팹을 인스펙터에서 설정
   
     private Collider currentCollider;
-    private Dictionary<GameObject, Coroutine> fertilizedGrounds = new Dictionary<GameObject, Coroutine>();
-  
-    private void OnTriggerEnter(Collider other)
+
+    private void OnCollisionEnter(Collision collision)
     {
         // 충돌 이벤트 로그 출력
-        Debug.Log("플레이어가 패고있습니다 : " + other.gameObject.name);
-  
-        // 현재 충돌 저장
-        currentCollider = other;
-    }
-  
-    private void Update() {
-        // 마우스 왼쪽 클릭 확인
-        if (Input.GetMouseButtonDown(0) && currentCollider != null) {
-            // Monster 또는 Animals 태그를 가진 오브젝트인지 확인
-            if (currentCollider.gameObject.CompareTag("Monster") || currentCollider.gameObject.CompareTag("Animals")) {
-                // Health 컴포넌트 가져오기
-                Entity entity = currentCollider.GetComponent<Entity>();
-                if (entity != null) {
-                    // HP를 100 감소시키기
-                    Debug.Log("플레이어 무기로 공격당함");
-                    entity.TakeDamage(100);
-                    Debug.Log($"{entity.name} 를 때림");
+        Debug.Log("플레이어가 패고있습니다 : " + collision.gameObject.name);
 
-                }
+        // Monster 또는 Animals 태그를 가진 오브젝트인지 확인
+        if (collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("Animals"))
+        {
+            // Entity 컴포넌트 가져오기
+            Entity entity = collision.gameObject.GetComponent<Entity>();
+            if (entity != null)
+            {
+                // HP를 100 감소시키기
+                Debug.Log("플레이어 무기로 공격당함");
+                entity.TakeDamage(100);
+                Debug.Log($"{entity.name} 를 때림");
             }
-            currentCollider = null;
-        }
+            
+       }
     }
 }

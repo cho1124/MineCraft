@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Animal : Entity, IDamageable {
     //동물도 자유롭게 구현하면 될거에용
 
     /*
-      ★현재 문제점 
-     - 플레이어 무기에 달려있는 test1 스크립트 만진 이후 플레이어가 동물을 
-    공격할 수 없게 됨... 공격해도 반응이 없음. 그러나 현재 몬스터들은 동물들에게 데미지를 주고 죽이기도 함.
-
-
-     => 점프모션만 하고, y축 이동 제외
+     => 점프모션만 하고, y축 이동 제외-> 때문에 만들었던 PerformAttack() 코루틴에서 좌표 부분 모두 뺌. 
+    코루틴 아예 없애면 공격 애니메이션을 끝내지 않고 공격이 진행되므로, 수정만함
      
      */
 
@@ -35,38 +30,39 @@ public class Animal : Entity, IDamageable {
     private bool isFull = false; // 배부름 상태
     private float speedIncrease = 1f; // 추가 이동 속도
 
+    // 플레이어가 음식을 준 횟수를 저장할 변수
+    private int foodGivenCount = 0;
+    private const int OvergrowthThreshold = 5;
+    private bool isOvergrowth = false;
+
     // 이동 속도 관련 변수들
-    public float baseSpeed; // 기본 이동 속도, 인스펙터에서 설정
+    public float walkSpeed=3; // 기본 이동 속도, 인스펙터에서 설정
+    public float runSpeed=4; // 기본 이동 속도, 인스펙터에서 설정
     private float currentSpeed; // 현재 이동 속도
+    public float minWalkTime = 4f; //걷기 최소 시간
+    public float maxWalkTime = 8f; //걷기 최대 시간
+    public float jumpForce = 4f; //점프할때 힘
 
     // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
-    private float spawnCooldown = 30f; // 쿨타임 시간
+    private float spawnCooldown = 300f; // 쿨타임 시간
     private const int collisionThreshold = 10; // 충돌 임계값
     protected Queue<int> recentAnimals = new Queue<int>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<int, int> animalCount = new Dictionary<int, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
 
     // 컴포넌트 관련 변수들
-    protected NavMeshAgent agent;
-    public DynamicNavMesh dynamicNavMesh;//동적인 NavMesh 업데이트를 관리하는 컴포넌트입니다.
     public GameObject heartObjectPrefab; // 하트 오브젝트 프리팹
     public GameObject shockObjectPrefab; // 충격 오브젝트 프리팹
+    public GameObject tamedObjectPrefab; // 테이밍 오브젝트 프리팹
+    private Vector3 targetPosition; //목적지
 
     // 탐지 관련 변수들
-    public float detectionDistance = 3f; //동물이 탐지할 수 있는 최대 거리입니다.
-    public int detectionAngle = 45; //동물이 탐지할 수 있는 각도 범위입니다.
-    public int detectionRays = 5; //동물이 탐지할 때 사용하는 레이의 수입니다.
-    public float wanderRadius = 30f; //동물이 배회할 수 있는 최대 반경입니다.
-    private float defaultDetectionDistance; // 기본 탐지 거리
-
-    // 플레이어 탐지 관련 변수들
-    protected bool canDetectPlayer = true;
-    protected float playerDetectionCooldown = 20f; 
-    //플레이어를 중복으로 감지하면 플레이어 감지시 행동이 과도하게 이루어져서 쿨타임을 만들었음
+    public float wanderRadius = 30f; // 동물이 배회할 수 있는 최대 반경입니다.
 
     // 상태 관련 변수들
-    protected enum State { Wander, Jump, Idle, Run, DoubleJump, Follow }
+    protected enum State { Walk, Jump, Idle, Run }
     protected State currentState;
+    private Coroutine stateCoroutine;
 
     // 위치 변화 감지 관련 변수들
     private Vector3 lastPosition; //동물이 배회할 수 있는 최대 반경입니다.
@@ -75,6 +71,9 @@ public class Animal : Entity, IDamageable {
     private const float positionThreshold = 3f; // 위치 변화 허용 범위(10초동안 이 범위 안에만 있으면 네비메쉬목적지변경)
 
     private GameObject activeEffect;
+    private GameObject tamedEffect; // Tamed 마크를 위한 변수
+    private bool isGrounded = true;
+    private Rigidbody rb;
 
     protected override void Start() {
 
@@ -84,14 +83,8 @@ public class Animal : Entity, IDamageable {
         OnDeath += Die;
 
         //컴포넌트 초기화
-        agent = GetComponent<NavMeshAgent>();
         Collider col = GetComponent<Collider>();
-
-        // NavMesh 위에 있는지 확인
-        if (!agent.isOnNavMesh)
-        {
-            MoveToNearestNavMesh();
-        }
+        rb = GetComponent<Rigidbody>();
 
         // 성장 관련 초기 설정
         if (gameObject.name.Contains("Baby")) {
@@ -102,23 +95,13 @@ public class Animal : Entity, IDamageable {
         }
 
         // 초기 이동 속도 설정
-        currentSpeed = baseSpeed = 2;
+        currentSpeed = walkSpeed;
 
         // 배고픔 감소 루틴 시작
         StartCoroutine(HungerRoutine());
 
-        // 오브젝트의 크기에 맞게 NavMeshAgent의 radius 설정
-        if (col != null) {
-            agent.radius = Mathf.Max(col.bounds.size.x, col.bounds.size.z) / 2;
-            //agent.radius가 반지름을 가리키는거기때문에 /2 함
-            agent.height = col.bounds.size.y;
-        }
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-        // 탐지 거리 초기화
-        defaultDetectionDistance = detectionDistance;
-
         // 초기 상태 설정
-        ChangeState(State.Wander);
+        ChangeState(State.Idle);
 
         // 위치 변화 감지 초기화
         lastPosition = transform.position;
@@ -126,13 +109,15 @@ public class Animal : Entity, IDamageable {
         idleTime = 0f;
     }
 
-    protected virtual void Update() {
+    void Update() {
 
-        // y축 높이 체크
-        if (transform.position.y >= 2|| transform.position.y<-5)
-        {
-            MoveToNearestNavMesh();
-        }
+
+//기존에 너무 높이 점프해서 y축 높이 봐서 제어하려고 만들었던 것
+      //  // y축 높이 체크
+      //  if (transform.position.y >= 2|| transform.position.y<-5)
+      //  {
+      //      transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+      //  }
 
         //성장 관련 업데이트
         //성인이 아니고 배부름상태가 growthTimeGaze 만큼 유지되면 성인으로 자람
@@ -143,55 +128,46 @@ public class Animal : Entity, IDamageable {
             }
         }
 
-        // Detect 메서드 호출(동물들 머리에 하트나 느낌표 띄우는거)
-        if (Detect())
-        {
-            return;
-        }
-
         // 배고픔 상태에 따른 성장 타이머 초기화
         if (!isFull) {
             growthTimeGaze = 0f;
         }
 
-        // NavMesh 상에 있는지 확인
-        if (!agent.isOnNavMesh) {
-            Debug.LogWarning($"Agent{agent.name} 가 NavMesh위에 없습니다.!");
-            MoveToNearestNavMesh();
-            return;
-        }
-
-      //  // 실시간 맵 변동을 반영하여 NavMesh 업데이트
-      //  if (dynamicNavMesh != null) {
-      //      dynamicNavMesh.UpdateNavMesh();
-      //  }
-
         // 현재 상태에 따라 행동 수행
         switch (currentState) {
-            case State.Wander:
-                if (!agent.hasPath) {
-                    SetRandomDestination();
-                }
+            case State.Walk:
+                Walk();
                 break;
             case State.Jump:
                 break;
             case State.Idle:
                 break;
             case State.Run:
+                Run();
                 break;
         }
 
-        //목적지 도착시 상태 변경
-        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending) {
-            ChangeState(GetRandomState());
-            SetRandomDestination();
+        // Tamed 상태일 때 Tamed 마크를 계속해서 유지
+        if (isOvergrowth && tamedEffect == null)
+        {
+            DisplayTamedMark();
         }
 
         // 위치 변화 감지
         CheckIdleTime();
+
     }
 
-    private void CheckIdleTime() {
+    private void FixedUpdate()
+    {
+        //몬스터가 뒤집혔을 경우 바로 세우기 
+        if (Vector3.Dot(transform.up, Vector3.down) > 0.5f)
+        {
+            rb.AddTorque(Vector3.right * 10f); // 힘을 가해서 자연스럽게 스도록 유도하는 방법
+        }
+    }
+
+    private void CheckIdleTime() {   //이동이 너무 오래 없을경우 목적지를 변경시킴
         // 현재 위치와 마지막 위치 사이의 거리를 계산합니다.
         float distanceMoved = Vector3.Distance(transform.position, lastPosition);
         // 이동한 거리가 positionThreshold 이하인 경우 idleTime을 증가시킵니다.
@@ -206,12 +182,21 @@ public class Animal : Entity, IDamageable {
         }
         // idleTime이 idleTimeLimit을 초과한 경우 새로운 랜덤 목적지를 설정합니다.
         if (idleTime >= idleTimeLimit) {
-            SetRandomDestination();
+            ChangeState(GetRandomState());
             idleTime = 0f;
         }
     }
 
     private void OnCollisionEnter(Collision collision) {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+
+        if (collision.gameObject.CompareTag("Weapon"))
+        {
+            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+        }
 
         // 자신과 같은 컴포넌트를 가진 오브젝트와의 충돌인지 확인
         if (collision.gameObject.GetComponent(GetType()) != null) {
@@ -227,13 +212,39 @@ public class Animal : Entity, IDamageable {
 
         // Food 태그가 붙은 오브젝트를 먹는 처리
         if (collision.gameObject.CompareTag("Food") && !isFull) {
-            Eat();
+            Eat("Food");
             Destroy(collision.gameObject); // 음식 오브젝트 제거
         }
+
+        // Animal_Food 태그가 붙은 오브젝트를 먹는 처리
+        if (collision.gameObject.CompareTag("Animal_Food") && !isFull)
+        {
+            Eat("Animal_Food");
+            Destroy(collision.gameObject); // 음식 오브젝트 제거
+        }
+
+        // 충돌을 통해 플레이어와 몬스터를 탐지
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            OnPlayerDetected();
+        }
+        else if (collision.gameObject.CompareTag("Monster"))
+        {
+            OnMonsterDetected();
+        }
+
 
         GameObject otherAnimal = collision.gameObject;
         AddToRecentAnimals(otherAnimal);
 
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 
     //같은 종의 동물이 10회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
@@ -331,22 +342,39 @@ public class Animal : Entity, IDamageable {
         Debug.Log($"{newAdult.name}가 성인으로 성장했습니다.");
     }
 
-    private void Eat() {
+    private void Eat(string foodType) {
         if (hungerLevel < maxHungerLevel) {
             hungerLevel++;
-            Debug.Log($"{name}가 사료를 먹었습니다. 배고픔 게이지: {hungerLevel}");
+            Debug.Log($"{name}가 {foodType}을 먹었습니다. 배고픔 게이지: {hungerLevel}");
+        }
+
+        // Animal_Food를 먹을 때 추가 처리
+        if (foodType == "Animal_Food")
+        {
+            if (!isOvergrowth)
+            {
+                foodGivenCount++;
+                Debug.Log($"{name}가 Animal_Food를 먹었습니다. foodGivenCount: {foodGivenCount}");
+
+                // 5번 먹이면 Tamed 상태로 변경
+                if (foodGivenCount >= OvergrowthThreshold)
+                {
+                    isOvergrowth = true;
+                    gameObject.name = "Tamed_" + gameObject.name;
+                    DisplayTamedMark(); // Tamed 마크 표시
+                    Debug.Log($"{name}가 테이밍되었습니다!");
+                }
+            }
         }
 
         // 배고픔 상태 관리
         if (hungerLevel > 6) {
             isHungry = false;
             isFull = true;
-            detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
         }
         else {
             isHungry = true;
             isFull = false;
-            detectionDistance = defaultDetectionDistance * 2; // 배고픔 상태일 때 탐지 거리 두 배
         }
     }
 
@@ -362,84 +390,63 @@ public class Animal : Entity, IDamageable {
             if (hungerLevel > 6) {
                 isHungry = false;
                 isFull = true;
-                detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
-                currentSpeed = baseSpeed; // 배부름 상태에서는 기본 속도
+                currentSpeed = walkSpeed; // 배부름 상태에서는 기본 속도
             }
             else {
                 isHungry = true;
                 isFull = false;
-                detectionDistance = defaultDetectionDistance * 2; // 배고픔 상태일 때 탐지 거리 두 배
 
                 if (hungerLevel <= 3) {
-                    currentSpeed = baseSpeed + speedIncrease; // 배고픔 상태에서는 속도 증가
-                    SearchForFood();
+                    currentSpeed = walkSpeed + speedIncrease; // 배고픔 상태에서는 속도 증가
                 }
                 else {
-                    currentSpeed = baseSpeed; // 기본 속도
+                    currentSpeed = walkSpeed; // 기본 속도
                 }
             }
         }
     }
 
-    private void SearchForFood() {
-        for (int i = 0; i < detectionRays; i++) {
-            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
-                if (hitInfo.collider.CompareTag("Food")) {
-                    MoveTowards(hitInfo.transform.position);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void MoveTowards(Vector3 targetPosition) {
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        if (agent.isOnNavMesh)
-        {
-            agent.SetDestination(targetPosition); // NavMeshAgent를 사용하여 이동
-        }
-    }
-    protected virtual void MoveToNearestNavMesh() {
-        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
-            MoveTowards(hit.position);
-            ChangeState(State.Wander);
-        }
-    }
-
-    protected virtual bool Detect()
+    private void Walk()
     {
-        bool detected = false;
-
-        for (int i = 0; i < detectionRays; i++)
+        MoveTowardsTarget(walkSpeed); // 목표 위치로 걷기 속도로 이동합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
         {
-            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance))
-            {
-                if (hitInfo.collider.CompareTag("Player"))
-                {
-                  //  Debug.Log("플레이어를 발견했습니다!");
-                    if (activeEffect == null || activeEffect.tag != "Heart")
-                    {
-                        OnPlayerDetected();
-                        detected = true;
-                    }
-                }
-                else if (hitInfo.collider.CompareTag("Monster"))
-                {
-                  //  Debug.Log("몬스터를 발견했습니다!");
-                    if (activeEffect == null || activeEffect.tag != "Shock")
-                    {
-                        OnMonsterDetected();
-                        detected = true;
-                    }
-                }
-            }
+            ChangeState(State.Idle); // Idle 상태로 변경
         }
+    }
 
-        return detected;
+    private void Run()
+    {
+        MoveTowardsTarget(runSpeed); // 목표 위치로 달리기 속도로 이동합니다.
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
+        {
+            ChangeState(State.Idle); // Idle 상태로 변경
+        }
+    }
+
+    private void MoveTowardsTarget(float speed) //몬스터를 targetPosition으로 이동시키는 기능
+    {
+
+        // targetPosition과 현재 위치의 차이를 구하고, 방향 벡터로 변환
+        Vector3 direction = (targetPosition - transform.position).normalized;
+
+        // direction 벡터를 사용하여 새로운 위치를 계산
+        Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
+
+        // 몬스터의 현재 위치를 newPosition으로 업데이트
+        rb.MovePosition(newPosition);
+        //Rigidbody를 사용하여 객체를 이동시키는 방법입니다. 이는 물리 엔진을 통해 이동을 처리하므로, 충돌 및 기타 물리적 상호작용을 고려하여 객체를 이동시킵니다. 
+
+        // 몬스터가 이동할 때 바라보는 방향을 갱신
+        transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    private Vector3 GetRandomPosition()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+        randomDirection += transform.position;
+        randomDirection.y = 0; // y축 고정
+        return randomDirection;
     }
 
     protected virtual void OnPlayerDetected() {
@@ -505,34 +512,34 @@ public class Animal : Entity, IDamageable {
         }
     }
 
-    protected IEnumerator PlayerDetectionCooldown() {
-        yield return new WaitForSeconds(playerDetectionCooldown);
-        canDetectPlayer = true; // 쿨타임 종료 후 탐지 활성화
-    }
-
     //걷거나 달리기 상태일 때 랜덤 목적지로 변경되는 이유는 동물이 정해진 패턴 없이 무작위로 배회하거나 달리게 하기 위해서.
     protected virtual void ChangeState(State newState) {
+
+        if (stateCoroutine != null)
+        {
+            StopCoroutine(stateCoroutine);
+        }
         currentState = newState;
 
         switch (currentState) {
-            case State.Wander:
-                agent.speed = baseSpeed;
-                animator.SetInteger("Walk", 1);
-                SetRandomDestination();
+            case State.Walk:
+                targetPosition = GetRandomPosition(); // 걷기 상태로 변경될 때 새로운 목표 위치를 설정합니다.
+                stateCoroutine = StartCoroutine(StateDuration(State.Walk, Random.Range(minWalkTime, maxWalkTime))); // 걷기 상태의 지속 시간을 설정합니다.
                 break;
             case State.Jump:
-                animator.Play("Jump");
-              //  StartCoroutine(JumpThenIdle());
+                if (isGrounded)
+                {
+                    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                    isGrounded = false; // 점프를 시작했음을 표시
+                }
+                stateCoroutine = StartCoroutine(StateDuration(State.Jump, 3f));
                 break;
             case State.Idle:
-                agent.ResetPath();
                 animator.Play("Idle");
-                StartCoroutine(IdleThenWander());
+                stateCoroutine = StartCoroutine(StateDuration(State.Idle, Random.Range(5f, 10f))); // 멈춰 있는 상태의 지속 시간을 설정합니다.
                 break;
             case State.Run:
-                agent.speed = baseSpeed * 2;
-                animator.SetInteger("Walk", 1);
-                SetRandomDestination();
+                stateCoroutine = StartCoroutine(StateDuration(State.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
         }
     }
@@ -549,36 +556,22 @@ public class Animal : Entity, IDamageable {
             return State.Idle; // 25% 확률로 대기 상태로 전환
         }
         else {
-            return State.Wander; // 25% 확률로 배회 상태로 전환
-        }
-    }
-
-    protected virtual void SetRandomDestination() {
-        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
-        randomDirection += transform.position;
-
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas)) {
-            if (agent.isOnNavMesh)
-            {
-                agent.SetDestination(hit.position);
-            }
-            else
-            {
-                Debug.LogWarning("SetRandomDestination 호출 전에 NavMesh 위에 에이전트가 없습니다.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("적절한 네비메쉬 위치 찾기 실패!");
+            return State.Walk; // 25% 확률로 걷기 상태로 전환
         }
     }
 
     protected virtual IEnumerator IdleThenWander() {
         yield return new WaitForSeconds(Random.Range(2, 5));
-        ChangeState(State.Wander);
+        ChangeState(State.Walk);
     }
 
-    public override void TakeDamage(int damage) 
+    private IEnumerator StateDuration(State state, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        ChangeState(GetRandomState());
+    }
+
+    public void TakeDamage(int damage) 
     {
 
         if (isInvincible)
@@ -589,13 +582,12 @@ public class Animal : Entity, IDamageable {
 
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
         Health -= damage;
+
+        // 180도 회전하고 Run 상태로 전환
+        transform.Rotate(0, 180, 0);
+        ChangeState(State.Run);
+
         StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
-
-      //  if (Health <= 0)
-      //  {
-      //      Die();
-      //  }
-
     }
 
     protected override void Die()
@@ -628,13 +620,19 @@ public class Animal : Entity, IDamageable {
             meatCount = Mathf.CeilToInt(meatCount / 2.0f);
         }
 
-        Destroy(gameObject);
+        // Tamed 상태일 경우 고기 생성 수 두 배
+        if (isOvergrowth)
+        {
+            meatCount *= 2;
+        }
 
         for (int i = 0; i < meatCount; i++)
         {
             Vector3 spawnPosition = position + new Vector3(i * 0.5f, 0, 0);
             Instantiate(beafPrefab, spawnPosition, rotation);
         }
+
+        Destroy(gameObject);
         StartCoroutine(OnDie());
     }
 
@@ -650,4 +648,10 @@ public class Animal : Entity, IDamageable {
         isInvincible = false;
     }
 
+    private void DisplayTamedMark()
+    {
+        tamedEffect = Instantiate(tamedObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        tamedEffect.transform.SetParent(transform);
+        tamedEffect.tag = "Tamed";
+    }
 }

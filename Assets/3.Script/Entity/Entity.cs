@@ -14,64 +14,66 @@ public class Entity : MonoBehaviour, IDamageable {
     // 동물과 몬스터 공격과 데미지 처리 하는 부분 해당 클래스에 구현
     //TakeDamage 메서드가 실행될 때 체력이 0 이하가 되면 Die 메서드가 호출되며, 이는 OnDeath 이벤트를 트리거합니다.
 
-
-
     public string type;
-        public string name;
-        public int damage = 10;
-        public int maxHealth = 100;
-        public int health;
-        private float posture;
-        private float defence;
-        private float weight;
-        private float speed;
-        public GameObject deathEffectPrefab;
+    public string name;
+    public int damage = 10;
+    public int maxHealth = 100;
+    public int health;
+    private float posture;
+    private float defence;
+    private float weight;
+    private float speed;
+    public GameObject deathEffectPrefab;
 
-        protected Animator animator;
-        private Renderer[] entityRenderer;
-        private Color[] originalColor;
+    protected Animator animator;
+    private Renderer[] entityRenderer;
+    private Color[] originalColor;
     protected Rigidbody rb;
-        protected  Vector3 originalPosition; // 공격 시 위치를 저장할 변수
-      
-        public event Action OnDeath; // 죽음 이벤트 선언
+    protected Collider col;
+    protected Vector3 originalPosition; // 공격 시 위치를 저장할 변수
+
+    public event Action OnDeath; // 죽음 이벤트 선언
 
     //  protected virtual void Awake()
     //  {
     //      LoadEntityData();
     //  }
 
-    protected virtual void Start() {
+    protected virtual void Start()
+    {
 
-        
         health = maxHealth;
         animator = GetComponent<Animator>();
+        col = GetComponent<Collider>(); // 콜라이더 초기화
         rb = GetComponent<Rigidbody>();
         entityRenderer = GetComponentsInChildren<Renderer>();
-      //  LoadEntityData();
+        //  LoadEntityData();
         originalColor = new Color[entityRenderer.Length];
-            for (int i = 0; i < entityRenderer.Length; i++) {
-                originalColor[i] = entityRenderer[i].material.color;
-            }
-
+        for (int i = 0; i < entityRenderer.Length; i++)
+        {
+            originalColor[i] = entityRenderer[i].material.color;
         }
+
+
+    }
 
         public int Health {
-            get {
-                return health;
+        get {
+            return health;
+        }
+        set {
+            if (health > value) {
+                StartCoroutine(BlinkRed());
             }
-            set {
-                if (health > value) {
-                    StartCoroutine(BlinkRed());
-                }
 
-                health = value;
+            health = value;
 
-                if (health <= 0) {
+            if (health <= 0) {
                 Die();
 
-                }
             }
         }
+    }
 
         protected virtual void Die() {
             Debug.Log($"{name}죽어버림ㅜㅜ");
@@ -147,14 +149,8 @@ public class Entity : MonoBehaviour, IDamageable {
         }
     }
 
-    private IEnumerator PerformAttack(Entity target)
+    private IEnumerator PerformAttack(Entity target) //공격 애니메이션 진행하는 부분만 남겨두고 좌표 고정하는것 모두 지움 
     {
-        // 현재 위치 저장
-        originalPosition = transform.position;
-
-        // Rigidbody의 x축과 z축 이동을 제한
-        rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-
         // 공격 애니메이션 트리거 설정
         animator.SetBool("Fight", true);
 
@@ -167,13 +163,6 @@ public class Entity : MonoBehaviour, IDamageable {
         {
             ((IDamageable)target).TakeDamage(damage);
         }
-
-        // Rigidbody의 이동 제한 해제
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
-
-        // x, z 위치를 공격 시작 위치로 고정
-        transform.position = new Vector3(originalPosition.x, transform.position.y, originalPosition.z);
-
         // 공격 애니메이션 종료
         animator.SetBool("Fight", false);
     }

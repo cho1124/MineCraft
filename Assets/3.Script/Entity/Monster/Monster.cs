@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Monster : Entity
+public class Monster : Entity, IDamageable
 {
     //자유롭게 몬스터 구현 해보십쇼
     /*

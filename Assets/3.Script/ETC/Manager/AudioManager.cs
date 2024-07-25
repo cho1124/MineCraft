@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,10 +12,16 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)]
     public float masterVolume = 1f;
     [Range(0f, 1f)]
-    public float musicVolume = 1f;
+    public float bgmVolume = 1f;
     [Range(0f, 1f)]
     public float sfxVolume = 1f;
 
+    public AudioMixer audioMixer;
+
+    [Header("UI Sliders")]
+    public Slider masterVolumeSlider;
+    public Slider bgmVolumeSlider;
+    public Slider sfxVolumeSlider;
 
     private void Awake()
     {
@@ -26,6 +34,17 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    
+        LoadSettings();
+
+        if(masterVolumeSlider != null)
+        masterVolumeSlider.value=masterVolume;
+
+        if(bgmVolumeSlider != null)
+        bgmVolumeSlider.value=bgmVolume;
+
+        if(sfxVolumeSlider != null)
+        sfxVolumeSlider.value=sfxVolume;
     }
 
     public void SetMasterVolume(float volume)
@@ -35,17 +54,17 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.SetFloat("MasterVolume", masterVolume);
     }
 
-    public void SetMusicVolume(float volume)
+    public void SetBGMVolume(float volume)
     {
-        musicVolume = volume;
-        // Music audio sources volume adjustment logic here
-        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+        bgmVolume = volume;
+        audioMixer.SetFloat("BGMVolume", Mathf.Log10(bgmVolume) * 20);
+        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
     }
 
     public void SetSFXVolume(float volume)
     {
         sfxVolume = volume;
-        // SFX audio sources volume adjustment logic here
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
     }
 
@@ -56,9 +75,9 @@ public class AudioManager : MonoBehaviour
             SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume"));
         }
 
-        if (PlayerPrefs.HasKey("MusicVolume"))
+        if (PlayerPrefs.HasKey("BGMVolume"))
         {
-            SetMusicVolume(PlayerPrefs.GetFloat("MusicVolume"));
+            SetBGMVolume(PlayerPrefs.GetFloat("BGMVolume"));
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
@@ -66,6 +85,4 @@ public class AudioManager : MonoBehaviour
             SetSFXVolume(PlayerPrefs.GetFloat("SFXVolume"));
         }
     }
-
-
 }
