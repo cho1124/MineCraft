@@ -135,7 +135,7 @@ public class Item_Manager : MonoBehaviour
 
         //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
-        Item_Dictionary.SpawnItem(TestKey, Vector3.zero);
+        Item_Dictionary.SpawnItem(TestKey, transform.position);
 
     }
 
