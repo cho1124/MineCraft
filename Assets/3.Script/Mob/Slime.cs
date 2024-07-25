@@ -97,7 +97,7 @@ public class Slime : Monster
         if (slimeComponent != null)
         {
             slimeComponent.currentHealth = currentHealth / 2;
-            slimeComponent.Health = Health / 2;
+            //slimeComponent.Health = Health / 2;
         }
 
         // 슬라임의 material을 프리팹의 material과 동일하게 설정

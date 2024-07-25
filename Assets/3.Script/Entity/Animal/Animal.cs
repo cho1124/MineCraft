@@ -588,7 +588,7 @@ public class Animal : Entity{
         }
     
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
-        Health -= damage;
+        //Health -= damage;
         StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
     
       //  if (Health <= 0)
