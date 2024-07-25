@@ -331,13 +331,6 @@ public class EquipmentItem : Original_Item
 
     [JsonProperty(Order = 16)]
     public float armor_defense { get; set; } = 0.0f;
-
-    [JsonProperty(Order = 17)]
-    public float draw_power { get; set; } = 0.0f;
-    [JsonProperty(Order = 18)]
-    public float draw_speed { get; set; } = 0.0f;
-    [JsonProperty(Order = 19)]
-    public float aim_accuracy { get; set; } = 0.0f;
 }
 
 public class ItemData
