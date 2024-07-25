@@ -1,4 +1,4 @@
-Shader "Minecraft/Transparent Blocks" {
+﻿Shader "Minecraft/Transparent Blocks" {
 
 	Properties{
 		_MainTex("Block Texture Atlas", 2D) = "white" {}
@@ -75,3 +75,4 @@ Shader "Minecraft/Transparent Blocks" {
 		}
 
 }
+
