@@ -170,6 +170,7 @@ public class Player_Control : MonoBehaviour
                 // «Ǫ
                 if (input_key_jump)
                 {
+                    Debug.Log("asd");
                     animator.SetBool("IsJump", true);
                     animator.SetBool("IsGround", false);
                     gravity_velocity = Mathf.Sqrt(-5f * jump_height * Physics.gravity.y);

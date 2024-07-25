@@ -34,7 +34,7 @@ public class ItemJsonEditorWindow : EditorWindow
         switch (itemType)
         {
             case ItemType.Stackable:
-                DrawStackableItemFields();
+                DrawStackableItemFields(stackableItem);
                 break;
             case ItemType.Consumable:
                 DrawConsumableItemFields();
@@ -70,16 +70,16 @@ public class ItemJsonEditorWindow : EditorWindow
 
     }
 
-    private void DrawStackableItemFields()
+    private void DrawStackableItemFields(StackableItem item)
     {
-        DrawBasicItemFields(stackableItem);
-        stackableItem.stack_max = EditorGUILayout.IntField("Stack Max", stackableItem.stack_max);
-        stackableItem.stack_current = EditorGUILayout.IntField("Stack Current", stackableItem.stack_current);
+        DrawBasicItemFields(item);
+        item.stack_max = EditorGUILayout.IntField("Stack Max", stackableItem.stack_max);
+        item.stack_current = EditorGUILayout.IntField("Stack Current", stackableItem.stack_current);
     }
 
     private void DrawConsumableItemFields()
     {
-        DrawStackableItemFields();
+        DrawStackableItemFields(consumableItem);
         consumableItem.hunger_amount = EditorGUILayout.FloatField("Hunger Amount", consumableItem.hunger_amount);
         consumableItem.thirst_amount = EditorGUILayout.FloatField("Thirst Amount", consumableItem.thirst_amount);
         consumableItem.fatigue_amount = EditorGUILayout.FloatField("Fatigue Amount", consumableItem.fatigue_amount);
@@ -90,7 +90,7 @@ public class ItemJsonEditorWindow : EditorWindow
 
     private void DrawPlaceableItemFields()
     {
-        DrawStackableItemFields();
+        DrawStackableItemFields(placeableItem);
         placeableItem.require_tool_type = (Equipment_Type)EditorGUILayout.EnumPopup("Require Tool Type", placeableItem.require_tool_type);
         
         placeableItem.require_tool_tier = EditorGUILayout.IntField("Require Tool Tier", placeableItem.require_tool_tier);
