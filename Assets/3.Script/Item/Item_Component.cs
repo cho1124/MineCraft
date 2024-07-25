@@ -36,6 +36,9 @@ public class ItemComponent : MonoBehaviour
     public float guardRate;
     public int toolTier;
     public float armorDefense;
+    public float drawPower;
+    public float drawSpeed;
+    public float aimAccuracy;
 
     // StackableItem 초기화 메서드
 
@@ -93,6 +96,9 @@ public class ItemComponent : MonoBehaviour
         meleeSpeed = item.melee_speed;
         guardRate = item.guard_rate;
         toolTier = item.tool_tier;
+        drawPower = item.draw_power;
+        drawSpeed = item.draw_speed;
+        aimAccuracy = item.aim_accuracy;
         armorDefense = item.armor_defense;
     }
 }
