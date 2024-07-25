@@ -31,7 +31,7 @@ public class Hand
 
     public void Set_Value_Default()
     {
-
+        //맨손으로 초기화
     }
     public void Set_Value_Melee(float melee_damage, float attack_damage_max_rate, float attack_damage_min_rate, float melee_speed, float attack_speed_rate, float guard_rate, int tool_tier)
     {
