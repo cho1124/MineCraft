@@ -47,10 +47,10 @@ public class Entity : MonoBehaviour
     private float attack_speed_rate;
     private float guard_rate;
 
-    private int moveset_number = 3;
+    public int moveset_number { get; private set; } = -1;
 
     private float movement_speed;
-    private float jump_height;
+    public float jump_height { get; private set; }
 
     public float Health { get { return health_current; } }
     public float Posture { get { return posture_current; } }
@@ -144,68 +144,75 @@ public class Entity : MonoBehaviour
         //여기서 무기 조합에 따른 무브셋 지정
         //if (moveset_number == 1 || moveset_number == -1 || moveset_number == 2 || moveset_number == -2)
         //{
-        //    L_Hand.GetComponent<Hand>().Set_Value_Melee(L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.guardRate, L_held_data.toolTier);
-        //    R_Hand.GetComponent<Hand>().Set_Value_Melee(R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.guardRate, R_held_data.toolTier);
-        //    L_Hand.GetComponent<Hand>().Set_Collider(L_Hand.GetComponentInChildren<Collider>());
-        //    R_Hand.GetComponent<Hand>().Set_Collider(R_Hand.GetComponentInChildren<Collider>());
+        //    L_Hand.Set_Value_Melee(L_held_data.meleeDamage + attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.guardRate, L_held_data.toolTier);
+        //    R_Hand.Set_Value_Melee(R_held_data.meleeDamage + attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.guardRate, R_held_data.toolTier);
+        //    L_Hand.Set_Collider(L_Hand.GetComponentInChildren<Collider>());
+        //    R_Hand.Set_Collider(R_Hand.GetComponentInChildren<Collider>());
         //
         //    switch (moveset_number)
         //    {
         //        case 1:
-        //            guard_rate = L_Hand.GetComponent<Hand>().guard_rate;
+        //            guard_rate = L_Hand.guard_rate;
         //            break;
         //        case -1:
-        //            guard_rate = R_Hand.GetComponent<Hand>().guard_rate;
+        //            guard_rate = R_Hand.guard_rate;
         //            break;
         //        case 2: case -2:
-        //            guard_rate = (L_Hand.GetComponent<Hand>().guard_rate + R_Hand.GetComponent<Hand>().guard_rate) / 2f;
+        //            guard_rate = (L_Hand.guard_rate + R_Hand.guard_rate) / 2f;
         //            break;
         //    }
         //}
         //else if (moveset_number == 3)
         //{
-        //    L_Hand.GetComponent<Hand>().Set_Value_Default();
-        //    R_Hand.GetComponent<Hand>().Set_Value_Melee(R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.guardRate, R_held_data.toolTier);
-        //    L_Hand.GetComponent<Hand>().Set_Collider_Default();
-        //    R_Hand.GetComponent<Hand>().Set_Collider(R_Hand.GetComponentInChildren<Collider>());
+        //    L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 0.5f, 1);
+        //    R_Hand.Set_Value_Melee(R_held_data.meleeDamage + attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.guardRate, R_held_data.toolTier);
+        //    L_Hand.Set_Collider_Default();
+        //    R_Hand.Set_Collider(moveset_number);
         //
-        //    guard_rate = R_Hand.GetComponent<Hand>().guard_rate;
+        //    guard_rate = R_Hand.guard_rate;
         //}
         //else if (moveset_number == -3)
         //{
-        //    L_Hand.GetComponent<Hand>().Set_Value_Melee(L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.guardRate, L_held_data.toolTier);
-        //    L_Hand.GetComponent<Hand>().Set_Value_Default();
-        //    L_Hand.GetComponent<Hand>().Set_Collider(L_Hand.GetComponentInChildren<Collider>());
-        //    R_Hand.GetComponent<Hand>().Set_Collider_Default();
+        //    L_Hand.Set_Value_Melee(L_held_data.meleeDamage + attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.guardRate, L_held_data.toolTier);
+        //    R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 0.5f, 1);
+        //    L_Hand.Set_Collider(moveset_number);
+        //    R_Hand.Set_Collider_Default();
         //
-        //    guard_rate = L_Hand.GetComponent<Hand>().guard_rate;
+        //    guard_rate = L_Hand.guard_rate;
         //}
         //else if (moveset_number == 4)
         //{
-        //    L_Hand.GetComponent<Hand>().Set_Value_Melee(L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.guardRate, L_held_data.toolTier);
-        //    R_Hand.GetComponent<Hand>().Set_Value_Range(R_held_data.drawPower, attack_damage_max_rate, R_held_data.drawSpeed, attack_speed_rate, R_held_data.aimAccuracy, attack_damage_min_rate);
-        //    L_Hand.GetComponent<Hand>().Set_Collider(L_Hand.GetComponentInChildren<Collider>());
-        //    R_Hand.GetComponent<Hand>().Set_Collider(R_Hand.GetComponentInChildren<Collider>());
+        //    L_Hand.Set_Value_Melee(L_held_data.meleeDamage + attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.guardRate, L_held_data.toolTier);
+        //    R_Hand.Set_Value_Range(R_held_data.drawPower, attack_damage_max_rate, R_held_data.drawSpeed, attack_speed_rate, R_held_data.aimAccuracy, attack_damage_min_rate);
+        //    L_Hand.Set_Collider(L_Hand.GetComponentInChildren<Collider>());
+        //    R_Hand.Set_Collider(R_Hand.GetComponentInChildren<Collider>());
         //
         //    guard_rate = 0f;
         //}
         //else if (moveset_number == -4)
         //{
-        //    L_Hand.GetComponent<Hand>().Set_Value_Range(L_held_data.drawPower, attack_damage_max_rate, L_held_data.drawSpeed, attack_speed_rate, L_held_data.aimAccuracy, attack_damage_min_rate);
-        //    R_Hand.GetComponent<Hand>().Set_Value_Melee(R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.guardRate, R_held_data.toolTier);
-        //    L_Hand.GetComponent<Hand>().Set_Collider(L_Hand.GetComponentInChildren<Collider>());
-        //    R_Hand.GetComponent<Hand>().Set_Collider(R_Hand.GetComponentInChildren<Collider>());
+        //    L_Hand.Set_Value_Range(L_held_data.drawPower, attack_damage_max_rate, L_held_data.drawSpeed, attack_speed_rate, L_held_data.aimAccuracy, attack_damage_min_rate);
+        //    R_Hand.Set_Value_Melee(R_held_data.meleeDamage + attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.guardRate, R_held_data.toolTier);
+        //    L_Hand.Set_Collider(L_Hand.GetComponentInChildren<Collider>());
+        //    R_Hand.Set_Collider(R_Hand.GetComponentInChildren<Collider>());
         //
         //    guard_rate = 0f;
         //}
 
         //일단 테스트용
-        L_Hand.Set_Value_Test();
-        R_Hand.Set_Value_Test();
-        R_Hand.GetComponent<Hand>().Set_Collider(R_Hand.GetComponentInChildren<Collider>());
+        L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 0.5f, 1);
+        R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 0.5f, 1);
+        //L_Hand.Set_Collider_Default();
+        //R_Hand.Set_Collider(moveset_number);
+        //L_Hand.Set_Collider_Default();
+        //R_Hand.Set_Collider_Default();
+        L_Hand.Set_Collider(moveset_number);
+        R_Hand.Set_Collider(moveset_number);
 
-        //R_Hand.Set_Collider(R_Hand.gameObject.GetComponentInChildren<Collider>());
 
+
+        animator.SetInteger("Moveset_Number", moveset_number);
+        animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
         animator.SetFloat("L_Attack_Speed", L_Hand.attack_speed);
         animator.SetFloat("R_Attack_Speed", R_Hand.attack_speed);
         animator.SetFloat("Movement_Speed", movement_speed);
@@ -213,6 +220,7 @@ public class Entity : MonoBehaviour
 
     public void On_Hit(float damage, Collider attacker)
     {
+        Debug.Log($"{entity_name} 맞았음");
         float damage_health = damage;
         float damage_posture = damage;
 
@@ -259,7 +267,36 @@ public class Entity : MonoBehaviour
         }
     }
 
-
+    public void On_L_Hand_Collider()
+    {
+        if(animator.GetInteger("Moveset_Number") > 0)
+        {
+            if (L_Hand.Is_Collider_On_Off()) L_Hand.Collider_On_Off(false);
+            else L_Hand.Collider_On_Off(true);
+            Debug.Log($"L_Hand -> {L_Hand.Is_Collider_On_Off()}");
+        }
+        else if (animator.GetInteger("Moveset_Number") < 0)
+        {
+            if (R_Hand.Is_Collider_On_Off()) R_Hand.Collider_On_Off(false);
+            else R_Hand.Collider_On_Off(true);
+            Debug.Log($"R_Hand -> {R_Hand.Is_Collider_On_Off()}");
+        }
+    }
+    public void On_R_Hand_Collider()
+    {
+        if (animator.GetInteger("Moveset_Number") > 0)
+        {
+            if (R_Hand.Is_Collider_On_Off()) R_Hand.Collider_On_Off(false);
+            else R_Hand.Collider_On_Off(true);
+            Debug.Log($"R_Hand -> {R_Hand.Is_Collider_On_Off()}");
+        }
+        else if (animator.GetInteger("Moveset_Number") < 0)
+        {
+            if (L_Hand.Is_Collider_On_Off()) L_Hand.Collider_On_Off(false);
+            else L_Hand.Collider_On_Off(true);
+            Debug.Log($"L_Hand -> {L_Hand.Is_Collider_On_Off()}");
+        }
+    }
 
 
 

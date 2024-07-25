@@ -17,15 +17,14 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private GameObject anchor_left;
     [SerializeField] private GameObject anchor_right;
 
+    private Entity entity;
+
     private Quaternion target_rotation;
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
     private float cursor_y = 0f;
     private float temp_y = 0f;
 
-    //private float speed_current = 0f;
-    //private float speed_walk = 2f; // player_data에서 가져오기
-    //private float speed_sprint = 4f; // player_data에서 가져오기
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
     private float current_speed = 0f;
@@ -39,8 +38,6 @@ public class Player_Control : MonoBehaviour
 
     private bool input_key_sprint = false;
     private bool input_key_jump = false;
-    private bool input_key_inventory = false;
-    private bool input_key_die_test = false;
 
     private float draw_rate = 0f;
 
@@ -48,6 +45,8 @@ public class Player_Control : MonoBehaviour
     private bool is_R_down = false;
 
     private bool is_guard_down = false;
+
+    private bool input_key_inventory = false;
 
     public bool Grounded;
     public float GroundedOffset;
@@ -61,12 +60,11 @@ public class Player_Control : MonoBehaviour
     {
         TryGetComponent(out controller);
         TryGetComponent(out animator);
+        TryGetComponent(out entity);
     }
 
     private void Update()
     {
-        //이 부분 나눈 이유는.. 나중에 lateupdate를 써야할 일이 생길때 써야되서 지금은 이렇게 쓰는게 좋을듯 합니다..
-
         GroundedCheck();
         Move_Control();
         Attack_Control();
@@ -76,12 +74,12 @@ public class Player_Control : MonoBehaviour
     {
         Rotation_Control();
 
-        if (animator.GetInteger("Moveset_Number") == 3)
+        if (entity.moveset_number == 3)
         {
             anchor_right.transform.LookAt(anchor_left.transform);
             anchor_right.transform.Rotate(new Vector3(-60f, -45f, 0f));
         }
-        if (animator.GetInteger("Moveset_Number") == -3)
+        if (entity.moveset_number == -3)
         {
             anchor_left.transform.LookAt(anchor_right.transform);
             anchor_left.transform.Rotate(new Vector3(-60f, -45f, 0f));
@@ -251,7 +249,6 @@ public class Player_Control : MonoBehaviour
         Vector2 input = context.ReadValue<Vector2>();
         if (input != null)
         {
-            Debug.Log("플레이어 꺼 온 무브");
             input_key_h = input.x;
             input_key_v = input.y;
         }
@@ -310,10 +307,5 @@ public class Player_Control : MonoBehaviour
     public void On_Guard_Trigger_Exit()
     {
         animator.SetBool("Is_Guarding", false);
-    }
-
-    public void On_Attack(bool hand, GameObject victim)
-    {
-        Debug.Log($"{hand}, {victim.name}");
     }
 }
