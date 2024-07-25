@@ -17,7 +17,8 @@ public class InventoryOnOff : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) // E키를 누른다면
         {
             on_off_tr = !on_off_tr; // 인벤토리 UI ON, OFF 체크
-        
+
+            //진짜 코드 여기저기 다망쳐놨네 씨발 진짜
             on_off_obj.SetActive(on_off_tr); // 인벤토리 UI ON, OFF 기능
         }
     }

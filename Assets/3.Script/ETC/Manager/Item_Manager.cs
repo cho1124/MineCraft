@@ -96,6 +96,23 @@ public class Item_Manager : MonoBehaviour
 
     }
 
+    public void SetLayerToItem(GameObject obj, string layer)
+    {
+
+        int itemLayer = LayerMask.NameToLayer(layer);
+
+        if (itemLayer != -1)
+        {
+            obj.layer = itemLayer;
+            Debug.Log($"{obj.name} layer set to {layer}");
+        }
+        else
+        {
+            Debug.LogError($"Layer {layer} does not exist!");
+        }
+    }
+
+
     public void SpawnItem(int itemID, Vector3 position)
     {
         if (Item_Dictionary.item_dictionary.ContainsKey(itemID))
@@ -104,6 +121,7 @@ public class Item_Manager : MonoBehaviour
             if (itemPrefab != null)
             {
                 GameObject spawnedItem = Instantiate(itemPrefab, position, Quaternion.identity);
+                SetLayerToItem(spawnedItem, "Item");
                 ItemComponent itemComponent = spawnedItem.AddComponent<ItemComponent>();
 
                 Original_Item itemData = Item_Dictionary.item_dictionary[itemID];

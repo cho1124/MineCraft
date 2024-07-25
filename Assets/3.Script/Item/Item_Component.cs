@@ -101,4 +101,12 @@ public class ItemComponent : MonoBehaviour
         aimAccuracy = item.aim_accuracy;
         armorDefense = item.armor_defense;
     }
+
+
+    
+
+    public void DestroyItem()
+    {
+        gameObject.SetActive(false);
+    }
 }

@@ -22,6 +22,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         slot_image = GetComponent<Image>();
     }
 
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if(eventData.button == PointerEventData.InputButton.Left)
@@ -46,8 +47,18 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         myItem.canvasGroup.blocksRaycasts = true;
 
         if(myTag != SlotTag.None)
-        { Inventory.Singleton.EquipEquipment(myTag, myItem); }
+        { Inventory.Instance.EquipEquipment(myTag, myItem); }
     }
+
+    public void ClearSlot()
+    {
+        if (myItem != null)
+        {
+            Destroy(myItem.gameObject);
+            myItem = null;
+        }
+    }
+
 
     public void OnPointerEnter(PointerEventData eventData)
     {
