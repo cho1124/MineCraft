@@ -6,7 +6,7 @@ using UnityEngine;
 //아이템 데이터 재활용좀 할게용
 public enum Equipment_Type
 {
-    NONE = 0,
+    NONE,
     HELMET,
     CHESTPLATE,
     LEGGINGS,
@@ -32,11 +32,12 @@ public enum Equipment_Armor_Type
     HELMET,
     CHESTPLATE,
     LEGGINGS,
-    BOOTS
+    BOOTS,
+    SHIELD
+
 }
 public enum Equipment_Weapon_Type
 {
-    SHIELD,
     ONE_HANDED_SWORD,
     ONE_HANDED_AXE,
     ONE_HANDED_HAMMER,
@@ -53,8 +54,8 @@ public enum Equipment_Weapon_Type
 [System.Serializable]
 public class Item_List
 {
-    public List<Item_Data> item_Datas;
     public List<Item_Stackable_Data> item_Stackable_Datas;
+    
     public List<Item_Consumable_Data> item_Consumable_Datas;
     public List<Item_Placeable_Data> item_Placeable_Datas;
     public List<Item_Equipment_Data> item_Equipment_Datas;
