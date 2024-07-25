@@ -81,7 +81,7 @@ public class Entity : MonoBehaviour
     // 동물과 몬스터 공격과 데미지 처리 하는 부분 해당 클래스에 구현
     //TakeDamage 메서드가 실행될 때 체력이 0 이하가 되면 Die 메서드가 호출되며, 이는 OnDeath 이벤트를 트리거합니다.
 
-    
+
 
     public string entity_type;
     public string entity_name;
@@ -134,7 +134,7 @@ public class Entity : MonoBehaviour
         weight_rate = 1f - weight_current / weight_max;
 
         posture_max = weight_current;
-        
+
         defense_base = END * 5f;
         defense_current = defense_base + helmet_data.armor_defense + chestplate_data.armor_defense + leggings_data.armor_defense + boots_data.armor_defense;
 
@@ -145,7 +145,7 @@ public class Entity : MonoBehaviour
 
         speed_movement = 1f + AGI * 0.0025f - weight_rate;
         jump_height = 1f * AGI * 0.0025f - weight_rate;
-        
+
 
 
         //여기서 무기 조합에 따른 무브셋 지정
@@ -219,13 +219,14 @@ public class Entity : MonoBehaviour
 
 
 
-
-
     public GameObject deathEffectPrefab;
     
     protected Animator animator;
+    protected Rigidbody rb;
     private Renderer[] entityRenderer;
     private Color[] originalColor;
+
+    protected int damage_base = 0;
     
     public event Action OnDeath; // 죽음 이벤트 선언
     
@@ -314,3 +315,6 @@ public class Entity : MonoBehaviour
     }
 }
 
+public interface IDamageable{
+    public void TakeDamage(int damage);
+}

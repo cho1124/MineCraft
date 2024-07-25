@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : Monster, IDamageable 
+public class Slime : Monster
     {
 
     public GameObject slimePrefab; // 원래 크기의 슬라임 프리팹

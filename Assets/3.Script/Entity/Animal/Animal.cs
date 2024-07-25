@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Animal : Entity, IDamageable {
+public class Animal : Entity{
     //동물도 자유롭게 구현하면 될거에용
 
     /*
@@ -578,24 +578,24 @@ public class Animal : Entity, IDamageable {
         ChangeState(State.Wander);
     }
 
-    public override void TakeDamage(int damage) 
+    public void TakeDamage(int damage) 
     {
-
+    
         if (isInvincible)
         {
             Debug.Log($"{name}은(는) 무적 상태입니다. 데미지를 받지 않습니다.");
             return;
         }
-
+    
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
         Health -= damage;
         StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
-
+    
       //  if (Health <= 0)
       //  {
       //      Die();
       //  }
-
+    
     }
 
     protected override void Die()
