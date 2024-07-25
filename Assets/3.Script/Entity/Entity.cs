@@ -14,16 +14,16 @@ public class Survival_Status
     //시간이 지날 때마다 감소하는 메소드 추가할 것
 }
 
-public class Hand
+public class Hand : MonoBehaviour
 {
-    private float damage_max;
-    private float damage_min;
-    private float attack_speed;
-    private float guard_rate;
+    public float damage_max { get; private set; }
+    public float damage_min { get; private set; }
+    public float attack_speed { get; private set; }
+    public float guard_rate { get; private set; }
 
-    private float draw_power;
-    private float draw_speed;
-    private float aim_accuracy;
+    public float draw_power { get; private set; }
+    public float draw_speed { get; private set; }
+    public float aim_accuracy { get; private set; }
 
     private int tool_tier;
 
@@ -69,6 +69,25 @@ public class Hand
     public void Collider_Off()
     {
         collider.enabled = false;
+        //딕셔너리 초기화
+    }
+
+    private void OnTriggerStay(Collider victim)
+    {
+        if (victim.CompareTag("Entity"))
+        {
+            float victim_defense = victim.gameObject.GetComponent<Entity>().Defense;
+            float victim_weight = victim.gameObject.GetComponent<Entity>().Weight;
+
+            float damage_health = UnityEngine.Random.Range(damage_min, damage_max);
+            float damage_posture = damage_health;
+
+            float damage_health_result = damage_health * (damage_health / (damage_health + victim_defense));
+            float damage_posture_result = damage_posture * (damage_posture / (damage_posture + victim_weight));
+
+            victim.gameObject.GetComponent<Entity>().On_Hit(damage_health_result, damage_posture_result);
+            //공격한 대상은 딕셔너리에 추가하고 딕셔너리에 있는 엔티티는 다시 처리 안함
+        }
     }
 }
 
@@ -110,15 +129,42 @@ public class Entity : MonoBehaviour
 
     private int moveset_number;
 
-    private float speed_movement;
+    private float movement_speed;
     private float jump_height;
 
+    public float Health { get { return health_current; } }
+    public float Posture { get { return posture_current; } }
+    public float Defense { get { return defense_current; } }
+    public float Weight { get { return weight_current; } }
+
+    [SerializeField] private Animator entity_animator;
     [SerializeField] private GameObject L_Hand;
     [SerializeField] private GameObject R_Hand;
 
     private EquipmentItem L_gear_data, R_gear_data;
 
     private EquipmentItem helmet_data, chestplate_data, leggings_data, boots_data;
+
+    public Entity()
+    {
+        VIT = 1;
+        END = 1;
+        STR = 1;
+        DEX = 1;
+        AGI = 1;
+
+        Update_Status();
+    }
+    public Entity(int VIT, int END, int STR, int DEX, int AGI)
+    {
+        this.VIT = VIT;
+        this.END = END;
+        this.STR = STR;
+        this.DEX = DEX;
+        this.AGI = AGI;
+
+        Update_Status();
+    }
 
     public void Update_Status()
     {
@@ -143,7 +189,7 @@ public class Entity : MonoBehaviour
         attack_damage_min_rate = 0.5f + DEX * 0.005f;
         attack_speed_rate = 1f + AGI * 0.005f;
 
-        speed_movement = 1f + AGI * 0.0025f - weight_rate;
+        movement_speed = 1f + AGI * 0.0025f - weight_rate;
         jump_height = 1f * AGI * 0.0025f - weight_rate;
 
 
@@ -182,21 +228,29 @@ public class Entity : MonoBehaviour
             L_Hand.GetComponent<Hand>().Set_Value_Range(L_gear_data.draw_power, attack_damage_max_rate, L_gear_data.draw_speed, attack_speed_rate, L_gear_data.aim_accuracy, attack_damage_min_rate);
             R_Hand.GetComponent<Hand>().Set_Value_Melee(R_gear_data.melee_damage, attack_damage_max_rate, attack_damage_min_rate, R_gear_data.melee_speed, attack_speed_rate, R_gear_data.guard_rate, R_gear_data.tool_tier);
             L_Hand.GetComponent<Hand>().Set_Collider(L_Hand.GetComponentInChildren<Collider>());
+
             R_Hand.GetComponent<Hand>().Set_Collider(R_Hand.GetComponentInChildren<Collider>());
         }
+
+        entity_animator.SetFloat("L_Attack_Speed", L_Hand.GetComponent<Hand>().attack_speed);
+        entity_animator.SetFloat("R_Attack_Speed", R_Hand.GetComponent<Hand>().attack_speed);
+        entity_animator.SetFloat("Movement_Speed", movement_speed);
     }
 
+    public void On_Hit(float damage_health, float damage_posture)
+    {
+        if(health_current > 0)
+        {
+            health_current -= damage_health;
+            if(health_current <= 0) OnDie();
+        }
 
-
-
-
-
-
-
-
-
-
-
+        if(posture_current > 0)
+        {
+            posture_current = damage_posture;
+            if (posture_current <= 0) Debug.Log("그로기!");
+        }
+    }
 
 
 
@@ -238,23 +292,6 @@ public class Entity : MonoBehaviour
         originalColor = new Color[entityRenderer.Length];
         for (int i = 0; i < entityRenderer.Length; i++) {
             originalColor[i] = entityRenderer[i].material.color;
-        }
-    }
-    
-    public float Health
-    {
-        get
-        {
-            return health_current;
-        }
-        set
-        {
-            if (health_current > value)
-            {
-                StartCoroutine(BlinkRed());
-                health_current = value;
-            }
-            if (health_current <= 0) Die();
         }
     }
     
@@ -311,7 +348,6 @@ public class Entity : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {health_current}");
-        Health -= damage;
     }
 }
 
