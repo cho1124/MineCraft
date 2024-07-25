@@ -251,6 +251,7 @@ public class Player_Control : MonoBehaviour
         Vector2 input = context.ReadValue<Vector2>();
         if (input != null)
         {
+            Debug.Log("플레이어 꺼 온 무브");
             input_key_h = input.x;
             input_key_v = input.y;
         }

@@ -195,8 +195,9 @@ public class Item_Manager : MonoBehaviour
 
                 if (equipmentItem.Weapon_Type.HasValue)
                 {
+                    if (equipmentItem.Weapon_Type == Equipment_Weapon_Type.BOW) Debug.Log($"Weapon Item: {equipmentItem.item_name}, draw_power: {equipmentItem.draw_power}, draw_speed: {equipmentItem.draw_speed}, aim_accuracy: {equipmentItem.aim_accuracy}");
                     // 무기 속성 설정
-                    Debug.Log($"Weapon Item: {equipmentItem.item_name}, Damage: {equipmentItem.melee_damage}, Speed: {equipmentItem.melee_speed}, Guard Rate: {equipmentItem.guard_rate}, Tool Tier: {equipmentItem.tool_tier}");
+                    else Debug.Log($"Weapon Item: {equipmentItem.item_name}, Damage: {equipmentItem.melee_damage}, Speed: {equipmentItem.melee_speed}, Guard Rate: {equipmentItem.guard_rate}, Tool Tier: {equipmentItem.tool_tier}");
                 }
                 else if (equipmentItem.Armor_Type.HasValue)
                 {
@@ -331,6 +332,13 @@ public class EquipmentItem : Original_Item
 
     [JsonProperty(Order = 16)]
     public float armor_defense { get; set; } = 0.0f;
+
+    [JsonProperty(Order = 17)]
+    public float draw_power { get; set; } = 0.0f;
+    [JsonProperty(Order = 18)]
+    public float draw_speed { get; set; } = 0.0f;
+    [JsonProperty(Order = 19)]
+    public float aim_accuracy { get; set; } = 0.0f;
 }
 
 public class ItemData

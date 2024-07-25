@@ -372,7 +372,7 @@ public class Monster : Entity
             {
                 if (hit.transform.GetComponent<IDamageable>() != null && hit.transform != this.transform && !hit.transform.CompareTag("Monster"))
                 {
-                    hit.transform.GetComponent<IDamageable>().TakeDamage(damage);
+                    hit.transform.GetComponent<IDamageable>().TakeDamage(0);
                 }
             }
         }
@@ -390,7 +390,7 @@ public class Monster : Entity
     {
         if (other.GetComponent<IDamageable>() != null && other.transform != this.transform && !other.CompareTag("Monster"))
         {
-            other.GetComponent<IDamageable>().TakeDamage(damage);
+            other.GetComponent<IDamageable>().TakeDamage(0);
         }
     }
 

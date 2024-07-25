@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Creeper : Monster, IDamageable
+public class Creeper : Monster
 {
 
     public Collider coll;
