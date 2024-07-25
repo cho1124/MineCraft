@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class Item_Manager : MonoBehaviour
 {
-
     public TextAsset text1;
     [Header("테스트 해보세용")]
     public int TestKey = 7;
+
+    
 
     public static class Item_Dictionary
     {
@@ -30,6 +31,9 @@ public class Item_Manager : MonoBehaviour
                 item.item_model_in_inv = Resources.Load<Sprite>(item.item_model_in_inventory);
             }
         }
+
+
+        
 
 
 
@@ -96,10 +100,12 @@ public class Item_Manager : MonoBehaviour
     }
 
 
+
+
     void Start()
     {
 
-        TextAsset jsonFile = Resources.Load<TextAsset>("Test"); // 테스트용
+        TextAsset jsonFile = Resources.Load<TextAsset>("ItemData"); // 테스트용
         if (jsonFile == null)
         {
             Debug.LogError("Could not find JSON file in Resources folder.");
@@ -127,14 +133,13 @@ public class Item_Manager : MonoBehaviour
 
         Dic_Add(itemData.equipmentItems);
 
-        Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
+        //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
         Item_Dictionary.SpawnItem(TestKey, Vector3.zero);
 
-
-
     }
 
+    
     private void Dic_Add(List<StackableItem> stackableItems)
     {
         foreach (var item in stackableItems)
@@ -231,20 +236,27 @@ public class Item_Manager : MonoBehaviour
 
 public class Original_Item
 {
+    [JsonProperty(Order = 1)]
     public int item_ID { get;  set; } //아이템 아이디
+    [JsonProperty(Order = 2)]
     public string item_name { get;  set; } //아이템 이름
+    [JsonProperty(Order = 3)]
     public string item_model_in_world { get;  set; } //바닥에 떨어져있을 때 보여질 아이템의 형태
+    [JsonProperty(Order = 4)]
     public string item_model_in_inventory { get;  set; } //인벤토리에서 보여질 아이템의 형태
 
+    [JsonIgnore]
     public GameObject item_model_in_worlds;
+    [JsonIgnore]
     public Sprite item_model_in_inv;
 }
 
 
 public class StackableItem : Original_Item
 {
-
+    [JsonProperty(Order = 5)]
     public int stack_max { get; set; } = 64;
+    [JsonProperty(Order = 6)]
     public int stack_current { get; set; } = 1;
 
     //public StackableItem(string item_name, string item_model_in_world, string item_model_in_inventory, int stack_max, int stack_current)
@@ -260,39 +272,64 @@ public class StackableItem : Original_Item
 
 public class ConsumableItem : StackableItem
 {
+    [JsonProperty(Order = 7)]
     public float hunger_amount { get; set; } = 0.0f;
+    [JsonProperty(Order = 8)]
     public float thirst_amount { get; set; } = 0.0f;
+    [JsonProperty(Order = 9)]
     public float fatigue_amount { get; set; } = 0.0f;
+    [JsonProperty(Order = 10)]
     public float freshment_max { get; set; } = 100.0f;
+    [JsonProperty(Order = 11)]
     public float freshment_current { get; set; } = 100.0f;
+
+    
+
 }
 
 public class PlaceableItem : StackableItem
 {
+    [JsonProperty(Order = 7)]
     public Equipment_Type require_tool_type { get; set; } = Equipment_Type.NONE;
+    [JsonProperty(Order = 8)]
     public int require_tool_tier { get; set; } = 1;
+    [JsonProperty(Order = 9)]
     public float durability_max { get; set; } = 100.0f;
+    [JsonProperty(Order = 10)]
     public float durability_current { get; set; } = 100.0f;
+    [JsonProperty(Order = 11)]
     public string item_model_in_place { get; set; } = "";
 
 }
 
 public class EquipmentItem : Original_Item
 {
+    [JsonProperty(Order = 5)]
     public string equipment_type { get; set; } = "";
+    [JsonProperty(Order = 6)]
     public float weight { get; set; } = 1.0f;
+    [JsonProperty(Order = 7)]
     public float durability_max { get; set; } = 100.0f;
+    [JsonProperty(Order = 8)]
     public float durability_current { get; set; } = 100.0f;
+    [JsonProperty(Order = 9)]
     public string item_model_in_equip { get; set; } = "";
 
+    [JsonIgnore]
     public Equipment_Armor_Type? Armor_Type { get; set; } = null;
+    [JsonIgnore]
     public Equipment_Weapon_Type? Weapon_Type { get; set; } = null;
 
+    [JsonProperty(Order = 12)]
     public float melee_damage { get; set; } = 0.0f;
+    [JsonProperty(Order = 13)]
     public float melee_speed { get; set; } = 1.0f;
+    [JsonProperty(Order = 14)]
     public float guard_rate { get; set; } = 0.0f;
+    [JsonProperty(Order = 15)]
     public int tool_tier { get; set; } = 1;
 
+    [JsonProperty(Order = 16)]
     public float armor_defense { get; set; } = 0.0f;
 }
 

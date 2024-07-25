@@ -1,8 +1,8 @@
-using UnityEngine;
-using UnityEditor;
-using System.IO;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+    using UnityEngine;
+    using UnityEditor;
+    using System.IO;
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
 
 public class ItemJsonEditorWindow : EditorWindow
 {
@@ -14,6 +14,7 @@ public class ItemJsonEditorWindow : EditorWindow
     private PlaceableItem placeableItem = new PlaceableItem();
     private EquipmentItem equipmentItem = new EquipmentItem();
     private ItemData itemData = new ItemData();
+    
     private Equipment_Type equipmentType = Equipment_Type.NONE;
 
     [MenuItem("Window/JSON Item Editor")]
@@ -84,18 +85,19 @@ public class ItemJsonEditorWindow : EditorWindow
         consumableItem.fatigue_amount = EditorGUILayout.FloatField("Fatigue Amount", consumableItem.fatigue_amount);
         consumableItem.freshment_max = EditorGUILayout.FloatField("Freshment Max", consumableItem.freshment_max);
         consumableItem.freshment_current = EditorGUILayout.FloatField("Freshment Current", consumableItem.freshment_current);
-        
+
     }
 
     private void DrawPlaceableItemFields()
     {
         DrawStackableItemFields();
         placeableItem.require_tool_type = (Equipment_Type)EditorGUILayout.EnumPopup("Require Tool Type", placeableItem.require_tool_type);
+        
         placeableItem.require_tool_tier = EditorGUILayout.IntField("Require Tool Tier", placeableItem.require_tool_tier);
         placeableItem.durability_max = EditorGUILayout.FloatField("Durability Max", placeableItem.durability_max);
         placeableItem.durability_current = EditorGUILayout.FloatField("Durability Current", placeableItem.durability_current);
         placeableItem.item_model_in_place = EditorGUILayout.TextField("Item Model In Place", placeableItem.item_model_in_place);
-        
+
     }
 
     private void DrawEquipmentItemFields()
@@ -126,7 +128,7 @@ public class ItemJsonEditorWindow : EditorWindow
 
     private void SaveJsonFile()
     {
-        string path = Application.dataPath + "/" + jsonFileName;
+        string path = Application.dataPath + "/Resources/" + jsonFileName;
 
         // 기존 파일이 존재하는 경우 데이터 읽기
         if (File.Exists(path))
@@ -189,10 +191,10 @@ public class ItemJsonEditorWindow : EditorWindow
 }
 
 public enum ItemType
-{
-    Stackable,
-    Consumable,
-    Placeable,
-    Equipment
-}
+    {
+        Stackable,
+        Consumable,
+        Placeable,
+        Equipment
+    }
 
