@@ -95,4 +95,12 @@ public class ItemComponent : MonoBehaviour
         toolTier = item.tool_tier;
         armorDefense = item.armor_defense;
     }
+
+
+    
+
+    public void DestroyItem()
+    {
+        gameObject.SetActive(false);
+    }
 }

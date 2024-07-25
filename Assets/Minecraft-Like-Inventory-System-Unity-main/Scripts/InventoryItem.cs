@@ -6,18 +6,23 @@ using UnityEngine.EventSystems;
 
 public class InventoryItem : MonoBehaviour, IPointerClickHandler
 {
-    Inventory inventory; // test
+    
 
     Image itemIcon;
     public CanvasGroup canvasGroup { get; private set; }
 
     public Item myItem { get; set; }
+    public ItemComponent itemComponent { get; set; }
+    
     public InventorySlot activeSlot { get; set; }
 
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         itemIcon = GetComponent<Image>();
+
+        
+
     }
 
     public void Initialize(Item item, InventorySlot parent)
@@ -28,11 +33,28 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         itemIcon.sprite = item.sprite;
     }
 
+    public void Initialize(ItemComponent itemComponent, InventorySlot parent)
+    {
+        if (itemComponent == null || parent == null)
+        {
+            Debug.LogError("itemComponent or parent is null");
+            return;
+        }
+
+        Debug.Log("Init : " + itemComponent.itemIcon);
+
+        activeSlot = parent;
+        activeSlot.myItem = this;
+        this.itemComponent = itemComponent;
+        itemIcon.sprite = itemComponent.itemIcon;
+    }
+
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if(eventData.button == PointerEventData.InputButton.Left)
         {
-            Inventory.Singleton.SetCarriedItem(this);
+            Inventory.Instance.SetCarriedItem(this);
         }
     }
 } 
