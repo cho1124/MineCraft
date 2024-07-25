@@ -21,8 +21,9 @@ public class Inventory : MonoBehaviour
 
     [Header("Item List")]
     [SerializeField] Item[] items;
-
+    [SerializeField] List<Original_Item> item_list;
     
+
     [Header("Debug")]
     [SerializeField] Button giveItemBtn;
 
@@ -32,6 +33,28 @@ public class Inventory : MonoBehaviour
         //Item_Manager.Item_Dictionary.SpawnItem
         giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
     }
+
+    private void Start()
+    {
+        Debug.Log("개똥멍청이조영준" + Item_Dictionary.item_dictionary.Count);
+
+
+
+
+        Add_All_Item(); //딕셔너리 전체에 대한 걸 받아오는 메서드,
+        //이제 아이템을 먹을 때마다 이 리스트에 추가하면 된당.
+    }
+
+
+    private void Add_All_Item()
+    {
+        foreach (int key in Item_Dictionary.item_dictionary.Keys)
+        {
+            item_list.Add(Item_Dictionary.item_dictionary[key]);
+
+        }
+    }
+
 
     void Update()
     {

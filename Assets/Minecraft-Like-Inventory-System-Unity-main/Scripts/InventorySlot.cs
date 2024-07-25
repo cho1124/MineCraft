@@ -19,7 +19,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
     private void Awake()
     {
-        slot_image = this.GetComponent<Image>();
+        slot_image = GetComponent<Image>();
     }
 
     public void OnPointerClick(PointerEventData eventData)

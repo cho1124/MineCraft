@@ -4,107 +4,56 @@ using Newtonsoft.Json;
 using System;
 using UnityEngine.UI;
 
+public static class Item_Dictionary
+{
+    public static Dictionary<int, Original_Item> item_dictionary { get; private set; }
+    // 딕셔너리 초기화
+    static Item_Dictionary()
+    {
+        item_dictionary = new Dictionary<int, Original_Item>();
+        LoadResources();
+    }
+
+    private static void LoadResources()
+    {
+        // 모든 아이템의 리소스를 미리 로드
+        foreach (var item in item_dictionary.Values)
+        {
+            item.item_model_in_worlds = Resources.Load<GameObject>(item.item_model_in_world);
+            item.item_model_in_inv = Resources.Load<Sprite>(item.item_model_in_inventory);
+        }
+    }
+
+    public static void Add(int item_ID, Original_Item item_data)
+    {
+        if (!item_dictionary.ContainsKey(item_ID))
+        {
+            item_dictionary.Add(item_ID, item_data);
+
+            item_dictionary[item_ID].item_model_in_worlds = Resources.Load<GameObject>(item_dictionary[item_ID].item_model_in_world);
+            item_dictionary[item_ID].item_model_in_inv = Resources.Load<Sprite>(item_dictionary[item_ID].item_model_in_inventory);
+
+        }
+        else
+        {
+            Debug.LogWarning($"Item ID {item_ID} already exists in the dictionary.");
+        }
+    }
+
+}
+
+
+
+
+
 public class Item_Manager : MonoBehaviour
 {
     public TextAsset text1;
     [Header("테스트 해보세용")]
     public int TestKey = 7;
 
-    
-
-    public static class Item_Dictionary
+    private void Awake()
     {
-        public static Dictionary<int, Original_Item> item_dictionary { get; private set; }
-        // 딕셔너리 초기화
-        static Item_Dictionary()
-        {
-            item_dictionary = new Dictionary<int, Original_Item>();
-            LoadResources();
-        }
-
-        private static void LoadResources()
-        {
-            // 모든 아이템의 리소스를 미리 로드
-            foreach (var item in item_dictionary.Values)
-            {
-                item.item_model_in_worlds = Resources.Load<GameObject>(item.item_model_in_world);
-                item.item_model_in_inv = Resources.Load<Sprite>(item.item_model_in_inventory);
-            }
-        }
-
-
-        
-
-
-
-        public static void SpawnItem(int itemID, Vector3 position)
-        {
-            if (item_dictionary.ContainsKey(itemID))
-            {
-                GameObject itemPrefab = item_dictionary[itemID].item_model_in_worlds;
-                if (itemPrefab != null)
-                {
-                    GameObject spawnedItem = Instantiate(itemPrefab, position, Quaternion.identity);
-                    ItemComponent itemComponent = spawnedItem.AddComponent<ItemComponent>();
-
-                    Original_Item itemData = item_dictionary[itemID];
-                    if (itemData is ConsumableItem consumableItem)
-                    {
-                        itemComponent.Initialize(consumableItem);
-                    }
-                    else if (itemData is PlaceableItem placeableItem)
-                    {
-                        itemComponent.Initialize(placeableItem);
-                    }
-                    else if (itemData is EquipmentItem equipmentItem)
-                    {
-                        itemComponent.Initialize(equipmentItem);
-                    }
-                    else if (itemData is StackableItem stackableItem)
-                    {
-                        itemComponent.Initialize(stackableItem);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"타입이 뭔지 모르겠어잉 {itemID}.");
-                    }
-
-                }
-                else
-                {
-                    Debug.LogWarning($"Item ID {itemID} 프리팹 없어잉");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"Item ID {itemID} 없어잉");
-            }
-        }
-
-        public static void Add(int item_ID, Original_Item item_data)
-        {
-            if (!item_dictionary.ContainsKey(item_ID))
-            {
-                item_dictionary.Add(item_ID, item_data);
-
-                item_dictionary[item_ID].item_model_in_worlds = Resources.Load<GameObject>(item_dictionary[item_ID].item_model_in_world);
-                item_dictionary[item_ID].item_model_in_inv = Resources.Load<Sprite>(item_dictionary[item_ID].item_model_in_inventory);
-
-            }
-            else
-            {
-                Debug.LogWarning($"Item ID {item_ID} already exists in the dictionary.");
-            }
-        }
-
-    }
-
-
-
-
-    void Start()
-    {
-
         TextAsset jsonFile = Resources.Load<TextAsset>("ItemData"); // 테스트용
         if (jsonFile == null)
         {
@@ -118,8 +67,8 @@ public class Item_Manager : MonoBehaviour
         // JSON 문자열을 ItemData 객체로 파싱
         ItemData itemData = JsonConvert.DeserializeObject<ItemData>(jsonString);
 
-        
-        Debug.Log("consume : " +itemData.consumableItems[0].item_name);
+
+        Debug.Log("consume : " + itemData.consumableItems[0].item_name);
         Debug.Log("place : " + itemData.placeableItems.Count);
         Debug.Log("equipmentitemcount : " + itemData.equipmentItems.Count);
 
@@ -135,11 +84,63 @@ public class Item_Manager : MonoBehaviour
 
         //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
-        Item_Dictionary.SpawnItem(TestKey, transform.position);
+        SpawnItem(TestKey, transform.position);
+    }
+
+
+
+    void Start()
+    {
+
+        
 
     }
 
-    
+    public void SpawnItem(int itemID, Vector3 position)
+    {
+        if (Item_Dictionary.item_dictionary.ContainsKey(itemID))
+        {
+            GameObject itemPrefab = Item_Dictionary.item_dictionary[itemID].item_model_in_worlds;
+            if (itemPrefab != null)
+            {
+                GameObject spawnedItem = Instantiate(itemPrefab, position, Quaternion.identity);
+                ItemComponent itemComponent = spawnedItem.AddComponent<ItemComponent>();
+
+                Original_Item itemData = Item_Dictionary.item_dictionary[itemID];
+                if (itemData is ConsumableItem consumableItem)
+                {
+                    itemComponent.Initialize(consumableItem);
+                }
+                else if (itemData is PlaceableItem placeableItem)
+                {
+                    itemComponent.Initialize(placeableItem);
+                }
+                else if (itemData is EquipmentItem equipmentItem)
+                {
+                    itemComponent.Initialize(equipmentItem);
+                }
+                else if (itemData is StackableItem stackableItem)
+                {
+                    itemComponent.Initialize(stackableItem);
+                }
+                else
+                {
+                    Debug.LogWarning($"타입이 뭔지 모르겠어잉 {itemID}.");
+                }
+
+            }
+            else
+            {
+                Debug.LogWarning($"Item ID {itemID} 프리팹 없어잉");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Item ID {itemID} 없어잉");
+        }
+    }
+
+
     private void Dic_Add(List<StackableItem> stackableItems)
     {
         foreach (var item in stackableItems)
