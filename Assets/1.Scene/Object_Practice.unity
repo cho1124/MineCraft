@@ -6164,7 +6164,7 @@ MonoBehaviour:
   minSpawnCount: 1
   maxSpawnCount: 2
   spawnRadius: 6
-  respawnDistance: 10
+  respawnDistance: 20
   invincibilityDuration: 2
 --- !u!1 &415876311
 GameObject:
@@ -8636,7 +8636,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540233288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.76, y: 0, z: 42.73}
+  m_LocalPosition: {x: -32.76, y: 0, z: -4.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1567766702}
@@ -11385,7 +11385,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 785045208}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f827e77704074144daed657fc9211fa5, type: 3}
   m_Name: 
@@ -15334,7 +15334,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!95 &1111164427
 Animator:
@@ -15568,7 +15568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1136058942
 Transform:
   m_ObjectHideFlags: 0
@@ -16213,7 +16213,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &1207436731
 GameObject:
@@ -16672,7 +16672,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1219073781
 Transform:
   m_ObjectHideFlags: 0
@@ -19824,7 +19824,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!95 &1440102340
 Animator:
@@ -22149,7 +22149,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &1623920422
 GameObject:
@@ -22223,7 +22223,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh255236
+  m_Name: pb_Mesh111272
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -22823,7 +22823,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh255742
+  m_Name: pb_Mesh111858
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -27818,7 +27818,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &2123094711
 GameObject:
@@ -27950,7 +27950,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!95 &2124416009
 Animator:
@@ -28216,7 +28216,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &1686542098429870
 GameObject:
@@ -33423,7 +33423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &464537729558623184
 Transform:
   m_ObjectHideFlags: 0
@@ -58130,7 +58130,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!4 &2774158227876904996
 Transform:
@@ -77047,7 +77047,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!4 &4395129162693473233
 Transform:
@@ -88340,7 +88340,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 0}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &5283956189602423649
 GameObject:
@@ -94292,7 +94292,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 0}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!33 &5737310955914023327
 MeshFilter:
@@ -103992,7 +103992,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6514976257171707430
 GameObject:
   m_ObjectHideFlags: 0
@@ -104010,7 +104010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!33 &6516289770706187873
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -119332,7 +119332,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 0}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!65 &7732645890064509165
 BoxCollider:
@@ -126538,7 +126538,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 0}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &8410048435363482420
 GameObject:
@@ -126722,6 +126722,7 @@ GameObject:
   - component: {fileID: 8063775380802784571}
   - component: {fileID: 8424181616517442799}
   - component: {fileID: 8424181616517442800}
+  - component: {fileID: 8424181616517442801}
   m_Layer: 0
   m_Name: hoe
   m_TagString: Weapon
@@ -126756,6 +126757,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
+--- !u!54 &8424181616517442801
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8424181616517442798}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!23 &8427558675744751626
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -127646,7 +127663,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!4 &8480574040387157840
 Transform:
@@ -130023,7 +130040,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!4 &8637212642126583777
 Transform:
@@ -134050,7 +134067,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 0}
+  overgrowthObjectPrefab: {fileID: 0}
   wanderRadius: 30
 --- !u!65 &8978731972257057566
 BoxCollider:

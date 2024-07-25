@@ -74,7 +74,7 @@ public class Monster : Entity, IDamageable
     public float detectionCooldown = 2f; // 감지 쿨다운 시간
     private Coroutine chaseCoroutine;
 
-    protected virtual void Start()
+    protected override void Start()
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
@@ -390,7 +390,8 @@ public class Monster : Entity, IDamageable
     {
         if (other.GetComponent<IDamageable>() != null && other.transform != this.transform && !other.CompareTag("Monster"))
         {
-            other.GetComponent<IDamageable>().TakeDamage(damage);
+            other.GetComponent<IDamageable>().TakeDamage
+                (damage);
         }
     }
 
@@ -403,6 +404,19 @@ public class Monster : Entity, IDamageable
         }
         stateCoroutine = StartCoroutine(StateDuration(GetRandomState(), 0.5f));
     }
+
+    protected override void Die()
+    {
+        base.Die(); // 기본 Die 로직 호출
+        // 몬스터 고유의 추가 로직이 필요하면 여기에 추가
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage); // Entity의 TakeDamage 호출
+        // 몬스터 고유의 추가 로직이 필요하면 여기에 추가
+    }
+
 
 }
 

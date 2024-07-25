@@ -79,23 +79,23 @@ public class Entity : MonoBehaviour, IDamageable {
             Debug.Log($"{name}죽어버림ㅜㅜ");
         OnDeath?.Invoke(); // 죽음 이벤트 호출
 
-       // if (OnDeath != null)
-       // {
-       //     StartCoroutine(DelayedDie()); // 코루틴 호출
-       // }
-       // else
-       // {
-       //     StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
-       // }
+        if (OnDeath != null)
+        {
+            StartCoroutine(DelayedDie()); // 코루틴 호출
+        }
+        else
+        {
+            StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
+        }
 
     }
 
-  //  private IEnumerator DelayedDie()
-  //  {
-  //      // OnDeath 이벤트가 완료될 때까지 대기
-  //      yield return new WaitForEndOfFrame();
-  //      StartCoroutine(OnDie()); // OnDie 코루틴 호출
-  //  }
+    private IEnumerator DelayedDie()
+    {
+        // OnDeath 이벤트가 완료될 때까지 대기
+        yield return new WaitForEndOfFrame();
+        StartCoroutine(OnDie()); // OnDie 코루틴 호출
+    }
 
     private IEnumerator BlinkRed() {
             float elapsedTime = 0;

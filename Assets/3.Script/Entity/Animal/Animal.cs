@@ -572,8 +572,7 @@ public class Animal : Entity, IDamageable {
             return;
         }
 
-        Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {Health - damage}");
-        Health -= damage;
+        base.TakeDamage(damage); // Entity의 TakeDamage 호출
 
         // 180도 회전하고 Run 상태로 전환
         transform.Rotate(0, 180, 0);
@@ -584,6 +583,7 @@ public class Animal : Entity, IDamageable {
 
     protected override void Die()
     {
+        base.Die(); // 기본 Die 로직 호출
         Vector3 position = transform.position;
         Quaternion rotation = transform.rotation;
 
