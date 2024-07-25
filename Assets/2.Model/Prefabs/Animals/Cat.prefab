@@ -257,8 +257,6 @@ GameObject:
   - component: {fileID: 65079961972077558}
   - component: {fileID: 95039602943946200}
   - component: {fileID: -8146254155843796937}
-  - component: {fileID: -6093275958621508149}
-  - component: {fileID: 3511679869066871875}
   m_Layer: 0
   m_Name: Cat
   m_TagString: Untagged
@@ -356,66 +354,15 @@ MonoBehaviour:
   adultPrefab: {fileID: 1585349779547952}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
   hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
+  walkSpeed: 3
+  runSpeed: 4
+  minWalkTime: 4
+  maxWalkTime: 8
+  jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
+  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
   wanderRadius: 30
---- !u!114 &-6093275958621508149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1585349779547952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88729b23ab427bc489d2cd2d8cdf86bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 
-  name: 
-  damage: 6
-  maxHealth: 40
-  health: 0
-  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
-  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
-  adultPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
-  babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
-  hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
-  heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
-  shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
-  wanderRadius: 30
---- !u!195 &3511679869066871875
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1585349779547952}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &1686542506629698
 GameObject:
   m_ObjectHideFlags: 0

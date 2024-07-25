@@ -53,7 +53,7 @@ public class Animal : Entity, IDamageable {
     // 컴포넌트 관련 변수들
     public GameObject heartObjectPrefab; // 하트 오브젝트 프리팹
     public GameObject shockObjectPrefab; // 충격 오브젝트 프리팹
-    public GameObject tamedObjectPrefab; // 테이밍 오브젝트 프리팹
+    public GameObject overgrowthObjectPrefab; // 테이밍 오브젝트 프리팹
     private Vector3 targetPosition; //목적지
 
     // 탐지 관련 변수들
@@ -71,7 +71,7 @@ public class Animal : Entity, IDamageable {
     private const float positionThreshold = 3f; // 위치 변화 허용 범위(10초동안 이 범위 안에만 있으면 네비메쉬목적지변경)
 
     private GameObject activeEffect;
-    private GameObject tamedEffect; // Tamed 마크를 위한 변수
+    private GameObject overgrowthEffect; // overgrowth 마크를 위한 변수
     private bool isGrounded = true;
     private Rigidbody rb;
 
@@ -111,14 +111,6 @@ public class Animal : Entity, IDamageable {
 
     void Update() {
 
-
-//기존에 너무 높이 점프해서 y축 높이 봐서 제어하려고 만들었던 것
-      //  // y축 높이 체크
-      //  if (transform.position.y >= 2|| transform.position.y<-5)
-      //  {
-      //      transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-      //  }
-
         //성장 관련 업데이트
         //성인이 아니고 배부름상태가 growthTimeGaze 만큼 유지되면 성인으로 자람
         if (!isAdult && isFull) {
@@ -147,10 +139,10 @@ public class Animal : Entity, IDamageable {
                 break;
         }
 
-        // Tamed 상태일 때 Tamed 마크를 계속해서 유지
-        if (isOvergrowth && tamedEffect == null)
+        // overgrowth 상태일 때 overgrowth 마크를 계속해서 유지
+        if (isOvergrowth && overgrowthEffect == null)
         {
-            DisplayTamedMark();
+            DisplayovergrowthMark();
         }
 
         // 위치 변화 감지
@@ -356,12 +348,12 @@ public class Animal : Entity, IDamageable {
                 foodGivenCount++;
                 Debug.Log($"{name}가 Animal_Food를 먹었습니다. foodGivenCount: {foodGivenCount}");
 
-                // 5번 먹이면 Tamed 상태로 변경
+                // 5번 먹이면 overgrowth 상태로 변경
                 if (foodGivenCount >= OvergrowthThreshold)
                 {
                     isOvergrowth = true;
-                    gameObject.name = "Tamed_" + gameObject.name;
-                    DisplayTamedMark(); // Tamed 마크 표시
+                    gameObject.name = "overgrowth_" + gameObject.name;
+                    DisplayovergrowthMark(); // overgrowth 마크 표시
                     Debug.Log($"{name}가 테이밍되었습니다!");
                 }
             }
@@ -571,7 +563,7 @@ public class Animal : Entity, IDamageable {
         ChangeState(GetRandomState());
     }
 
-    public void TakeDamage(int damage) 
+    public override void TakeDamage(int damage) 
     {
 
         if (isInvincible)
@@ -620,7 +612,7 @@ public class Animal : Entity, IDamageable {
             meatCount = Mathf.CeilToInt(meatCount / 2.0f);
         }
 
-        // Tamed 상태일 경우 고기 생성 수 두 배
+        // overgrowth 상태일 경우 고기 생성 수 두 배
         if (isOvergrowth)
         {
             meatCount *= 2;
@@ -648,10 +640,10 @@ public class Animal : Entity, IDamageable {
         isInvincible = false;
     }
 
-    private void DisplayTamedMark()
+    private void DisplayovergrowthMark()
     {
-        tamedEffect = Instantiate(tamedObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
-        tamedEffect.transform.SetParent(transform);
-        tamedEffect.tag = "Tamed";
+        overgrowthEffect = Instantiate(overgrowthObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        overgrowthEffect.transform.SetParent(transform);
+        gameObject.name = "Overgrowth_" + gameObject.name;
     }
 }

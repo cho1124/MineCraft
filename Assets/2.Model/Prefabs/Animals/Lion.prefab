@@ -417,9 +417,7 @@ GameObject:
   - component: {fileID: 54254021876192096}
   - component: {fileID: 65306087575105876}
   - component: {fileID: 95995790678533120}
-  - component: {fileID: 1947720676111983046}
   - component: {fileID: 6389368554289155211}
-  - component: {fileID: 3262329574997193558}
   m_Layer: 0
   m_Name: Lion
   m_TagString: Untagged
@@ -496,36 +494,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1947720676111983046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553991042791506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea0edd52946548f4cb81e685c311b1c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 
-  name: 
-  damage: 8
-  maxHealth: 180
-  health: 0
-  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
-  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
-  adultPrefab: {fileID: 1553991042791506}
-  babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
-  hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
-  heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
-  shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
-  wanderRadius: 30
 --- !u!114 &6389368554289155211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,36 +516,15 @@ MonoBehaviour:
   adultPrefab: {fileID: 1553991042791506}
   babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
   hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
+  walkSpeed: 3
+  runSpeed: 4
+  minWalkTime: 4
+  maxWalkTime: 8
+  jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
+  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
   wanderRadius: 30
---- !u!195 &3262329574997193558
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553991042791506}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &1559099344501894
 GameObject:
   m_ObjectHideFlags: 0
