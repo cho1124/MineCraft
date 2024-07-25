@@ -7,11 +7,13 @@ public class Inventory : MonoBehaviour
 {
     public static Inventory Singleton;
     public static InventoryItem carriedItem;
+    private Item_Manager itemManager;
+
 
     [SerializeField] InventorySlot[] inventorySlots;
     [SerializeField] InventorySlot[] hotbarSlots;
 
-    // 0: Head, 1: Chest, 2: Legs, 3: Feet, 4: Weapon, 5: Accessories
+    // 0: HEAD, 1: CHEST, 2: LEGGINGS, 3: FEET, 4: WEAPON, 5: Accessories
     [SerializeField] InventorySlot[] equipmentSlots;
 
     [SerializeField] Transform draggablesTransform;
@@ -20,12 +22,14 @@ public class Inventory : MonoBehaviour
     [Header("Item List")]
     [SerializeField] Item[] items;
 
+    
     [Header("Debug")]
     [SerializeField] Button giveItemBtn;
 
     void Awake()
     {
         Singleton = this;
+        //Item_Manager.Item_Dictionary.SpawnItem
         giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
     }
 

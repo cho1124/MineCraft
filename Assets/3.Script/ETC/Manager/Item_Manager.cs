@@ -233,7 +233,7 @@ public class Item_Manager : MonoBehaviour
 
 
 }
-
+[System.Serializable]
 public class Original_Item
 {
     [JsonProperty(Order = 1)]
