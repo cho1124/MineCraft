@@ -17,18 +17,17 @@ public class Player_Control : MonoBehaviour
     [SerializeField] private GameObject anchor_left;
     [SerializeField] private GameObject anchor_right;
 
-    private Entity entity;
-
     private Quaternion target_rotation;
     private float cursor_h, cursor_v, key_h, key_v;
     private float cursor_x = 0f;
     private float cursor_y = 0f;
     private float temp_y = 0f;
 
+    private float speed_h;
+    private float speed_v;
+
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
-    private float current_speed = 0f;
-    private float velocity = 0f;
 
     private float input_cursor_h;
     private float input_cursor_v;
@@ -60,7 +59,6 @@ public class Player_Control : MonoBehaviour
     {
         TryGetComponent(out controller);
         TryGetComponent(out animator);
-        TryGetComponent(out entity);
     }
 
     private void Update()
@@ -121,8 +119,8 @@ public class Player_Control : MonoBehaviour
         else if(key_h != 0 || key_v != 0)
         {
             if (key_v == 0) temp_y = cursor_x;
-            else if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
-            else if (((key_h > 0) && !(key_v < 0)) || ((key_h < 0) && (key_v < 0))) temp_y = cursor_x + 45f;
+            //else if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
+            //else if (((key_h > 0) && !(key_v < 0)) || ((key_h < 0) && (key_v < 0))) temp_y = cursor_x + 45f;
             else if (key_v != 0 && key_h == 0) temp_y = cursor_x;
         }
         else
@@ -189,37 +187,14 @@ public class Player_Control : MonoBehaviour
         gravity_velocity += Physics.gravity.y * Time.deltaTime;
         controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
+
     private void Move_Animation(float key_h, float key_v)
     {
-        float target_speed = 0f;
-        if (key_h != 0f && key_v != 0f)
-        {
-            target_speed = Mathf.Sqrt(key_h * key_h + key_v * key_v);
-            if (key_v < 0) target_speed = -target_speed;
-        }
-        else if (key_h == 0f && key_v != 0f) target_speed = key_v;
-        else if (key_h != 0f && key_v == 0f) target_speed = key_h;
-        else target_speed = 0f;
+        speed_h = input_key_sprint ? key_h * 2f : key_h;
+        speed_v = input_key_sprint ? key_v * 2f : key_v;
 
-        target_speed = input_key_sprint ? target_speed * 2f : target_speed;
-
-        current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref velocity, 0.35f);
-
-        if (key_v != 0f)
-        {
-            animator.SetFloat("Speed_V", current_speed);
-            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_H") && animator.GetFloat("Speed_H") < 0.1f) animator.SetFloat("Speed_H", 0f);
-        }
-        else if (key_h != 0f)
-        {
-            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_V") && animator.GetFloat("Speed_V") < 0.1f) animator.SetFloat("Speed_V", 0f);
-            animator.SetFloat("Speed_H", current_speed);
-        }
-        else
-        {
-            animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_V") && animator.GetFloat("Speed_V") < 0.1f) animator.SetFloat("Speed_V", 0f);
-            animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), 0f, Time.deltaTime)); if (-0.1f < animator.GetFloat("Speed_H") && animator.GetFloat("Speed_H") < 0.1f) animator.SetFloat("Speed_H", 0f);
-        }
+        animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), speed_h, Time.deltaTime * 3f));
+        animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), speed_v, Time.deltaTime * 3f));
     }
     private void Attack_Control()
     {
