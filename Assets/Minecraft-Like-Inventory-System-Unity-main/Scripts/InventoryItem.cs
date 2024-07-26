@@ -6,9 +6,7 @@ using UnityEngine.EventSystems;
 
 public class InventoryItem : MonoBehaviour, IPointerClickHandler
 {
-    
-
-    Image itemIcon;
+    Image itemIcon; 
     public CanvasGroup canvasGroup { get; private set; }
 
     public Item myItem { get; set; }
@@ -20,8 +18,6 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
     {
         canvasGroup = GetComponent<CanvasGroup>();
         itemIcon = GetComponent<Image>();
-
-        
 
     }
 
@@ -48,7 +44,6 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         this.itemComponent = itemComponent;
         itemIcon.sprite = itemComponent.itemIcon;
     }
-
 
     public void OnPointerClick(PointerEventData eventData)
     {

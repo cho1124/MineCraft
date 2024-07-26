@@ -13,6 +13,10 @@ public class inventory : MonoBehaviour
 
     public List<ItemComponent> items = new List<ItemComponent>();
 
+    //test
+    public InventorySlot[] inv_Slot_ui = new InventorySlot[0];
+
+
 
 
     private void Awake()
@@ -68,6 +72,10 @@ public class inventory : MonoBehaviour
             {
                 inv_Slot[i] = item;
                 item.gameObject.SetActive(false);
+                Debug.Log(inv_Slot[i].StackCurrent);
+                
+
+
                 return;
             }
             else if (inv_Slot[i].Get_Type() == item.Get_Type() && inv_Slot[i].Get_Type() != 4)
@@ -75,16 +83,23 @@ public class inventory : MonoBehaviour
                 while (item.StackCurrent > 0 && inv_Slot[i].Check_Full())
                 {
                     item.StackCurrent--;
+                    //inv_Slot[i].StackCurrent++;
                     if (item.StackCurrent == 0)
                     {
+                        Debug.Log(inv_Slot[i].StackCurrent);
                         item.gameObject.SetActive(false);
                         return;
                     }
                 }
             }
 
-
         }
     }
+
+    public ItemComponent[] GetInv_Main()
+    {
+        return inv_Slot;
+    }
+
 }
 

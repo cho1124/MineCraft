@@ -25,7 +25,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Button giveItemBtn;
 
     [SerializeField] private List<ItemComponent> itemList = new List<ItemComponent>();
-
+    
 
 
     void Awake()
@@ -41,12 +41,35 @@ public class Inventory : MonoBehaviour
         }
 
         giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
+        // inventory.instance.GetInv_Main()
+        //SetEmptyItem();
+
+
+
+
     }
+
+    private void OnEnable()
+    {
+        SetInventory();
+    }
+
 
     private void Start()
     {
         Debug.Log("∞≥∂À∏€√ª¿Ã¡∂øµ¡ÿ" + Item_Dictionary.item_dictionary.Count);
         Add_All_Item();
+
+       
+
+    }
+
+    private void SetEmptyItem()
+    {
+        for(int i = 0; i < inventorySlots.Length; i++)
+        {
+            Instantiate(itemPrefab, inventorySlots[i].transform);
+        }
     }
 
     private void Add_All_Item()
@@ -117,6 +140,9 @@ public class Inventory : MonoBehaviour
         {
             if (inventorySlots[i].myItem == null)
             {
+                
+
+
                 Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(_item, inventorySlots[i]);
                 break;
             }
@@ -136,11 +162,39 @@ public class Inventory : MonoBehaviour
             if (inventorySlots[i].myItem == null)
             {
                 Debug.Log("SpawnCollidedItem : " + item.itemIcon);
-                itemList.Add(item);
-                Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(item, inventorySlots[i]);
+                //itemList.Add(item);
+
+                if(inventorySlots[i].transform.childCount == 0)
+                {
+                    Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(item, inventorySlots[i]);
+                }
+
+                
                 break;
             }
         }
+    }
+
+    public void SetInventory()
+    {
+        //inventory.instance.GetInv_Main()[0].
+
+        ItemComponent[] inv = inventory.instance.GetInv_Main();
+        int invLength = inventory.instance.GetInv_Main().Length;
+
+
+
+        for(int i = 0; i < invLength; i++)
+        {
+            if(inv[i] != null)
+            {
+                SpawnCollidedItem(inventory.instance.GetInv_Main()[i]);
+            }
+
+
+        }
+
+
     }
 
     private Item PickRandomItem()

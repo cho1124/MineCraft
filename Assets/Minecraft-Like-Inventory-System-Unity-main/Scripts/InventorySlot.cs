@@ -50,6 +50,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         { Inventory.Instance.EquipEquipment(myTag, myItem); }
     }
 
+    
+
+
     public void ClearSlot()
     {
         if (myItem != null)
