@@ -46,13 +46,13 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < Hotbar_Slot.Length; i++)
         {
-            if(Hotbar_Slot[i] == null)
+            if (Hotbar_Slot[i] == null)
             {
                 Hotbar_Slot[i] = item;
                 item.gameObject.SetActive(false);
                 return;
             }
-            else if(Hotbar_Slot[i].Get_Type() == item.Get_Type() && Hotbar_Slot[i].Get_Type() != 4)
+            else if (Hotbar_Slot[i].Get_Type() == item.Get_Type() && Hotbar_Slot[i].Get_Type() != 4)
             {
                 while (item.StackCurrent > 0 && Hotbar_Slot[i].Check_Full())
                 {
@@ -67,12 +67,17 @@ public class Inventory : MonoBehaviour
                 }
             }
 
+
+        }
+
+        for(int i = 0; i < inv_Slot.Length; i++)
+        {
             if (inv_Slot[i] == null)
             {
                 inv_Slot[i] = item;
                 item.gameObject.SetActive(false);
                 Debug.Log(inv_Slot[i].StackCurrent);
-                
+
                 return;
             }
             else if (inv_Slot[i].Get_Type() == item.Get_Type() && inv_Slot[i].Get_Type() != 4)
@@ -90,8 +95,11 @@ public class Inventory : MonoBehaviour
                 }
                 //스태커블 체크
             }
-
         }
+
+            
+
+        
     }
     public ItemComponent[] GetInv_Main()
     {

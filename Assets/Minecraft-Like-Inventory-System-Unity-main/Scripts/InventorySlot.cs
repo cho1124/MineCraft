@@ -51,12 +51,34 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         //아이템들 사용 하는 것 >> 핫바에 대한 처리 해야함
         //
 
+        InventorySlot[] GetSlotArray(InventorySlot slot)
+        {
+            if (System.Array.IndexOf(Inven.inventorySlots, slot) != -1)
+            {
+                return Inven.inventorySlots;
+            }
+            else if (System.Array.IndexOf(Inven.hotbarSlots, slot) != -1)
+            {
+                return Inven.hotbarSlots;
+            }
+            else if (System.Array.IndexOf(Inven.equipmentSlots, slot) != -1)
+            {
+                return Inven.equipmentSlots;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
+
+        InventorySlot[] oldSlotArray = GetSlotArray(item.activeSlot);
         // 이전 슬롯의 인덱스를 저장
         int oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, item.activeSlot);
 
         Debug.Log("조영준은 개쓰레기" + oldSlotIndex);
 
+        InventorySlot[] newSlotArray = GetSlotArray(this);
         // 새로운 슬롯의 인덱스를 저장
         int newSlotIndex = System.Array.IndexOf(Inven.inventorySlots, this);
         Debug.Log("조영준은 개쓰레기진짜" + newSlotIndex);

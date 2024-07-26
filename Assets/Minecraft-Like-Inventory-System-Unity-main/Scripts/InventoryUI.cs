@@ -9,10 +9,10 @@ public class InventoryUI : MonoBehaviour
     private Item_Manager itemManager;
 
     [SerializeField] public InventorySlot[] inventorySlots; //1번 슬롯 배열
-    [SerializeField] private InventorySlot[] hotbarSlots; //2번 슬롯 배열
+    [SerializeField] public InventorySlot[] hotbarSlots; //2번 슬롯 배열
 
     // 0: HEAD, 1: CHEST, 2: LEGGINGS, 3: FEET, 4: WEAPON, 5: Accessories
-    [SerializeField] private InventorySlot[] equipmentSlots;
+    [SerializeField] public InventorySlot[] equipmentSlots; //퍼블릭 마음이 너무 아픕니다
 
     [SerializeField] private Transform draggablesTransform;
     [SerializeField] private InventoryItem itemPrefab;
@@ -112,44 +112,72 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
+        // Hotbar 슬롯에서 빈 슬롯을 찾아 아이템 배치
+        //for (int i = 0; i < hotbarSlots.Length; i++)
+        //{
+        //    if (hotbarSlots[i].myItem == null)
+        //    {
+        //        if (Inventory.instance.Hotbar_Slot[i] != null)
+        //        {
+        //            var tempItem = Inventory.instance.Hotbar_Slot[i];
+        //            Debug.Log(tempItem.name);
+        //
+        //            if (itemSet.Length > i && itemSet[i] == null)
+        //            {
+        //                itemSet[i] = Instantiate(itemPrefab, hotbarSlots[i].transform);
+        //                itemSet[i].Initialize(tempItem, hotbarSlots[i]);
+        //                return; // 아이템을 배치했으므로 종료
+        //            }
+        //        }
+        //    }
+        //}
+
+        // Inventory 슬롯에서 빈 슬롯을 찾아 아이템 배치
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             if (inventorySlots[i].myItem == null)
             {
-                //Debug.Log("SpawnCollidedItem : " + item.itemIcon);
-                //itemList.Add(item);
-
                 if (Inventory.instance.inv_Slot[i] != null)
                 {
-                    item = Inventory.instance.inv_Slot[i];
-                    Debug.Log(Inventory.instance.inv_Slot[i].name);
+                    var tempItem = Inventory.instance.inv_Slot[i];
+                    Debug.Log("Tlqkf" +tempItem.name);
 
-                    if(itemSet[i] == null)
+                    if (itemSet.Length > i && itemSet[i] == null)
                     {
                         itemSet[i] = Instantiate(itemPrefab, inventorySlots[i].transform);
-                        itemSet[i].Initialize(item, inventorySlots[i]);
-                        break;
-
+                        itemSet[i].Initialize(tempItem, inventorySlots[i]);
+                        return; // 아이템을 배치했으므로 종료
                     }
                 }
-      
             }
         }
     }
+
 
     public void SetInventory()
     {
         //inventory.instance.GetInv_Main()[0].
 
-        ItemComponent[] inv = Inventory.instance.GetInv_Main();
-        int invLength = Inventory.instance.GetInv_Main().Length;
+        ItemComponent[] inv = Inventory.instance.inv_Slot;
+        ItemComponent[] hot_inv = Inventory.instance.Hotbar_Slot;
+        int invLength = Inventory.instance.inv_Slot.Length;
+        int hot_invLength = Inventory.instance.Hotbar_Slot.Length;
 
 
-        for(int i = 0; i < invLength; i++)
+        for (int i = 0; i < hot_invLength; i++)
+        {
+            if (hot_inv[i] != null)
+            {
+                SpawnCollidedItem(hot_inv[i]);
+            }
+
+        }
+
+        for (int i = 0; i < invLength; i++)
         {
             if(inv[i] != null)
             {
-                SpawnCollidedItem(Inventory.instance.GetInv_Main()[i]);
+                SpawnCollidedItem(inv[i]); 
             }
 
         }
@@ -165,16 +193,28 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < inventorySlots.Length; i++)
+        if(Inventory.instance.Hotbar_Slot.Length != 0)
         {
-            if (inventorySlots[i].myItem == null)
+
+        }
+
+
+        if(Inventory.instance.inv_Slot.Length != 0)
+        {
+            for (int i = 0; i < inventorySlots.Length; i++)
             {
-                Debug.Log(item.name);
-                item.transform.SetParent(inventorySlots[i].transform);
-                item.Initialize(item.myItem, inventorySlots[i]);
-                return;
+                if (inventorySlots[i].myItem == null)
+                {
+                    Debug.Log(item.name);
+                    item.transform.SetParent(inventorySlots[i].transform);
+                    item.Initialize(item.myItem, inventorySlots[i]);
+                    return;
+                }
             }
         }
+
+
+        
 
         Debug.LogWarning("No empty slot found for the item.");
     }
