@@ -8,8 +8,8 @@ public class Inventory : MonoBehaviour
     public static InventoryItem carriedItem;
     private Item_Manager itemManager;
 
-    [SerializeField] private InventorySlot[] inventorySlots;
-    [SerializeField] private InventorySlot[] hotbarSlots;
+    [SerializeField] private InventorySlot[] inventorySlots; //1¹ø ½½·Ô ¹è¿­
+    [SerializeField] private InventorySlot[] hotbarSlots; //2¹ø ½½·Ô ¹è¿­
 
     // 0: HEAD, 1: CHEST, 2: LEGGINGS, 3: FEET, 4: WEAPON, 5: Accessories
     [SerializeField] private InventorySlot[] equipmentSlots;

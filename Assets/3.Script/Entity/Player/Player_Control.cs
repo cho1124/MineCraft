@@ -74,16 +74,20 @@ public class Player_Control : MonoBehaviour
     {
         Rotation_Control();
 
-        if (entity.moveset_number == 3)
-        {
-            anchor_right.transform.LookAt(anchor_left.transform);
-            anchor_right.transform.Rotate(new Vector3(-60f, -45f, 0f));
-        }
-        if (entity.moveset_number == -3)
-        {
-            anchor_left.transform.LookAt(anchor_right.transform);
-            anchor_left.transform.Rotate(new Vector3(-60f, -45f, 0f));
-        }
+        //if (entity.moveset_number == 3)
+        //{
+        //    anchor_right.transform.LookAt(anchor_left.transform);
+        //    anchor_right.transform.Rotate(new Vector3(-60f, -45f, 0f));
+        //}
+        //else if (entity.moveset_number == -3)
+        //{
+        //    anchor_left.transform.LookAt(anchor_right.transform);
+        //    anchor_left.transform.Rotate(new Vector3(-60f, -45f, 0f));
+        //}
+        //else
+        //{
+        //    //
+        //}
     }
 
 

@@ -33,10 +33,15 @@ public class PlayerCollision : MonoBehaviour
 
 
 
-            GetComponent<inventory>().items.Add(itemComponent);
+            
 
-            Debug.Log(itemComponent.itemIcon.name);
-            Inventory.Instance.SpawnCollidedItem(itemComponent);
+            //GetComponent<inventory>().items.Add(itemComponent);
+
+            //Debug.Log(itemComponent.itemIcon.name);
+            //Inventory.Instance.SpawnCollidedItem(itemComponent);
+            inventory.instance.AddItem(itemComponent);
+
+
             //SpawnCollidedItem(itemComponent);
         }
 

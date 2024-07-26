@@ -3,50 +3,67 @@ using System.Collections.Generic;
 
 public class ItemComponent : MonoBehaviour
 {
-    public int itemID;
-    public string itemName;
+    private int itemID;
+    
+    private string itemName;
     public Sprite itemIcon;
     public int stackMax;
-    public int stackCurrent;
+    private int stackCurrent;
 
+    public int StackCurrent
+    {
+        get => stackCurrent;
+        set
+        {
+            stackCurrent = Mathf.Clamp(value, 0, stackMax);
+        }
+
+    }
+
+
+    private int SetType; //열거형 만들기 귀찮아서 대충 //// original 0, stackable 1, consumable 2, placeable 3
     // ConsumableItem 필드
-    public float hungerAmount;
-    public float thirstAmount;
-    public float fatigueAmount;
-    public float freshmentMax;
-    public float freshmentCurrent;
+    private float hungerAmount;
+    private float thirstAmount;
+    private float fatigueAmount;
+    private float freshmentMax;
+    private float freshmentCurrent;
 
     // PlaceableItem 필드
-    public Equipment_Type requireToolType;
-    public int requireToolTier;
+    private Equipment_Type requireToolType;
+    private int requireToolTier;
     
-    public string itemModelInPlace;
+    private string itemModelInPlace;
     
 
     // EquipmentItem 필드
-    public string equipmentType;
-    public float weight;
-    public float durabilityMax;
-    public float durabilityCurrent;
-    public string itemModelInEquip;
-    public Equipment_Armor_Type? armorType;
-    public Equipment_Weapon_Type? weaponType;
-    public float meleeDamage;
-    public float meleeSpeed;
-    public float guardRate;
-    public int toolTier;
-    public float armorDefense;
-    public float drawPower;
-    public float drawSpeed;
-    public float aimAccuracy;
+    private string equipmentType;
+    private float weight;
+    private float durabilityMax;
+    private float durabilityCurrent;
+    private string itemModelInEquip;
+    private Equipment_Armor_Type? armorType;
+    private Equipment_Weapon_Type? weaponType;
+    private float meleeDamage;
+    private float meleeSpeed;
+    private float guardRate;
+    private int toolTier;
+    private float armorDefense;
+    private float drawPower;
+    private float drawSpeed;
+    private float aimAccuracy;
 
     // StackableItem 초기화 메서드
 
     public void Initialize(Original_Item item)
     {
+        
         itemID = item.item_ID;
         itemName = item.item_name;
         itemIcon = item.item_model_in_inv;
+        SetType = 0;
+
+
     }
 
     public void Initialize(StackableItem item)
@@ -56,6 +73,7 @@ public class ItemComponent : MonoBehaviour
 
         stackMax = item.stack_max;
         stackCurrent = item.stack_current;
+        SetType = 1;
     }
 
     // ConsumableItem 초기화 메서드
@@ -67,6 +85,7 @@ public class ItemComponent : MonoBehaviour
         fatigueAmount = item.fatigue_amount;
         freshmentMax = item.freshment_max;
         freshmentCurrent = item.freshment_current;
+        SetType = 2;
     }
 
     // PlaceableItem 초기화 메서드
@@ -78,7 +97,8 @@ public class ItemComponent : MonoBehaviour
         durabilityMax = item.durability_max;
         durabilityCurrent = item.durability_current;
         itemModelInPlace = item.item_model_in_place;
-       
+        SetType = 3;
+
     }
 
     // EquipmentItem 초기화 메서드
@@ -100,13 +120,33 @@ public class ItemComponent : MonoBehaviour
         drawSpeed = item.draw_speed;
         aimAccuracy = item.aim_accuracy;
         armorDefense = item.armor_defense;
+        SetType = 4;
     }
-
-
-    
 
     public void DestroyItem()
     {
         gameObject.SetActive(false);
     }
+
+    public int Get_Type()
+    {
+        return SetType;
+    }
+
+    public bool Check_Full()
+    {
+        if(stackCurrent < stackMax)
+        {
+            stackCurrent++;
+            return true;
+        }
+
+        return false;
+
+    }
+
+    
+
+
+
 }

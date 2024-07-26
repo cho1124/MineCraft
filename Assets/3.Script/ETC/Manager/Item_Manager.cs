@@ -96,6 +96,19 @@ public class Item_Manager : MonoBehaviour
 
     }
 
+
+    //테스트용 업데이트 ->>>> 디버그할 땐 꼭 지울 것
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            SpawnItem(TestKey, transform.position);
+        }
+
+       
+    }
+
+
     public void SetLayerToItem(GameObject obj, string layer)
     {
 
