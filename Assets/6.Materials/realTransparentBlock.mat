@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: realTransparentBlock
-  m_Shader: {fileID: -6465566751694194690, guid: 35302127505a29648a3325498e15447e, type: 3}
+  m_Shader: {fileID: 4800000, guid: 38893b6a0ccc31742837d4be1cb296c0, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
@@ -104,6 +104,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 3f1190e846f12dc4ebbb1f2371d861cc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_eb4ff5bb81964d91bedb0ed5f1afe505_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 3f1190e846f12dc4ebbb1f2371d861cc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SecondTex:
         m_Texture: {fileID: 2800000, guid: 3f1190e846f12dc4ebbb1f2371d861cc, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -129,6 +133,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - GlobalLightLevel: 0.752
     - _Alpha: 0.5
     - _AlphaClip: 0
     - _AlphaTest: 0
@@ -171,6 +176,8 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - maxGlobalLightLevel: 0.8
+    - minGlobalLightLevel: 0.25
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
