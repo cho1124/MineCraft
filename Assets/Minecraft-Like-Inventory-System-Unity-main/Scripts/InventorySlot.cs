@@ -44,6 +44,14 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     public void SetItem(InventoryItem item)
     {
 
+        //TODO >> 처음 클릭한 슬롯이 메인 인벤토리인지, 핫바인지, 아니면 장비칸인지에 대한 판단 처리
+        //그 다음으로 그 인덱스 받아오기
+        //SWAP
+        //장비칸일때는 그 인벤토리에 있는 ITEMCOMPONENT 스크립트를 받아오고 타입인지 확인하는 절차를 해야 함
+        //아이템들 사용 하는 것 >> 핫바에 대한 처리 해야함
+        //
+
+
         // 이전 슬롯의 인덱스를 저장
         int oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, item.activeSlot);
 

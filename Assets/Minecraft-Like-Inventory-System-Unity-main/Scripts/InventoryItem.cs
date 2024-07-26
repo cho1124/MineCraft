@@ -10,10 +10,8 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
     Image itemIcon;
     InventoryUI Inven;
 
-
     public Equipment_Type equip_type = Equipment_Type.NONE;
    
-
     public CanvasGroup canvasGroup { get; private set; }
 
     public Item myItem { get; set; }
@@ -58,9 +56,6 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         this.itemComponent = itemComponent;
         itemIcon.sprite = itemComponent.itemIcon;
     }
-
-
-
 
     public void OnPointerClick(PointerEventData eventData)
     {

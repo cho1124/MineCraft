@@ -22,17 +22,11 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private List<Original_Item> item_list;
     [SerializeField] private InventoryItem[] itemSet;
 
-    
     //[SerializeField] private Button giveItemBtn;
 
-    
-    
     void Awake()
     {
         
-
-        //giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
-        // inventory.instance.GetInv_Main()
         itemSet = new InventoryItem[inventorySlots.Length];
         //SetEmptyItem();
     }
@@ -50,20 +44,6 @@ public class InventoryUI : MonoBehaviour
 
       
     }
-
-    private void SetEmptyItem()
-    {
-        for(int i = 0; i < inventorySlots.Length; i++)
-        {
-            InventoryItem item = Instantiate(itemPrefab, inventorySlots[i].transform);
-            item.gameObject.SetActive(false);
-
-            itemSet[i] = item;
-
-            //따로 배열 만들고 넣고 비활성화 그리고 필요할때마다 해당 인덱스 활성화
-        }
-    }
-
     private void Add_All_Item()
     {
         foreach (int key in Item_Dictionary.item_dictionary.Keys)
