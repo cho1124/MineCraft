@@ -26,6 +26,7 @@ public class WorldData
         worldName = _worldName;
         seed = _seed;
     }
+    
     public WorldData (WorldData wD)
     {
         worldName = wD.worldName;

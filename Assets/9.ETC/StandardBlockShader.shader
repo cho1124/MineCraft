@@ -1,4 +1,4 @@
-Shader "Minecraft/Blocks" {
+	Shader "Minecraft/Blocks" {
 
 	Properties{
 		_MainTex("Block Texture Atlas", 2D) = "white" {}

@@ -128,7 +128,7 @@ public class Chunk
 
 
         ClearMeshData();
-        CalculateLight();
+        //CalculateLight();
 
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
         {
@@ -251,71 +251,71 @@ public class Chunk
     }
 
 
-    void CalculateLight()
-    {
-        Queue<Vector3Int> litVoxels = new Queue<Vector3Int>();
-
-
-        for (int x = 0; x < VoxelData.ChunkWidth; x++)
-        {
-            for (int z = 0; z < VoxelData.ChunkWidth; z++)
-            {
-
-                float lightRay = 1f;
-
-                for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--)
-                {
-
-                    VoxelState thisVoxel = chunkData.map[x, y, z];
-
-                    if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].opacity < lightRay)
-                        if (World.Instance.blockTypes[thisVoxel.id].opacity == 2)
-                            lightRay = World.Instance.blockTypes[thisVoxel.id].opacity * 0.25f;
-                        else
-                            lightRay = World.Instance.blockTypes[thisVoxel.id].opacity;
-
-                    thisVoxel.globalLightPercent = lightRay;
-
-                    chunkData.map[x, y, z] = thisVoxel;
-
-                    if (lightRay > VoxelData.lightFalloff)
-                    {
-                        litVoxels.Enqueue(new Vector3Int(x, y, z));
-                    }
-
-
-                }
-
-            }
-        }
-
-        while (litVoxels.Count > 0)
-        {
-            Vector3Int v = litVoxels.Dequeue();
-
-            for (int p = 0; p < 6; p++)
-            {
-                Vector3 currentVoxel = v + VoxelData.faceChecks[p];
-                Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
-
-                if (IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.y))
-                {
-                    if (chunkData.map[neighbor.x, neighbor.y, neighbor.y].globalLightPercent < chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff)
-                    {
-                        chunkData.map[neighbor.x, neighbor.y, neighbor.y].globalLightPercent = chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
-
-                        if (chunkData.map[neighbor.x, neighbor.y, neighbor.y].globalLightPercent > VoxelData.lightFalloff)
-                        {
-                            litVoxels.Enqueue(neighbor);
-                        }
-                    }
-                }
-
-
-            }
-        }
-
-    }
+    //void CalculateLight()
+    //{
+    //    Queue<Vector3Int> litVoxels = new Queue<Vector3Int>();
+    //
+    //
+    //    for (int x = 0; x < VoxelData.ChunkWidth; x++)
+    //    {
+    //        for (int z = 0; z < VoxelData.ChunkWidth; z++)
+    //        {
+    //
+    //            float lightRay = 1f;
+    //
+    //            for (int y = VoxelData.ChunkHeight - 1; y >= 0; y--)
+    //            {
+    //
+    //                VoxelState thisVoxel = chunkData.map[x, y, z];
+    //
+    //                if (thisVoxel.id > 0 && World.Instance.blockTypes[thisVoxel.id].opacity < lightRay)
+    //                    if (World.Instance.blockTypes[thisVoxel.id].opacity == 2)
+    //                        lightRay = World.Instance.blockTypes[thisVoxel.id].opacity * 0.25f;
+    //                    else
+    //                        lightRay = World.Instance.blockTypes[thisVoxel.id].opacity;
+    //
+    //                thisVoxel.globalLightPercent = lightRay;
+    //
+    //                chunkData.map[x, y, z] = thisVoxel;
+    //
+    //                if (lightRay > VoxelData.lightFalloff)
+    //                {
+    //                    litVoxels.Enqueue(new Vector3Int(x, y, z));
+    //                }
+    //
+    //
+    //            }
+    //
+    //        }
+    //    }
+    //
+    //    while (litVoxels.Count > 0)
+    //    {
+    //        Vector3Int v = litVoxels.Dequeue();
+    //
+    //        for (int p = 0; p < 6; p++)
+    //        {
+    //            Vector3 currentVoxel = v + VoxelData.faceChecks[p];
+    //            Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
+    //
+    //            if (IsVoxelInChunk(neighbor.x, neighbor.y, neighbor.y))
+    //            {
+    //                if (chunkData.map[neighbor.x, neighbor.y, neighbor.y].globalLightPercent < chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff)
+    //                {
+    //                    chunkData.map[neighbor.x, neighbor.y, neighbor.y].globalLightPercent = chunkData.map[v.x, v.y, v.z].globalLightPercent - VoxelData.lightFalloff;
+    //
+    //                    if (chunkData.map[neighbor.x, neighbor.y, neighbor.y].globalLightPercent > VoxelData.lightFalloff)
+    //                    {
+    //                        litVoxels.Enqueue(neighbor);
+    //                    }
+    //                }
+    //            }
+    //
+    //
+    //        }
+    //    }
+    //
+    //}
 
 
     // 복셀의 각 면을 검사해서 보이는 면만 메쉬 데이터에 추가

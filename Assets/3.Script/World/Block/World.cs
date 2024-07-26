@@ -644,7 +644,7 @@ public class BlockType
     public bool isSolid;
     public bool isWater;
     public bool renderNeighborFaces;
-    public byte opacity;
+    public float opacity;
     public int blockDurability;
 
     [Header("Texture IDs")]
