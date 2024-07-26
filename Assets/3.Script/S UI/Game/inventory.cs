@@ -2,22 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class inventory : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
 
-    public static inventory instance;
+    public static Inventory instance;
 
-    [SerializeField] private ItemComponent[] inv_Slot = new ItemComponent[27];
-    [SerializeField] private ItemComponent[] Hotbar_Slot = new ItemComponent[9];
-    [SerializeField] private ItemComponent[] Equipment_Slot = new ItemComponent[7];
+    public ItemComponent[] inv_Slot = new ItemComponent[27];
+    public ItemComponent[] Hotbar_Slot = new ItemComponent[9];
+    public ItemComponent[] Equipment_Slot = new ItemComponent[7];
 
     public List<ItemComponent> items = new List<ItemComponent>();
 
-    //test
-    public InventorySlot[] inv_Slot_ui = new InventorySlot[0];
-
-
-
+    
 
     private void Awake()
     {
@@ -28,14 +24,6 @@ public class inventory : MonoBehaviour
         }
         instance = this;
     }
-
-    public delegate void OnChangeItem();
-    public OnChangeItem onChangeItem;
-
-
-
-
-
 
     private int slotCount;
 
@@ -49,21 +37,6 @@ public class inventory : MonoBehaviour
 
         }
     }
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        SlotCount = 4; //일단 튜토따라 테스트
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void AddItem(ItemComponent item)
     {
         for (int i = 0; i < inv_Slot.Length; i++)
@@ -74,8 +47,6 @@ public class inventory : MonoBehaviour
                 item.gameObject.SetActive(false);
                 Debug.Log(inv_Slot[i].StackCurrent);
                 
-
-
                 return;
             }
             else if (inv_Slot[i].Get_Type() == item.Get_Type() && inv_Slot[i].Get_Type() != 4)
@@ -95,11 +66,9 @@ public class inventory : MonoBehaviour
 
         }
     }
-
     public ItemComponent[] GetInv_Main()
     {
         return inv_Slot;
     }
-
 }
 

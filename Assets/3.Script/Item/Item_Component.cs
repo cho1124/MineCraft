@@ -38,6 +38,8 @@ public class ItemComponent : MonoBehaviour
 
     // EquipmentItem ÇÊµå
     private string equipmentType;
+   
+    
     private float weight;
     private float durabilityMax;
     private float durabilityCurrent;
@@ -144,6 +146,17 @@ public class ItemComponent : MonoBehaviour
         return false;
 
     }
+
+    public string SetEquipType()
+    {
+        return equipmentType;
+    }
+
+    public ItemComponent thisItem()
+    {
+        return this;
+    }
+
 
     
 

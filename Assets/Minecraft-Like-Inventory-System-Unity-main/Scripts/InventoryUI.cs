@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory : MonoBehaviour
+public class InventoryUI : MonoBehaviour
 {
-    public static Inventory Instance; // 싱글톤 패턴
+    
     public static InventoryItem carriedItem;
     private Item_Manager itemManager;
 
-    [SerializeField] private InventorySlot[] inventorySlots; //1번 슬롯 배열
+    [SerializeField] public InventorySlot[] inventorySlots; //1번 슬롯 배열
     [SerializeField] private InventorySlot[] hotbarSlots; //2번 슬롯 배열
 
     // 0: HEAD, 1: CHEST, 2: LEGGINGS, 3: FEET, 4: WEAPON, 5: Accessories
@@ -18,35 +18,23 @@ public class Inventory : MonoBehaviour
     [SerializeField] private InventoryItem itemPrefab;
 
     [Header("Item List")]
-    [SerializeField] private Item[] items;
-    [SerializeField] private List<Original_Item> item_list;
-
-    [Header("Debug")]
-    [SerializeField] private Button giveItemBtn;
-
-    [SerializeField] private List<ItemComponent> itemList = new List<ItemComponent>();
     
+    [SerializeField] private List<Original_Item> item_list;
+    [SerializeField] private InventoryItem[] itemSet;
 
+    
+    //[SerializeField] private Button giveItemBtn;
 
+    
+    
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        
 
-        giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
+        //giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
         // inventory.instance.GetInv_Main()
+        itemSet = new InventoryItem[inventorySlots.Length];
         //SetEmptyItem();
-
-
-
-
     }
 
     private void OnEnable()
@@ -60,15 +48,19 @@ public class Inventory : MonoBehaviour
         Debug.Log("개똥멍청이조영준" + Item_Dictionary.item_dictionary.Count);
         Add_All_Item();
 
-       
-
+      
     }
 
     private void SetEmptyItem()
     {
         for(int i = 0; i < inventorySlots.Length; i++)
         {
-            Instantiate(itemPrefab, inventorySlots[i].transform);
+            InventoryItem item = Instantiate(itemPrefab, inventorySlots[i].transform);
+            item.gameObject.SetActive(false);
+
+            itemSet[i] = item;
+
+            //따로 배열 만들고 넣고 비활성화 그리고 필요할때마다 해당 인덱스 활성화
         }
     }
 
@@ -132,23 +124,6 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void SpawnInventoryItem(Item item = null)
-    {
-        Item _item = item ?? PickRandomItem();
-
-        for (int i = 0; i < inventorySlots.Length; i++)
-        {
-            if (inventorySlots[i].myItem == null)
-            {
-                
-
-
-                Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(_item, inventorySlots[i]);
-                break;
-            }
-        }
-    }
-
     public void SpawnCollidedItem(ItemComponent item)
     {
         if (item == null)
@@ -161,16 +136,23 @@ public class Inventory : MonoBehaviour
         {
             if (inventorySlots[i].myItem == null)
             {
-                Debug.Log("SpawnCollidedItem : " + item.itemIcon);
+                //Debug.Log("SpawnCollidedItem : " + item.itemIcon);
                 //itemList.Add(item);
 
-                if(inventorySlots[i].transform.childCount == 0)
+                if (Inventory.instance.inv_Slot[i] != null)
                 {
-                    Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(item, inventorySlots[i]);
-                }
+                    item = Inventory.instance.inv_Slot[i];
+                    Debug.Log(Inventory.instance.inv_Slot[i].name);
 
-                
-                break;
+                    if(itemSet[i] == null)
+                    {
+                        itemSet[i] = Instantiate(itemPrefab, inventorySlots[i].transform);
+                        itemSet[i].Initialize(item, inventorySlots[i]);
+                        break;
+
+                    }
+                }
+      
             }
         }
     }
@@ -179,30 +161,22 @@ public class Inventory : MonoBehaviour
     {
         //inventory.instance.GetInv_Main()[0].
 
-        ItemComponent[] inv = inventory.instance.GetInv_Main();
-        int invLength = inventory.instance.GetInv_Main().Length;
-
+        ItemComponent[] inv = Inventory.instance.GetInv_Main();
+        int invLength = Inventory.instance.GetInv_Main().Length;
 
 
         for(int i = 0; i < invLength; i++)
         {
             if(inv[i] != null)
             {
-                SpawnCollidedItem(inventory.instance.GetInv_Main()[i]);
+                SpawnCollidedItem(Inventory.instance.GetInv_Main()[i]);
             }
-
 
         }
 
-
     }
 
-    private Item PickRandomItem()
-    {
-        int random = Random.Range(0, items.Length);
-        return items[random];
-    }
-
+    
     public void AddItemToInventory(InventoryItem item)
     {
         if (item == null)
