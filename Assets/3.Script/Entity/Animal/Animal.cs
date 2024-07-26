@@ -533,6 +533,9 @@ public class Animal : Entity, IDamageable {
             case State.Run:
                 stateCoroutine = StartCoroutine(StateDuration(State.Run, Random.Range(minWalkTime, maxWalkTime)));
                 break;
+            default:
+                stateCoroutine = StartCoroutine(StateDuration(State.Idle, Random.Range(4f, 10f)));
+                break;
         }
     }
 

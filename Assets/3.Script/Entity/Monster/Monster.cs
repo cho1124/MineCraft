@@ -13,7 +13,7 @@ public class Monster : Entity, IDamageable
     =>장애물이 있을때 점프하거나, 왼쪽으로 회전하거나, 오른쪽으로 회전하면 좀더 움직임을 다양화 할 수 있을거 같아서 수정
     ==>움직임이 너무 앞뒤로만 움직여서 양옆으로 회전하는 움직임 추가
     ===>(혹시 어딘가 끼어 움직이지 못하고 있는 상황 대비) 15초간 3f이상의 좌표 변동이 없으면 180도 회전 하도록 해둠 
-    ====> 플레이어 감지하면 플레이어에게 raycast 쏘면서 한동안 chase(7초) 함 
+
     =====> 플레이어 움직임 좀더 자연스럽게 움직이도록 일정 시간마다 랜덤 방향으로 회전하고 이동하고 또 일정 이후 상태 변경하도록
  
     <공격>
@@ -78,21 +78,6 @@ public class Monster : Entity, IDamageable
     {
         base.Start();  // Entity 클래스의 Start 메서드 호출
         obstacleDetector = GetComponentInChildren<ObstacleDetector>();
-        if (obstacleDetector == null)
-        {
-            Debug.LogError("ObstacleDetector가 null입니다.");
-        }
-
-        boxCollider = GetComponent<BoxCollider>();
-        if (boxCollider == null)
-        {
-            Debug.LogError("BoxCollider가 null입니다.");
-        }
-        rb = GetComponent<Rigidbody>();
-        if (rb == null) {
-            Debug.LogError("Rigidbody가 null입니다.");
-            return;
-        }
         originalColliderSize = boxCollider.size;
         expandedColliderSize = originalColliderSize * 2; //몬스터와 주변 사물이 잘 충돌이 안일어나는거같아서 전투시만 콜라이더 2배크기로
         ChangeState(MonsterState.Idle);
@@ -158,7 +143,7 @@ public class Monster : Entity, IDamageable
 
         if (collision.gameObject.CompareTag("Weapon"))
         {
-            TakeDamage(10); // 플레이어와 충돌 시 10의 데미지를 입음
+            TakeDamage(10); // 플레이어무기와 충돌 시 10의 데미지를 입음
             Debug.Log($"{collision}에게 {transform.name}공격받음~~");
         }
     }
@@ -255,16 +240,6 @@ public class Monster : Entity, IDamageable
 
     private void MoveTowardsTarget(float speed) //몬스터를 targetPosition으로 이동시키는 기능
     {
-
-        if (rb == null) {
-            Debug.LogError("Rigidbody가 null입니다.");
-            return;
-        }
-
-        if (targetPosition == null) {
-            Debug.LogError("targetPosition이 null입니다.");
-            return;
-        }
         // targetPosition과 현재 위치의 차이를 구하고, 방향 벡터로 변환
         Vector3 direction = (targetPosition - transform.position).normalized;
 
@@ -366,15 +341,6 @@ public class Monster : Entity, IDamageable
 
             // 일시적으로 콜라이더 크기를 늘립니다.
             StartCoroutine(ExpandCollider());
-
-            RaycastHit hit;
-            if (Physics.Raycast(head.position, head.forward, out hit, attackRange))
-            {
-                if (hit.transform.GetComponent<IDamageable>() != null && hit.transform != this.transform && !hit.transform.CompareTag("Monster"))
-                {
-                    hit.transform.GetComponent<IDamageable>().TakeDamage(damage);
-                }
-            }
         }
         EndChaseAndWander();
     }
@@ -416,7 +382,5 @@ public class Monster : Entity, IDamageable
         base.TakeDamage(damage); // Entity의 TakeDamage 호출
         // 몬스터 고유의 추가 로직이 필요하면 여기에 추가
     }
-
-
 }
 

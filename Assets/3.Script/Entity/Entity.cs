@@ -19,10 +19,10 @@ public class Entity : MonoBehaviour, IDamageable {
     public int damage = 10;
     public int maxHealth = 100;
     public int health;
-    private float posture;
-    private float defence;
-    private float weight;
-    private float speed;
+   // private float posture;
+   // private float defence;
+   // private float weight;
+   // private float speed;
     public GameObject deathEffectPrefab;
 
     protected Animator animator;
@@ -62,11 +62,11 @@ public class Entity : MonoBehaviour, IDamageable {
             return health;
         }
         set {
+            health = value;
+
             if (health > value) {
                 StartCoroutine(BlinkRed());
             }
-
-            health = value;
 
             if (health <= 0) {
                 Die();
@@ -87,17 +87,15 @@ public class Entity : MonoBehaviour, IDamageable {
         {
             StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
         }
-
     }
 
     private IEnumerator DelayedDie()
     {
         // OnDeath 이벤트가 완료될 때까지 대기
         yield return new WaitForEndOfFrame();
-        StartCoroutine(OnDie()); // OnDie 코루틴 호출
     }
 
-    private IEnumerator BlinkRed() {
+    protected IEnumerator BlinkRed() {
             float elapsedTime = 0;
             bool isRed = false;
 
@@ -137,7 +135,6 @@ public class Entity : MonoBehaviour, IDamageable {
         }
 
         public virtual void TakeDamage(int damage) {
-        Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: {health}");
         Health -= damage;
         }
 
