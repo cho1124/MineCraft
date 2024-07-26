@@ -36,7 +36,7 @@ public class Test1 : MonoBehaviour
             {
                 // HP를 100 감소시키기
                 Debug.Log("플레이어 무기로 공격당함");
-                entity.TakeDamage(100);
+                entity.TakeDamage(30);
                 Debug.Log($"{entity.name} 를 때림");
             }
             

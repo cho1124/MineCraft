@@ -47,14 +47,11 @@ public class Slime : Monster, IDamageable
         deathPosition = transform.position; // 죽은 위치 저장
 
             Vector3 spawnPosition1 = deathPosition + new Vector3(-0.5f, 0, 0);
-        Vector3 spawnPosition2 = deathPosition + new Vector3(0.5f, 0, 0);
 
         GameObject newSlime1 = Instantiate(slimePrefab, spawnPosition1, Quaternion.identity);
-        GameObject newSlime2 = Instantiate(slimePrefab, spawnPosition2, Quaternion.identity);
 
             // 생성된 슬라임의 속성을 초기화
             InitializeNewSlime(newSlime1);
-            InitializeNewSlime(newSlime2);
 
         // OnDie 코루틴 호출
         StartCoroutine(OnDie());

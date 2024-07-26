@@ -18,7 +18,7 @@ public class Entity : MonoBehaviour, IDamageable {
     public string name;
     public int damage = 10;
     public int maxHealth = 100;
-    public int health;
+    private int health;
    // private float posture;
    // private float defence;
    // private float weight;
@@ -48,13 +48,11 @@ public class Entity : MonoBehaviour, IDamageable {
         rb = GetComponent<Rigidbody>();
         entityRenderer = GetComponentsInChildren<Renderer>();
         //  LoadEntityData();
-        originalColor = new Color[entityRenderer.Length];
+        originalColor = new Color[entityRenderer.Length]; //각 renderer의 원래 색상을 저장해서 깜박일때 본래 색으로 돌아올 수 있게.
         for (int i = 0; i < entityRenderer.Length; i++)
         {
             originalColor[i] = entityRenderer[i].material.color;
         }
-
-
     }
 
         public int Health {
@@ -62,11 +60,11 @@ public class Entity : MonoBehaviour, IDamageable {
             return health;
         }
         set {
-            health = value;
-
             if (health > value) {
                 StartCoroutine(BlinkRed());
+                Debug.Log($"{name}가 데미지를 입어 현재 체력: {value}");
             }
+            health = value;
 
             if (health <= 0) {
                 Die();
@@ -78,22 +76,14 @@ public class Entity : MonoBehaviour, IDamageable {
         protected virtual void Die() {
             Debug.Log($"{name}죽어버림ㅜㅜ");
         OnDeath?.Invoke(); // 죽음 이벤트 호출
-
-        if (OnDeath != null)
-        {
-            StartCoroutine(DelayedDie()); // 코루틴 호출
-        }
-        else
-        {
-            StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
-        }
+          //  StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
     }
 
-    private IEnumerator DelayedDie()
-    {
-        // OnDeath 이벤트가 완료될 때까지 대기
-        yield return new WaitForEndOfFrame();
-    }
+   // private IEnumerator DelayedDie()
+   // {
+   //     // OnDeath 이벤트가 완료될 때까지 대기
+   //     yield return new WaitForEndOfFrame();
+   // }
 
     protected IEnumerator BlinkRed() {
             float elapsedTime = 0;
@@ -112,7 +102,7 @@ public class Entity : MonoBehaviour, IDamageable {
                 elapsedTime += 0.3f; // 깜박이는 속도
                 yield return new WaitForSeconds(0.3f);
             }
-            for (int i = 0; i < entityRenderer.Length; i++) {
+            for (int i = 0; i < entityRenderer.Length; i++) {//깜박이고 나서 원래 색깔로 돌아가는 부분
                 if (entityRenderer[i].GetComponent<ObstacleDetector>() != null) {
                     continue;
                 }
@@ -124,10 +114,8 @@ public class Entity : MonoBehaviour, IDamageable {
         public virtual IEnumerator OnDie() // virtual 키워드 추가
         {
             animator.SetTrigger("Die");
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            yield return new WaitForSeconds(stateInfo.length);
+            yield return new WaitForSeconds(2f);
             Debug.Log("애니메이션 대기 완료");
-      
       
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -135,8 +123,10 @@ public class Entity : MonoBehaviour, IDamageable {
         }
 
         public virtual void TakeDamage(int damage) {
+        Debug.Log($"엔티티!! {name}이(가) {damage}의 데미지를 받음");
         Health -= damage;
-        }
+
+    }
 
     public void Attack(Entity target)
     {

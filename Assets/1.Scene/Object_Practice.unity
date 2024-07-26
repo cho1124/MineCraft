@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3996,6 +3996,118 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 214532082}
   m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
+--- !u!1 &214705766
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 214705767}
+  - component: {fileID: 214705771}
+  - component: {fileID: 214705770}
+  - component: {fileID: 214705769}
+  - component: {fileID: 214705768}
+  m_Layer: 0
+  m_Name: Animal_Food (59)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &214705767
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214705766}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -15.26, y: 12.13, z: 33.46}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 59
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &214705768
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214705766}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &214705769
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214705766}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &214705770
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214705766}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &214705771
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214705766}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &225334832
 GameObject:
   m_ObjectHideFlags: 0
@@ -6145,7 +6257,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406618874}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb9f00ddc2ac03449b067be08aaff6a, type: 3}
   m_Name: 
@@ -6622,6 +6734,118 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &424977143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 424977144}
+  - component: {fileID: 424977148}
+  - component: {fileID: 424977147}
+  - component: {fileID: 424977146}
+  - component: {fileID: 424977145}
+  m_Layer: 0
+  m_Name: Animal_Food (61)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &424977144
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424977143}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -17.07, y: 12.13, z: 33.53}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 61
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &424977145
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424977143}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &424977146
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424977143}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &424977147
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424977143}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &424977148
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424977143}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &426018542
 GameObject:
   m_ObjectHideFlags: 0
@@ -8636,7 +8860,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540233288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.76, y: 0, z: -4.4}
+  m_LocalPosition: {x: -12.5, y: 0, z: 21.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1567766702}
@@ -8965,6 +9189,118 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &573784766
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 573784767}
+  - component: {fileID: 573784771}
+  - component: {fileID: 573784770}
+  - component: {fileID: 573784769}
+  - component: {fileID: 573784768}
+  m_Layer: 0
+  m_Name: Animal_Food (60)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &573784767
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573784766}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -14.31, y: 12.13, z: 33.56}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 60
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &573784768
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573784766}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &573784769
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573784766}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &573784770
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573784766}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &573784771
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573784766}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &578623157
 GameObject:
   m_ObjectHideFlags: 0
@@ -10666,6 +11002,118 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3258499021345759842, guid: c287855b432473447b2db31512e46e2b, type: 3}
   m_PrefabInstance: {fileID: 1120392888}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &723469624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 723469625}
+  - component: {fileID: 723469629}
+  - component: {fileID: 723469628}
+  - component: {fileID: 723469627}
+  - component: {fileID: 723469626}
+  m_Layer: 0
+  m_Name: Animal_Food (58)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &723469625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723469624}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -13.15, y: 12.13, z: 32.34}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 58
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &723469626
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723469624}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &723469627
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723469624}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &723469628
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723469624}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &723469629
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723469624}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &723484727
 GameObject:
   m_ObjectHideFlags: 0
@@ -11279,9 +11727,6 @@ GameObject:
   - component: {fileID: 785045212}
   - component: {fileID: 785045211}
   - component: {fileID: 785045214}
-  - component: {fileID: 785045209}
-  - component: {fileID: 785045215}
-  - component: {fileID: 785045216}
   - component: {fileID: 785045210}
   m_Layer: 6
   m_Name: Plane
@@ -11290,18 +11735,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
   m_IsActive: 1
---- !u!114 &785045209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 785045208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858e41e160a438a40822f58cf6d0ff93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &785045210
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11408,49 +11841,6 @@ MonoBehaviour:
   plane: {fileID: 785045208}
   minObjects: 10
   maxObjects: 12
---- !u!114 &785045215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 785045208}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 0}
---- !u!114 &785045216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 785045208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a0830ddcf3306b4090bf924a4b7b421, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  melonPrefab: {fileID: 1302099903764408682, guid: 348b09e4d7369294b85e45f62acc7493, type: 3}
-  spawnOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &789187582
 GameObject:
   m_ObjectHideFlags: 0
@@ -13140,6 +13530,118 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891248927}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &929484292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 929484293}
+  - component: {fileID: 929484297}
+  - component: {fileID: 929484296}
+  - component: {fileID: 929484295}
+  - component: {fileID: 929484294}
+  m_Layer: 0
+  m_Name: Animal_Food (63)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &929484293
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929484292}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -16.04, y: 12.13, z: 33.49}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 63
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &929484294
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929484292}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &929484295
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929484292}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &929484296
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929484292}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &929484297
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929484292}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &943882396
 GameObject:
   m_ObjectHideFlags: 0
@@ -13621,6 +14123,118 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1526959571420392900, guid: db3d1035cdbdf5345b16da4b0c8db994, type: 3}
   m_PrefabInstance: {fileID: 1526959571585592355}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &981906324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 981906325}
+  - component: {fileID: 981906329}
+  - component: {fileID: 981906328}
+  - component: {fileID: 981906327}
+  - component: {fileID: 981906326}
+  m_Layer: 0
+  m_Name: Animal_Food (62)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &981906325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981906324}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -14.16, y: 12.13, z: 32.25}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 62
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &981906326
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981906324}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &981906327
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981906324}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &981906328
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981906324}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &981906329
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981906324}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &982639253
 GameObject:
   m_ObjectHideFlags: 0
@@ -15321,11 +15935,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
+  overgrowthPrefab: {fileID: 9170244010595372139, guid: 2fa2f17d2f0f26e4f9b0cb0ccec936c7, type: 3}
   hungerLevel: 10
   walkSpeed: 3
   runSpeed: 4
@@ -15334,7 +15948,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 1894350435}
   wanderRadius: 30
 --- !u!95 &1111164427
 Animator:
@@ -15568,7 +16182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1136058942
 Transform:
   m_ObjectHideFlags: 0
@@ -16200,11 +16814,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
   babyPrefab: {fileID: 6172145746540233397, guid: f2924713c8e86e044a6c5bdee6474fbe, type: 3}
+  overgrowthPrefab: {fileID: 8343810386093485254, guid: 5c8e2a2c0cc23714c9819e2b37d3e666, type: 3}
   hungerLevel: 7
   walkSpeed: 3
   runSpeed: 4
@@ -16213,7 +16827,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 1178805587}
   wanderRadius: 30
 --- !u!1 &1207436731
 GameObject:
@@ -19138,6 +19752,118 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397627937}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1424961527
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1424961528}
+  - component: {fileID: 1424961532}
+  - component: {fileID: 1424961531}
+  - component: {fileID: 1424961530}
+  - component: {fileID: 1424961529}
+  m_Layer: 0
+  m_Name: Animal_Food (65)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1424961528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424961527}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -16.04, y: 12.13, z: 32.44}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 65
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1424961529
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424961527}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1424961530
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424961527}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1424961531
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424961527}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1424961532
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424961527}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &1425315971
 GameObject:
   m_ObjectHideFlags: 0
@@ -19811,11 +20537,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
+  overgrowthPrefab: {fileID: 9170244010595372139, guid: 2fa2f17d2f0f26e4f9b0cb0ccec936c7, type: 3}
   hungerLevel: 10
   walkSpeed: 3
   runSpeed: 4
@@ -19824,7 +20550,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 112075848}
   wanderRadius: 30
 --- !u!95 &1440102340
 Animator:
@@ -22136,11 +22862,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
+  overgrowthPrefab: {fileID: 9170244010595372139, guid: 2fa2f17d2f0f26e4f9b0cb0ccec936c7, type: 3}
   hungerLevel: 10
   walkSpeed: 3
   runSpeed: 4
@@ -22149,7 +22875,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 1549435013}
   wanderRadius: 30
 --- !u!1 &1623920422
 GameObject:
@@ -27072,6 +27798,14 @@ Transform:
   - {fileID: 1569685867}
   - {fileID: 1207436732}
   - {fileID: 1448675033}
+  - {fileID: 723469625}
+  - {fileID: 214705767}
+  - {fileID: 573784767}
+  - {fileID: 424977144}
+  - {fileID: 981906325}
+  - {fileID: 929484293}
+  - {fileID: 2028039183}
+  - {fileID: 1424961528}
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27136,6 +27870,118 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
+--- !u!1 &2028039182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2028039183}
+  - component: {fileID: 2028039187}
+  - component: {fileID: 2028039186}
+  - component: {fileID: 2028039185}
+  - component: {fileID: 2028039184}
+  m_Layer: 0
+  m_Name: Animal_Food (64)
+  m_TagString: Animal_Food
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2028039183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028039182}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -17.05, y: 12.13, z: 32.28}
+  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_Children: []
+  m_Father: {fileID: 2017592422}
+  m_RootOrder: 64
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &2028039184
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028039182}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &2028039185
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028039182}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0025, y: 0.0031249993, z: 0.00062500045}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &2028039186
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028039182}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 6f936899a9457144d884c81000187421, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2028039187
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028039182}
+  m_Mesh: {fileID: -6536681712829603485, guid: 0c1313e111e270f4c8ad02b1601de62d, type: 3}
 --- !u!1 &2063799000
 GameObject:
   m_ObjectHideFlags: 0
@@ -27805,11 +28651,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
   babyPrefab: {fileID: 6172145746540233397, guid: f2924713c8e86e044a6c5bdee6474fbe, type: 3}
+  overgrowthPrefab: {fileID: 8343810386093485254, guid: 5c8e2a2c0cc23714c9819e2b37d3e666, type: 3}
   hungerLevel: 7
   walkSpeed: 3
   runSpeed: 4
@@ -27818,7 +28664,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 1046930385}
   wanderRadius: 30
 --- !u!1 &2123094711
 GameObject:
@@ -27937,11 +28783,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
+  overgrowthPrefab: {fileID: 9170244010595372139, guid: 2fa2f17d2f0f26e4f9b0cb0ccec936c7, type: 3}
   hungerLevel: 10
   walkSpeed: 3
   runSpeed: 4
@@ -27950,7 +28796,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 1343480415}
   wanderRadius: 30
 --- !u!95 &2124416009
 Animator:
@@ -28203,12 +29049,12 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
-  hungerLevel: 10
+  overgrowthPrefab: {fileID: 9170244010595372139, guid: 2fa2f17d2f0f26e4f9b0cb0ccec936c7, type: 3}
+  hungerLevel: 1
   walkSpeed: 3
   runSpeed: 4
   minWalkTime: 4
@@ -28216,7 +29062,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 4253874737197678}
   wanderRadius: 30
 --- !u!1 &1686542098429870
 GameObject:
@@ -28340,7 +29186,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1585351547751132}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.59, y: 11.69, z: 7.2}
+  m_LocalPosition: {x: 2.59, y: 11.69, z: 22.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4490605241626910}
@@ -58117,11 +58963,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1417258215064542, guid: 7451ef01e53127446b9d7406220542f6, type: 3}
   babyPrefab: {fileID: 4093909873755144833, guid: 9a9cbd48c2fd1b34487471af00e1ba8b, type: 3}
+  overgrowthPrefab: {fileID: 7650826435742435958, guid: f73e28d40d007754eb1a33d946fa13d7, type: 3}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -58130,7 +58976,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 2774158227876905010}
   wanderRadius: 30
 --- !u!4 &2774158227876904996
 Transform:
@@ -71811,7 +72657,6 @@ MonoBehaviour:
   name: 
   damage: 20
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 6073571250091072227}
   walkRadius: 5
@@ -71878,7 +72723,6 @@ MonoBehaviour:
   name: 
   damage: 15
   maxHealth: 30
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7315859951241969868}
   walkRadius: 5
@@ -76646,7 +77490,6 @@ MonoBehaviour:
   name: 
   damage: 15
   maxHealth: 30
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7315859951241969868}
   walkRadius: 10
@@ -77034,11 +77877,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 4395129162693242875}
   babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
+  overgrowthPrefab: {fileID: 8029075741705259068, guid: 13d91c3530ed05d43992d44887d93bc8, type: 3}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -77047,7 +77890,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 4395129162693473237}
   wanderRadius: 30
 --- !u!4 &4395129162693473233
 Transform:
@@ -79639,7 +80482,6 @@ MonoBehaviour:
   name: 
   damage: 20
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 6073571250091072227}
   walkRadius: 10
@@ -82820,7 +83662,6 @@ MonoBehaviour:
   name: 
   damage: 15
   maxHealth: 30
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 2015929772068715500}
   walkRadius: 10
@@ -82853,7 +83694,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 2015929770572857202}
   walkRadius: 10
@@ -88327,11 +89167,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 0}
   adultPrefab: {fileID: 1553991042791506, guid: d2edcf95960b81249bf3f4a30ad1a908, type: 3}
   babyPrefab: {fileID: 2464545248191228738, guid: cf8561e3f61766e4792a620b860d90ef, type: 3}
+  overgrowthPrefab: {fileID: 0}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -88340,7 +89180,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &5283956189602423649
 GameObject:
@@ -90008,7 +90848,6 @@ MonoBehaviour:
   name: 
   damage: 15
   maxHealth: 30
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7315859951241969868}
   walkRadius: 5
@@ -90736,7 +91575,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 50
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662348952914}
   walkRadius: 10
@@ -90769,7 +91607,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 50
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662513066182}
   walkRadius: 10
@@ -90802,7 +91639,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 50
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825661315588050}
   walkRadius: 10
@@ -93392,7 +94228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3460678129870255147}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -19.29726, y: 12.131646, z: 30.7603}
+  m_LocalPosition: {x: -14.95, y: 12.131646, z: 30.7603}
   m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
   m_Children: []
   m_Father: {fileID: 2017592422}
@@ -93406,7 +94242,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3460678129171035158}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -19.29726, y: 12.131646, z: 30.7603}
+  m_LocalPosition: {x: -13.09, y: 12.131646, z: 30.7603}
   m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
   m_Children: []
   m_Father: {fileID: 2017592422}
@@ -93504,7 +94340,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3460678128546827011}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -19.29726, y: 12.131646, z: 30.7603}
+  m_LocalPosition: {x: -12.41, y: 16.45, z: 30.7603}
   m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
   m_Children: []
   m_Father: {fileID: 2017592422}
@@ -93658,7 +94494,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3460678128226836616}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -19.29726, y: 12.131646, z: 30.7603}
+  m_LocalPosition: {x: -16.65, y: 12.131646, z: 30.7603}
   m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
   m_Children: []
   m_Father: {fileID: 2017592422}
@@ -93672,7 +94508,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3460678128198751640}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -19.29726, y: 12.131646, z: 30.7603}
+  m_LocalPosition: {x: -15.28, y: 12.13, z: 32.22}
   m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
   m_Children: []
   m_Father: {fileID: 2017592422}
@@ -94279,11 +95115,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 0}
   adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
   babyPrefab: {fileID: 6172145746540233397, guid: f2924713c8e86e044a6c5bdee6474fbe, type: 3}
+  overgrowthPrefab: {fileID: 0}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -94292,7 +95128,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 0}
   wanderRadius: 30
 --- !u!33 &5737310955914023327
 MeshFilter:
@@ -96866,7 +97702,6 @@ MonoBehaviour:
   name: 
   damage: 20
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 4123892499104958318}
   walkRadius: 10
@@ -102131,7 +102966,6 @@ MonoBehaviour:
   name: 
   damage: 20
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 4123892499104958318}
   walkRadius: 5
@@ -115675,7 +116509,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 50
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825661315588050}
   walkRadius: 5
@@ -119319,11 +120152,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 0}
   adultPrefab: {fileID: 1585349779547952, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   babyPrefab: {fileID: 562798753983057749, guid: 64a7a070c63a0a448afaced1f99f5871, type: 3}
+  overgrowthPrefab: {fileID: 0}
   hungerLevel: 10
   walkSpeed: 3
   runSpeed: 4
@@ -119332,7 +120165,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 0}
   wanderRadius: 30
 --- !u!65 &7732645890064509165
 BoxCollider:
@@ -123921,7 +124754,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 50
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662348952914}
   walkRadius: 5
@@ -123958,7 +124790,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 50
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 7796825662513066182}
   walkRadius: 5
@@ -126525,11 +127356,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 0}
   adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   babyPrefab: {fileID: 740167545552832187, guid: 0b47bdb7d4463e1499c010bb2fb81e2f, type: 3}
+  overgrowthPrefab: {fileID: 0}
   hungerLevel: 10
   walkSpeed: 3
   runSpeed: 4
@@ -126538,7 +127369,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 0}
   wanderRadius: 30
 --- !u!1 &8410048435363482420
 GameObject:
@@ -127650,12 +128481,12 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1969419073538870, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   babyPrefab: {fileID: 740167545552832187, guid: 0b47bdb7d4463e1499c010bb2fb81e2f, type: 3}
-  hungerLevel: 10
+  overgrowthPrefab: {fileID: 7186630279588421308, guid: 024e65d6791c2e54686a90ea0c406df8, type: 3}
+  hungerLevel: 1
   walkSpeed: 3
   runSpeed: 4
   minWalkTime: 4
@@ -127663,7 +128494,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 8480574040387157844}
   wanderRadius: 30
 --- !u!4 &8480574040387157840
 Transform:
@@ -127687,7 +128518,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8480574040387052402}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -43.65, y: -5.197112, z: 36.03}
+  m_LocalPosition: {x: -30.15, y: -5.197112, z: 36.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8480574040387157840}
@@ -128493,7 +129324,6 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   head: {fileID: 2015929770572857202}
   walkRadius: 5
@@ -130027,11 +130857,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
   babyPrefab: {fileID: 6172145746540233397, guid: f2924713c8e86e044a6c5bdee6474fbe, type: 3}
+  overgrowthPrefab: {fileID: 8343810386093485254, guid: 5c8e2a2c0cc23714c9819e2b37d3e666, type: 3}
   hungerLevel: 7
   walkSpeed: 3
   runSpeed: 4
@@ -130040,7 +130870,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 8637212642126583781}
   wanderRadius: 30
 --- !u!4 &8637212642126583777
 Transform:
@@ -134054,11 +134884,11 @@ MonoBehaviour:
   name: 
   damage: 10
   maxHealth: 100
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 0}
   adultPrefab: {fileID: 1417258215064542, guid: 7451ef01e53127446b9d7406220542f6, type: 3}
   babyPrefab: {fileID: 4093909873755144833, guid: 9a9cbd48c2fd1b34487471af00e1ba8b, type: 3}
+  overgrowthPrefab: {fileID: 0}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -134067,7 +134897,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
+  head: {fileID: 0}
   wanderRadius: 30
 --- !u!65 &8978731972257057566
 BoxCollider:

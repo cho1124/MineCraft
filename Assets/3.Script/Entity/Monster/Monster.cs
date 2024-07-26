@@ -86,8 +86,23 @@ public class Monster : Entity, IDamageable
 
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        //몬스터가 뒤집혔을 경우 바로 세우기 
+        if (Vector3.Dot(transform.up, Vector3.down) > 0.5f)
+        {
+            rb.AddTorque(Vector3.right * 10f); // 힘을 가해서 자연스럽게 스도록 유도하는 방법
+
+            /*
+            뒤집힌걸 세울 수 있는 다른 코드
+            rb.angularVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
+            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+              오브젝트를 멈추고 각도를 재설정하여 본래 상태로 만들음, 빠르나 부자연스러울 수 있음                   
+             
+             */
+        }
+
         CheckPositionChange(); // 일정 간격으로 위치 변화를 체크합니다.
         switch (currentState) // 현재 상태에 따라 다른 행동을 수행합니다.
         {
@@ -113,24 +128,6 @@ public class Monster : Entity, IDamageable
             case MonsterState.Attack:
                 AttackTarget();
                 break;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        //몬스터가 뒤집혔을 경우 바로 세우기 
-        if (Vector3.Dot(transform.up, Vector3.down) > 0.5f)
-        {
-            rb.AddTorque(Vector3.right * 10f); // 힘을 가해서 자연스럽게 스도록 유도하는 방법
-
-            /*
-            뒤집힌걸 세울 수 있는 다른 코드
-            rb.angularVelocity = Vector3.zero;
-            rb.velocity = Vector3.zero;
-            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-              오브젝트를 멈추고 각도를 재설정하여 본래 상태로 만들음, 빠르나 부자연스러울 수 있음                   
-             
-             */
         }
     }
 

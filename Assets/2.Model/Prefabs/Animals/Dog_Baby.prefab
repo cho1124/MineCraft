@@ -190,7 +190,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4093909873755144833}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.944, y: -5.197112, z: 8.18}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4828285249390814734}
@@ -268,11 +268,11 @@ MonoBehaviour:
   name: 
   damage: 3
   maxHealth: 30
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1417258215064542, guid: 7451ef01e53127446b9d7406220542f6, type: 3}
   babyPrefab: {fileID: 4093909873755144833}
+  overgrowthPrefab: {fileID: 7650826435742435958, guid: f73e28d40d007754eb1a33d946fa13d7, type: 3}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -281,7 +281,7 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  tamedObjectPrefab: {fileID: 7636213137212032965, guid: edd51f692fba6764cbb554066405d54e, type: 3}
+  head: {fileID: 2884509576127646079}
   wanderRadius: 30
 --- !u!1 &5180575141314686982
 GameObject:
