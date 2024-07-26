@@ -16,6 +16,7 @@ public class Hand : MonoBehaviour
     public int tool_tier { get; private set; }
 
     private Collider collider;
+    private Dictionary<GameObject, bool> victim_dictionary = new Dictionary<GameObject, bool>();
 
     public void Set_Value_Melee(float melee_damage, float attack_damage_max_rate, float attack_damage_min_rate, float melee_speed, float attack_speed_rate, float guard_rate, int tool_tier)
     {
@@ -34,7 +35,8 @@ public class Hand : MonoBehaviour
 
     public void Set_Collider_Default()
     {
-        this.collider = transform.GetChild(0).GetComponent<Collider>();
+        this.collider = transform.GetChild(0).GetComponentInChildren<Collider>();
+        Collider_On_Off(false);
     }
     public void Set_Collider(int moveset_number)
     {
@@ -45,7 +47,7 @@ public class Hand : MonoBehaviour
     public void Collider_On_Off(bool on_off)
     {
         collider.enabled = on_off;
-        if (!on_off) { } //딕셔너리 초기화
+        if (!on_off) victim_dictionary.Clear();
     }
     public bool Is_Collider_On_Off()
     {
@@ -56,8 +58,11 @@ public class Hand : MonoBehaviour
     {
         if (victim.CompareTag("Entity"))
         {
-            victim.gameObject.GetComponent<Entity>().On_Hit(UnityEngine.Random.Range(damage_min, damage_max), collider);
-            //공격한 대상은 딕셔너리에 추가하고 딕셔너리에 있는 엔티티는 다시 처리 안함
+            if (!victim_dictionary.ContainsKey(victim.gameObject) || !victim_dictionary[victim.gameObject])
+            {
+                victim_dictionary[victim.gameObject] = true;
+                victim.gameObject.GetComponent<Entity>().On_Hit(UnityEngine.Random.Range(damage_min, damage_max), collider);
+            }
         }
     }
 }
