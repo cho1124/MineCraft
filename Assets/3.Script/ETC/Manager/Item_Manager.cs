@@ -91,8 +91,23 @@ public class Item_Manager : MonoBehaviour
 
     void Start()
     {
+        for(int i = 0; i < 3; i++)
+        {
+            SpawnItem(5, transform.position);
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            SpawnItem(6, transform.position);
+        }
+        for (int i = 0; i < 3; i++) 
+        {
+            SpawnItem(366, transform.position);
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            SpawnItem(16, transform.position);
+        }
 
-        
 
     }
 

@@ -39,7 +39,7 @@ public class PlayerCollision : MonoBehaviour
 
             //Debug.Log(itemComponent.itemIcon.name);
             //Inventory.Instance.SpawnCollidedItem(itemComponent);
-            inventory.instance.AddItem(itemComponent);
+            Inventory.instance.AddItem(itemComponent);
 
 
             //SpawnCollidedItem(itemComponent);

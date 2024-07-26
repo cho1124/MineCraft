@@ -7,6 +7,14 @@
       "item_model_in_inventory": "Iconsasd",
       "stack_max": 64,
       "stack_current": 1
+    },
+    {
+      "item_ID": 16,
+      "item_name": "Coal ore",
+      "item_model_in_world": "Prefabs/Coal ore",
+      "item_model_in_inventory": "Icons/Coal ore",
+      "stack_max": 64,
+      "stack_current": 1
     }
   ],
   "consumableItems": [
@@ -22,9 +30,36 @@
       "fatigue_amount": 0.0,
       "freshment_max": 100.0,
       "freshment_current": 100.0
+    },
+    {
+      "item_ID": 366,
+      "item_name": "Cooked chicken",
+      "item_model_in_world": "Prefabs/Cooked chicken",
+      "item_model_in_inventory": "Icons/Cooked chicken",
+      "stack_max": 64,
+      "stack_current": 1,
+      "hunger_amount": 30.0,
+      "thirst_amount": 0.0,
+      "fatigue_amount": 0.0,
+      "freshment_max": 100.0,
+      "freshment_current": 100.0
     }
   ],
-  "placeableItems": [],
+  "placeableItems": [
+    {
+      "item_ID": 6,
+      "item_name": null,
+      "item_model_in_world": "Prefabs/Chest",
+      "item_model_in_inventory": "Icons/Chest",
+      "stack_max": 64,
+      "stack_current": 1,
+      "require_tool_type": 0,
+      "require_tool_tier": 1,
+      "durability_max": 100.0,
+      "durability_current": 100.0,
+      "item_model_in_place": ""
+    }
+  ],
   "equipmentItems": [
     {
       "item_ID": 5,
@@ -40,7 +75,10 @@
       "melee_speed": 1.0,
       "guard_rate": 0.0,
       "tool_tier": 1,
-      "armor_defense": 0.0
+      "armor_defense": 0.0,
+      "draw_power": 0.0,
+      "draw_speed": 0.0,
+      "aim_accuracy": 0.0
     }
   ]
 }
