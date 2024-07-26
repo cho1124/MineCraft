@@ -47,7 +47,7 @@ public class Entity : MonoBehaviour
     private float attack_speed_rate;
     private float guard_rate;
 
-    public int moveset_number { get; private set; } = -1;
+    public int moveset_number { get; private set; } = -10;
 
     private float movement_speed;
     public float jump_height { get; private set; }
@@ -204,10 +204,10 @@ public class Entity : MonoBehaviour
         R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 0.5f, 1);
         //L_Hand.Set_Collider_Default();
         //R_Hand.Set_Collider(moveset_number);
-        //L_Hand.Set_Collider_Default();
-        //R_Hand.Set_Collider_Default();
-        L_Hand.Set_Collider(moveset_number);
-        R_Hand.Set_Collider(moveset_number);
+        L_Hand.Set_Collider_Default();
+        R_Hand.Set_Collider_Default();
+        //L_Hand.Set_Collider(moveset_number);
+        //R_Hand.Set_Collider(moveset_number);
 
 
 
@@ -220,7 +220,7 @@ public class Entity : MonoBehaviour
 
     public void On_Hit(float damage, Collider attacker)
     {
-        Debug.Log($"{entity_name} 맞았음");
+        Debug.Log($"{entity_name}가 {attacker.gameObject.transform.parent.gameObject.name}에게 맞았음");
         float damage_health = damage;
         float damage_posture = damage;
 
