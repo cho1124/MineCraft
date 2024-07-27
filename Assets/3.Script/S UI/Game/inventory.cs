@@ -43,10 +43,6 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    
-
-
-
     /// <summary>
     /// hotbar -> inven -> 그 다음에 자유롭게 이동 가능 -> 추가로 equipment는 ㅁㄴ엄녀온먀ㅕ온ㅁ어
     /// </summary>
