@@ -27,10 +27,10 @@ public class Enderman : Monster, IDamageable
 
     }
 
-    private void Update()
-    {
-        Damaged_ender();
-    }
+ //   private void Update()
+ //   {
+ //       Damaged_ender();
+ //   }
 
 
     private void HandleDeath()
@@ -64,12 +64,35 @@ public class Enderman : Monster, IDamageable
         }
     }
 
-    private void Damaged_ender()
-    {
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            TakeDamage(50);
+    // private void Damaged_ender()
+    // {
+    //     if(Input.GetKeyDown(KeyCode.K))
+    //     {
+    //         TakeDamage(50);
+    //     }
+    // }
+
+    protected override void AttackTarget() {
+        if (Vector3.Distance(transform.position, targetPosition) < attackRange) {
+            Debug.Log($"엔더맨스크립트 {name} 가 공격중.!");
+            SetRandomAttackParameters();
+            animator.SetTrigger("Attack");
         }
+        EndChaseAndWander();
+    }
+
+    private void SetRandomAttackParameters() {
+        bool attackType1 = Random.value > 0.5f;
+        bool attackType2 = Random.value > 0.5f;
+
+        if (!attackType1 && !attackType2) {
+            attackType1 = true; // 둘 다 false일 때 AttackType1을 true로 설정
+        }
+
+        Debug.Log($"AttackType1: {attackType1}, AttackType2: {attackType2}");
+
+        animator.SetBool("AttackType1", attackType1);
+        animator.SetBool("AttackType2", attackType2);
     }
 
 }
