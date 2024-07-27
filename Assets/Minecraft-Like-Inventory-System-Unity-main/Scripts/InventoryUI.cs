@@ -124,7 +124,6 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        
         for (int i = 0; i < Inventory.instance.inv_Slot.Length; i++)
         {
             if(Inventory.instance.inv_Slot[i] != null)
@@ -144,26 +143,9 @@ public class InventoryUI : MonoBehaviour
                 }
             }
 
-
-            
         }
 
     }
-
-    private bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem)
-    {
-        if (slots[index].myItem == null)
-        {
-            if (itemSet.Length > index && itemSet[index] == null)
-            {
-                itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
-                itemSet[index].Initialize(tempItem, slots[index]);
-                return true; // 아이템을 배치했으므로 true 반환
-            }
-        }
-        return false; // 아이템 배치 실패
-    }
-
 
     public void SetInventory()
     {

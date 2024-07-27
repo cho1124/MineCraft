@@ -42,10 +42,6 @@ public static class Item_Dictionary
 
 }
 
-
-
-
-
 public class Item_Manager : MonoBehaviour
 {
     public TextAsset text1;
@@ -87,8 +83,6 @@ public class Item_Manager : MonoBehaviour
         SpawnItem(TestKey, transform.position);
     }
 
-
-
     void Start()
     {
         for(int i = 0; i < 400; i++)
@@ -96,21 +90,7 @@ public class Item_Manager : MonoBehaviour
             SpawnItem(i, transform.position);
         }
 
-
     }
-
-
-    //테스트용 업데이트 ->>>> 디버그할 땐 꼭 지울 것
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            SpawnItem(TestKey, transform.position);
-        }
-
-       
-    }
-
 
     public void SetLayerToItem(GameObject obj, string layer)
     {

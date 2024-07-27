@@ -19,7 +19,6 @@ public class Inventory : MonoBehaviour
     public delegate void HotBarUpdate();
     public event HotBarUpdate OnHotBarChanged;
 
-
     private void Awake()
     {
         if (instance != null)
@@ -90,13 +89,6 @@ public class Inventory : MonoBehaviour
     {
         OnHotBarChanged?.Invoke();
     }
-
-    public ItemComponent[] GetInv_Main()
-    {
-        return inv_Slot;
-    }
-
-
 
 }
 

@@ -7,13 +7,6 @@ public class PlayerCollision : MonoBehaviour
     [SerializeField] private ItemComponent itemComponent;
     //public GameObject InventoryObj;
 
-    private void Start()
-    {
-        
-
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
@@ -26,34 +19,12 @@ public class PlayerCollision : MonoBehaviour
                 return;
             }
 
-            //if (AddItem(itemComponent))
-            //{
-            //    itemComponent.DestroyItem();
-            //}
 
-
-
-
-            
-
-            //GetComponent<inventory>().items.Add(itemComponent);
-
-            //Debug.Log(itemComponent.itemIcon.name);
-            //Inventory.Instance.SpawnCollidedItem(itemComponent);
             Inventory.instance.AddItem(itemComponent);
 
 
-            //SpawnCollidedItem(itemComponent);
         }
 
     }
-
-
-
-    private void GetItem(GameObject gameObject)
-    {
-
-    }
-
 
 }

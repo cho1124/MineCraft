@@ -27,21 +27,6 @@ public class UIManager : MonoBehaviour
         
     }
 
-
-
-    private void InitHotBar()
-    {
-        for (int i = 0; i < HotBarSlots.Length; i++)
-        {
-            if (TryRemoveItem(HotBarSlots, hotitemSet, i, out InventoryItem removedItem))
-            {
-
-
-                //Debug.Log("내가 사용할 아이템 히히" + removedItem.name);
-            }
-        }
-    }
-
     private void SetHotBar()
     {
         for (int i = 0; i < HotBarSlots.Length; i++)
@@ -49,10 +34,10 @@ public class UIManager : MonoBehaviour
             // 핫바 슬롯에 아이템이 있고, 인벤토리 슬롯에 아이템이 없는 경우 제거
             if (HotBarSlots[i] != null && Inventory.instance.inv_Slot[i] == null)
             {
-                Debug.Log("있다없어졌데이");
+                
                 if (TryRemoveItem(HotBarSlots, hotitemSet, i, out InventoryItem removedItem))
                 {
-                    // 필요에 따라 제거된 후의 추가 작업
+                    // 필요에 따라 제거된 후의 추가 작업, 아마 아이템 버리기가 여기서 하지 않을까?
                 }
             }
 
