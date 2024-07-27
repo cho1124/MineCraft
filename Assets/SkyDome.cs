@@ -8,15 +8,19 @@ public class SkyDome : MonoBehaviour
     public GameObject sun;
     public GameObject moon;
 
+
     public Material skyMaterial;  // 하늘 재질을 참조합니다.
     public float dayDuration = 180f;  // 반나절(해가 반바퀴 도는 시간)을 180초로 설정합니다.
 
     public float rotationSpeed = 10f;  // 해의 회전 속도
+
+    private Light sunLight;
     private float time;
     private float offsetValue;
 
     private void Start()
     {
+        sunLight = sun.GetComponent<Light>();
         skyMaterial.mainTextureOffset = new Vector2(0.62f, 0);
         offsetValue = 0.62f;
         // 달의 초기 위치를 태양의 반대편에 설정
@@ -35,10 +39,30 @@ public class SkyDome : MonoBehaviour
         //time += Time.deltaTime;
 
         offsetValue += Time.deltaTime / dayDuration * (1.25f - 0.62f);
-
+        
+        sunLight.bounceIntensity = 0;
 
         Vector2 offset = new Vector2(offsetValue, 0);
 
+        if (sunLight.intensity <= 0)
+        { 
+            sunLight.intensity = 0;
+        }
+
+        if(sunLight.intensity >= 100000)
+        {
+            sunLight.intensity = 100000;
+        }
+
+
+        if (sun.transform.rotation.x <= 30)
+        {
+            sunLight.intensity--;
+        }
+        else
+        { 
+            sunLight.intensity++;
+        }
 
 
 
