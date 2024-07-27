@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class ItemComponent : MonoBehaviour
 {
-    private int itemID;
-    
-    private string itemName;
-    public Sprite itemIcon;
-    public int stackMax;
-    private int stackCurrent;
+    public int itemID;
+
+    public string itemName { get; private set; }
+    public Sprite itemIcon { get; private set; }
+    public int stackMax { get; private set; }
+    public int stackCurrent { get; private set; }
 
     public int StackCurrent
     {
@@ -21,39 +21,39 @@ public class ItemComponent : MonoBehaviour
     }
 
 
-    private int SetType; //열거형 만들기 귀찮아서 대충 //// original 0, stackable 1, consumable 2, placeable 3
+    public int SetType { get; private set; } //열거형 만들기 귀찮아서 대충 //// original 0, stackable 1, consumable 2, placeable 3
     // ConsumableItem 필드
-    private float hungerAmount;
-    private float thirstAmount;
-    private float fatigueAmount;
-    private float freshmentMax;
-    private float freshmentCurrent;
+    public float hungerAmount { get; private set; }
+    public float thirstAmount { get; private set; }
+    public float fatigueAmount { get; private set; }
+    public float freshmentMax { get; private set; }
+    public float freshmentCurrent { get; private set; }
 
     // PlaceableItem 필드
-    private Equipment_Type requireToolType;
-    private int requireToolTier;
-    
-    private string itemModelInPlace;
-    
+    public Equipment_Type requireToolType { get; private set; }
+    public int requireToolTier { get; private set; }
+
+    public string itemModelInPlace { get; private set; }
+
 
     // EquipmentItem 필드
-    private string equipmentType;
-   
-    
-    private float weight;
-    private float durabilityMax;
-    private float durabilityCurrent;
-    private string itemModelInEquip;
-    private Equipment_Armor_Type? armorType;
-    private Equipment_Weapon_Type? weaponType;
-    private float meleeDamage;
-    private float meleeSpeed;
-    private float guardRate;
-    private int toolTier;
-    private float armorDefense;
-    private float drawPower;
-    private float drawSpeed;
-    private float aimAccuracy;
+    public string equipmentType { get; private set; }
+
+
+    public float weight { get; private set; }
+    public float durabilityMax { get; private set; }
+    public float durabilityCurrent { get; private set; }
+    public string itemModelInEquip { get; private set; }
+    public Equipment_Armor_Type? armorType { get; private set; }
+    public Equipment_Weapon_Type? weaponType { get; private set; }
+    public float meleeDamage { get; private set; }
+    public float meleeSpeed { get; private set; }
+    public float guardRate { get; private set; }
+    public int toolTier { get; private set; }
+    public float armorDefense { get; private set; }
+    public float drawPower { get; private set; }
+    public float drawSpeed { get; private set; }
+    public float aimAccuracy { get; private set; }
 
     // StackableItem 초기화 메서드
 
