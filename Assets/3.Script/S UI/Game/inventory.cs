@@ -63,7 +63,7 @@ public class Inventory : MonoBehaviour
 
                 return;
             }
-            else if (inv_Slot[i].Get_Type() == item.Get_Type() && inv_Slot[i].Get_Type() != 4)
+            else if (inv_Slot[i].Get_Type() == item.Get_Type() && inv_Slot[i].Get_Type() != 4) //4가 뭐였지
             {
                 while (item.StackCurrent > 0 && inv_Slot[i].Check_Full())
                 {
@@ -75,6 +75,7 @@ public class Inventory : MonoBehaviour
 
                         item.transform.SetParent(Inventory_obj);
                         item.gameObject.SetActive(false);
+                        ChangeEvent(); //카운트도 할거야
                         return;
                     }
                 }

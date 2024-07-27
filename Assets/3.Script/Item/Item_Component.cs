@@ -37,7 +37,7 @@ public class ItemComponent : MonoBehaviour
     
 
     // EquipmentItem ÇÊµå
-   [SerializeField] private string equipmentType;
+   [SerializeField] public string equipmentType;
    
     
     private float weight;

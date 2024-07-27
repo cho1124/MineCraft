@@ -14,7 +14,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
    
     public CanvasGroup canvasGroup { get; private set; }
 
-    public Item myItem { get; set; }
+    //public Item myItem { get; set; }
     public ItemComponent itemComponent { get; set; }
     
     public InventorySlot activeSlot { get; set; }
@@ -23,14 +23,14 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
     {
         canvasGroup = GetComponent<CanvasGroup>();
         itemIcon = GetComponent<Image>();
-        Inven = FindObjectOfType<InventoryUI>();
+        Inven = GetComponentInParent<InventoryUI>();
     }
 
     public void Initialize(Item item, InventorySlot parent)
     {
         activeSlot = parent;
         activeSlot.myItem = this;
-        myItem = item;
+        //myItem = item;
         itemIcon.sprite = item.sprite;
     }
 

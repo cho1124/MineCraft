@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public enum SlotTag { None, Head, Chest, Legs, Feet, Weapon, Accessories, }
+
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -13,9 +13,11 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     private Image slot_image = null;
     public InventoryItem myItem { get; set; }
 
-    public InventoryUI Inven;
+    private InventoryUI Inven;
 
-    public SlotTag myTag;
+    
+
+    public Equipment_Type Equip_Type;
 
     private float slot_color_value = 0.2f;
 
@@ -32,7 +34,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         if(eventData.button == PointerEventData.InputButton.Left)
         {
             if(Inven.carriedItem == null) return;
-            if(myTag != SlotTag.None && Inven.carriedItem.myItem.itemTag != myTag) return;
+            if(Equip_Type != Equipment_Type.NONE && Inven.carriedItem.equip_type != Equip_Type) return;
 
             
             Debug.Log("Clicked slot index: " + Inven.carriedItem.name);
@@ -47,44 +49,74 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         //TODO >> 처음 클릭한 슬롯이 메인 인벤토리인지, 핫바인지, 아니면 장비칸인지에 대한 판단 처리
         //그 다음으로 그 인덱스 받아오기
         //SWAP
-        //장비칸일때는 그 인벤토리에 있는 ITEMCOMPONENT 스크립트를 받아오고 타입인지 확인하는 절차를 해야 함
-        //아이템들 사용 하는 것 >> 핫바에 대한 처리 해야함
+        //장비칸일때는 그 인벤토리에 있는 ITEMCOMPONENT 스크립트를 받아오고 타입인지 확인하는 절차를 해야 함 >>>>> 개 웃긴점, 이미 타입 받아와 놓고 컴포넌트 받아오려는 개똥멍청이조영준, 진짜 멍청함
+        //아이템들 사용 하는 것 >> 핫바에 대한 처리 해야함 >> 핫바 처리 완료, 다음 할 건 핫바에서도 활성화 칸 근데 문제는 무기때문에 어찌해야 할지 모르겠네 >> 이것도 나중에 생각해보자 >>
         //
 
        
         //int oldSlotIndex = -1;
-        bool isInHotbar = false; //나중에 쓸 무언가
+        bool isInEquip = false; //나중에 쓸 무언가
+        bool isInEquipNew = false;
+        
 
         // 아이템이 핫바 슬롯에 있는지 확인
         int oldSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, Inven.carriedItem.activeSlot);
         if (oldSlotIndex != -1)
         {
-            isInHotbar = true;
+            //나중에 지울거야 수벌
         }
         else
         {
             // 아이템이 인벤토리 슬롯에 있는지 확인
             oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, Inven.carriedItem.activeSlot);
+
+            if(oldSlotIndex == -1)
+            {
+                oldSlotIndex = System.Array.IndexOf(Inven.equipmentSlots, Inven.carriedItem.activeSlot);
+                isInEquip = true;
+            }
+
         }
-
-
-
+        //개쓰레기 논리이긴 한데 머리가 안돌아가요
         Debug.Log("oldSlotIndex" + oldSlotIndex);
 
-        
 
-        
         // 새로운 슬롯의 인덱스를 저장
         int newSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, this);
 
         if (newSlotIndex != -1)
         {
-            isInHotbar = true;
+            
         }
         else
         {
             // 아이템이 인벤토리 슬롯에 있는지 확인
             newSlotIndex = System.Array.IndexOf(Inven.inventorySlots, this);
+            if (newSlotIndex == -1)
+            {
+                if (Inven.carriedItem.activeSlot == null)
+                {
+                    Debug.LogError("activeSlot is null");
+                }
+                if (Inven.equipmentSlots == null || Inven.equipmentSlots.Length == 0)
+                {
+                    Debug.LogError("equipmentSlots array is null or empty");
+                }
+                if (System.Array.IndexOf(Inven.equipmentSlots, this) == -1)
+                {
+                    Debug.LogError("activeSlot not found in equipmentSlots");
+                }
+
+                newSlotIndex = System.Array.IndexOf(Inven.equipmentSlots, this);
+                
+
+
+                Debug.Log("장비칸~~~" + newSlotIndex);
+
+
+
+                isInEquipNew = true;
+            }
         }
 
         Debug.Log("newSlotIndex" + newSlotIndex);
@@ -105,21 +137,55 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         myItem.canvasGroup.blocksRaycasts = true;
 
         //Swap
-        ItemComponent itemCom  = Inventory.instance.inv_Slot[oldSlotIndex];
 
-        Inventory.instance.inv_Slot[oldSlotIndex] = Inventory.instance.inv_Slot[newSlotIndex];
+        if (isInEquip != isInEquipNew)
+        {
+            if (!isInEquip && isInEquipNew)
+            {
+                // isInEquip는 false이고 isInEquipNew는 true인 경우
+                Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.Equipment_Slot[newSlotIndex]);
 
-        Inventory.instance.inv_Slot[newSlotIndex] = itemCom;
+            }
+            else if (isInEquip && !isInEquipNew)
+            {
+                // isInEquip는 true이고 isInEquipNew는 false인 경우
+                Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
+            }
+        }
+        else
+        {
+            if (isInEquip && isInEquipNew)
+            {
+                // isInEquip와 isInEquipNew가 모두 true인 경우
+                Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.Equipment_Slot[newSlotIndex]);
+            }
+            else
+            {
+                // isInEquip와 isInEquipNew가 모두 false인 경우
+                Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
+            }
+        }
+
+
+        //itemCom  = Inventory.instance.inv_Slot[oldSlotIndex];
 
         Inventory.instance.ChangeEvent();
         //TODO >>> 핫바에 대한 부분, 장비장착에 대한 부분, 장비 장착시, itemLayer를 제거하고 사용 가능한 아이템으로 변환할 것 >>>> 필수 정말짱중요
 
 
 
-        if (myTag != SlotTag.None)
+        if (Equip_Type != Equipment_Type.NONE)
         { 
-            Inven.EquipEquipment(myTag, myItem);
+            Inven.EquipEquipment(Equip_Type, myItem);
         }
+    }
+
+    private void Swap(ref ItemComponent Old_Item, ref ItemComponent New_Item)
+    {
+        ItemComponent temp = Old_Item;
+        Old_Item = New_Item;
+        New_Item = temp;
+
     }
 
    public void CheckCurrentSlot()

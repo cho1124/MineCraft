@@ -75,13 +75,13 @@ public class InventoryUI : MonoBehaviour
     {
         if (carriedItem != null)
         {
-            if (item.activeSlot.myTag != SlotTag.None && item.activeSlot.myTag != carriedItem.myItem.itemTag) return;
+            if (item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type) return;
             item.activeSlot.SetItem(carriedItem);
         }
 
-        if (item.activeSlot.myTag != SlotTag.None)
+        if (item.activeSlot.myItem.equip_type != Equipment_Type.NONE)
         {
-            EquipEquipment(item.activeSlot.myTag, null);
+            EquipEquipment(item.activeSlot.Equip_Type, null);
         }
 
         carriedItem = item;
@@ -89,29 +89,29 @@ public class InventoryUI : MonoBehaviour
         item.transform.SetParent(draggablesTransform);
     }
 
-    public void EquipEquipment(SlotTag tag, InventoryItem item = null)
+    public void EquipEquipment(Equipment_Type tag, InventoryItem item = null)
     {
         switch (tag)
         {
-            case SlotTag.Head:
+            case Equipment_Type.HELMET:
                 if (item == null)
                 {
                     Debug.Log("Unequipped helmet on " + tag);
                 }
                 else
                 {
-                    Debug.Log("Equipped " + item.myItem.name + " on " + tag);
+                    //Debug.Log("Equipped " + item.myItem.name + " on " + tag);
                 }
                 break;
-            case SlotTag.Chest:
+            case Equipment_Type.CHESTPLATE:
                 break;
-            case SlotTag.Legs:
+            case Equipment_Type.LEGGINGS:
                 break;
-            case SlotTag.Feet:
+            case Equipment_Type.BOOTS:
                 break;
-            case SlotTag.Weapon:
+            case Equipment_Type.ONE_HANDED_SWORD: //이거 좀 더 다양성 추가할 예정
                 break;
-            case SlotTag.Accessories:
+            case Equipment_Type.SHIELD: //장신구 칸인데 없어도 될듯?
                 break;
         }
     }
@@ -185,35 +185,4 @@ public class InventoryUI : MonoBehaviour
 
     }
 
-    
-    public void AddItemToInventory(InventoryItem item)
-    {
-        if (item == null)
-        {
-            Debug.LogError("InventoryItem is null.");
-            return;
-        }
-
-        
-
-
-        if(Inventory.instance.inv_Slot.Length != 0)
-        {
-            for (int i = 0; i < inventorySlots.Length; i++)
-            {
-                if (inventorySlots[i].myItem == null)
-                {
-                    Debug.Log(item.name);
-                    item.transform.SetParent(inventorySlots[i].transform);
-                    item.Initialize(item.myItem, inventorySlots[i]);
-                    return;
-                }
-            }
-        }
-
-
-        
-
-        Debug.LogWarning("No empty slot found for the item.");
-    }
 }

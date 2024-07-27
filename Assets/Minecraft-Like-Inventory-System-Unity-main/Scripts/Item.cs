@@ -6,7 +6,7 @@ using UnityEngine;
 public class Item : ScriptableObject
 {
     public Sprite sprite;
-    public SlotTag itemTag;
+    
 
     [Header("If the item can be equipped")]
     public GameObject equipmentPrefab;
