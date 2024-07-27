@@ -176,17 +176,33 @@ public class Chunk
 
     }
 
+    public byte CheckBlockID(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+
+        // Chunk의 위치를 빼서 월드좌표 -> 청크내의 상대좌표로 변환
+        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck].id;
+
+        return currentBlockID;
+    }
+
 
     public byte EditVoxel(Vector3 pos, byte newID)
     {
         int xCheck = Mathf.FloorToInt(pos.x);
         int yCheck = Mathf.FloorToInt(pos.y);
         int zCheck = Mathf.FloorToInt(pos.z);
-
+        
         // Chunk의 위치를 빼서 월드좌표 -> 청크내의 상대좌표로 변환
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
-
+        
         // 현재 블록 ID 저장
         byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck].id;
 
