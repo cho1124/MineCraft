@@ -7,8 +7,8 @@ public class Inventory : MonoBehaviour
 
     public static Inventory instance;
 
-    public ItemComponent[] inv_Slot = new ItemComponent[27];
-    public ItemComponent[] Hotbar_Slot = new ItemComponent[9];
+    public ItemComponent[] inv_Slot = new ItemComponent[36]; // 핫바랑 합쳐서 한번에 처리하자
+    
     public ItemComponent[] Equipment_Slot = new ItemComponent[7];
 
     public List<ItemComponent> items = new List<ItemComponent>();
@@ -44,32 +44,7 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(ItemComponent item)
     {
-        for (int i = 0; i < Hotbar_Slot.Length; i++)
-        {
-            if (Hotbar_Slot[i] == null)
-            {
-                Hotbar_Slot[i] = item;
-                item.gameObject.SetActive(false);
-                return;
-            }
-            else if (Hotbar_Slot[i].Get_Type() == item.Get_Type() && Hotbar_Slot[i].Get_Type() != 4)
-            {
-                while (item.StackCurrent > 0 && Hotbar_Slot[i].Check_Full())
-                {
-                    item.StackCurrent--;
-                    //inv_Slot[i].StackCurrent++;
-                    if (item.StackCurrent == 0)
-                    {
-                        Debug.Log(Hotbar_Slot[i].StackCurrent);
-                        item.gameObject.SetActive(false);
-                        return;
-                    }
-                }
-            }
-
-
-        }
-
+       
         for(int i = 0; i < inv_Slot.Length; i++)
         {
             if (inv_Slot[i] == null)
@@ -97,9 +72,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-            
-
-        
+           
     }
     public ItemComponent[] GetInv_Main()
     {

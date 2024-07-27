@@ -114,47 +114,49 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-         //Hotbar 슬롯에서 빈 슬롯을 찾아 아이템 배치
-        for (int i = 0; i < hotbarSlots.Length; i++)
-        {
-            if (hotbarSlots[i].myItem == null)
-            {
-                if (Inventory.instance.Hotbar_Slot[i] != null)
-                {
-                    var tempItem = Inventory.instance.Hotbar_Slot[i];
-                    //Debug.Log(tempItem.name);
         
-                    if (hotitemSet.Length > i && hotitemSet[i] == null)
-                    {
-                        hotitemSet[i] = Instantiate(itemPrefab, hotbarSlots[i].transform);
-                        hotitemSet[i].Initialize(tempItem, hotbarSlots[i]);
-                        return; // 아이템을 배치했으므로 종료
-                    }
+        for (int i = 0; i < Inventory.instance.inv_Slot.Length; i++)
+        {
+            if(Inventory.instance.inv_Slot[i] != null)
+            {
+                var tempItem = Inventory.instance.inv_Slot[i];
+                Debug.Log("Tlqkf" + tempItem.name);
+
+                if (i < hotbarSlots.Length)
+                {
+                    if (TryPlaceItem(hotbarSlots, hotitemSet, i, tempItem))
+                        return;
+                }
+                else
+                {
+                    if (TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, tempItem)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
+                        return;
                 }
             }
+
+
+            
         }
+
 
 
         //아마도 itemset에 대한 처리 필요
         // Inventory 슬롯에서 빈 슬롯을 찾아 아이템 배치
-        for (int i = 0; i < inventorySlots.Length; i++)
-        {
-            if (inventorySlots[i].myItem == null)
-            {
-                if (Inventory.instance.inv_Slot[i] != null)
-                {
-                    var tempItem = Inventory.instance.inv_Slot[i];
-                    Debug.Log("Tlqkf" +tempItem.name);
+        
+    }
 
-                    if (itemSet.Length > i && itemSet[i] == null)
-                    {
-                        itemSet[i] = Instantiate(itemPrefab, inventorySlots[i].transform);
-                        itemSet[i].Initialize(tempItem, inventorySlots[i]);
-                        return; // 아이템을 배치했으므로 종료
-                    }
-                }
+    private bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem)
+    {
+        if (slots[index].myItem == null)
+        {
+            if (itemSet.Length > index && itemSet[index] == null)
+            {
+                itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
+                itemSet[index].Initialize(tempItem, slots[index]);
+                return true; // 아이템을 배치했으므로 true 반환
             }
         }
+        return false; // 아이템 배치 실패
     }
 
 
@@ -163,20 +165,9 @@ public class InventoryUI : MonoBehaviour
         //inventory.instance.GetInv_Main()[0].
 
         ItemComponent[] inv = Inventory.instance.inv_Slot;
-        ItemComponent[] hot_inv = Inventory.instance.Hotbar_Slot;
+        
         int invLength = Inventory.instance.inv_Slot.Length;
-        int hot_invLength = Inventory.instance.Hotbar_Slot.Length;
-
-
-        for (int i = 0; i < hot_invLength; i++)
-        {
-            if (hot_inv[i] != null)
-            {
-                SpawnCollidedItem(hot_inv[i]);
-            }
-
-        }
-
+        
         for (int i = 0; i < invLength; i++)
         {
             if(inv[i] != null)
@@ -198,10 +189,7 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        if(Inventory.instance.Hotbar_Slot.Length != 0)
-        {
-
-        }
+        
 
 
         if(Inventory.instance.inv_Slot.Length != 0)
