@@ -744,7 +744,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &7157210477058290646
 BoxCollider:
@@ -779,6 +779,7 @@ MonoBehaviour:
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 7186630279588421308}
   babyPrefab: {fileID: 740167545552832187, guid: 0b47bdb7d4463e1499c010bb2fb81e2f, type: 3}
+  overgrowthPrefab: {fileID: 0}
   hungerLevel: 6
   walkSpeed: 3
   runSpeed: 4
@@ -787,7 +788,6 @@ MonoBehaviour:
   jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  overgrowthObjectPrefab: {fileID: 0}
   head: {fileID: 7184731587244206796}
   wanderRadius: 30
 --- !u!1 &7187247686449522420

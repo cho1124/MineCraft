@@ -12,6 +12,7 @@ public class ObstacleDetector : MonoBehaviour
     private Monster monsterScript;
     private float lastPlayerDetectionTime = -Mathf.Infinity; // 마지막 플레이어 감지 시간
     private float lastAnimalDetectionTime = -Mathf.Infinity; // 마지막 동물 감지 시간
+    private float lastDetectionTime = -Mathf.Infinity; // 마지막 감지 시간
 
     private void Start()
     {
@@ -20,21 +21,13 @@ public class ObstacleDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(playerTag) || other.CompareTag(animalTag))
+        if (Time.time > lastDetectionTime + detectionCooldown) // 쿨타임 체크
         {
-            if (other.CompareTag(playerTag) && Time.time > lastPlayerDetectionTime + detectionCooldown) {
-                lastPlayerDetectionTime = Time.time; // 플레이어 감지 시간을 업데이트
-                monsterScript.SetTargetAndRun(other.transform.position, true);
-            }
-            else if (other.CompareTag(animalTag) && Time.time > lastAnimalDetectionTime + detectionCooldown) {
-                lastAnimalDetectionTime = Time.time; // 동물 감지 시간을 업데이트
-                monsterScript.SetTargetAndRun(other.transform.position, false);
-            }
-        }
-        else
-        {
-            if (monsterScript != null) {
-                monsterScript.JumpAndChangeState();
+            if (other.CompareTag(playerTag) || other.CompareTag(animalTag)) {
+                if (monsterScript != null) {
+                    monsterScript.SetTargetAndRun(other.transform.position);
+                    lastDetectionTime = Time.time; // 감지 시간 업데이트
+                }
             }
         }
     }

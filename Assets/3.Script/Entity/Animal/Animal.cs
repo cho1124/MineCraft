@@ -7,12 +7,7 @@ public class Animal : Entity, IDamageable
     //동물도 자유롭게 구현하면 될거에용
 
     /*
-     => 점프모션만 하고, y축 이동 제외-> 때문에 만들었던 PerformAttack() 코루틴에서 좌표 부분 모두 뺌. 
-    코루틴 아예 없애면 공격 애니메이션을 끝내지 않고 공격이 진행되므로, 수정만함
     
-    동물들 머리에 띄우는 heartObjectPrefab과 shockObjectPrefab 오브젝트 풀링해서 20개씩 만들어서 사용하려고
-    시도 
-
     동물들은 배고픔 상태에서 이속이 빨라짐
     새끼는 foodGivenCount 가 오르지 않음.
     성인상태에서 5번 Animal_Food를 먹으면 tamed 가 이름에 붙고, 그 상태에서 
@@ -60,7 +55,7 @@ public class Animal : Entity, IDamageable
 
     // 개체 복사 관련 변수들
     private bool canSpawn = true; // 개체 복사 쿨타임 플래그
-    private float spawnCooldown = 300f; // 쿨타임 시간
+    private float spawnCooldown = 600f; // 쿨타임 시간
     private const int collisionThreshold = 10; // 충돌 임계값
     protected Queue<int> recentAnimals = new Queue<int>(); // 최근 탐색된 10개의 개체를 저장할 큐
     protected Dictionary<int, int> animalCount = new Dictionary<int, int>(); // 탐색된 개체의 탐색 횟수를 저장할 딕셔너리
@@ -212,8 +207,11 @@ public class Animal : Entity, IDamageable
             int collisionAnimalId = collision.gameObject.GetInstanceID();
             if (animalCount.ContainsKey(collisionAnimalId) && animalCount[collisionAnimalId] >= collisionThreshold)
             {
-                SpawnNewAnimal();
-                animalCount[collisionAnimalId] = 0;
+                if (canSpawn && !isOvergrowth) // 과성장 상태가 아니고, 스폰 쿨타임이 지나야만 스폰
+                {
+                    SpawnNewAnimal();
+                    animalCount[collisionAnimalId] = 0;
+                }
             }
         }
 
@@ -258,6 +256,10 @@ public class Animal : Entity, IDamageable
     //같은 종의 동물이 10회 이상 충돌했을때 동물을 복사(번식) 하기 위해 확인하는 작업
     protected virtual void AddToRecentAnimals(GameObject animal)
     {
+        // Baby가 포함된 오브젝트는 무시
+        if (animal.name.Contains("Baby")) {
+            return;
+        }
 
         int animalId = animal.GetInstanceID();
 
@@ -308,10 +310,10 @@ public class Animal : Entity, IDamageable
                 tracker.recentAnimals.Clear();
                 tracker.animalCount.Clear();
             }
-
-            // 복제된 오브젝트의 이름에 "Baby" 추가
-            newAnimal.name = gameObject.name + "_Baby";
-            Debug.Log($"{newAnimal.name} 태어남! ");
+            // 복제된 오브젝트의 이름에 "Baby" 추가 (이미 "Baby"가 포함된 경우 추가하지 않음)
+            if (!newAnimal.name.Contains("Baby")) {
+                newAnimal.name = gameObject.name + "_Baby";
+            }
 
             // 복제된 오브젝트에 "Animals" 태그 추가
             newAnimal.tag = "Animals";

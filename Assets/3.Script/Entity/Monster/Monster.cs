@@ -38,7 +38,7 @@ public class Monster : Entity, IDamageable
     public float jumpForce = 4f; //몬스터 점프할때 힘
     public float detectionDistance = 2f; //몬스터 탐지 거리
     public float turnDuration = 4f;
-    public float attackRange = 2f;
+    public float attackRange = 1f;
 
     // 위치 변화 추적을 위한 변수
     private Vector3 lastPosition;
@@ -97,9 +97,6 @@ public class Monster : Entity, IDamageable
                 break;
             case MonsterState.Jump:
                 break;
-        //    case MonsterState.Chase:
-        //        Chase();
-        //        break;
             case MonsterState.TurnLeft:
                 TurnLeft();
                 break;
@@ -153,9 +150,6 @@ public class Monster : Entity, IDamageable
                 }
                 stateCoroutine = StartCoroutine(StateDuration(MonsterState.Jump, 3f));
                 break;
-          //  case MonsterState.Chase:
-          //      //  StartCoroutine(StateDuration(MonsterState.Chase, ChaseDuration));
-          //      break;
             case MonsterState.TurnLeft:
                 stateCoroutine = StartCoroutine(StateDuration(MonsterState.TurnLeft, turnDuration));
                 break;
@@ -163,7 +157,7 @@ public class Monster : Entity, IDamageable
                 stateCoroutine = StartCoroutine(StateDuration(MonsterState.TurnRight, turnDuration));
                 break;
             case MonsterState.Attack:
-                stateCoroutine = StartCoroutine(StateDuration(MonsterState.Attack, 2f));
+                AttackTarget();
                 break;
                 default:
                 stateCoroutine = StartCoroutine(StateDuration(MonsterState.Idle, Random.Range(4f, 10f)));
@@ -182,10 +176,9 @@ public class Monster : Entity, IDamageable
 
     private void Run()  // 달리기 상태에서 수행할 행동을 정의하는 메서드입니다.
     {
-        MoveTowardsTarget(runSpeed); // 목표 위치로 달리기 속도로 이동합니다.
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // 목표 위치에 도달했는지 확인합니다.
-        {
-            ChangeState(MonsterState.Idle); // Idle 상태로 변경
+        MoveTowardsTarget(runSpeed);
+        if (Vector3.Distance(transform.position, targetPosition) < attackRange) {
+            ChangeState(MonsterState.Attack); // 공격 범위 안에 들어오면 Attack 상태로 변경
         }
     }
 
@@ -202,23 +195,6 @@ public class Monster : Entity, IDamageable
         transform.Rotate(0, 90, 0);
         ChangeState(MonsterState.Walk);
     }
-
-  //  private void Chase()
-  //  {
-  //      /*
-  //      목표 위치로 이동->목표 위치와의 거리가 attackRange 내에 있으면 상태를 Attack으로->
-  //      */
-  //
-  //      MoveTowardsTarget(runSpeed);
-  //      if (Vector3.Distance(transform.position, targetPosition) < attackRange)
-  //      {
-  //          ChangeState(MonsterState.Attack);
-  //      }
-  //      else if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-  //      {
-  //          EndChaseAndWander();
-  //      }
-  //  }
 
     private void MoveTowardsTarget(float speed) //몬스터를 targetPosition으로 이동시키는 기능
     {
@@ -300,10 +276,9 @@ public class Monster : Entity, IDamageable
         }
     }
 
-    public void SetTargetAndRun(Vector3 target, bool isPlayer) {
+    public void SetTargetAndRun(Vector3 target) {
         targetPosition = target;
-        IsChasingPlayer = isPlayer;
-        ChangeState(MonsterState.Run);
+        ChangeState(MonsterState.Run); // 무조건 Run 상태로 변경
     }
 
     public void EndChaseAndWander()
@@ -314,14 +289,23 @@ public class Monster : Entity, IDamageable
 
     protected virtual void AttackTarget()
     {
+        // 플레이어나 동물이 공격 범위 내에 있는지 확인합니다.
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
         // 몬스터와 목표 위치 사이의 거리가 공격 범위 내에 있는지 확인합니다.
-        if (Vector3.Distance(transform.position, targetPosition) < attackRange)
-        {
-            Debug.Log($"{this.name} 가 공격중.!");
-            animator.SetBool("Fight", true); // 공격 애니메이션 bool 파라미터 설정
-                                             // 머리 위치에서 앞 방향으로 레이캐스트를 발사하여 공격을 시도합니다.
-
+        foreach (var hitCollider in hitColliders) {
+            if (hitCollider.CompareTag("Player") || hitCollider.CompareTag("Animals")) {
+                animator.SetBool("Fight", true); // 공격 애니메이션 bool 파라미터 설정
+                Debug.Log($"{this.name} 공격 애니메이션.!");
+                StartCoroutine(EndAttackAnimation());
+                return; // 공격을 실행했으면 함수를 종료합니다.
+            }
         }
+        EndChaseAndWander();
+    }
+
+    protected IEnumerator EndAttackAnimation() {
+        yield return new WaitForSeconds(2f); // 공격 애니메이션이 끝날 때까지 대기
+        animator.SetBool("Fight", false);
         EndChaseAndWander();
     }
 

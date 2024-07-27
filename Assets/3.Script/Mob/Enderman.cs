@@ -5,11 +5,10 @@ using UnityEngine;
 public class Enderman : Monster, IDamageable
 {
     /*
-    현재 엔더맨 체력이 0이하로 줄어들어도 핸들데스 메서드 이벤트에
-    호출되지 않고있음, 체력 -까지 계속 뜸
-    
-    => 이벤트 말고 Entity 클래스의 TakeDamage 메서드를 오버라이드하여 체력이 0 이하일 때 직접 Die 메서드를 호출하도록
-    => 그러나 여전히 차이는 없음...
+
+    애니메이터 파라미터 설정은 잘 되어있는데 
+    엔더맨 스크립트의 attacktarget 메서드에 진입하지 못하고 있는것 같다. 
+
     */
 
     private Entity entity;
@@ -27,34 +26,12 @@ public class Enderman : Monster, IDamageable
 
     }
 
- //   private void Update()
- //   {
- //       Damaged_ender();
- //   }
-
-
     private void HandleDeath()
     {
         Debug.Log("HandleDeath 호출됨");
         StartCoroutine(OnDie());
     }
 
-    //public override IEnumerator OnDie()
-    //{
-    //    Debug.Log($"{name}사망시작.");
-    //    // 사망 애니메이션을 트리거합니다.
-    //    animator.SetTrigger("Die");
-    //
-    //    // 사망 애니메이션의 길이를 얻어 대기합니다.
-    //    AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-    //    yield return new WaitForSeconds(stateInfo.length);
-    //
-    //    // 사망 효과를 생성합니다.
-    //    Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-    //
-    //    // 엔더맨 오브젝트를 파괴합니다.
-    //    Destroy(gameObject);
-    //}
 
     public override void TakeDamage(int damage)
     {
@@ -64,35 +41,36 @@ public class Enderman : Monster, IDamageable
         }
     }
 
-    // private void Damaged_ender()
-    // {
-    //     if(Input.GetKeyDown(KeyCode.K))
-    //     {
-    //         TakeDamage(50);
-    //     }
-    // }
-
     protected override void AttackTarget() {
-        if (Vector3.Distance(transform.position, targetPosition) < attackRange) {
-            Debug.Log($"엔더맨스크립트 {name} 가 공격중.!");
-            SetRandomAttackParameters();
-            animator.SetTrigger("Attack");
+        // 플레이어나 동물이 공격 범위 내에 있는지 확인합니다.
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
+        // 몬스터와 목표 위치 사이의 거리가 공격 범위 내에 있는지 확인합니다.
+        foreach (var hitCollider in hitColliders) {
+            if (hitCollider.CompareTag("Player") || hitCollider.CompareTag("Animals")) {
+                SetRandomAttackParameters();
+                Debug.Log($"{this.name} 엔더맨 공격 애니메이션.!");
+                return; // 공격을 실행했으면 함수를 종료합니다.
+            }
         }
         EndChaseAndWander();
     }
 
     private void SetRandomAttackParameters() {
-        bool attackType1 = Random.value > 0.5f;
-        bool attackType2 = Random.value > 0.5f;
-
-        if (!attackType1 && !attackType2) {
-            attackType1 = true; // 둘 다 false일 때 AttackType1을 true로 설정
+        int attackType = Random.Range(1, 4); // 1, 2, 3 중 하나를 무작위로 선택
+        // 선택된 공격 애니메이션 트리거를 설정
+        switch (attackType) {
+            case 1:
+                animator.SetTrigger("FightType1");
+                break;
+            case 2:
+                animator.SetTrigger("FightType2");
+                break;
+            case 3:
+                animator.SetTrigger("FightType3");
+                break;
         }
 
-        Debug.Log($"AttackType1: {attackType1}, AttackType2: {attackType2}");
-
-        animator.SetBool("AttackType1", attackType1);
-        animator.SetBool("AttackType2", attackType2);
+        Debug.Log($"Selected Attack Type: {attackType}");
     }
 
 }
