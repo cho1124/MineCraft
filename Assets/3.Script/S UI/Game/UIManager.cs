@@ -27,12 +27,16 @@ public class UIManager : MonoBehaviour
         
     }
 
+
+
     private void InitHotBar()
     {
         for (int i = 0; i < HotBarSlots.Length; i++)
         {
             if (TryRemoveItem(HotBarSlots, hotitemSet, i, out InventoryItem removedItem))
             {
+
+
                 //Debug.Log("내가 사용할 아이템 히히" + removedItem.name);
             }
         }
@@ -40,23 +44,26 @@ public class UIManager : MonoBehaviour
 
     private void SetHotBar()
     {
-
-        InitHotBar();
-
-        //핫바 초기화하는 과정
-
         for (int i = 0; i < HotBarSlots.Length; i++)
         {
-           
+            // 핫바 슬롯에 아이템이 있고, 인벤토리 슬롯에 아이템이 없는 경우 제거
+            if (HotBarSlots[i] != null && Inventory.instance.inv_Slot[i] == null)
+            {
+                Debug.Log("있다없어졌데이");
+                if (TryRemoveItem(HotBarSlots, hotitemSet, i, out InventoryItem removedItem))
+                {
+                    // 필요에 따라 제거된 후의 추가 작업
+                }
+            }
+
+            // 인벤토리 슬롯에 아이템이 있는 경우 배치
             if (Inventory.instance.inv_Slot[i] != null)
             {
                 var tempItem = Inventory.instance.inv_Slot[i];
-                if (TryPlaceItem(HotBarSlots, hotitemSet, i, tempItem, itemPrefab)) return;
+                TryPlaceItem(HotBarSlots, hotitemSet, i, tempItem, itemPrefab);
             }
-            
         }
     }
-
 
     public bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem, InventoryItem itemPrefab)
     {
@@ -83,26 +90,28 @@ public class UIManager : MonoBehaviour
             Debug.Log("removesetSlots : " + index);
 
             // itemSet에서 지정된 인덱스에 아이템이 있는지 확인합니다
-            //if (itemSet.Length > index && itemSet[index] != null)
-            //{
-            //    // itemSet에서 아이템을 가져옵니다
-            //    removedItem = itemSet[index];
-            //
-            //    // itemSet과 슬롯에서 아이템을 제거합니다
-            //    itemSet[index] = null;
-            //    slots[index].myItem = null;
-            //
-            //    // 필요에 따라 아이템의 GameObject를 파괴합니다
-            //    Destroy(removedItem.gameObject);
-            //
-            //    return true; // 아이템이 성공적으로 제거됨을 반환
-            //}
+            if (itemSet.Length > index && itemSet[index] != null)
+            {
+                // itemSet에서 아이템을 가져옵니다
+                removedItem = itemSet[index];
+
+                // itemSet과 슬롯에서 아이템을 제거합니다
+                itemSet[index] = null;
+                slots[index].myItem = null;
+
+                // 필요에 따라 아이템의 GameObject를 파괴합니다
+                Destroy(removedItem.gameObject);
+
+                return true; // 아이템이 성공적으로 제거됨을 반환
+            }
 
             return true;
         }
 
+        Debug.Log("bugbugbug");
         return false; // 아이템 제거 실패를 반환
     }
+
 
 
 }
