@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
@@ -12,6 +13,12 @@ public class Inventory : MonoBehaviour
     public ItemComponent[] Equipment_Slot = new ItemComponent[7];
 
     public List<ItemComponent> items = new List<ItemComponent>();
+
+    public Transform Inventory_obj;
+
+    public delegate void HotBarUpdate();
+    public event HotBarUpdate OnHotBarChanged;
+
 
     private void Awake()
     {
@@ -36,6 +43,9 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    
+
+
 
     /// <summary>
     /// hotbar -> inven -> 그 다음에 자유롭게 이동 가능 -> 추가로 equipment는 ㅁㄴ엄녀온먀ㅕ온ㅁ어
@@ -50,8 +60,10 @@ public class Inventory : MonoBehaviour
             if (inv_Slot[i] == null)
             {
                 inv_Slot[i] = item;
+                item.transform.SetParent(Inventory_obj);
                 item.gameObject.SetActive(false);
                 Debug.Log(inv_Slot[i].StackCurrent);
+                ChangeEvent();
 
                 return;
             }
@@ -64,6 +76,8 @@ public class Inventory : MonoBehaviour
                     if (item.StackCurrent == 0)
                     {
                         Debug.Log(inv_Slot[i].StackCurrent);
+
+                        item.transform.SetParent(Inventory_obj);
                         item.gameObject.SetActive(false);
                         return;
                     }
@@ -74,9 +88,18 @@ public class Inventory : MonoBehaviour
 
            
     }
+
+    public void ChangeEvent()
+    {
+        OnHotBarChanged?.Invoke();
+    }
+
     public ItemComponent[] GetInv_Main()
     {
         return inv_Slot;
     }
+
+
+
 }
 

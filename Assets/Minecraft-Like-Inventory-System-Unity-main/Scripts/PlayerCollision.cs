@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerCollision : MonoBehaviour
 {
     [SerializeField] private ItemComponent itemComponent;
+    //public GameObject InventoryObj;
 
     private void Start()
     {

@@ -31,13 +31,13 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     {
         if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if(InventoryUI.carriedItem == null) return;
-            if(myTag != SlotTag.None && InventoryUI.carriedItem.myItem.itemTag != myTag) return;
+            if(Inven.carriedItem == null) return;
+            if(myTag != SlotTag.None && Inven.carriedItem.myItem.itemTag != myTag) return;
 
             
-            Debug.Log("Clicked slot index: " + InventoryUI.carriedItem.equip_type);
+            Debug.Log("Clicked slot index: " + Inven.carriedItem.name);
 
-            SetItem(InventoryUI.carriedItem);
+            SetItem(Inven.carriedItem);
         }
     }
 
@@ -51,39 +51,45 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         //아이템들 사용 하는 것 >> 핫바에 대한 처리 해야함
         //
 
-        InventorySlot[] GetSlotArray(InventorySlot slot)
+       
+        //int oldSlotIndex = -1;
+        bool isInHotbar = false; //나중에 쓸 무언가
+
+        // 아이템이 핫바 슬롯에 있는지 확인
+        int oldSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, Inven.carriedItem.activeSlot);
+        if (oldSlotIndex != -1)
         {
-            if (System.Array.IndexOf(Inven.inventorySlots, slot) != -1)
-            {
-                return Inven.inventorySlots;
-            }
-            else if (System.Array.IndexOf(Inven.hotbarSlots, slot) != -1)
-            {
-                return Inven.hotbarSlots;
-            }
-            else if (System.Array.IndexOf(Inven.equipmentSlots, slot) != -1)
-            {
-                return Inven.equipmentSlots;
-            }
-            else
-            {
-                return null;
-            }
+            isInHotbar = true;
+        }
+        else
+        {
+            // 아이템이 인벤토리 슬롯에 있는지 확인
+            oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, Inven.carriedItem.activeSlot);
         }
 
 
-        InventorySlot[] oldSlotArray = GetSlotArray(item.activeSlot);
-        // 이전 슬롯의 인덱스를 저장
-        int oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, item.activeSlot);
 
-        Debug.Log("조영준은 개쓰레기" + oldSlotIndex);
+        Debug.Log("oldSlotIndex" + oldSlotIndex);
 
-        InventorySlot[] newSlotArray = GetSlotArray(this);
+        
+
+        
         // 새로운 슬롯의 인덱스를 저장
-        int newSlotIndex = System.Array.IndexOf(Inven.inventorySlots, this);
-        Debug.Log("조영준은 개쓰레기진짜" + newSlotIndex);
+        int newSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, this);
 
-        InventoryUI.carriedItem = null;
+        if (newSlotIndex != -1)
+        {
+            isInHotbar = true;
+        }
+        else
+        {
+            // 아이템이 인벤토리 슬롯에 있는지 확인
+            newSlotIndex = System.Array.IndexOf(Inven.inventorySlots, this);
+        }
+
+        Debug.Log("newSlotIndex" + newSlotIndex);
+
+        Inven.carriedItem = null;
 
         // Reset old slot
         item.activeSlot.myItem = null;
@@ -98,19 +104,17 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         myItem.transform.SetParent(transform);
         myItem.canvasGroup.blocksRaycasts = true;
 
-
+        //Swap
         ItemComponent itemCom  = Inventory.instance.inv_Slot[oldSlotIndex];
 
         Inventory.instance.inv_Slot[oldSlotIndex] = Inventory.instance.inv_Slot[newSlotIndex];
 
         Inventory.instance.inv_Slot[newSlotIndex] = itemCom;
 
+        Inventory.instance.ChangeEvent();
         //TODO >>> 핫바에 대한 부분, 장비장착에 대한 부분, 장비 장착시, itemLayer를 제거하고 사용 가능한 아이템으로 변환할 것 >>>> 필수 정말짱중요
 
-        //Inventory.Instance.inventorySlots[oldSlotIndex] = null;
-        //Inventory.Instance.inventorySlots[newSlotIndex] = myItem;
 
-        //Debug.Log("New slot index: " + newSlotIndex);
 
         if (myTag != SlotTag.None)
         { 
@@ -118,7 +122,12 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         }
     }
 
-   
+   public void CheckCurrentSlot()
+    {
+        //if()
+    }
+
+
     public void ClearSlot()
     {
         if (myItem != null)

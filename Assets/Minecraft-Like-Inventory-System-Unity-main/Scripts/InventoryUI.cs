@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class InventoryUI : MonoBehaviour
 {
     
-    public static InventoryItem carriedItem;
+    public InventoryItem carriedItem;
     private Item_Manager itemManager;
 
     [SerializeField] public InventorySlot[] inventorySlots; //1번 슬롯 배열
@@ -23,6 +23,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private InventoryItem[] itemSet;
     [SerializeField] private InventoryItem[] hotitemSet;
 
+    private UIManager UIManager;
+
     //[SerializeField] private Button giveItemBtn;
 
     void Awake()
@@ -30,6 +32,14 @@ public class InventoryUI : MonoBehaviour
         
         itemSet = new InventoryItem[inventorySlots.Length];
         hotitemSet = new InventoryItem[hotbarSlots.Length];
+
+        UIManager = GetComponentInParent<UIManager>();
+        if(UIManager == null)
+        {
+            Debug.Log("조영준 ㅈㄴ 멍청이");
+        }
+
+
         //SetEmptyItem();
     }
 
@@ -124,12 +134,12 @@ public class InventoryUI : MonoBehaviour
 
                 if (i < hotbarSlots.Length)
                 {
-                    if (TryPlaceItem(hotbarSlots, hotitemSet, i, tempItem))
+                    if (UIManager.TryPlaceItem(hotbarSlots, hotitemSet, i, tempItem, itemPrefab))
                         return;
                 }
                 else
                 {
-                    if (TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, tempItem)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
+                    if (UIManager.TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, tempItem, itemPrefab)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
                         return;
                 }
             }
@@ -138,11 +148,6 @@ public class InventoryUI : MonoBehaviour
             
         }
 
-
-
-        //아마도 itemset에 대한 처리 필요
-        // Inventory 슬롯에서 빈 슬롯을 찾아 아이템 배치
-        
     }
 
     private bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem)
