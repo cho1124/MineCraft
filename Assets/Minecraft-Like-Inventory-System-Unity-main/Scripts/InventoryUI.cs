@@ -21,6 +21,7 @@ public class InventoryUI : MonoBehaviour
     
     [SerializeField] private List<Original_Item> item_list;
     [SerializeField] private InventoryItem[] itemSet;
+    [SerializeField] private InventoryItem[] hotitemSet;
 
     //[SerializeField] private Button giveItemBtn;
 
@@ -28,6 +29,7 @@ public class InventoryUI : MonoBehaviour
     {
         
         itemSet = new InventoryItem[inventorySlots.Length];
+        hotitemSet = new InventoryItem[hotbarSlots.Length];
         //SetEmptyItem();
     }
 
@@ -112,26 +114,28 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        // Hotbar 슬롯에서 빈 슬롯을 찾아 아이템 배치
-        //for (int i = 0; i < hotbarSlots.Length; i++)
-        //{
-        //    if (hotbarSlots[i].myItem == null)
-        //    {
-        //        if (Inventory.instance.Hotbar_Slot[i] != null)
-        //        {
-        //            var tempItem = Inventory.instance.Hotbar_Slot[i];
-        //            Debug.Log(tempItem.name);
-        //
-        //            if (itemSet.Length > i && itemSet[i] == null)
-        //            {
-        //                itemSet[i] = Instantiate(itemPrefab, hotbarSlots[i].transform);
-        //                itemSet[i].Initialize(tempItem, hotbarSlots[i]);
-        //                return; // 아이템을 배치했으므로 종료
-        //            }
-        //        }
-        //    }
-        //}
+         //Hotbar 슬롯에서 빈 슬롯을 찾아 아이템 배치
+        for (int i = 0; i < hotbarSlots.Length; i++)
+        {
+            if (hotbarSlots[i].myItem == null)
+            {
+                if (Inventory.instance.Hotbar_Slot[i] != null)
+                {
+                    var tempItem = Inventory.instance.Hotbar_Slot[i];
+                    //Debug.Log(tempItem.name);
+        
+                    if (hotitemSet.Length > i && hotitemSet[i] == null)
+                    {
+                        hotitemSet[i] = Instantiate(itemPrefab, hotbarSlots[i].transform);
+                        hotitemSet[i].Initialize(tempItem, hotbarSlots[i]);
+                        return; // 아이템을 배치했으므로 종료
+                    }
+                }
+            }
+        }
 
+
+        //아마도 itemset에 대한 처리 필요
         // Inventory 슬롯에서 빈 슬롯을 찾아 아이템 배치
         for (int i = 0; i < inventorySlots.Length; i++)
         {
@@ -177,6 +181,7 @@ public class InventoryUI : MonoBehaviour
         {
             if(inv[i] != null)
             {
+                //Debug.Log("invindex : " + i);
                 SpawnCollidedItem(inv[i]); 
             }
 
