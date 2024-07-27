@@ -15,19 +15,13 @@ public class Entity_Humanoid_Control : MonoBehaviour
     [SerializeField] private GameObject target;
 
     private Quaternion target_rotation;
-    private float cursor_h, cursor_v, key_h, key_v;
-    private float cursor_x = 0f;
-    private float cursor_y = 0f;
-    private float temp_y = 0f;
+    private float key_h, key_v;
 
     private float speed_h;
     private float speed_v;
 
     private float jump_height = 1f; // player_data에서 가져오기
     private float gravity_velocity = 0f;
-
-    private float input_cursor_h;
-    private float input_cursor_v;
 
     private float input_key_h = 0f;
     private float input_key_v;
