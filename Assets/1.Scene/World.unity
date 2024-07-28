@@ -296,13 +296,13 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 10000
+  m_Intensity: 50000
   m_Range: 10000
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -330,7 +330,7 @@ Light:
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -688,7 +688,7 @@ MonoBehaviour:
   day: {r: 0, g: 0.8893428, b: 1, a: 0}
   night: {r: 0, g: 0.26948595, b: 1, a: 0}
   clouds: {fileID: 1393693410}
-  material: {fileID: 2100000, guid: 319ed15d75f64e846983944f1aa78fbc, type: 2}
+  material: {fileID: 2100000, guid: 901a27f0d0f9d03479503bcf1aec02ac, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 731e0f5a0a9fbb44eb969ac462f475f7, type: 2}
   waterMaterial: {fileID: 2100000, guid: 0d22dda3e545ca14086680a4aacdac91, type: 2}
   blockTypes:
