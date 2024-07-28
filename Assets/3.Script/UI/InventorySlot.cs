@@ -37,7 +37,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             if(Equip_Type != Equipment_Type.NONE && Inven.carriedItem.equip_type != Equip_Type) return;
 
             
-            Debug.Log("Clicked slot index: " + Inven.carriedItem.name);
+            //Debug.Log("Clicked slot index: " + Inven.carriedItem.name);
 
             SetItem(Inven.carriedItem);
         }
@@ -53,8 +53,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         //아이템들 사용 하는 것 >> 핫바에 대한 처리 해야함 >> 핫바 처리 완료, 다음 할 건 핫바에서도 활성화 칸 근데 문제는 무기때문에 어찌해야 할지 모르겠네 >> 이것도 나중에 생각해보자 >>
         //
 
-       
+
         //int oldSlotIndex = -1;
+        bool isInHotBar = false;
+        bool isInHotBarNew = false;
         bool isInEquip = false; //나중에 쓸 무언가
         bool isInEquipNew = false;
         
@@ -63,7 +65,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         int oldSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, Inven.carriedItem.activeSlot);
         if (oldSlotIndex != -1)
         {
+            //Debug.Log("핫바 인덱스 : " + oldSlotIndex);
             //나중에 지울거야 수벌
+            isInHotBar = true;
         }
         else
         {
@@ -78,7 +82,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         }
         //개쓰레기 논리이긴 한데 머리가 안돌아가요
-        Debug.Log("oldSlotIndex" + oldSlotIndex);
+        //Debug.Log("oldSlotIndex" + oldSlotIndex);
 
 
         // 새로운 슬롯의 인덱스를 저장
@@ -86,7 +90,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         if (newSlotIndex != -1)
         {
-            
+            //Debug.Log("핫바 인덱스new : " + newSlotIndex);
+            isInHotBarNew = true;
         }
         else
         {
@@ -111,7 +116,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
                 
 
 
-                Debug.Log("장비칸~~~" + newSlotIndex);
+                //Debug.Log("장비칸~~~" + newSlotIndex);
 
 
 
@@ -119,7 +124,11 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
         }
 
-        Debug.Log("newSlotIndex" + newSlotIndex);
+        //
+        //
+        //
+        //
+        //("newSlotIndex" + newSlotIndex);
 
         Inven.carriedItem = null;
 
@@ -136,12 +145,25 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         myItem.transform.SetParent(transform);
         myItem.canvasGroup.blocksRaycasts = true;
 
-        //Swap
+        if (!isInHotBar && !isInEquip)
+        {
+            oldSlotIndex += Inven.hotbarSlots.Length;
+            //Debug.Log(oldSlotIndex);
+        }
 
+        if (!isInHotBarNew && !isInEquipNew)
+        {
+            newSlotIndex += Inven.hotbarSlots.Length;
+            //Debug.Log(newSlotIndex);
+        }
+
+        //Swap
+        //아 또 멍청한 실수 했다
         if (isInEquip != isInEquipNew)
         {
             if (!isInEquip && isInEquipNew)
             {
+                
                 // isInEquip는 false이고 isInEquipNew는 true인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.Equipment_Slot[newSlotIndex]);
 
@@ -161,6 +183,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             else
             {
+
+                
+
                 // isInEquip와 isInEquipNew가 모두 false인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
             }

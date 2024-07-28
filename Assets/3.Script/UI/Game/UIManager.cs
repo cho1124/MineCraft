@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -72,7 +73,7 @@ public class UIManager : MonoBehaviour
         // 지정된 슬롯에 아이템이 있는지 확인합니다
         if (slots[index].myItem != null)
         {
-            Debug.Log("removesetSlots : " + index);
+            //Debug.Log("removesetSlots : " + index);
 
             // itemSet에서 지정된 인덱스에 아이템이 있는지 확인합니다
             if (itemSet.Length > index && itemSet[index] != null)
@@ -93,7 +94,7 @@ public class UIManager : MonoBehaviour
             return true;
         }
 
-        Debug.Log("bugbugbug");
+        //Debug.Log("bugbugbug");
         return false; // 아이템 제거 실패를 반환
     }
 

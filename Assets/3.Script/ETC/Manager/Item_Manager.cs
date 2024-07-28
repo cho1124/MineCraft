@@ -34,10 +34,7 @@ public static class Item_Dictionary
             item_dictionary[item_ID].item_model_in_inv = Resources.Load<Sprite>(item_dictionary[item_ID].item_model_in_inventory);
 
         }
-        else
-        {
-            Debug.LogWarning($"Item ID {item_ID} already exists in the dictionary.");
-        }
+        
     }
 
 }
@@ -64,10 +61,7 @@ public class Item_Manager : MonoBehaviour
         ItemData itemData = JsonConvert.DeserializeObject<ItemData>(jsonString);
 
 
-        Debug.Log("consume : " + itemData.consumableItems[0].item_name);
-        Debug.Log("place : " + itemData.placeableItems.Count);
-        Debug.Log("equipmentitemcount : " + itemData.equipmentItems.Count);
-
+        
         // 파싱된 데이터 사용 예제
 
         Dic_Add(itemData.stackableItems);
@@ -80,16 +74,25 @@ public class Item_Manager : MonoBehaviour
 
         //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
-        SpawnItem(TestKey, transform.position);
+        //SpawnItem(TestKey, transform.position);
     }
 
     void Start()
     {
-        for(int i = 0; i < 400; i++)
+
+        SpawnItem(309, transform.position);
+
+        for(int i = 0; i < 300; i++)
         {
-            SpawnItem(i, transform.position);
+            SpawnItem(262, transform.position);
         }
 
+    }
+
+
+    private void Update()
+    {
+        
     }
 
     public void SetLayerToItem(GameObject obj, string layer)
@@ -100,7 +103,7 @@ public class Item_Manager : MonoBehaviour
         if (itemLayer != -1)
         {
             obj.layer = itemLayer;
-            Debug.Log($"{obj.name} layer set to {layer}");
+            
         }
         else
         {
@@ -159,7 +162,7 @@ public class Item_Manager : MonoBehaviour
     {
         foreach (var item in stackableItems)
         {
-            Debug.Log("SADAUSHVUC : " + item.item_name);
+            //Debug.Log("SADAUSHVUC : " + item.item_name);
 
 
 
@@ -174,7 +177,7 @@ public class Item_Manager : MonoBehaviour
     {
         foreach (var item in consumableItems)
         {
-            Debug.Log("Consumable Item Name: " + item.item_name);
+            //Debug.Log("Consumable Item Name: " + item.item_name);
 
             Item_Dictionary.Add(item.item_ID, item);
 
@@ -186,7 +189,7 @@ public class Item_Manager : MonoBehaviour
 
         foreach (var item in placeableItems)
         {
-            Debug.Log("Placeable Item Name: " + item.item_name);
+            //Debug.Log("Placeable Item Name: " + item.item_name);
 
             Item_Dictionary.Add(item.item_ID, item);
         }
@@ -198,7 +201,7 @@ public class Item_Manager : MonoBehaviour
     {
         foreach (var item in equipmentItems)
         {
-            Debug.Log("Equipment Item ID: " + item.item_ID);
+            //Debug.Log("Equipment Item ID: " + item.item_ID);
 
             // equipment_type에 따라 열거형 값을 설정
             EquipmentItem equipmentItem = item;
@@ -208,21 +211,7 @@ public class Item_Manager : MonoBehaviour
                 equipmentItem.Weapon_Type = ParseWeaponType(equipmentItem.equipment_type);
                 equipmentItem.Armor_Type = ParseArmorType(equipmentItem.equipment_type);
 
-                if (equipmentItem.Weapon_Type.HasValue)
-                {
-                    if (equipmentItem.Weapon_Type == Equipment_Weapon_Type.BOW) Debug.Log($"Weapon Item: {equipmentItem.item_name}, draw_power: {equipmentItem.draw_power}, draw_speed: {equipmentItem.draw_speed}, aim_accuracy: {equipmentItem.aim_accuracy}");
-                    // 무기 속성 설정
-                    else Debug.Log($"Weapon Item: {equipmentItem.item_name}, Damage: {equipmentItem.melee_damage}, Speed: {equipmentItem.melee_speed}, Guard Rate: {equipmentItem.guard_rate}, Tool Tier: {equipmentItem.tool_tier}");
-                }
-                else if (equipmentItem.Armor_Type.HasValue)
-                {
-                    // 방어구 속성 설정
-                    Debug.Log($"Armor Item: {equipmentItem.item_name}, Defense: {equipmentItem.armor_defense}");
-                }
-                else
-                {
-                    Debug.LogWarning($"Unknown equipment type: {equipmentItem.equipment_type}");
-                }
+                
             }
 
             Item_Dictionary.Add(item.item_ID, item);

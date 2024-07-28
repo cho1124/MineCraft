@@ -4,6 +4,12 @@ using System.Collections.Generic;
 public class ItemComponent : MonoBehaviour
 {
     private int itemID;
+    public int ItemID
+    {
+        get => itemID;
+        
+        
+    }
     
     private string itemName;
     public Sprite itemIcon;
@@ -134,6 +140,7 @@ public class ItemComponent : MonoBehaviour
     {
         return SetType;
     }
+
 
     public bool Check_Full()
     {

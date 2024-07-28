@@ -29,21 +29,10 @@ public class Inventory : MonoBehaviour
         instance = this;
     }
 
-    private int slotCount;
-
-    public int SlotCount
-    {
-        get => slotCount;
-
-        set
-        {
-            slotCount = value;
-
-        }
-    }
+    
 
     /// <summary>
-    /// hotbar -> inven -> 그 다음에 자유롭게 이동 가능 -> 추가로 equipment는 ㅁㄴ엄녀온먀ㅕ온ㅁ어
+    /// hotbar -> inven -> 그 다음에 자유롭게 이동 가능
     /// </summary>
     /// <param name="item"></param>
 
@@ -57,12 +46,12 @@ public class Inventory : MonoBehaviour
                 inv_Slot[i] = item;
                 item.transform.SetParent(Inventory_obj);
                 item.gameObject.SetActive(false);
-                Debug.Log(inv_Slot[i].StackCurrent);
+                
                 ChangeEvent();
 
                 return;
             }
-            else if (inv_Slot[i].Get_Type() == item.Get_Type() && inv_Slot[i].Get_Type() != 4) //4가 뭐였지
+            else if (inv_Slot[i].ItemID == item.ItemID && inv_Slot[i].Get_Type() != 4)
             {
                 while (item.StackCurrent > 0 && inv_Slot[i].Check_Full())
                 {
@@ -70,7 +59,7 @@ public class Inventory : MonoBehaviour
                     //inv_Slot[i].StackCurrent++;
                     if (item.StackCurrent == 0)
                     {
-                        Debug.Log(inv_Slot[i].StackCurrent);
+                        Debug.Log($"{i}번 슬롯의 현재 스택 카운트 : " + inv_Slot[i].StackCurrent);
 
                         item.transform.SetParent(Inventory_obj);
                         item.gameObject.SetActive(false);

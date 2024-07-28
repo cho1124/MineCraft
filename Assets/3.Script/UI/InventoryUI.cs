@@ -6,7 +6,7 @@ public class InventoryUI : MonoBehaviour
 {
     
     public InventoryItem carriedItem;
-    private Item_Manager itemManager;
+   
 
     [SerializeField] public InventorySlot[] inventorySlots; //1번 슬롯 배열
     [SerializeField] public InventorySlot[] hotbarSlots; //2번 슬롯 배열
@@ -36,7 +36,7 @@ public class InventoryUI : MonoBehaviour
         UIManager = GetComponentInParent<UIManager>();
         if(UIManager == null)
         {
-            Debug.Log("조영준 ㅈㄴ 멍청이");
+            Debug.LogError("UI없음");
         }
 
 
@@ -51,7 +51,7 @@ public class InventoryUI : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("개똥멍청이조영준" + Item_Dictionary.item_dictionary.Count);
+        
         Add_All_Item();
 
       
@@ -75,13 +75,36 @@ public class InventoryUI : MonoBehaviour
     {
         if (carriedItem != null)
         {
-            if (item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type) return;
+            if (item.activeSlot != null && item.activeSlot.myItem != null && item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type) return;
             item.activeSlot.SetItem(carriedItem);
         }
 
-        if (item.activeSlot.myItem.equip_type != Equipment_Type.NONE)
+        if (item != null &&
+            item.activeSlot != null &&
+            item.activeSlot.myItem != null &&
+            item.activeSlot.myItem.equip_type != Equipment_Type.NONE)
         {
             EquipEquipment(item.activeSlot.Equip_Type, null);
+        }
+        else
+        {
+            // 어느 부분에서 null이 발생했는지 디버그 로그 추가
+            if (item == null)
+            {
+                Debug.LogError("Item is null.");
+            }
+            else if (item.activeSlot == null)
+            {
+                Debug.LogError("item.activeSlot is null.");
+            }
+            else if (item.activeSlot.myItem == null)
+            {
+                Debug.LogError("item.activeSlot.myItem is null.");
+            }
+            else if (item.activeSlot.myItem.equip_type == Equipment_Type.NONE)
+            {
+                Debug.LogError("item.activeSlot.myItem.equip_type is NONE.");
+            }
         }
 
         carriedItem = item;
@@ -96,7 +119,7 @@ public class InventoryUI : MonoBehaviour
             case Equipment_Type.HELMET:
                 if (item == null)
                 {
-                    Debug.Log("Unequipped helmet on " + tag);
+                    //나중에 할거야 이건
                 }
                 else
                 {
@@ -129,7 +152,7 @@ public class InventoryUI : MonoBehaviour
             if(Inventory.instance.inv_Slot[i] != null)
             {
                 var tempItem = Inventory.instance.inv_Slot[i];
-                Debug.Log("Tlqkf" + tempItem.name);
+                
 
                 if (i < hotbarSlots.Length)
                 {

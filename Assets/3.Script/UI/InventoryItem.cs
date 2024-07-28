@@ -9,6 +9,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
 {
     Image itemIcon;
     InventoryUI Inven;
+    Text itemCount;
 
     public Equipment_Type equip_type = Equipment_Type.NONE;
    
@@ -24,6 +25,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         canvasGroup = GetComponent<CanvasGroup>();
         itemIcon = GetComponent<Image>();
         Inven = GetComponentInParent<InventoryUI>();
+        itemCount = GetComponentInChildren<Text>();
     }
 
     public void Initialize(Item item, InventorySlot parent)
@@ -42,7 +44,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        Debug.Log("Init : " + itemComponent.itemIcon);
+        
 
         activeSlot = parent;
         activeSlot.myItem = this;
@@ -55,6 +57,16 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         //equip_type = 
         this.itemComponent = itemComponent;
         itemIcon.sprite = itemComponent.itemIcon;
+
+        if (itemComponent.StackCurrent <= 1)
+        {
+            itemCount.gameObject.SetActive(false);
+        }
+        else
+        {
+            itemCount.gameObject.SetActive(true); //!!!!!!
+            itemCount.text = $"{itemComponent.StackCurrent}";
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
