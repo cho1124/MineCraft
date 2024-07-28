@@ -83,19 +83,14 @@ public class Item_Manager : MonoBehaviour
     {
 
         //SpawnItem(309, transform.position);
-        //
-        //for(int i = 0; i < 300; i++)
-        //{
-        //    SpawnItem(262, transform.position);
-        //}
-
-    }
-
-
-    private void Update()
-    {
         
+        for(int i = 200; i < 400; i++)
+        {
+            SpawnItem(i, transform.position);
+        }
+
     }
+
 
     public void SetLayerToItem(GameObject obj, string layer)
     {
@@ -113,6 +108,15 @@ public class Item_Manager : MonoBehaviour
         }
     }
 
+    public void SetItem(byte destroyedBlockID, Vector3 destroyPos, World world)
+    {
+        GameObject popObjectInstance = SpawnItem(destroyedBlockID, destroyPos);
+
+        PopObject popObject = popObjectInstance.GetComponent<PopObject>();
+
+  
+        popObject.Initialize(world, destroyPos, destroyedBlockID);
+    }
 
     public GameObject SpawnItem(int itemID, Vector3 position)
     {

@@ -34,23 +34,29 @@ public class PopObject : MonoBehaviour
         transform.position = position;
 
         // Initialize MeshFilter and MeshRenderer here
-        meshFilter = gameObject.GetComponent<MeshFilter>();
-        if (meshFilter == null)
-        {
-            meshFilter = gameObject.AddComponent<MeshFilter>();
-        }
-
-        meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        if (meshRenderer == null)
-        {
-            meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        }
-
-        transform.GetComponent<ItemComponent>();
         
 
+        //transform.GetComponent<ItemComponent>();
+        
+        if(blockID < 200)
+        {
+            meshFilter = gameObject.GetComponent<MeshFilter>();
+            if (meshFilter == null)
+            {
+                meshFilter = gameObject.AddComponent<MeshFilter>();
+            }
 
-        ApplyBlockMeshAndTexture(blockID);
+            meshRenderer = gameObject.GetComponent<MeshRenderer>();
+            if (meshRenderer == null)
+            {
+                meshRenderer = gameObject.AddComponent<MeshRenderer>();
+            }
+
+            ApplyBlockMeshAndTexture(blockID);
+        }
+
+
+        
 
         JumpAnimation();
     }

@@ -290,11 +290,12 @@ public class Player : MonoBehaviour
 
                     //GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject"); //찾았다 내사랑, 아이템 매니저의 spawnitem이랑 연동하면 끝
 
-                    GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
-
-                    PopObject popObject = popObjectInstance.GetComponent<PopObject>();
-
-                    popObject.Initialize(world, destroyPos, destroyedBlockID);
+                    itemManager.SetItem(destroyedBlockID, destroyPos, world);
+                    //GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
+                    //
+                    //PopObject popObject = popObjectInstance.GetComponent<PopObject>();
+                    //
+                    //popObject.Initialize(world, destroyPos, destroyedBlockID);
                 }
 
 
