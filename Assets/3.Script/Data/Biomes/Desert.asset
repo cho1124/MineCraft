@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d558f66af23a2be4ba5ca2c4b4aab347, type: 3}
+  m_Name: Desert
+  m_EditorClassIdentifier: 
+  biomeName: Desert
+  offset: 87544
+  scale: 0.17
+  terrainHeight: 64
+  terrainScale: 0.25
+  surfaceBlock: 4
+  subSurfaceBlock: 4
+  majorFloraIndex: 1
+  majorFloraZoneScale: 1.3
+  majorFloraZoneThreshold: 0.3
+  majorFloraPlacementScale: 5
+  majorFloraPlacementThreshold: 0.955
+  placeMajorFlora: 1
+  maxHeight: 4
+  minHeight: 2
+  lodes:
+  - nodeName: Sand
+    blockID: 4
+    minHeight: 1
+    maxHeight: 255
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 0
+    isSolid: 1
+  - nodeName: Air
+    blockID: 0
+    minHeight: 1
+    maxHeight: 255
+    scale: 1
+    threshold: 0.5
+    noiseOffset: 50
+    isSolid: 0
+  - nodeName: Dirt
+    blockID: 5
+    minHeight: 30
+    maxHeight: 60
+    scale: 0.1
+    threshold: 0.5
+    noiseOffset: 2
+    isSolid: 1
+  - nodeName: Coal
+    blockID: 12
+    minHeight: 1
+    maxHeight: 120
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 4
+    isSolid: 1
+  - nodeName: Copper
+    blockID: 13
+    minHeight: 1
+    maxHeight: 120
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 232
+    isSolid: 1
+  - nodeName: Iron
+    blockID: 14
+    minHeight: 1
+    maxHeight: 120
+    scale: 0.2
+    threshold: 0.5
+    noiseOffset: 5512215
+    isSolid: 1
