@@ -38,14 +38,14 @@ public class Test1 : MonoBehaviour
             // Monster 또는 Animals 태그를 가진 오브젝트인지 확인
             if (currentCollider.gameObject.CompareTag("Monster") || currentCollider.gameObject.CompareTag("Animals")) {
                 // Health 컴포넌트 가져오기
-                Entity entity = currentCollider.GetComponent<Entity>();
-                if (entity != null) {
-                    // HP를 100 감소시키기
-                    Debug.Log("플레이어 무기로 공격당함");
-                    entity.TakeDamage(100);
-                    Debug.Log($"{entity.name} 를 때림");
-
-                }
+                //Entity entity = currentCollider.GetComponent<Entity>();
+                //if (entity != null) {
+                //    // HP를 100 감소시키기
+                //    Debug.Log("플레이어 무기로 공격당함");
+                //    entity.TakeDamage(100);
+                //    Debug.Log($"{entity.name} 를 때림");
+                //
+                //}
             }
             currentCollider = null;
         }
