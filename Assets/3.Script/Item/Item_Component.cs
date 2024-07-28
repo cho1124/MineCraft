@@ -131,6 +131,12 @@ public class ItemComponent : MonoBehaviour
         SetType = 4;
     }
 
+    public void Initialize(BlockType item)
+    {
+
+    }
+
+
     public void DestroyItem()
     {
         gameObject.SetActive(false);

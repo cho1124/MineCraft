@@ -20,6 +20,12 @@ public class InventoryOnOff : MonoBehaviour
 
             //
             on_off_obj.SetActive(on_off_tr); // 인벤토리 UI ON, OFF 기능
+
+            if(on_off_tr)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+
         }
     }
 }

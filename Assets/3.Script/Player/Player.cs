@@ -65,12 +65,20 @@ public class Player : MonoBehaviour
     public GameObject ui_furnance;
     //--------------UI end---------------------//
 
+    //조영준 커스텀 시작
+    private Item_Manager itemManager;
+
 
     // 초기화
     private void Start()
     {
         cam = GameObject.Find("Main Camera").transform;
         world = GameObject.Find("World").GetComponent<World>();
+        itemManager = FindObjectOfType<Item_Manager>();
+        if(itemManager == null)
+        {
+            //Debug.LogError("Fuck");
+        }
 
         UIInit();
 
@@ -274,9 +282,16 @@ public class Player : MonoBehaviour
                     Vector3 destroyPos = highlightBlock.position;
                     byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
 
-                    GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject");
+                    if(destroyedBlockID == 3)
+                    {
+                        destroyedBlockID = 5;
+                    }
 
-                    GameObject popObjectInstance = Instantiate(popObjectPrefab, destroyPos, Quaternion.identity);
+
+                    //GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject"); //찾았다 내사랑, 아이템 매니저의 spawnitem이랑 연동하면 끝
+
+                    GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
+
                     PopObject popObject = popObjectInstance.GetComponent<PopObject>();
 
                     popObject.Initialize(world, destroyPos, destroyedBlockID);
@@ -322,6 +337,9 @@ public class Player : MonoBehaviour
             return;
         }
     }
+
+    
+
 
     // 떨어지는거 계산
     private float CheckDownSpeed(float downSpeed)

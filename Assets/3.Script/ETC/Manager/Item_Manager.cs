@@ -72,6 +72,8 @@ public class Item_Manager : MonoBehaviour
 
         Dic_Add(itemData.equipmentItems);
 
+        Dic_Add(itemData.blockTypes);
+
         //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
         //SpawnItem(TestKey, transform.position);
@@ -80,12 +82,12 @@ public class Item_Manager : MonoBehaviour
     void Start()
     {
 
-        SpawnItem(309, transform.position);
-
-        for(int i = 0; i < 300; i++)
-        {
-            SpawnItem(262, transform.position);
-        }
+        //SpawnItem(309, transform.position);
+        //
+        //for(int i = 0; i < 300; i++)
+        //{
+        //    SpawnItem(262, transform.position);
+        //}
 
     }
 
@@ -112,7 +114,7 @@ public class Item_Manager : MonoBehaviour
     }
 
 
-    public void SpawnItem(int itemID, Vector3 position)
+    public GameObject SpawnItem(int itemID, Vector3 position)
     {
         if (Item_Dictionary.item_dictionary.ContainsKey(itemID))
         {
@@ -122,6 +124,8 @@ public class Item_Manager : MonoBehaviour
                 GameObject spawnedItem = Instantiate(itemPrefab, position, Quaternion.identity);
                 SetLayerToItem(spawnedItem, "Item");
                 ItemComponent itemComponent = spawnedItem.AddComponent<ItemComponent>();
+                
+                //PopObject pop = spawnedItem.AddComponent<PopObject>();
 
                 Original_Item itemData = Item_Dictionary.item_dictionary[itemID];
                 if (itemData is ConsumableItem consumableItem)
@@ -144,17 +148,22 @@ public class Item_Manager : MonoBehaviour
                 {
                     Debug.LogWarning($"Å¸ÀÔÀÌ ¹ºÁö ¸ð¸£°Ú¾îÀ× {itemID}.");
                 }
+                return spawnedItem;
+
 
             }
             else
             {
                 Debug.LogWarning($"Item ID {itemID} ÇÁ¸®ÆÕ ¾ø¾îÀ×");
+                return null;
             }
         }
         else
         {
             Debug.LogWarning($"Item ID {itemID} ¾ø¾îÀ×");
+            return null;
         }
+
     }
 
 
@@ -217,6 +226,12 @@ public class Item_Manager : MonoBehaviour
             Item_Dictionary.Add(item.item_ID, item);
         }
     }
+
+    private void Dic_Add(List<BlockType> blockTypes)
+    {
+
+    }
+
 
     //enum parse °³ÆíÇÑ °Í
     private Equipment_Weapon_Type? ParseWeaponType(string type)
@@ -351,4 +366,6 @@ public class ItemData
     public List<ConsumableItem> consumableItems { get; set; }
     public List<PlaceableItem> placeableItems { get; set; }
     public List<EquipmentItem> equipmentItems { get; set; }
+
+    public List<BlockType> blockTypes { get; set; }
 }

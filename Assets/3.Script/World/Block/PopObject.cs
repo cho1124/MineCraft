@@ -46,6 +46,8 @@ public class PopObject : MonoBehaviour
             meshRenderer = gameObject.AddComponent<MeshRenderer>();
         }
 
+        transform.GetComponent<ItemComponent>();
+        
 
 
         ApplyBlockMeshAndTexture(blockID);
