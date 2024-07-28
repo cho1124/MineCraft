@@ -87,6 +87,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         // 새로운 슬롯의 인덱스를 저장
         int newSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, this);
+        Debug.Log("new hot bat slot" + newSlotIndex);
 
         if (newSlotIndex != -1)
         {
@@ -166,6 +167,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
                 
                 // isInEquip는 false이고 isInEquipNew는 true인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.Equipment_Slot[newSlotIndex]);
+                
 
             }
             else if (isInEquip && !isInEquipNew)
@@ -188,6 +190,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
                 // isInEquip와 isInEquipNew가 모두 false인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
+                
             }
         }
 
@@ -212,6 +215,14 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         New_Item = temp;
 
     }
+
+    private void Swap(ref InventorySlot oldSlot, ref InventorySlot newSlot)
+    {
+        InventorySlot temp = oldSlot;
+        oldSlot = newSlot;
+        newSlot = temp;
+    }
+
 
    public void CheckCurrentSlot()
     {

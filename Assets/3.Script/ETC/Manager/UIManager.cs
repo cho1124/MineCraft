@@ -6,15 +6,10 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    //일단 테스트용이니까 체력 경험치 등등등 전부 플레이어에 맞춰서 이벤트로 등록해놓으시면 될듯합니다.
-    
     public InventorySlot[] HotBarSlots;
-    //public Inventory inventory; //이 부분이 조금 애매한데, 몬스터 인벤토리가 있다고 가정했을 때 Find를 사용할때 문제가 될수 있어서 임시로 직접참조 때려 넣을게요
 
     [SerializeField] private InventoryItem[] hotitemSet;
     [SerializeField] private InventoryItem itemPrefab;
-
 
     private void Awake()
     {
@@ -23,27 +18,42 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        //Inventory.instance.OnHotBarChanged += InitHotBar;
-        Inventory.instance.OnHotBarChanged += SetHotBar;
-        
+        if (Inventory.instance != null)
+        {
+            Inventory.instance.OnHotBarChanged += SetHotBar;
+        }
+        else
+        {
+            Debug.LogError("Inventory instance is null. Ensure that Inventory is properly initialized.");
+        }
     }
 
     private void SetHotBar()
     {
+        Debug.Log("HotBarChanged");
+
         for (int i = 0; i < HotBarSlots.Length; i++)
         {
-            // 핫바 슬롯에 아이템이 있고, 인벤토리 슬롯에 아이템이 없는 경우 제거
-            if (HotBarSlots[i] != null && Inventory.instance.inv_Slot[i] == null)
+            if (HotBarSlots[i] == null)
             {
-                
-                if (TryRemoveItem(HotBarSlots, hotitemSet, i, out InventoryItem removedItem))
-                {
-                    // 필요에 따라 제거된 후의 추가 작업, 아마 아이템 버리기가 여기서 하지 않을까?
-                }
+                Debug.LogWarning($"HotBarSlot at index {i} is null.");
+                continue;
             }
 
-            // 인벤토리 슬롯에 아이템이 있는 경우 배치
-            if (Inventory.instance.inv_Slot[i] != null)
+            if (Inventory.instance.inv_Slot == null)
+            {
+                Debug.LogError("Inventory slots are null. Ensure that inv_Slot array is initialized.");
+                return;
+            }
+
+            if (Inventory.instance.inv_Slot[i] == null)
+            {
+                if (HotBarSlots[i].myItem != null)
+                {
+                    TryRemoveItem(HotBarSlots, hotitemSet, i, out InventoryItem removedItem);
+                }
+            }
+            else
             {
                 var tempItem = Inventory.instance.inv_Slot[i];
                 TryPlaceItem(HotBarSlots, hotitemSet, i, tempItem, itemPrefab);
@@ -53,51 +63,39 @@ public class UIManager : MonoBehaviour
 
     public bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem, InventoryItem itemPrefab)
     {
-        if (slots[index].myItem == null)
+        if (index >= slots.Length || index >= itemSet.Length)
         {
-            if (itemSet.Length > index && itemSet[index] == null)
-            {
-                itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
-                itemSet[index].Initialize(tempItem, slots[index]);
-                return true; // 아이템을 배치했으므로 true 반환
-            }
+            Debug.LogError($"Index {index} is out of range for slots or itemSet array.");
+            return false;
         }
-        return false; // 아이템 배치 실패
+
+        if (slots[index].myItem == null && itemSet[index] == null)
+        {
+            itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
+            itemSet[index].Initialize(tempItem, slots[index]);
+            return true;
+        }
+        return false;
     }
 
     public bool TryRemoveItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, out InventoryItem removedItem)
     {
-        // out 매개변수를 초기화합니다
         removedItem = null;
 
-        // 지정된 슬롯에 아이템이 있는지 확인합니다
-        if (slots[index].myItem != null)
+        if (index >= slots.Length || index >= itemSet.Length)
         {
-            //Debug.Log("removesetSlots : " + index);
-
-            // itemSet에서 지정된 인덱스에 아이템이 있는지 확인합니다
-            if (itemSet.Length > index && itemSet[index] != null)
-            {
-                // itemSet에서 아이템을 가져옵니다
-                removedItem = itemSet[index];
-
-                // itemSet과 슬롯에서 아이템을 제거합니다
-                itemSet[index] = null;
-                slots[index].myItem = null;
-
-                // 필요에 따라 아이템의 GameObject를 파괴합니다
-                Destroy(removedItem.gameObject);
-
-                return true; // 아이템이 성공적으로 제거됨을 반환
-            }
-
-            return true;
+            Debug.LogError($"Index {index} is out of range for slots or itemSet array.");
+            return false;
         }
 
-        //Debug.Log("bugbugbug");
-        return false; // 아이템 제거 실패를 반환
+        if (slots[index].myItem != null && itemSet[index] != null)
+        {
+            removedItem = itemSet[index];
+            itemSet[index] = null;
+            slots[index].myItem = null;
+            Destroy(removedItem.gameObject);
+            return true;
+        }
+        return false;
     }
-
-
-
 }

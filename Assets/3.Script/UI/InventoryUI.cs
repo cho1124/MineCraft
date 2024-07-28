@@ -30,8 +30,8 @@ public class InventoryUI : MonoBehaviour
     void Awake()
     {
         
-        itemSet = new InventoryItem[inventorySlots.Length];
-        hotitemSet = new InventoryItem[hotbarSlots.Length];
+        
+        
 
         UIManager = GetComponentInParent<UIManager>();
         if(UIManager == null)
@@ -45,6 +45,10 @@ public class InventoryUI : MonoBehaviour
 
     private void OnEnable()
     {
+        itemSet = new InventoryItem[inventorySlots.Length];
+        hotitemSet = new InventoryItem[hotbarSlots.Length];
+        Debug.Log("enabled");
+        //InitSlot();
         SetInventory();
     }
 
@@ -147,22 +151,32 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
+
+        
+
         for (int i = 0; i < Inventory.instance.inv_Slot.Length; i++)
         {
             if(Inventory.instance.inv_Slot[i] != null)
             {
+                Debug.Log("notnull");
                 var tempItem = Inventory.instance.inv_Slot[i];
                 
 
                 if (i < hotbarSlots.Length)
                 {
                     if (UIManager.TryPlaceItem(hotbarSlots, hotitemSet, i, tempItem, itemPrefab))
+                    {
+                        
                         return;
+                    }
                 }
                 else
                 {
                     if (UIManager.TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, tempItem, itemPrefab)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
+                    {
+
                         return;
+                    }
                 }
             }
 
@@ -185,9 +199,23 @@ public class InventoryUI : MonoBehaviour
                 //Debug.Log("invindex : " + i);
                 SpawnCollidedItem(inv[i]); 
             }
+            
 
         }
 
     }
+
+    public void InitSlot()
+    {
+        for(int i = 0; i < hotbarSlots.Length; i++)
+        {
+            hotbarSlots[i] = null;
+        }
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            inventorySlots[i] = null;
+        }
+    }
+
 
 }
