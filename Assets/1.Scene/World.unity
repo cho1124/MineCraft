@@ -3748,6 +3748,7 @@ MonoBehaviour:
   _player: {fileID: 0}
   spawnPoint: {x: 0, y: 0, z: 0}
   camera: {fileID: 576789853}
+  isWorldGenerate: 1
   biomes:
   - {fileID: 11400000, guid: 06f395524857e4b45b0d13a4a48b0a21, type: 2}
   - {fileID: 11400000, guid: b14ea4d02a18a794aa14a3bba415714c, type: 2}
@@ -17515,6 +17516,10 @@ PrefabInstance:
     - target: {fileID: 516486935395657638, guid: ea7bedb440eaa384ba3ac417edd39922, type: 3}
       propertyPath: m_Name
       value: Cube
+      objectReference: {fileID: 0}
+    - target: {fileID: 516486935395657638, guid: ea7bedb440eaa384ba3ac417edd39922, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 516486935395657641, guid: ea7bedb440eaa384ba3ac417edd39922, type: 3}
       propertyPath: m_Materials.Array.data[0]

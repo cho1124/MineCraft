@@ -23,6 +23,7 @@ public class World : MonoBehaviour
     public Player _player;
     public Vector3 spawnPoint;
     public new Camera camera;
+    public bool isWorldGenerate = true; //디버깅용
 
 
     //  ================================================== //
@@ -103,7 +104,7 @@ public class World : MonoBehaviour
     private void Awake()
     {
         if (_instance != null && _instance != this)
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         else
             _instance = this;
 
@@ -116,22 +117,34 @@ public class World : MonoBehaviour
     public WorldData worldData;
 
 
- 
-
-
     //월드 생성
     private void Start()
     {
-        spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 120f, VoxelData.WorldCenter);
+        WorldInit();
+
+    }
+
+    private void WorldInit()
+    {
+        if(isWorldGenerate)
+        {
+            spawnPoint = new Vector3(VoxelData.WorldCenter, VoxelData.ChunkHeight - 120f, VoxelData.WorldCenter); //플레이어 스폰
+        }
+        else
+        {
+            spawnPoint = Vector3.zero;
+        }
+
+        
         player.position = spawnPoint;
 
-        worldData = SaveSystem.LoadWorld("Prototype");
+        worldData = SaveSystem.LoadWorld("Prototype"); //로드
 
-        string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
+        string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg"); //세팅 읽기
         settings = JsonUtility.FromJson<Settings>(jsonImport);
 
 
-        UnityEngine.Random.InitState(settings.seed);
+        UnityEngine.Random.InitState(settings.seed); //시드적용
 
 
         Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
@@ -154,7 +167,6 @@ public class World : MonoBehaviour
 
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
         SetGlobalLightValue();
-
     }
 
     public void SetGlobalLightValue()
@@ -168,6 +180,27 @@ public class World : MonoBehaviour
 
 
     private void Update()
+    {
+        
+        if(isWorldGenerate)
+        {
+            WorldGenerate();
+        }
+
+        
+
+
+
+        if (Input.GetKeyDown(KeyCode.F1))
+            SaveSystem.SaveWorld(worldData);
+
+        if (Input.GetKeyDown(KeyCode.F3))
+            debugScreen.SetActive(!debugScreen.activeSelf);
+    
+    
+    }
+
+    private void WorldGenerate()
     {
         playerChunkCoord = GetChunkCoordFromVector3(player.position);
 
@@ -209,17 +242,9 @@ public class World : MonoBehaviour
 
 
         }
-
-
-
-        if (Input.GetKeyDown(KeyCode.F1))
-            SaveSystem.SaveWorld(worldData);
-
-        if (Input.GetKeyDown(KeyCode.F3))
-            debugScreen.SetActive(!debugScreen.activeSelf);
-    
-    
     }
+
+
 
 
     public void AddChunkToUpdate(Chunk chunk)

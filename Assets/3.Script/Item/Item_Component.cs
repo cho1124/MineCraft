@@ -19,7 +19,9 @@ public class ItemComponent : MonoBehaviour
         get => stackCurrent;
         set
         {
+            
             stackCurrent = Mathf.Clamp(value, 0, stackMax);
+            
         }
 
     }

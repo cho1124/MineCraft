@@ -73,10 +73,10 @@ public class Entity_Humanoid : Entity
                 R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
             }
 
-            if ()
-            {
-
-            }
+            //if ()
+            //{
+            //
+            //}
 
             switch (animator.GetInteger("Moveset_Number"))
             {

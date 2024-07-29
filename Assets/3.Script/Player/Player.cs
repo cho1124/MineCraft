@@ -63,6 +63,8 @@ public class Player : MonoBehaviour
     public GameObject ui_craftTable;
     public GameObject ui_chest;
     public GameObject ui_furnance;
+    
+    private ItemComponent[] inventorySlots; //사용할 인덱스는 0부터 8까지
     //--------------UI end---------------------//
 
     //조영준 커스텀 시작
@@ -73,9 +75,12 @@ public class Player : MonoBehaviour
     private void Start()
     {
         cam = GameObject.Find("Main Camera").transform;
-        world = GameObject.Find("World").GetComponent<World>();
+        //world = GameObject.Find("World").GetComponent<World>();
+        world = FindAnyObjectByType<World>();
         itemManager = FindObjectOfType<Item_Manager>();
-        if(itemManager == null)
+        
+        inventorySlots = GetComponent<Inventory>().inv_Slot;
+        if (itemManager == null)
         {
             //Debug.LogError("Fuck");
         }
@@ -240,98 +245,25 @@ public class Player : MonoBehaviour
             vertical = Input.GetAxis("Vertical");
             mouseHorizontal = Input.GetAxis("Mouse X");
             mouseVertical = Input.GetAxis("Mouse Y");
-
-
-
+            
+            
+            
             if (Input.GetKeyDown(KeyCode.Escape))
                 Application.Quit();
-
-
-
+            
+            
+            
             if (Input.GetButtonDown("Sprint"))
                 isSprinting = true;
             if (Input.GetButtonUp("Sprint"))
                 isSprinting = false;
-
+            
             if (isGrounded && Input.GetButtonDown("Jump"))
                 jumpRequest = true;
 
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-            if (scroll != 0)
-            {
-                if (scroll > 0)
-                    selectedBlockIndex++;
-                else
-                    selectedBlockIndex--;
+            //CreativeScroll();
 
-                if (selectedBlockIndex > (byte)(world.blockTypes.Length - 1))
-                    selectedBlockIndex = 1;
-                if (selectedBlockIndex < 1)
-                    selectedBlockIndex = (byte)(world.blockTypes.Length - 1);
-
-                selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " block selected";
-            }
-
-            if (highlightBlock.gameObject.activeSelf)
-            {
-
-
-                // 블록 파괴 Destroy block
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Vector3 destroyPos = highlightBlock.position;
-                    byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
-
-                    if(destroyedBlockID == 3)
-                    {
-                        destroyedBlockID = 5;
-                    }
-
-
-                    //GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject"); //찾았다 내사랑, 아이템 매니저의 spawnitem이랑 연동하면 끝
-
-                    itemManager.SetItem(destroyedBlockID, destroyPos, world);
-                    //GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
-                    //
-                    //PopObject popObject = popObjectInstance.GetComponent<PopObject>();
-                    //
-                    //popObject.Initialize(world, destroyPos, destroyedBlockID);
-                }
-
-
-
-
-                // 블록 배치 Place block
-                if (Input.GetMouseButtonDown(1))
-                {
-                    switch(world.GetChunkFromVector3(highlightBlock.position).CheckBlockID(highlightBlock.position))
-                    {
-                        // chest
-                        case 16:
-                            ui_chest.SetActive(true);
-                            break;
-
-                        // Furnance
-                        case 18:
-                            ui_furnance.SetActive(true);
-                            break;
-
-                        // craftTable
-                        case 19:
-                            ui_craftTable.SetActive(true);
-                            break;
-                        default:
-                            world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlockIndex);
-                            break;
-                    }
-
-
-
-                }
-
-
-
-            }
+            InvenScroll();
         }
         else
         {
@@ -339,7 +271,179 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+    private void CreativeScroll()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
+        {
+            if (scroll > 0)
+                selectedBlockIndex++;
+            else
+                selectedBlockIndex--;
+
+            if (selectedBlockIndex > (byte)(world.blockTypes.Length - 1))
+                selectedBlockIndex = 1;
+            if (selectedBlockIndex < 1)
+                selectedBlockIndex = (byte)(world.blockTypes.Length - 1);
+
+            selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " block selected";
+        }
+
+        if (highlightBlock.gameObject.activeSelf)
+        {
+
+
+            // 블록 파괴 Destroy block
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 destroyPos = highlightBlock.position;
+                byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
+
+                if (destroyedBlockID == 3)
+                {
+                    destroyedBlockID = 5;
+                }
+
+
+                //GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject"); //찾았다 내사랑, 아이템 매니저의 spawnitem이랑 연동하면 끝
+
+                itemManager.SetItem(destroyedBlockID, destroyPos, world);
+                //GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
+                //
+                //PopObject popObject = popObjectInstance.GetComponent<PopObject>();
+                //
+                //popObject.Initialize(world, destroyPos, destroyedBlockID);
+            }
+
+
+
+
+            // 블록 배치 Place block
+            if (Input.GetMouseButtonDown(1))
+            {
+                switch (world.GetChunkFromVector3(highlightBlock.position).CheckBlockID(highlightBlock.position))
+                {
+                    // chest
+                    case 16:
+                        ui_chest.SetActive(true);
+                        break;
+
+                    // Furnance
+                    case 18:
+                        ui_furnance.SetActive(true);
+                        break;
+
+                    // craftTable
+                    case 19:
+                        ui_craftTable.SetActive(true);
+                        break;
+                    default:
+                        world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, selectedBlockIndex);
+                        break;
+                }
+
+
+
+            }
+
+
+
+        }
+    }
+
+    private void InvenScroll()
+    {
+        
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
+        {
+            if (scroll > 0)
+                selectedBlockIndex++;
+            else
+                selectedBlockIndex--;
+
+            if (selectedBlockIndex > 8)
+                selectedBlockIndex = 0;
+            if (selectedBlockIndex < 0)
+                selectedBlockIndex = 8;
+
+            if(inventorySlots[selectedBlockIndex] == null)
+            {
+                selectedBlockText.text =  $"{selectedBlockIndex - 1} slot NONE block selected";
+            }
+            else
+            {
+                selectedBlockText.text = inventorySlots[selectedBlockIndex].itemName + " block selected";
+            }
+
+            
+        }
+
+        if (highlightBlock.gameObject.activeSelf)
+        {
+
+
+            // 블록 파괴 Destroy block
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 destroyPos = highlightBlock.position;
+                byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
+
+                if (destroyedBlockID == 3)
+                {
+                    destroyedBlockID = 5;
+                }
+
+
+                //GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject"); //찾았다 내사랑, 아이템 매니저의 spawnitem이랑 연동하면 끝
+
+                itemManager.SetItem(destroyedBlockID, destroyPos, world);
+                //GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
+                //
+                //PopObject popObject = popObjectInstance.GetComponent<PopObject>();
+                //
+                //popObject.Initialize(world, destroyPos, destroyedBlockID);
+            }
+
+
+
+
+            // 블록 배치 Place block
+            if (Input.GetMouseButtonDown(1))
+            {
+                switch (world.GetChunkFromVector3(highlightBlock.position).CheckBlockID(highlightBlock.position))
+                {
+                    // chest
+                    case 16:
+                        ui_chest.SetActive(true);
+                        break;
+
+                    // Furnance
+                    case 18:
+                        ui_furnance.SetActive(true);
+                        break;
+
+                    // craftTable
+                    case 19:
+                        ui_craftTable.SetActive(true);
+                        break;
+                    default:
+                        world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, (byte)inventorySlots[selectedBlockIndex].itemID);
+                        inventorySlots[selectedBlockIndex].StackCurrent--;
+
+                        break;
+                }
+
+
+
+            }
+
+
+
+        }
+    }
+
+
 
 
     // 떨어지는거 계산

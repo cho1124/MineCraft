@@ -60,6 +60,7 @@ public class Inventory : MonoBehaviour
                     if (item.StackCurrent == 0)
                     {
                         Debug.Log($"{i}번 슬롯의 현재 스택 카운트 : " + inv_Slot[i].StackCurrent);
+                        Debug.Log($"{i}번 슬롯의 현재 id : {inv_Slot[i].itemID}");
 
                         item.transform.SetParent(Inventory_obj);
                         item.gameObject.SetActive(false);
