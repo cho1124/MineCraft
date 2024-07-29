@@ -65,7 +65,7 @@ namespace Entity_Data
             weight_max = END * 0.75f + STR * 1.5f;
             weight_current = weight_base;
 
-            weight_rate = 1f - weight_current / weight_max;
+            weight_rate = weight_current / weight_max;
 
             posture_max = weight_current;
 
@@ -84,6 +84,8 @@ namespace Entity_Data
         public void On_Hit(float damage, Collider attacker)
         {
             Debug.Log($"{entity_name}°¡ {attacker.gameObject.GetComponentInParent<Entity>().entity_name}¿¡°Ô ¸Â¾ÒÀ½");
+            gameObject.GetComponent<Target_Handler>().target = attacker.gameObject.GetComponentInParent<Entity>().gameObject;
+
             float damage_health = damage;
             float damage_posture = damage;
 
@@ -117,7 +119,11 @@ namespace Entity_Data
                     StopCoroutine(BlinkRed());
                     StartCoroutine(BlinkRed());
                     health_current -= damage_health_result;
-                    if (health_current <= 0) Debug.Log("»ç¸Á!");
+                    if (health_current <= 0)
+                    {
+                        Debug.Log("»ç¸Á!");
+                        Destroy(gameObject);
+                    }
                 }
 
                 if (posture_current > 0)

@@ -12,7 +12,8 @@ public class Entity_Humanoid_Control : MonoBehaviour
 
     [SerializeField] private GameObject L_Hand;
     [SerializeField] private GameObject R_Hand;
-    [SerializeField] private GameObject target;
+
+    [SerializeField] private Target_Handler target_handler;
 
     private Quaternion target_rotation;
     private float key_h, key_v;
@@ -55,15 +56,23 @@ public class Entity_Humanoid_Control : MonoBehaviour
         rotation_anchor = gameObject.transform.Find("Rotation_Anchor").gameObject;
         L_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Left:Upper/Arm:Left:Lower/Arm:Left:Hand").gameObject;
         R_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Right:Upper/Arm:Right:Lower/Arm:Right:Hand").gameObject;
+        TryGetComponent(out target_handler);
     }
 
     private void Update()
     {
-        if(target != null && !is_tracking)
+        if((target_handler.target != null && target_handler.target.activeSelf != false) && !is_tracking)
         {
             is_tracking = true;
             StartCoroutine(Tracking_Target_Co());
             StartCoroutine(Attack_Target_Co());
+        }
+        else if (target_handler.target == null || target_handler.target.activeSelf == false)
+        {
+            target_handler.target = null;
+            is_tracking = false;
+            StopCoroutine(Tracking_Target_Co());
+            StopCoroutine(Attack_Target_Co());
         }
         GroundedCheck();
         Move_Control();
@@ -88,14 +97,14 @@ public class Entity_Humanoid_Control : MonoBehaviour
 
     private IEnumerator Tracking_Target_Co()
     {
-        while(target != null)
+        while(target_handler.target != null)
         {
-            if (Vector3.Distance(target.transform.position, transform.position) >= 2f)
+            if (Vector3.Distance(target_handler.target.transform.position, transform.position) >= 2f)
             {
                 input_key_v = Mathf.Lerp(input_key_v, 1f, 0.5f);
                 input_key_sprint = true;
             }
-            else if (1f < Vector3.Distance(target.transform.position, transform.position) && Vector3.Distance(target.transform.position, transform.position) < 2f)
+            else if (1f < Vector3.Distance(target_handler.target.transform.position, transform.position) && Vector3.Distance(target_handler.target.transform.position, transform.position) < 2f)
             {
                 input_key_v = Mathf.Lerp(input_key_v, -1f, 0.5f);
                 input_key_sprint = false;
@@ -114,9 +123,9 @@ public class Entity_Humanoid_Control : MonoBehaviour
 
     private IEnumerator Attack_Target_Co()
     {
-        while(target != null)
+        while(target_handler.target != null)
         {
-            if (Vector3.Distance(target.transform.position, transform.position) < 2f)
+            if (Vector3.Distance(target_handler.target.transform.position, transform.position) < 2f)
             {
                 switch(Random.Range(0, 6))
                 {
@@ -170,7 +179,7 @@ public class Entity_Humanoid_Control : MonoBehaviour
     private void Rotation_Control()
     {
         rotation_anchor.transform.position = position_anchor.transform.position;
-        if(target != null) rotation_anchor.transform.LookAt(target.transform);
+        if(target_handler.target != null && target_handler.target.activeSelf != false) rotation_anchor.transform.LookAt(target_handler.target.transform);
 
         target_rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, rotation_anchor.transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
 
@@ -267,10 +276,5 @@ public class Entity_Humanoid_Control : MonoBehaviour
     public void On_Guard_Trigger_Exit()
     {
         animator.SetBool("Is_Guarding", false);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player")) target = other.gameObject;
     }
 }

@@ -22,6 +22,7 @@ public class Entity_Humanoid : Entity
     {
         //인벤토리의 장비칸을 읽어오고 각 능력치에 추가
         //weight_current = weight_base + helmet_data.weight + chestplate_data.weight + leggings_data.weight + boots_data.weight + L_held_data.weight + R_held_data.weight;
+        //weight_rate = weight_current / weight_max;
         //defense_current = defense_base + helmet_data.armorDefense + chestplate_data.armorDefense + leggings_data.armorDefense + boots_data.armorDefense;
 
         //무기 조합에 따른 무브셋 넘버 지정 및 Set_Value
