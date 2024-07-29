@@ -10,8 +10,6 @@ public class ObstacleDetector : MonoBehaviour
     public string animalTag = "Animals";
     public float detectionCooldown = 30f; // 감지 후 쿨타임 시간
     private Monster monsterScript;
-    private float lastPlayerDetectionTime = -Mathf.Infinity; // 마지막 플레이어 감지 시간
-    private float lastAnimalDetectionTime = -Mathf.Infinity; // 마지막 동물 감지 시간
     private float lastDetectionTime = -Mathf.Infinity; // 마지막 감지 시간
 
     private void Start()

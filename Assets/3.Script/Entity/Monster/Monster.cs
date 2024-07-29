@@ -20,8 +20,8 @@ public class Monster : Entity, IDamageable
     */
 
     //상태 및 동작 관련 변수
-    private enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight, Attack }
-    private MonsterState currentState; // 몬스터의 현재상태 
+    protected enum MonsterState { Idle, Walk, Run, Jump, Chase, TurnLeft, TurnRight, Attack }
+    protected MonsterState currentState; // 몬스터의 현재상태 
 
     //참조를 위한 변수
     protected Vector3 targetPosition; //몬스터 목적지
@@ -48,8 +48,8 @@ public class Monster : Entity, IDamageable
 
     public bool IsChasingPlayer { get; set; } = false; // 플레이어를 추적 중인지 여부를 저장
 
-    private Coroutine stateCoroutine;
-    private bool isGrounded = true; // 몬스터가 바닥에 있는지 여부를 저장
+    protected Coroutine stateCoroutine;
+    protected bool isGrounded = true; // 몬스터가 바닥에 있는지 여부를 저장
     private BoxCollider boxCollider;
 
     //플레이어와 동물 감지 추적 관련
@@ -212,7 +212,7 @@ public class Monster : Entity, IDamageable
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    private Vector3 GetRandomPosition()
+    protected Vector3 GetRandomPosition()
     {
         Vector3 randomPosition;
         int attempt = 0;
@@ -235,7 +235,7 @@ public class Monster : Entity, IDamageable
         return randomPosition;
     }
 
-    private IEnumerator StateDuration(MonsterState state, float duration)
+    protected IEnumerator StateDuration(MonsterState state, float duration)
     {
         yield return new WaitForSeconds(duration);
         ChangeState(GetRandomState());

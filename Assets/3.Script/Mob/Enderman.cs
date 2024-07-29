@@ -72,5 +72,4 @@ public class Enderman : Monster, IDamageable
 
         Debug.Log($"Selected Attack Type: {attackType}");
     }
-
 }
