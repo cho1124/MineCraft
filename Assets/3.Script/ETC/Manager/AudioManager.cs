@@ -56,6 +56,10 @@ public class AudioManager : MonoBehaviour {
     // 키워드와 오디오 클립을 매핑할 딕셔너리
     private Dictionary<string, List<AudioClip>> sfxClips;
 
+    [Header("Mixer Groups")]
+    public AudioMixerGroup bgmMixerGroup; // BGM 오디오 믹서 그룹
+    public AudioMixerGroup sfxMixerGroup; // SFX 오디오 믹서 그룹
+
     private void Awake() {
         if (instance == null) {
             instance = this;
@@ -79,9 +83,12 @@ public class AudioManager : MonoBehaviour {
 
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.loop = false; // 루프가 아니라 다음 클립을 재생하기 위해 설정
+        bgmSource.outputAudioMixerGroup = bgmMixerGroup; // BGM 믹서 그룹 할당
+        // AudioSource가 생성된 후 outputAudioMixerGroup 프로퍼티를 통해 sfxMixerGroup에 할당
 
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.loop = false;
+        sfxSource.outputAudioMixerGroup = sfxMixerGroup; // SFX 믹서 그룹 할당
 
         sfxClips = new Dictionary<string, List<AudioClip>>();
 
