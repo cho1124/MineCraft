@@ -12,12 +12,12 @@ public class Inventory : MonoBehaviour
     
     public ItemComponent[] Equipment_Slot = new ItemComponent[7];
 
-    public List<ItemComponent> items = new List<ItemComponent>();
+    
 
     public Transform Inventory_obj;
 
     public delegate void HotBarUpdate();
-    public event HotBarUpdate OnHotBarChanged;
+    public event HotBarUpdate OnChangedInv;
 
     private void Awake()
     {
@@ -77,7 +77,7 @@ public class Inventory : MonoBehaviour
 
     public void ChangeEvent()
     {
-        OnHotBarChanged?.Invoke();
+        OnChangedInv?.Invoke();
     }
 
 }

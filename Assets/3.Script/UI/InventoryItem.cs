@@ -8,7 +8,7 @@ using System;
 public class InventoryItem : MonoBehaviour, IPointerClickHandler
 {
     Image itemIcon;
-    InventoryUI Inven;
+    UIManager Inven;
     Text itemCount;
 
     public Equipment_Type equip_type = Equipment_Type.NONE;
@@ -24,7 +24,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
     {
         canvasGroup = GetComponent<CanvasGroup>();
         itemIcon = GetComponent<Image>();
-        Inven = GetComponentInParent<InventoryUI>();
+        Inven = GetComponentInParent<UIManager>();
         itemCount = GetComponentInChildren<Text>();
     }
 
@@ -71,6 +71,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        
         if(eventData.button == PointerEventData.InputButton.Left)
         {
             Inven.SetCarriedItem(this);

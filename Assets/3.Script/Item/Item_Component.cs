@@ -160,6 +160,17 @@ public class ItemComponent : MonoBehaviour
 
     }
 
+    public bool Check_Empty()
+    {
+        stackCurrent--;
+        if(stackCurrent <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
     public string SetEquipType()
     {
         return equipmentType;

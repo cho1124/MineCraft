@@ -429,7 +429,13 @@ public class Player : MonoBehaviour
                         break;
                     default:
                         world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, (byte)inventorySlots[selectedBlockIndex].itemID);
-                        inventorySlots[selectedBlockIndex].StackCurrent--;
+
+                        if(inventorySlots[selectedBlockIndex].Check_Empty())
+                        {
+                            inventorySlots[selectedBlockIndex] = null;
+                        }
+                        Inventory.instance.ChangeEvent();
+                        //inventorySlots[selectedBlockIndex].StackCurrent--;
 
                         break;
                 }

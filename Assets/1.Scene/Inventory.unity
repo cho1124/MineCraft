@@ -4119,6 +4119,7 @@ GameObject:
   - component: {fileID: 523460725}
   - component: {fileID: 523460727}
   - component: {fileID: 523460726}
+  - component: {fileID: 523460728}
   m_Layer: 0
   m_Name: Inventory bag UI
   m_TagString: Untagged
@@ -4160,7 +4161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.6156863}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4185,6 +4186,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523460724}
   m_CullTransparentMesh: 1
+--- !u!225 &523460728
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523460724}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &531820024
 GameObject:
   m_ObjectHideFlags: 0
@@ -13602,7 +13615,6 @@ GameObject:
   - component: {fileID: 1583278915}
   - component: {fileID: 1583278917}
   - component: {fileID: 1583278916}
-  - component: {fileID: 1583278918}
   m_Layer: 0
   m_Name: Inventory
   m_TagString: Untagged
@@ -13672,70 +13684,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1583278914}
   m_CullTransparentMesh: 1
---- !u!114 &1583278918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1583278914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a51ec66caf77ae0488557cbc6e41c4f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  carriedItem: {fileID: 0}
-  inventorySlots:
-  - {fileID: 934938406}
-  - {fileID: 215247244}
-  - {fileID: 347080465}
-  - {fileID: 544704328}
-  - {fileID: 1496974000}
-  - {fileID: 566208893}
-  - {fileID: 1808309916}
-  - {fileID: 1351260721}
-  - {fileID: 124088933}
-  - {fileID: 1750105083}
-  - {fileID: 1548506693}
-  - {fileID: 673938309}
-  - {fileID: 283004333}
-  - {fileID: 2115992468}
-  - {fileID: 36484906}
-  - {fileID: 419325949}
-  - {fileID: 2030917163}
-  - {fileID: 409554898}
-  - {fileID: 338882132}
-  - {fileID: 1939668679}
-  - {fileID: 2042854441}
-  - {fileID: 756829548}
-  - {fileID: 730584982}
-  - {fileID: 1964155902}
-  - {fileID: 237172824}
-  - {fileID: 375011009}
-  - {fileID: 1706896759}
-  hotbarSlots:
-  - {fileID: 961165851}
-  - {fileID: 1566216750}
-  - {fileID: 1886772186}
-  - {fileID: 1002747998}
-  - {fileID: 1981745040}
-  - {fileID: 836712319}
-  - {fileID: 1423988925}
-  - {fileID: 1384899536}
-  - {fileID: 942133546}
-  equipmentSlots:
-  - {fileID: 839984472}
-  - {fileID: 1795306612}
-  - {fileID: 38115506}
-  - {fileID: 711533672}
-  - {fileID: 601107411}
-  - {fileID: 1337580374}
-  - {fileID: 1337580374}
-  draggablesTransform: {fileID: 2016497735}
-  itemPrefab: {fileID: 8527893814601168996, guid: 1028cb616073445408e5c9f2550546dc, type: 3}
-  item_list: []
-  itemSet: []
-  hotitemSet: []
 --- !u!1 &1596334934
 GameObject:
   m_ObjectHideFlags: 0
@@ -16450,7 +16398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f53269b984f74573b735003e1847df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  on_off_obj: {fileID: 523460724}
+  inventoryCanvasGroup: {fileID: 523460728}
   on_off_tr: 0
 --- !u!1 &1854675359
 GameObject:
@@ -17145,7 +17093,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8c5fd214a6a6014a90f9c8ad3f0a2f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HotBarSlots:
+  carriedItem: {fileID: 0}
+  inventorySlots:
+  - {fileID: 934938406}
+  - {fileID: 215247244}
+  - {fileID: 347080465}
+  - {fileID: 544704328}
+  - {fileID: 1496974000}
+  - {fileID: 566208893}
+  - {fileID: 1808309916}
+  - {fileID: 1351260721}
+  - {fileID: 124088933}
+  - {fileID: 1750105083}
+  - {fileID: 1548506693}
+  - {fileID: 673938309}
+  - {fileID: 283004333}
+  - {fileID: 2115992468}
+  - {fileID: 36484906}
+  - {fileID: 419325949}
+  - {fileID: 2030917163}
+  - {fileID: 409554898}
+  - {fileID: 338882132}
+  - {fileID: 1939668679}
+  - {fileID: 2042854441}
+  - {fileID: 756829548}
+  - {fileID: 730584982}
+  - {fileID: 1964155902}
+  - {fileID: 237172824}
+  - {fileID: 375011009}
+  - {fileID: 1706896759}
+  hotbarSlots:
+  - {fileID: 961165851}
+  - {fileID: 1566216750}
+  - {fileID: 1886772186}
+  - {fileID: 1002747998}
+  - {fileID: 1981745040}
+  - {fileID: 836712319}
+  - {fileID: 1423988925}
+  - {fileID: 1384899536}
+  - {fileID: 942133546}
+  equipmentSlots:
+  - {fileID: 839984472}
+  - {fileID: 1795306612}
+  - {fileID: 38115506}
+  - {fileID: 711533672}
+  - {fileID: 601107411}
+  - {fileID: 1337580374}
+  - {fileID: 1086574681}
+  HotBarSlots_Out:
   - {fileID: 3732281519430345701}
   - {fileID: 1043464362}
   - {fileID: 2095535909}
@@ -17156,6 +17151,9 @@ MonoBehaviour:
   - {fileID: 2104604072}
   - {fileID: 1217457852}
   hotitemSet: []
+  hotitemSet_inv: []
+  invenitemSet: []
+  draggablesTransform: {fileID: 2016497735}
   itemPrefab: {fileID: 8527893814601168996, guid: 1028cb616073445408e5c9f2550546dc, type: 3}
 --- !u!114 &1908970893
 MonoBehaviour:

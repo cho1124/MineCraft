@@ -82,7 +82,12 @@ public class Item_Manager : MonoBehaviour
     void Start()
     {
 
-        //SpawnItem(309, transform.position);
+        //for(int i = 0; i < 1000; i++)
+        //{
+        //    SpawnItem(262, transform.position);
+        //}
+
+        
         
         
 
@@ -92,7 +97,7 @@ public class Item_Manager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.K))
         {
-            SpawnItem(262, transform.position);
+            SpawnItem(307, transform.position);
         }
     }
 

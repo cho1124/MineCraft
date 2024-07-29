@@ -13,7 +13,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     private Image slot_image = null;
     public InventoryItem myItem { get; set; }
 
-    private InventoryUI Inven;
+    private UIManager Inven;
 
     
 
@@ -24,7 +24,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     private void Awake()
     {
         slot_image = GetComponent<Image>();
-        Inven = FindObjectOfType<InventoryUI>();
+        Inven = FindObjectOfType<UIManager>();
 
     }
 
@@ -82,12 +82,12 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         }
         //개쓰레기 논리이긴 한데 머리가 안돌아가요
-        //Debug.Log("oldSlotIndex" + oldSlotIndex);
+        Debug.Log("oldSlotIndex" + oldSlotIndex);
 
 
         // 새로운 슬롯의 인덱스를 저장
         int newSlotIndex = System.Array.IndexOf(Inven.hotbarSlots, this);
-        Debug.Log("new hot bat slot" + newSlotIndex);
+        //Debug.Log("new hot bat slot" + newSlotIndex);
 
         if (newSlotIndex != -1)
         {
@@ -129,7 +129,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         //
         //
         //
-        //("newSlotIndex" + newSlotIndex);
+        Debug.Log("newSlotIndex" + newSlotIndex);
 
         Inven.carriedItem = null;
 
@@ -191,6 +191,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
                 // isInEquip와 isInEquipNew가 모두 false인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
                 
+                
 
 
             }
@@ -199,7 +200,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         //itemCom  = Inventory.instance.inv_Slot[oldSlotIndex];
 
-        Inventory.instance.ChangeEvent();
+        
         //TODO >>> 핫바에 대한 부분, 장비장착에 대한 부분, 장비 장착시, itemLayer를 제거하고 사용 가능한 아이템으로 변환할 것 >>>> 필수 정말짱중요
 
 
@@ -208,6 +209,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         { 
             Inven.EquipEquipment(Equip_Type, myItem);
         }
+
+        Inventory.instance.ChangeEvent();
     }
 
     private void Swap(ref ItemComponent Old_Item, ref ItemComponent New_Item)
