@@ -26,7 +26,7 @@ public class Test1 : MonoBehaviour
     {
         // 충돌 이벤트 로그 출력
         Debug.Log("플레이어가 패고있습니다 : " + collision.gameObject.name);
-
+        AudioManager.instance.PlayRandomSFX("Humanoid", "Attack"); 
         // Monster 또는 Animals 태그를 가진 오브젝트인지 확인
         if (collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("Animals"))
         {

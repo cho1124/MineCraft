@@ -6,8 +6,11 @@ public class Enderman : Monster, IDamageable
 {
     /*
 
-    애니메이터 파라미터 설정은 잘 되어있는데 
-    엔더맨 스크립트의 attacktarget 메서드에 진입하지 못하고 있는것 같다. 
+    공격 애니메이션 3개중에 1개 랜덤으로 재생하게 하려고 함 
+
+    => 일단은 애니메이션중 기존것 1개만 재생되도록 하고있음...
+       AttackTarget 을 monster 스크립트에서 override 받아 만들었으나 monster 스크립트의 AttackTarget을 진행중ㅜㅜ
+       (아직 해결방법을 못찾음)
 
     */
 
@@ -29,6 +32,7 @@ public class Enderman : Monster, IDamageable
     private void HandleDeath()
     {
         Debug.Log("HandleDeath 호출됨");
+        AudioManager.instance.PlayRandomSFX("Enderman", "Die"); // 죽음 효과음 재생
         StartCoroutine(OnDie());
     }
 
