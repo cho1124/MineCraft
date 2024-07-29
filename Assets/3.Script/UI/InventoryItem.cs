@@ -64,7 +64,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            itemCount.gameObject.SetActive(true); //!!!!!!
+            itemCount.gameObject.SetActive(true);
             itemCount.text = $"{itemComponent.StackCurrent}";
         }
     }

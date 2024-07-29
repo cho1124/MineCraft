@@ -7,13 +7,16 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public InventorySlot[] HotBarSlots;
+    public InventorySlot[] InventoryBarSlots;
 
     [SerializeField] private InventoryItem[] hotitemSet;
+    [SerializeField] private InventoryItem[] invenitemSet;
     [SerializeField] private InventoryItem itemPrefab;
 
     private void Awake()
     {
         hotitemSet = new InventoryItem[HotBarSlots.Length];
+        invenitemSet = new InventoryItem[InventoryBarSlots.Length];
     }
 
     private void Start()
@@ -69,13 +72,27 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
-        if (slots[index].myItem == null && itemSet[index] == null)
+        if (slots[index].myItem == null && itemSet[index] == null) //아무것도 없을때
         {
             itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
             itemSet[index].Initialize(tempItem, slots[index]);
             return true;
         }
-        return false;
+        else if(slots[index].myItem != null && itemSet[index] == null) 
+        {
+            //Debug.Log("ㅎㅎ");
+            itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
+            itemSet[index].Initialize(tempItem, slots[index]);
+            return true;
+        }
+        else
+        {
+            Debug.Log("shit");
+            itemSet[index].Initialize(tempItem, slots[index]);
+            return true;
+        }
+        
+        
     }
 
     public bool TryRemoveItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, out InventoryItem removedItem)

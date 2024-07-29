@@ -191,6 +191,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
                 // isInEquip와 isInEquipNew가 모두 false인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
                 
+
+
             }
         }
 
@@ -216,11 +218,11 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
     }
 
-    private void Swap(ref InventorySlot oldSlot, ref InventorySlot newSlot)
+    private void Swap(ref InventoryItem oldItem, ref InventoryItem newItem)
     {
-        InventorySlot temp = oldSlot;
-        oldSlot = newSlot;
-        newSlot = temp;
+        InventoryItem temp = oldItem;
+        oldItem = newItem;
+        newItem = temp;
     }
 
 

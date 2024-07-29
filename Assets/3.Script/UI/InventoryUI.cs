@@ -39,33 +39,20 @@ public class InventoryUI : MonoBehaviour
             Debug.LogError("UI없음");
         }
 
+        
 
+
+        itemSet = new InventoryItem[inventorySlots.Length];
+        hotitemSet = new InventoryItem[hotbarSlots.Length];
         //SetEmptyItem();
     }
 
     private void OnEnable()
     {
-        itemSet = new InventoryItem[inventorySlots.Length];
-        hotitemSet = new InventoryItem[hotbarSlots.Length];
-        Debug.Log("enabled");
-        //InitSlot();
-        SetInventory();
-    }
-
-
-    private void Start()
-    {
         
-        Add_All_Item();
-
-      
-    }
-    private void Add_All_Item()
-    {
-        foreach (int key in Item_Dictionary.item_dictionary.Keys)
-        {
-            item_list.Add(Item_Dictionary.item_dictionary[key]);
-        }
+        Debug.Log("enabled");
+        
+        SetInventory();
     }
 
     void Update()
@@ -151,6 +138,9 @@ public class InventoryUI : MonoBehaviour
         ItemComponent[] inv = Inventory.instance.inv_Slot;
         
         int invLength = Inventory.instance.inv_Slot.Length;
+
+        //hotitemSet = UIManager.hotitemSet;
+
         
         for (int i = 0; i < invLength; i++)
         {
@@ -158,19 +148,33 @@ public class InventoryUI : MonoBehaviour
             {
                 if (i < hotbarSlots.Length) //이거 왜이러냐면 실제 인벤토리와 ui에서의 인벤토리는 다른 부분이기 때문에
                 {
-                    if (UIManager.TryPlaceItem(hotbarSlots, hotitemSet, i, inv[i], itemPrefab))
+                    if(hotbarSlots[i].myItem == null)
                     {
-
-                        return;
+                        hotitemSet[i] = Instantiate(itemPrefab, hotbarSlots[i].transform);
                     }
+
+
+
+                    hotitemSet[i].Initialize(inv[i], hotbarSlots[i]);
+                    return;
+
                 }
                 else
                 {
-                    if (UIManager.TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, inv[i], itemPrefab)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
-                    {
+                    int inv_i = i - hotbarSlots.Length;
 
-                        return;
+                    if(inventorySlots[inv_i].myItem == null)
+                    {
+                        itemSet[inv_i] = Instantiate(itemPrefab, inventorySlots[inv_i].transform);
                     }
+
+                    if(itemSet[inv_i] == null)
+                    {
+                        Debug.Log("error");
+                    }
+                    else
+                    itemSet[inv_i].Initialize(inv[inv_i], inventorySlots[inv_i]);
+                    return;
                 }
 
             }
@@ -180,16 +184,16 @@ public class InventoryUI : MonoBehaviour
 
     }
 
+
+
+    
+
     public void InitSlot()
     {
-        for(int i = 0; i < hotbarSlots.Length; i++)
-        {
-            hotbarSlots[i] = null;
-        }
-        for (int i = 0; i < inventorySlots.Length; i++)
-        {
-            inventorySlots[i] = null;
-        }
+        
+
+        itemSet = new InventoryItem[inventorySlots.Length];
+        hotitemSet = new InventoryItem[hotbarSlots.Length];
     }
 
 
