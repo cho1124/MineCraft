@@ -706,7 +706,7 @@ public class Animal : Entity, IDamageable
         // 고기 생성 후 일정 시간 동안 무적 상태로 설정
             SetInvincible(2.0f);
         }
-        AudioManager.instance.PlayRandomSFX(this.name, "attack");
+        AudioManager.instance.PlayRandomSFX(animalName, "Die");
         StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
     }
 

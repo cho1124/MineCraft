@@ -91,6 +91,8 @@ public class Creeper : Monster, IDamageable
                     }
 
                     // Player 또는 Animals 태그가 아닌 모든 오브젝트 파괴
+                    AudioManager.instance.PlayRandomSFX("Creeper", "Die");
+                    AudioManager.instance.PlayRandomSFX("Creeper", "Explore");
                     Destroy(hitCollider.gameObject);
                     Debug.Log($"오브젝트 파괴: {hitCollider.gameObject.name}");
                 }
