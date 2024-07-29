@@ -180,6 +180,8 @@ public class Entity_Humanoid : Entity
         L_Hand.Set_Collider();
         R_Hand.Set_Collider();
 
+        movement_speed = Mathf.Max(0.1f, movement_speed - weight_rate);
+
         animator.SetFloat("L_Attack_Speed", L_Hand.attack_speed);
         animator.SetFloat("R_Attack_Speed", R_Hand.attack_speed);
         animator.SetFloat("Movement_Speed", movement_speed);

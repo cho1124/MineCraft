@@ -60,10 +60,14 @@ public class Part : MonoBehaviour
         {
             if (victim.gameObject != self && (!victim_dictionary.ContainsKey(victim.gameObject) || !victim_dictionary[victim.gameObject]))
             {
-                Debug.Log($"{victim.gameObject.name}, {self.name}");
                 victim_dictionary[victim.gameObject] = true;
                 victim.gameObject.GetComponent<Entity>().On_Hit(Random.Range(damage_min, damage_max), collider);
             }
         }
+    }
+
+    public void Force_Trigger(Collider victim)
+    {
+        OnTriggerStay(victim);
     }
 }

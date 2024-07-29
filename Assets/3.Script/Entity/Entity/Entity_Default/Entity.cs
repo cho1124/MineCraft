@@ -37,8 +37,8 @@ namespace Entity_Data
 
         [SerializeField] public Action On_Death;
 
-        public float movement_speed { get; private set; }
-        public float jump_height { get; private set; }
+        public float movement_speed { get; protected set; }
+        public float jump_height { get; protected set; }
 
 
 
@@ -64,8 +64,8 @@ namespace Entity_Data
         {
             health_max = VIT * 2f;
 
-            weight_base = VIT * 1f + END * 0.5f;
-            weight_max = END * 0.75f + STR * 1.5f;
+            weight_base = VIT * 0.3f + END * 0.2f;
+            weight_max = END * 1f + STR * 1.5f;
             weight_current = weight_base;
 
             weight_rate = weight_current / weight_max;
@@ -80,8 +80,8 @@ namespace Entity_Data
             attack_damage_min_rate = 0.5f + DEX * 0.005f;
             attack_speed_rate = 1f + AGI * 0.005f;
 
-            movement_speed = 1f + AGI * 0.0025f - weight_rate;
-            jump_height = 1f * AGI * 0.0025f - weight_rate;
+            movement_speed = Mathf.Max(0.1f, 1f + AGI * 0.0025f);
+            jump_height = Mathf.Max(0.1f, 1f + AGI * 0.0025f);
         }
 
         public void On_Hit(float damage, Collider attacker)
