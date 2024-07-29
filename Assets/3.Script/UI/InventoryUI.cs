@@ -143,47 +143,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void SpawnCollidedItem(ItemComponent item)
-    {
-        if (item == null)
-        {
-            Debug.LogError("ItemComponent is null");
-            return;
-        }
-
-
-        
-
-        for (int i = 0; i < Inventory.instance.inv_Slot.Length; i++)
-        {
-            if(Inventory.instance.inv_Slot[i] != null)
-            {
-                Debug.Log("notnull");
-                var tempItem = Inventory.instance.inv_Slot[i];
-                
-
-                if (i < hotbarSlots.Length)
-                {
-                    if (UIManager.TryPlaceItem(hotbarSlots, hotitemSet, i, tempItem, itemPrefab))
-                    {
-                        
-                        return;
-                    }
-                }
-                else
-                {
-                    if (UIManager.TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, tempItem, itemPrefab)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
-                    {
-
-                        return;
-                    }
-                }
-            }
-
-        }
-
-    }
-
+   
     public void SetInventory()
     {
         //inventory.instance.GetInv_Main()[0].
@@ -196,8 +156,23 @@ public class InventoryUI : MonoBehaviour
         {
             if(inv[i] != null)
             {
-                //Debug.Log("invindex : " + i);
-                SpawnCollidedItem(inv[i]); 
+                if (i < hotbarSlots.Length) //이거 왜이러냐면 실제 인벤토리와 ui에서의 인벤토리는 다른 부분이기 때문에
+                {
+                    if (UIManager.TryPlaceItem(hotbarSlots, hotitemSet, i, inv[i], itemPrefab))
+                    {
+
+                        return;
+                    }
+                }
+                else
+                {
+                    if (UIManager.TryPlaceItem(inventorySlots, itemSet, i - hotbarSlots.Length, inv[i], itemPrefab)) //이 부분 매우 중요함, 인벤토리의 앞 부분은 핫바로 처리하기 위한 과정
+                    {
+
+                        return;
+                    }
+                }
+
             }
             
 
