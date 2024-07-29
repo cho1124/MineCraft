@@ -25,10 +25,7 @@ SFX- 음악클립 이름에 키워드 정확하게 적어두고 키워드 2개 찾기( <예시>"Creeper" "
    <예시>
    AudioManager.instance.PlayRandomSFX("walk", "attack");
 
-※키워드는 <사용자 - 행동> 이렇게 되어있으며 첫글자는 대문자
-현재 사용자에는 Humanoid- / Enderman- / Chicken- / Creeper- / Object- 등이 있음 
-행동에는 Attack / Die / Arrow / Click / Landing / Get 등이 있음
-
+※키워드는 [Assets/Resources/SFX] 에서 보고 사용하면 됩니다. 
 ※PlayerPrefs : 유니티에서 제공하는 내장 클래스:간단한데이터를 영구적으로 저장하고 불러오는데 사용
 
 */
