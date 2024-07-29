@@ -1676,6 +1676,7 @@ GameObject:
   - component: {fileID: 725455810}
   - component: {fileID: 725455809}
   - component: {fileID: 725455811}
+  - component: {fileID: 725455812}
   m_Layer: 5
   m_Name: Image (2)
   m_TagString: Untagged
@@ -1753,6 +1754,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cfd04fa8ed9584787998049991d9a806, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &725455812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725455807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4482758a439e142f2afea1536f3e4889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &852525357
@@ -2667,8 +2680,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 725455811}
-        m_TargetAssemblyTypeName: Title, Assembly-CSharp
+      - m_Target: {fileID: 725455812}
+        m_TargetAssemblyTypeName: MoveScene, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -3442,9 +3455,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 725455811}
-        m_TargetAssemblyTypeName: Title, Assembly-CSharp
-        m_MethodName: StartGame
+      - m_Target: {fileID: 725455812}
+        m_TargetAssemblyTypeName: MoveScene, Assembly-CSharp
+        m_MethodName: Game
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
