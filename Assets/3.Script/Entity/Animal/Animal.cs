@@ -8,6 +8,9 @@ public class Animal : Entity, IDamageable
 
     /*
     
+    ★plane (평평한땅)에서 내내 테스트해서 현재 주변 랜덤 이동목표지점(걷거나 달릴때) y축 고정되어있어서 
+    청크위에서 다닐때 괜찮을지? 
+
     동물들은 배고픔 상태에서 이속이 빨라짐
     새끼는 foodGivenCount 가 오르지 않음.
     성인상태에서 5번 Animal_Food를 먹으면 tamed 가 이름에 붙고, 그 상태에서 
@@ -703,7 +706,7 @@ public class Animal : Entity, IDamageable
         // 고기 생성 후 일정 시간 동안 무적 상태로 설정
             SetInvincible(2.0f);
         }
-
+        AudioManager.instance.PlayRandomSFX(this.name, "attack");
         StartCoroutine(OnDie()); // 바로 OnDie 코루틴 호출
     }
 

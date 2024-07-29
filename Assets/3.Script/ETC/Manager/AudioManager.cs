@@ -31,6 +31,9 @@ SFX- 음악클립 이름에 키워드 정확하게 적어두고 키워드 2개 찾기( <예시>"Creeper" "
 ※마스터볼륨스크롤바는 그렇지 않은데, bgm 볼륨바가 0이랑 가까워지면 소리가 작아지는데 스크롤바를 제일 왼쪽으로
 했을때 소리가 다시 켜지는 오류가 있어서 볼륨 0 일시 음소거 되는 부분 추가함
 
+
+★현재 안되는 부분 : 마스터 볼륨과 bgm 은 title의 스크롤바 움직임에 따라 볼륨이 조절되나 sfx는 조절안되는중ㅜㅜ★
+
 */
 public class AudioManager : MonoBehaviour {
     public static AudioManager instance = null;
