@@ -9,6 +9,6 @@ public class Target_Handler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && other.transform.parent.gameObject != gameObject && (target == null || target.activeSelf == false)) target = other.transform.parent.gameObject;
+        if (other.CompareTag("Target") && other.transform.parent.gameObject != gameObject && (target == null || target.activeSelf == false)) target = other.transform.parent.gameObject;
     }
 }

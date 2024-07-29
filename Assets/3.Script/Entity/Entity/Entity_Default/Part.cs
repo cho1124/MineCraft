@@ -21,7 +21,7 @@ public class Part : MonoBehaviour
 
     private void Awake()
     {
-        self = transform.parent.parent.parent.parent.parent.parent.parent.gameObject;
+        self = transform.GetComponentInParent<Entity>().gameObject;
     }
 
     public void Set_Value_Melee(float melee_damage, float attack_damage_max_rate, float attack_damage_min_rate, float melee_speed, float attack_speed_rate, int tool_tier)

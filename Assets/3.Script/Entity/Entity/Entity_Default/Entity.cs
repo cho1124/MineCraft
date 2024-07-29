@@ -35,6 +35,8 @@ namespace Entity_Data
         [SerializeField] protected float attack_speed_rate;
         [SerializeField] protected float guard_rate = 0f;
 
+        [SerializeField] public Action On_Death;
+
         public float movement_speed { get; private set; }
         public float jump_height { get; private set; }
 
@@ -55,6 +57,7 @@ namespace Entity_Data
             entityRenderer = GetComponentsInChildren<Renderer>();
             originalColor = new Color[entityRenderer.Length];
             for (int i = 0; i < entityRenderer.Length; i++) originalColor[i] = entityRenderer[i].material.color;
+            On_Death += Death;
         }
 
         public void Update_Status()
@@ -122,7 +125,7 @@ namespace Entity_Data
                     if (health_current <= 0)
                     {
                         Debug.Log("»ç¸Á!");
-                        Destroy(gameObject);
+                        On_Death();
                     }
                 }
 
@@ -133,6 +136,11 @@ namespace Entity_Data
                     if (posture_current <= 0) Debug.Log("±×·Î±â!");
                 }
             }
+        }
+
+        protected void Death()
+        {
+            Destroy(gameObject);
         }
 
         protected IEnumerator BlinkRed()

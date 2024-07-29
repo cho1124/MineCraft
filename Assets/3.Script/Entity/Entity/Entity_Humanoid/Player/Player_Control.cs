@@ -45,8 +45,6 @@ public class Player_Control : MonoBehaviour
 
     private bool is_guard_down = false;
 
-    private bool input_key_inventory = false;
-
     public bool Grounded;
     public float GroundedOffset;
     public Vector3 GroundedBoxSize;

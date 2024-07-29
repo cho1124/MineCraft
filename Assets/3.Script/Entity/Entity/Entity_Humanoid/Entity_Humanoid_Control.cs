@@ -152,13 +152,15 @@ public class Entity_Humanoid_Control : MonoBehaviour
                         break;
                 }
             }
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.5f);
             is_L_down = false;
             is_R_down = false;
             is_guard_down = false;
+            yield return new WaitForSeconds(0.5f);
         }
         is_L_down = false;
         is_R_down = false;
+        is_guard_down = false;
         yield return null;
     }
 

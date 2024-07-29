@@ -172,9 +172,9 @@ public class Entity_Humanoid : Entity
         else
         {
             animator.SetInteger("Moveset_Number", 10);
-            animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
             L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
             R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
+            animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
             guard_rate = 0.5f;
         }
         L_Hand.Set_Collider();
