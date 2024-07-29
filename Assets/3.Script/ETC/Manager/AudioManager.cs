@@ -49,6 +49,7 @@ public class AudioManager : MonoBehaviour {
         }
         else {
             Destroy(gameObject);
+            return;
         }
 
         LoadSettings();
@@ -109,7 +110,7 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    IEnumerator PlayRandomBGM() {
+    private IEnumerator PlayRandomBGM() {
         while (true) {
             AudioClip clip = bgmClips[Random.Range(0, bgmClips.Length)];
             bgmSource.clip = clip;
@@ -154,30 +155,30 @@ public class AudioManager : MonoBehaviour {
             // 필요한 경우 다른 키워드를 추가합니다.
         }
 
-   //     private void AddSFXClip(string keyword, AudioClip clip) {
-   //         if (!sfxClips.ContainsKey(keyword)) {
-   //             sfxClips[keyword] = new List<AudioClip>();
-   //         }
-   //         sfxClips[keyword].Add(clip);
-   //     }
-   //
-   //     public void PlayRandomSFX(string keyword1, string keyword2) {
-   //         List<AudioClip> combinedClips = new List<AudioClip>();
-   //
-   //         if (sfxClips.ContainsKey(keyword1)) {
-   //             combinedClips.AddRange(sfxClips[keyword1]);
-   //         }
-   //
-   //         if (sfxClips.ContainsKey(keyword2)) {
-   //             combinedClips.AddRange(sfxClips[keyword2]);
-   //         }
-   //
-   //         if (combinedClips.Count > 0) {
-   //             AudioClip clip = combinedClips[Random.Range(0, combinedClips.Count)];
-   //             PlaySFX(clip);
-   //         }
-   //     }
-   // }
+        void AddSFXClip(string keyword, AudioClip clip) {
+            if (!sfxClips.ContainsKey(keyword)) {
+                sfxClips[keyword] = new List<AudioClip>();
+            }
+            sfxClips[keyword].Add(clip);
+        }
+   
+        void PlayRandomSFX(string keyword1, string keyword2) {
+            List<AudioClip> combinedClips = new List<AudioClip>();
+   
+            if (sfxClips.ContainsKey(keyword1)) {
+                combinedClips.AddRange(sfxClips[keyword1]);
+            }
+   
+            if (sfxClips.ContainsKey(keyword2)) {
+                combinedClips.AddRange(sfxClips[keyword2]);
+            }
+   
+            if (combinedClips.Count > 0) {
+                AudioClip clip = combinedClips[Random.Range(0, combinedClips.Count)];
+                PlaySFX(clip);
+            }
+        }
+    }
 }
 
 //<예시>
