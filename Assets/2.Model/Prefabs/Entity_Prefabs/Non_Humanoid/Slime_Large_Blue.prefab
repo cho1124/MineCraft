@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 6201133898774352715}
   - component: {fileID: 6201133898774352758}
   m_Layer: 0
-  m_Name: Slime_Large
+  m_Name: Slime_Large_Blue
   m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity_type: Non_Humanoid
-  entity_name: Slime_Large
+  entity_name: Slime_Large_Blue
   VIT: 30
   END: 10
   STR: 30
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6bae3b9629c1a46810c0bd0c65c642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slime_small: {fileID: 0}
+  slime_small: {fileID: 3747062317061168913, guid: 32c9f87c23d93ce43a9708bdd205f598, type: 3}
   spawn_position: {x: 0, y: 0, z: 0}
   entity: {fileID: 0}
 --- !u!1 &6201133898938124868

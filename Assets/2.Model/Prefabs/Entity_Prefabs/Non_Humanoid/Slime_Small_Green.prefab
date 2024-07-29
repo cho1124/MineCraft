@@ -177,7 +177,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 762b5f628249faa428838024699b2e85, type: 2}
+  - {fileID: 2100000, guid: d6a1f0e1963add14bb2658c510969934, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 3747062317061168916}
   - component: {fileID: 3747062317061168919}
   m_Layer: 0
-  m_Name: Slime_Small
+  m_Name: Slime_Small_Green
   m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -364,12 +364,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity_type: Non_Humanoid
-  entity_name: Slime_Small
-  VIT: 30
-  END: 10
-  STR: 30
-  DEX: 10
-  AGI: 10
+  entity_name: Slime_Small_Green
+  VIT: 5
+  END: 5
+  STR: 5
+  DEX: 5
+  AGI: 5
   health_max: 0
   health_current: 0
   posture_max: 0
