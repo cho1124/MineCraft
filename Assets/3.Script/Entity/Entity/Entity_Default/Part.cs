@@ -5,13 +5,13 @@ using Entity_Data;
 
 public class Part : MonoBehaviour
 {
-    public float damage_max { get; private set; }
-    public float damage_min { get; private set; }
-    public float attack_speed { get; private set; }
+    [SerializeField] public float damage_max { get; private set; }
+    [SerializeField] public float damage_min { get; private set; }
+    [SerializeField] public float attack_speed { get; private set; }
 
-    public float draw_power { get; private set; }
-    public float draw_speed { get; private set; }
-    public float aim_accuracy { get; private set; }
+    [SerializeField] public float draw_power { get; private set; }
+    [SerializeField] public float draw_speed { get; private set; }
+    [SerializeField] public float aim_accuracy { get; private set; }
 
     public int tool_tier { get; private set; }
 
@@ -62,7 +62,7 @@ public class Part : MonoBehaviour
             {
                 Debug.Log($"{victim.gameObject.name}, {self.name}");
                 victim_dictionary[victim.gameObject] = true;
-                victim.gameObject.GetComponent<Entity>().On_Hit(UnityEngine.Random.Range(damage_min, damage_max), collider);
+                victim.gameObject.GetComponent<Entity>().On_Hit(Random.Range(damage_min, damage_max), collider);
             }
         }
     }

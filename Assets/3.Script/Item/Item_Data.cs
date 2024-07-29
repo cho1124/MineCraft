@@ -14,10 +14,10 @@ public enum Equipment_Type
     SHIELD,
     ONE_HANDED_SWORD,
     ONE_HANDED_AXE,
-    ONE_HANDED_HAMMER,
+    ONE_HANDED_BLUNT,
     TWO_HANDED_SWORD,
     TWO_HANDED_AXE,
-    TWO_HANDED_HAMMER,
+    TWO_HANDED_BLUNT,
     BOW,
     PICKAXE,
     SHOVEL,
@@ -32,18 +32,17 @@ public enum Equipment_Armor_Type
     HELMET,
     CHESTPLATE,
     LEGGINGS,
-    BOOTS,
-    SHIELD
-
+    BOOTS
 }
 public enum Equipment_Weapon_Type
 {
+    SHIELD,
     ONE_HANDED_SWORD,
     ONE_HANDED_AXE,
-    ONE_HANDED_HAMMER,
+    ONE_HANDED_BLUNT,
     TWO_HANDED_SWORD,
     TWO_HANDED_AXE,
-    TWO_HANDED_HAMMER,
+    TWO_HANDED_BLUNT,
     BOW,
     PICKAXE,
     SHOVEL,

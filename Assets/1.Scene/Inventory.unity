@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.81460726, g: 0.8727239, b: 0.88535565, a: 1}
+  m_IndirectSpecularColor: {r: 0.8144179, g: 0.8727183, b: 0.8855463, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -937,8 +937,8 @@ Transform:
   m_LocalPosition: {x: -2.344432e-10, y: 0.006000002, z: 1.7763567e-16}
   m_LocalScale: {x: 1, y: 1, z: 0.99999994}
   m_Children:
-  - {fileID: 417368199}
   - {fileID: 881848118}
+  - {fileID: 417368199}
   - {fileID: 1982905229}
   - {fileID: 222526093}
   - {fileID: 941275627}
@@ -3199,7 +3199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &417368199
 Transform:
   m_ObjectHideFlags: 0
@@ -3212,7 +3212,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 45481054}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 180, z: 150}
 --- !u!65 &417368200
 BoxCollider:
@@ -7396,7 +7396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &881848118
 Transform:
   m_ObjectHideFlags: 0
@@ -7409,7 +7409,7 @@ Transform:
   m_LocalScale: {x: 0.016119828, y: 0.016119828, z: 0.016119823}
   m_Children: []
   m_Father: {fileID: 45481054}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &881848119
 BoxCollider:
@@ -7483,6 +7483,7 @@ MonoBehaviour:
   guard_rate: 0
   L_Hand: {fileID: 0}
   R_Hand: {fileID: 0}
+  inventory: {fileID: 0}
   L_held_data: {fileID: 0}
   R_held_data: {fileID: 0}
   helmet_data: {fileID: 0}
@@ -13794,6 +13795,7 @@ MonoBehaviour:
   guard_rate: 0
   L_Hand: {fileID: 0}
   R_Hand: {fileID: 0}
+  inventory: {fileID: 0}
   L_held_data: {fileID: 0}
   R_held_data: {fileID: 0}
   helmet_data: {fileID: 0}
@@ -16074,11 +16076,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entity_type: Player
   entity_name: Player
-  VIT: 10
-  END: 10
-  STR: 10
-  DEX: 10
-  AGI: 10
+  VIT: 99
+  END: 99
+  STR: 99
+  DEX: 99
+  AGI: 99
   health_max: 0
   health_current: 0
   posture_max: 0
@@ -16096,6 +16098,7 @@ MonoBehaviour:
   guard_rate: 0
   L_Hand: {fileID: 0}
   R_Hand: {fileID: 0}
+  inventory: {fileID: 0}
   L_held_data: {fileID: 0}
   R_held_data: {fileID: 0}
   helmet_data: {fileID: 0}
