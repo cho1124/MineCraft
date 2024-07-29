@@ -77,6 +77,7 @@ public class AudioManager : MonoBehaviour {
 
         LoadSettings();
 
+        //스크롤바 값 설정
         if (masterVolumeScrollbar != null)
             masterVolumeScrollbar.value = masterVolume;
 
@@ -168,9 +169,12 @@ public class AudioManager : MonoBehaviour {
     public void PlayRandomSFX(string keyword1, string keyword2) {
         List<AudioClip> combinedClips = new List<AudioClip>();
 
-        //딕셔너리의 각 키워드를 반복하면서, 키워드에 keyword1 또는 keyword2가 포함된 경우 해당 클립들을 combinedClips 리스트에 추가
         foreach (var kvp in sfxClips) {
-            if (kvp.Key.Contains(keyword1) && kvp.Key.Contains(keyword2)) {
+            // 각 키워드를 분리하여 확인
+            string[] keywords = kvp.Key.Split('-');
+            if (keywords.Length == 2 && 
+                ((keywords[0] == keyword1 && keywords[1] == keyword2) ||
+                (keywords[0] == keyword2 && keywords[1] == keyword1))) {
                 combinedClips.AddRange(kvp.Value);
             }
         }
@@ -188,13 +192,13 @@ public class AudioManager : MonoBehaviour {
             // 클립 이름을 '-'로 분리하여 각 부분을 키워드로 저장합니다.
             string[] keywords = clip.name.Split('-');
             if (keywords.Length == 2) {
-                string combinedKeyword = keywords[0] + keywords[1];
+                string combinedKeyword = keywords[0] + "-" + keywords[1];
                 AddSFXClip(combinedKeyword, clip);
             }
             }
         }
 
-        void AddSFXClip(string keyword, AudioClip clip) { //특정 키워드에 해당하는 오디오 클립을 딕셔너리에 추가
+    private void AddSFXClip(string keyword, AudioClip clip) { //특정 키워드에 해당하는 오디오 클립을 딕셔너리에 추가
             if (!sfxClips.ContainsKey(keyword)) {
                 sfxClips[keyword] = new List<AudioClip>();
             }
