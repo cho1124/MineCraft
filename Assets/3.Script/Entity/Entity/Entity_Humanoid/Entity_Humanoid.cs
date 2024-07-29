@@ -8,10 +8,12 @@ public class Entity_Humanoid : Entity
     [SerializeField] private Part L_Hand;
     [SerializeField] private Part R_Hand;
 
+    [SerializeField] private Inventory inventory = null;
     [SerializeField] private ItemComponent L_held_data, R_held_data, helmet_data, chestplate_data, leggings_data, boots_data;
 
     private void Awake()
     {
+        TryGetComponent(out inventory);
         Awake_Default();
         L_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Left:Upper/Arm:Left:Lower/Arm:Left:Hand").gameObject.GetComponent<Part>();
         R_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Right:Upper/Arm:Right:Lower/Arm:Right:Hand").gameObject.GetComponent<Part>();
@@ -20,25 +22,103 @@ public class Entity_Humanoid : Entity
 
     public void Update_Status_Humanoid()
     {
-        //인벤토리의 장비칸을 읽어오고 각 능력치에 추가
-        //weight_current = weight_base + helmet_data.weight + chestplate_data.weight + leggings_data.weight + boots_data.weight + L_held_data.weight + R_held_data.weight;
-        //weight_rate = weight_current / weight_max;
-        //defense_current = defense_base + helmet_data.armorDefense + chestplate_data.armorDefense + leggings_data.armorDefense + boots_data.armorDefense;
+        if(inventory != null)
+        {
+            if (inventory.Equipment_Slot[0] != null)
+            {
+                helmet_data = inventory.Equipment_Slot[0];
+                weight_current = weight_current + helmet_data.weight;
+                defense_current = defense_current + helmet_data.armorDefense;
+            }
+            if (inventory.Equipment_Slot[1] != null)
+            {
+                chestplate_data = inventory.Equipment_Slot[1];
+                weight_current = weight_current + chestplate_data.weight;
+                defense_current = defense_current + chestplate_data.armorDefense;
+            }
+            if (inventory.Equipment_Slot[2] != null)
+            {
+                leggings_data = inventory.Equipment_Slot[2];
+                weight_current = weight_current + leggings_data.weight;
+                defense_current = defense_current + leggings_data.armorDefense;
+            }
+            if (inventory.Equipment_Slot[3] != null)
+            {
+                boots_data = inventory.Equipment_Slot[3];
+                weight_current = weight_current + boots_data.weight;
+                defense_current = defense_current + boots_data.armorDefense;
+            }
 
-        //무기 조합에 따른 무브셋 넘버 지정 및 Set_Value
-        //L_Hand.Set_Value_Melee(attack_damage_base + L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.toolTier);
-        //R_Hand.Set_Value_Melee(attack_damage_base + R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.toolTier);
-        L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1); //이건 맨손 기준
-        R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1); //이건 맨손 기준
+            if (inventory.Equipment_Slot[4] != null)
+            {
+                L_held_data = inventory.Equipment_Slot[4];
+                L_Hand.Set_Value_Melee(attack_damage_base + L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.toolTier);
+                L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(false);
+            }
+            else
+            {
+                L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
+                L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
+            }
+
+            if (inventory.Equipment_Slot[5] != null)
+            {
+                R_held_data = inventory.Equipment_Slot[5];
+                R_Hand.Set_Value_Melee(attack_damage_base + R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.toolTier);
+                R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(false);
+            }
+            else
+            {
+                R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
+                R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
+            }
+
+            if ()
+            {
+
+            }
+
+            switch (animator.GetInteger("Moveset_Number"))
+            {
+                case 10:
+                case -10:
+                    guard_rate = 0.5f;
+                    break;
+                case 1:
+                    guard_rate = L_held_data.guardRate;
+                    break;
+                case -1:
+                    guard_rate = R_held_data.guardRate;
+                    break;
+                case 2:
+                case -2:
+                    guard_rate = (L_held_data.guardRate + R_held_data.guardRate) / 2f;
+                    break;
+                case 3:
+                    guard_rate = R_held_data.guardRate;
+                    break;
+                case -3:
+                    guard_rate = L_held_data.guardRate;
+                    break;
+                case 4:
+                case -4:
+                    guard_rate = 0f;
+                    break;
+            }
+        }
+        else
+        {
+            L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
+            R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
+            guard_rate = 0.5f;
+        }
         L_Hand.Set_Collider();
         R_Hand.Set_Collider();
 
-        //animator.SetInteger("Moveset_Number", moveset_number);
         animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
         animator.SetFloat("L_Attack_Speed", L_Hand.attack_speed);
         animator.SetFloat("R_Attack_Speed", R_Hand.attack_speed);
         animator.SetFloat("Movement_Speed", movement_speed);
-        //guard_rate 설정
     }
 
     public void On_L_Hand_Collider()
