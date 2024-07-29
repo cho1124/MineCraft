@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -153,12 +153,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   masterVolume: 1
-  musicVolume: 1
+  bgmVolume: 1
   sfxVolume: 1
   audioMixer: {fileID: 24100000, guid: ad4f46b8235fad947899d8b2bc1907d6, type: 2}
-  masterVolumeSlider: {fileID: 0}
-  musicVolumeSlider: {fileID: 0}
-  sfxVolumeSlider: {fileID: 0}
+  masterVolumeScrollbar: {fileID: 1500355151}
+  bgmVolumeScrollbar: {fileID: 1443190137}
+  sfxVolumeScrollbar: {fileID: 319626725}
+  bgmClips:
+  - {fileID: 8300000, guid: 311f5acf40cb9b74d8aa6b5dd149b700, type: 3}
+  - {fileID: 8300000, guid: 80549cdd3e935fd4fb9230650f6d6f12, type: 3}
+  - {fileID: 8300000, guid: dc7850f5c7854eb42bd0b7184fb79937, type: 3}
+  bgmMixerGroup: {fileID: 4276652189124636734, guid: ad4f46b8235fad947899d8b2bc1907d6, type: 2}
+  sfxMixerGroup: {fileID: 2678614090764741615, guid: ad4f46b8235fad947899d8b2bc1907d6, type: 2}
 --- !u!4 &35861280
 Transform:
   m_ObjectHideFlags: 0

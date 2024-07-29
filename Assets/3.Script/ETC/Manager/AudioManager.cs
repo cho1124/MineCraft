@@ -28,6 +28,9 @@ SFX- 음악클립 이름에 키워드 정확하게 적어두고 키워드 2개 찾기( <예시>"Creeper" "
 ※키워드는 [Assets/Resources/SFX] 에서 보고 사용하면 됩니다. 
 ※PlayerPrefs : 유니티에서 제공하는 내장 클래스:간단한데이터를 영구적으로 저장하고 불러오는데 사용
 
+※마스터볼륨스크롤바는 그렇지 않은데, bgm 볼륨바가 0이랑 가까워지면 소리가 작아지는데 스크롤바를 제일 왼쪽으로
+했을때 소리가 다시 켜지는 오류가 있어서 볼륨 0 일시 음소거 되는 부분 추가함
+
 */
 public class AudioManager : MonoBehaviour {
     public static AudioManager instance = null;
@@ -42,15 +45,14 @@ public class AudioManager : MonoBehaviour {
 
     public AudioMixer audioMixer;
 
-    [Header("UI Sliders")]
-    public Slider masterVolumeSlider;
-    public Slider bgmVolumeSlider;
-    public Slider sfxVolumeSlider;
+    [Header("UI Scrollbars")]
+    public Scrollbar masterVolumeScrollbar;
+    public Scrollbar bgmVolumeScrollbar;
+    public Scrollbar sfxVolumeScrollbar;
 
     [Header("BGM")]
     public AudioClip[] bgmClips;
     private AudioSource bgmSource;
-
     private AudioSource sfxSource;
 
     // 키워드와 오디오 클립을 매핑할 딕셔너리
@@ -72,14 +74,14 @@ public class AudioManager : MonoBehaviour {
 
         LoadSettings();
 
-        if (masterVolumeSlider != null)
-            masterVolumeSlider.value = masterVolume;
+        if (masterVolumeScrollbar != null)
+            masterVolumeScrollbar.value = masterVolume;
 
-        if (bgmVolumeSlider != null)
-            bgmVolumeSlider.value = bgmVolume;
+        if (bgmVolumeScrollbar != null)
+            bgmVolumeScrollbar.value = bgmVolume;
 
-        if (sfxVolumeSlider != null)
-            sfxVolumeSlider.value = sfxVolume;
+        if (sfxVolumeScrollbar != null)
+            sfxVolumeScrollbar.value = sfxVolume;
 
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.loop = false; // 루프가 아니라 다음 클립을 재생하기 위해 설정
@@ -101,19 +103,34 @@ public class AudioManager : MonoBehaviour {
 
     public void SetMasterVolume(float volume) { //마스터볼륨을 설정하고 PlayerPrefs에 저장
         masterVolume = volume;
-        AudioListener.volume = masterVolume;
+        if (masterVolume <= 0.0001f) {
+            AudioListener.volume = 0f; // 음소거
+        }
+        else {
+            AudioListener.volume = masterVolume;
+        }
         PlayerPrefs.SetFloat("MasterVolume", masterVolume);
     }
 
     public void SetBGMVolume(float volume) { //배경음악 볼륨을 설정
         bgmVolume = volume;
-        audioMixer.SetFloat("BGMVolume", Mathf.Log10(bgmVolume) * 20);
+        if (bgmVolume <= 0.0001f) {
+            audioMixer.SetFloat("BGMVolume", -80f); // 음소거
+        }
+        else {
+            audioMixer.SetFloat("BGMVolume", Mathf.Log10(bgmVolume) * 20);
+        }
         PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
     }
 
     public void SetSFXVolume(float volume) { //효과음 볼륨을 설정
         sfxVolume = volume;
-        audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        if (sfxVolume <= 0.0001f) {
+            audioMixer.SetFloat("SFXVolume", -80f); // 음소거
+        }
+        else {
+            audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        }
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
     }
 
@@ -150,7 +167,7 @@ public class AudioManager : MonoBehaviour {
 
         //딕셔너리의 각 키워드를 반복하면서, 키워드에 keyword1 또는 keyword2가 포함된 경우 해당 클립들을 combinedClips 리스트에 추가
         foreach (var kvp in sfxClips) {
-            if (kvp.Key.Contains(keyword1) || kvp.Key.Contains(keyword2)) {
+            if (kvp.Key.Contains(keyword1) && kvp.Key.Contains(keyword2)) {
                 combinedClips.AddRange(kvp.Value);
             }
         }
@@ -168,9 +185,9 @@ public class AudioManager : MonoBehaviour {
             // 클립 이름을 '-'로 분리하여 각 부분을 키워드로 저장합니다.
             string[] keywords = clip.name.Split('-');
             if (keywords.Length == 2) {
-                foreach (var keyword in keywords) {
-                    AddSFXClip(keyword, clip);
-                }
+                string combinedKeyword = keywords[0] + keywords[1];
+                AddSFXClip(combinedKeyword, clip);
+            }
             }
         }
 
@@ -181,4 +198,4 @@ public class AudioManager : MonoBehaviour {
             sfxClips[keyword].Add(clip);
         }
     }
-}
+

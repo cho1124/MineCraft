@@ -39,15 +39,18 @@ public class VolumeValue : MonoBehaviour
     private void FullVolume() // 전체 음량
     {
         Full_volume_text.text = $"전체 음량: {sr[0].value * 100:F0}%";
+        AudioManager.instance.SetMasterVolume(sr[0].value);
     }
 
     private void BackgroundVolume() // 배경 음량
     {
         background_volume_text.text = $"배경 음량: {sr[1].value * 100:F0}%";
+        AudioManager.instance.SetBGMVolume(sr[1].value);
     }
 
     private void EffectVolume() // 효과 음량
     {
         effect_text.text = $"효과 음량: {sr[2].value * 100:F0}%";
+        AudioManager.instance.SetSFXVolume(sr[2].value);
     }
 }
