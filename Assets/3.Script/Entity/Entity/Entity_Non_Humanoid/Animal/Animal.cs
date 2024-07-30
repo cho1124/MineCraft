@@ -8,17 +8,7 @@ public class Animal : Entity_Non_Humanoid
     //동물도 자유롭게 구현하면 될거에용
 
     /*
-      ★현재 문제점 
-     - 플레이어 무기에 달려있는 test1 스크립트 만진 이후 플레이어가 동물을 
-    공격할 수 없게 됨... 공격해도 반응이 없음. 그러나 현재 몬스터들은 동물들에게 데미지를 주고 죽이기도 함.
-
-
-     => 점프모션만 하고, y축 이동 제외
-     
      */
-
-    private bool isInvincible = false; // 무적 상태 변수(동물이 태어나자마 몬스터와 부딧쳐 죽는 경우가 많아서)
-    // animalspawner 스크립트에 무적상태 2초로 설정하여 태어나서 2초동안은 무적이 되도록
 
     public GameObject beafPrefab; // beaf 프리팹을 인스펙터에서 설정
 
@@ -88,11 +78,6 @@ public class Animal : Entity_Non_Humanoid
         agent = GetComponent<NavMeshAgent>();
         Collider col = GetComponent<Collider>();
 
-        // NavMesh 위에 있는지 확인
-        if (!agent.isOnNavMesh)
-        {
-            MoveToNearestNavMesh();
-        }
 
         // 성장 관련 초기 설정
         if (gameObject.name.Contains("Baby")) {
@@ -105,8 +90,6 @@ public class Animal : Entity_Non_Humanoid
         // 초기 이동 속도 설정
         currentSpeed = baseSpeed = 2;
 
-        // 배고픔 감소 루틴 시작
-        StartCoroutine(HungerRoutine());
 
         // 오브젝트의 크기에 맞게 NavMeshAgent의 radius 설정
         if (col != null) {
@@ -118,8 +101,6 @@ public class Animal : Entity_Non_Humanoid
         // 탐지 거리 초기화
         defaultDetectionDistance = detectionDistance;
 
-        // 초기 상태 설정
-        ChangeState(State.Wander);
 
         // 위치 변화 감지 초기화
         lastPosition = transform.position;
@@ -127,13 +108,9 @@ public class Animal : Entity_Non_Humanoid
         idleTime = 0f;
     }
 
-    protected virtual void Update() {
+    protected virtual void Update()
+    {
 
-        // y축 높이 체크
-        if (transform.position.y >= 2|| transform.position.y<-5)
-        {
-            MoveToNearestNavMesh();
-        }
 
         //성장 관련 업데이트
         //성인이 아니고 배부름상태가 growthTimeGaze 만큼 유지되면 성인으로 자람
@@ -144,12 +121,6 @@ public class Animal : Entity_Non_Humanoid
             }
         }
 
-        // Detect 메서드 호출(동물들 머리에 하트나 느낌표 띄우는거)
-        if (Detect())
-        {
-            return;
-        }
-
         // 배고픔 상태에 따른 성장 타이머 초기화
         if (!isFull) {
             growthTimeGaze = 0f;
@@ -158,20 +129,13 @@ public class Animal : Entity_Non_Humanoid
         // NavMesh 상에 있는지 확인
         if (!agent.isOnNavMesh) {
             Debug.LogWarning($"Agent{agent.name} 가 NavMesh위에 없습니다.!");
-            MoveToNearestNavMesh();
             return;
         }
 
-      //  // 실시간 맵 변동을 반영하여 NavMesh 업데이트
-      //  if (dynamicNavMesh != null) {
-      //      dynamicNavMesh.UpdateNavMesh();
-      //  }
 
-        // 현재 상태에 따라 행동 수행
         switch (currentState) {
             case State.Wander:
                 if (!agent.hasPath) {
-                    SetRandomDestination();
                 }
                 break;
             case State.Jump:
@@ -184,8 +148,6 @@ public class Animal : Entity_Non_Humanoid
 
         //목적지 도착시 상태 변경
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending) {
-            ChangeState(GetRandomState());
-            SetRandomDestination();
         }
 
         // 위치 변화 감지
@@ -207,7 +169,6 @@ public class Animal : Entity_Non_Humanoid
         }
         // idleTime이 idleTimeLimit을 초과한 경우 새로운 랜덤 목적지를 설정합니다.
         if (idleTime >= idleTimeLimit) {
-            SetRandomDestination();
             idleTime = 0f;
         }
     }
@@ -351,304 +312,231 @@ public class Animal : Entity_Non_Humanoid
         }
     }
 
-    private IEnumerator HungerRoutine() {
-        while (true) {
-            yield return new WaitForSeconds(60f);
-
-            if (hungerLevel > 0) {
-                hungerLevel--;
-            }
-
-            // 배고픔 상태 관리
-            if (hungerLevel > 6) {
-                isHungry = false;
-                isFull = true;
-                detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
-                currentSpeed = baseSpeed; // 배부름 상태에서는 기본 속도
-            }
-            else {
-                isHungry = true;
-                isFull = false;
-                detectionDistance = defaultDetectionDistance * 2; // 배고픔 상태일 때 탐지 거리 두 배
-
-                if (hungerLevel <= 3) {
-                    currentSpeed = baseSpeed + speedIncrease; // 배고픔 상태에서는 속도 증가
-                    SearchForFood();
-                }
-                else {
-                    currentSpeed = baseSpeed; // 기본 속도
-                }
-            }
-        }
-    }
-
-    private void SearchForFood() {
-        for (int i = 0; i < detectionRays; i++) {
-            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
-                if (hitInfo.collider.CompareTag("Food")) {
-                    MoveTowards(hitInfo.transform.position);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void MoveTowards(Vector3 targetPosition) {
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        if (agent.isOnNavMesh)
-        {
-            agent.SetDestination(targetPosition); // NavMeshAgent를 사용하여 이동
-        }
-    }
-    protected virtual void MoveToNearestNavMesh() {
-        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
-            MoveTowards(hit.position);
-            ChangeState(State.Wander);
-        }
-    }
-
-    protected virtual bool Detect()
-    {
-        bool detected = false;
-
-        for (int i = 0; i < detectionRays; i++)
-        {
-            float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance))
-            {
-                if (hitInfo.collider.CompareTag("Player"))
-                {
-                  //  Debug.Log("플레이어를 발견했습니다!");
-                    if (activeEffect == null || activeEffect.tag != "Heart")
-                    {
-                        OnPlayerDetected();
-                        detected = true;
-                    }
-                }
-                else if (hitInfo.collider.CompareTag("Monster"))
-                {
-                  //  Debug.Log("몬스터를 발견했습니다!");
-                    if (activeEffect == null || activeEffect.tag != "Shock")
-                    {
-                        OnMonsterDetected();
-                        detected = true;
-                    }
-                }
-            }
-        }
-
-        return detected;
-    }
-
-    protected virtual void OnPlayerDetected() {
-        // 플레이어를 발견했을 때의 기본 동작
-       // Debug.Log("Animal: OnPlayerDetected 호출됨");
-        if (activeEffect == null || activeEffect.tag != "Shock")
-        {
-            StartCoroutine(DisplayHeartAndRun());
-        }
-    }
-
-    protected virtual void OnMonsterDetected()
-    {
-       // Debug.Log("Animal: OnMonsterDetected 호출됨");
-        if (activeEffect == null || activeEffect.tag != "Heart")
-        {
-            StartCoroutine(DisplayShockAndRun());
-        }
-    }
-
-    private IEnumerator DisplayHeartAndRun()
-    {
-        ClearActiveEffect(); // 기존 효과 제거
-
-        activeEffect = Instantiate(heartObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
-        activeEffect.transform.SetParent(transform);
-        activeEffect.tag = "Heart";
-
-        ChangeState(State.Idle);
-        yield return new WaitForSeconds(2f);
-
-        transform.Rotate(0, 180, 0);
-
-        ChangeState(State.Run);
-
-        ClearActiveEffect(); // 효과 제거
-    }
-
-    private IEnumerator DisplayShockAndRun()
-    {
-        ClearActiveEffect(); // 기존 효과 제거
-
-        activeEffect = Instantiate(shockObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
-        activeEffect.transform.SetParent(transform);
-        activeEffect.tag = "Shock";
-
-        ChangeState(State.Idle);
-        yield return new WaitForSeconds(2f);
-
-        transform.Rotate(0, 180, 0);
-
-        ChangeState(State.Run);
-
-        ClearActiveEffect(); // 효과 제거
-    }
-
-    private void ClearActiveEffect()
-    {
-        if (activeEffect != null)
-        {
-            Destroy(activeEffect);
-            activeEffect = null;
-        }
-    }
-
-    protected IEnumerator PlayerDetectionCooldown() {
-        yield return new WaitForSeconds(playerDetectionCooldown);
-        canDetectPlayer = true; // 쿨타임 종료 후 탐지 활성화
-    }
-
-    //걷거나 달리기 상태일 때 랜덤 목적지로 변경되는 이유는 동물이 정해진 패턴 없이 무작위로 배회하거나 달리게 하기 위해서.
-    protected virtual void ChangeState(State newState) {
-        currentState = newState;
-
-        switch (currentState) {
-            case State.Wander:
-                agent.speed = baseSpeed;
-                animator.SetInteger("Walk", 1);
-                SetRandomDestination();
-                break;
-            case State.Jump:
-                animator.Play("Jump");
-              //  StartCoroutine(JumpThenIdle());
-                break;
-            case State.Idle:
-                agent.ResetPath();
-                animator.Play("Idle");
-                StartCoroutine(IdleThenWander());
-                break;
-            case State.Run:
-                agent.speed = baseSpeed * 2;
-                animator.SetInteger("Walk", 1);
-                SetRandomDestination();
-                break;
-        }
-    }
-
-    protected virtual State GetRandomState() {
-        int random = Random.Range(0, 100);
-        if (random < 25) {
-            return State.Jump; // 25% 확률로 점프 상태로 전환
-        }
-        else if (random < 50) {
-            return State.Run; // 25% 확률로 달리기 상태로 전환
-        }
-        else if (random < 75) {
-            return State.Idle; // 25% 확률로 대기 상태로 전환
-        }
-        else {
-            return State.Wander; // 25% 확률로 배회 상태로 전환
-        }
-    }
-
-    protected virtual void SetRandomDestination() {
-        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
-        randomDirection += transform.position;
-
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas)) {
-            if (agent.isOnNavMesh)
-            {
-                agent.SetDestination(hit.position);
-            }
-            else
-            {
-                Debug.LogWarning("SetRandomDestination 호출 전에 NavMesh 위에 에이전트가 없습니다.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("적절한 네비메쉬 위치 찾기 실패!");
-        }
-    }
-
-    protected virtual IEnumerator IdleThenWander() {
-        yield return new WaitForSeconds(Random.Range(2, 5));
-        ChangeState(State.Wander);
-    }
-
-    public void TakeDamage(int damage) 
-    {
-    
-        if (isInvincible)
-        {
-            Debug.Log($"{name}은(는) 무적 상태입니다. 데미지를 받지 않습니다.");
-            return;
-        }
-    
-        Debug.Log($"{name}이(가) {damage}만큼의 데미지를 입었습니다. 현재 체력: ");
-        //Health -= damage;
-        StartCoroutine(DisplayShockAndRun()); // 데미지를 입었을 때 DisplayShockAndRun 코루틴 호출
-    
-      //  if (Health <= 0)
-      //  {
-      //      Die();
-      //  }
-    
-    }
-
-    //protected override void Die()
-    //{
-    //    Vector3 position = transform.position;
-    //    Quaternion rotation = transform.rotation;
+    //private IEnumerator HungerRoutine() {
+    //    while (true) {
+    //        yield return new WaitForSeconds(60f);
     //
-    //    int meatCount = 1;
-    //    string animalName = gameObject.name;
+    //        if (hungerLevel > 0) {
+    //            hungerLevel--;
+    //        }
     //
-    //    if (animalName.Contains("Cat"))
-    //    {
-    //        meatCount = Random.Range(1, 3);
-    //    }
-    //    else if (animalName.Contains("Dog"))
-    //    {
-    //        meatCount = Random.Range(2, 4);
-    //    }
-    //    else if (animalName.Contains("Chicken"))
-    //    {
-    //        meatCount = Random.Range(1, 4);
-    //    }
-    //    else if (animalName.Contains("Lion"))
-    //    {
-    //        meatCount = Random.Range(3, 6);
-    //    }
+    //        // 배고픔 상태 관리
+    //        if (hungerLevel > 6) {
+    //            isHungry = false;
+    //            isFull = true;
+    //            detectionDistance = defaultDetectionDistance; // 배부름 상태일 때 탐지 거리 복원
+    //            currentSpeed = baseSpeed; // 배부름 상태에서는 기본 속도
+    //        }
+    //        else {
+    //            isHungry = true;
+    //            isFull = false;
+    //            detectionDistance = defaultDetectionDistance * 2; // 배고픔 상태일 때 탐지 거리 두 배
     //
-    //    if (animalName.Contains("Baby"))
-    //    {
-    //        meatCount = Mathf.CeilToInt(meatCount / 2.0f);
+    //            if (hungerLevel <= 3) {
+    //                currentSpeed = baseSpeed + speedIncrease; // 배고픔 상태에서는 속도 증가
+    //                SearchForFood();
+    //            }
+    //            else {
+    //                currentSpeed = baseSpeed; // 기본 속도
+    //            }
+    //        }
     //    }
-    //
-    //    Destroy(gameObject);
-    //
-    //    for (int i = 0; i < meatCount; i++)
-    //    {
-    //        Vector3 spawnPosition = position + new Vector3(i * 0.5f, 0, 0);
-    //        Instantiate(beafPrefab, spawnPosition, rotation);
-    //    }
-    //    StartCoroutine(OnDie());
     //}
 
-    public void SetInvincible(float duration)
-    {
-        StartCoroutine(InvincibilityCoroutine(duration));
-    }
-
-    private IEnumerator InvincibilityCoroutine(float duration)
-    {
-        isInvincible = true;
-        yield return new WaitForSeconds(duration);
-        isInvincible = false;
-    }
-
+    //private void SearchForFood() {
+    //    for (int i = 0; i < detectionRays; i++) {
+    //        float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
+    //        Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+    //        if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance)) {
+    //            if (hitInfo.collider.CompareTag("Food")) {
+    //                MoveTowards(hitInfo.transform.position);
+    //                break;
+    //            }
+    //        }
+    //    }
+    //}
+    //
+    //private void MoveTowards(Vector3 targetPosition) {
+    //    Vector3 direction = (targetPosition - transform.position).normalized;
+    //    if (agent.isOnNavMesh)
+    //    {
+    //        agent.SetDestination(targetPosition); // NavMeshAgent를 사용하여 이동
+    //    }
+    //}
+    //protected virtual void MoveToNearestNavMesh() {
+    //    if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
+    //        MoveTowards(hit.position);
+    //        ChangeState(State.Wander);
+    //    }
+    //}
+    //
+    //protected virtual bool Detect()
+    //{
+    //    bool detected = false;
+    //
+    //    for (int i = 0; i < detectionRays; i++)
+    //    {
+    //        float angle = (-detectionAngle / 2) + (detectionAngle / (detectionRays - 1)) * i;
+    //        Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+    //        if (Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, detectionDistance))
+    //        {
+    //            if (hitInfo.collider.CompareTag("Player"))
+    //            {
+    //              //  Debug.Log("플레이어를 발견했습니다!");
+    //                if (activeEffect == null || activeEffect.tag != "Heart")
+    //                {
+    //                    OnPlayerDetected();
+    //                    detected = true;
+    //                }
+    //            }
+    //            else if (hitInfo.collider.CompareTag("Monster"))
+    //            {
+    //              //  Debug.Log("몬스터를 발견했습니다!");
+    //                if (activeEffect == null || activeEffect.tag != "Shock")
+    //                {
+    //                    OnMonsterDetected();
+    //                    detected = true;
+    //                }
+    //            }
+    //        }
+    //    }
+    //
+    //    return detected;
+    //}
+    //
+    //protected virtual void OnPlayerDetected() {
+    //    // 플레이어를 발견했을 때의 기본 동작
+    //   // Debug.Log("Animal: OnPlayerDetected 호출됨");
+    //    if (activeEffect == null || activeEffect.tag != "Shock")
+    //    {
+    //        StartCoroutine(DisplayHeartAndRun());
+    //    }
+    //}
+    //
+    //protected virtual void OnMonsterDetected()
+    //{
+    //   // Debug.Log("Animal: OnMonsterDetected 호출됨");
+    //    if (activeEffect == null || activeEffect.tag != "Heart")
+    //    {
+    //        StartCoroutine(DisplayShockAndRun());
+    //    }
+    //}
+    //
+    //private IEnumerator DisplayHeartAndRun()
+    //{
+    //    ClearActiveEffect(); // 기존 효과 제거
+    //
+    //    activeEffect = Instantiate(heartObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+    //    activeEffect.transform.SetParent(transform);
+    //    activeEffect.tag = "Heart";
+    //
+    //    ChangeState(State.Idle);
+    //    yield return new WaitForSeconds(2f);
+    //
+    //    transform.Rotate(0, 180, 0);
+    //
+    //    ChangeState(State.Run);
+    //
+    //    ClearActiveEffect(); // 효과 제거
+    //}
+    //
+    //private IEnumerator DisplayShockAndRun()
+    //{
+    //    ClearActiveEffect(); // 기존 효과 제거
+    //
+    //    activeEffect = Instantiate(shockObjectPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+    //    activeEffect.transform.SetParent(transform);
+    //    activeEffect.tag = "Shock";
+    //
+    //    ChangeState(State.Idle);
+    //    yield return new WaitForSeconds(2f);
+    //
+    //    transform.Rotate(0, 180, 0);
+    //
+    //    ChangeState(State.Run);
+    //
+    //    ClearActiveEffect(); // 효과 제거
+    //}
+    //
+    //private void ClearActiveEffect()
+    //{
+    //    if (activeEffect != null)
+    //    {
+    //        Destroy(activeEffect);
+    //        activeEffect = null;
+    //    }
+    //}
+    //
+    //protected IEnumerator PlayerDetectionCooldown() {
+    //    yield return new WaitForSeconds(playerDetectionCooldown);
+    //    canDetectPlayer = true; // 쿨타임 종료 후 탐지 활성화
+    //}
+    //
+    ////걷거나 달리기 상태일 때 랜덤 목적지로 변경되는 이유는 동물이 정해진 패턴 없이 무작위로 배회하거나 달리게 하기 위해서.
+    //protected virtual void ChangeState(State newState) {
+    //    currentState = newState;
+    //
+    //    switch (currentState) {
+    //        case State.Wander:
+    //            agent.speed = baseSpeed;
+    //            animator.SetInteger("Walk", 1);
+    //            SetRandomDestination();
+    //            break;
+    //        case State.Jump:
+    //            animator.Play("Jump");
+    //          //  StartCoroutine(JumpThenIdle());
+    //            break;
+    //        case State.Idle:
+    //            agent.ResetPath();
+    //            animator.Play("Idle");
+    //            StartCoroutine(IdleThenWander());
+    //            break;
+    //        case State.Run:
+    //            agent.speed = baseSpeed * 2;
+    //            animator.SetInteger("Walk", 1);
+    //            SetRandomDestination();
+    //            break;
+    //    }
+    //}
+    //
+    //protected virtual State GetRandomState() {
+    //    int random = Random.Range(0, 100);
+    //    if (random < 25) {
+    //        return State.Jump; // 25% 확률로 점프 상태로 전환
+    //    }
+    //    else if (random < 50) {
+    //        return State.Run; // 25% 확률로 달리기 상태로 전환
+    //    }
+    //    else if (random < 75) {
+    //        return State.Idle; // 25% 확률로 대기 상태로 전환
+    //    }
+    //    else {
+    //        return State.Wander; // 25% 확률로 배회 상태로 전환
+    //    }
+    //}
+    //
+    //protected virtual void SetRandomDestination() {
+    //    Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+    //    randomDirection += transform.position;
+    //
+    //    if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas)) {
+    //        if (agent.isOnNavMesh)
+    //        {
+    //            agent.SetDestination(hit.position);
+    //        }
+    //        else
+    //        {
+    //            Debug.LogWarning("SetRandomDestination 호출 전에 NavMesh 위에 에이전트가 없습니다.");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("적절한 네비메쉬 위치 찾기 실패!");
+    //    }
+    //}
+    //
+    //protected virtual IEnumerator IdleThenWander() {
+    //    yield return new WaitForSeconds(Random.Range(2, 5));
+    //    ChangeState(State.Wander);
+    //}
 }

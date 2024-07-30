@@ -5,9 +5,11 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Experimental;
+using Entity_Data;
 
 public class Player_Control : MonoBehaviour
 {
+    [SerializeField] private Entity entity;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
@@ -45,8 +47,6 @@ public class Player_Control : MonoBehaviour
 
     private bool is_guard_down = false;
 
-    private bool input_key_inventory = false;
-
     public bool Grounded;
     public float GroundedOffset;
     public Vector3 GroundedBoxSize;
@@ -57,6 +57,7 @@ public class Player_Control : MonoBehaviour
 
     private void Awake()
     {
+        TryGetComponent(out entity);
         TryGetComponent(out controller);
         TryGetComponent(out animator);
         head_transform = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Head");
@@ -200,16 +201,26 @@ public class Player_Control : MonoBehaviour
     }
     private void Attack_Control()
     {
-        if (!animator.GetBool("Is_Guarding"))
+        if (!entity.is_stunned)
         {
-            animator.SetBool("LR_Attack", is_L_down && is_R_down);
-            animator.SetBool("L_Attack", is_L_down);
-            animator.SetBool("R_Attack", is_R_down);
-        }
+            if (!animator.GetBool("Is_Guarding"))
+            {
+                animator.SetBool("LR_Attack", is_L_down && is_R_down);
+                animator.SetBool("L_Attack", is_L_down);
+                animator.SetBool("R_Attack", is_R_down);
+            }
 
-        if(!animator.GetBool("Is_Attacking"))
+            if (!animator.GetBool("Is_Attacking"))
+            {
+                animator.SetBool("Guard", is_guard_down);
+            }
+        }
+        else
         {
-            animator.SetBool("Guard", is_guard_down);
+            animator.SetBool("LR_Attack", false);
+            animator.SetBool("L_Attack", false);
+            animator.SetBool("R_Attack", false);
+            animator.SetBool("Guard", false);
         }
     }
 

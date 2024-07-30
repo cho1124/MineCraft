@@ -30,24 +30,28 @@ public class Entity_Humanoid : Entity
                 weight_current = weight_current + helmet_data.weight;
                 defense_current = defense_current + helmet_data.armorDefense;
             }
+            else helmet_data = null;
             if (inventory.Equipment_Slot[1] != null)
             {
                 chestplate_data = inventory.Equipment_Slot[1];
                 weight_current = weight_current + chestplate_data.weight;
                 defense_current = defense_current + chestplate_data.armorDefense;
             }
+            else chestplate_data = null;
             if (inventory.Equipment_Slot[2] != null)
             {
                 leggings_data = inventory.Equipment_Slot[2];
                 weight_current = weight_current + leggings_data.weight;
                 defense_current = defense_current + leggings_data.armorDefense;
             }
+            else leggings_data = null;
             if (inventory.Equipment_Slot[3] != null)
             {
                 boots_data = inventory.Equipment_Slot[3];
                 weight_current = weight_current + boots_data.weight;
                 defense_current = defense_current + boots_data.armorDefense;
             }
+            else boots_data = null;
 
             if (inventory.Equipment_Slot[4] != null)
             {
@@ -57,6 +61,7 @@ public class Entity_Humanoid : Entity
             }
             else
             {
+                L_held_data = null;
                 L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
                 L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
             }
@@ -69,14 +74,72 @@ public class Entity_Humanoid : Entity
             }
             else
             {
+                R_held_data = null;
                 R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
                 R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
             }
 
-            //if ()
-            //{
-            //
-            //}
+
+
+            if (L_held_data != null && R_held_data != null)
+            {
+                if (L_held_data.equipmentType == "SHIELD")
+                {
+                    animator.SetInteger("Moveset_Number", 1);
+                    animator.SetFloat("LR_Attack_Speed", R_Hand.attack_speed);
+                }
+                else if (R_held_data.equipmentType == "SHIELD")
+                {
+                    animator.SetInteger("Moveset_Number", -1);
+                    animator.SetFloat("LR_Attack_Speed", L_Hand.attack_speed);
+                }
+                else if (L_held_data.equipmentType.Contains("ONE_HANDED") && R_held_data.equipmentType.Contains("ONE_HANDED"))
+                {
+                    animator.SetInteger("Moveset_Number", 2);
+                    animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
+                }
+            }
+            else if (L_held_data != null && R_held_data == null)
+            {
+                if (L_held_data.equipmentType.Contains("ONE_HANDED"))
+                {
+                    animator.SetInteger("Moveset_Number", -1);
+                    animator.SetFloat("LR_Attack_Speed", L_Hand.attack_speed);
+                }
+                else if (L_held_data.equipmentType.Contains("TWO_HANDED"))
+                {
+                    animator.SetInteger("Moveset_Number", -3);
+                    animator.SetFloat("LR_Attack_Speed", L_Hand.attack_speed);
+                }
+                else if (L_held_data.equipmentType == "BOW")
+                {
+                    animator.SetInteger("Moveset_Number", -4);
+                    animator.SetFloat("Draw_Speed", L_Hand.draw_speed);
+                }
+            }
+            else if (L_held_data == null && R_held_data != null)
+            {
+                if (R_held_data.equipmentType.Contains("ONE_HANDED"))
+                {
+                    animator.SetInteger("Moveset_Number", 1);
+                    animator.SetFloat("LR_Attack_Speed", R_Hand.attack_speed);
+                }
+                else if (R_held_data.equipmentType.Contains("TWO_HANDED"))
+                {
+                    animator.SetInteger("Moveset_Number", 3);
+                    animator.SetFloat("LR_Attack_Speed", R_Hand.attack_speed);
+                }
+                else if (R_held_data.equipmentType == "BOW")
+                {
+                    animator.SetInteger("Moveset_Number", 4);
+                    animator.SetFloat("Draw_Speed", R_Hand.draw_speed);
+                }
+            }
+            else
+            {
+                animator.SetInteger("Moveset_Number", 10);
+                animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
+            }
 
             switch (animator.GetInteger("Moveset_Number"))
             {
@@ -108,14 +171,17 @@ public class Entity_Humanoid : Entity
         }
         else
         {
+            animator.SetInteger("Moveset_Number", 10);
             L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
             R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
+            animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
             guard_rate = 0.5f;
         }
         L_Hand.Set_Collider();
         R_Hand.Set_Collider();
 
-        animator.SetFloat("LR_Attack_Speed", (L_Hand.attack_speed + R_Hand.attack_speed) / 2f);
+        movement_speed = Mathf.Max(0.1f, movement_speed - weight_rate);
+
         animator.SetFloat("L_Attack_Speed", L_Hand.attack_speed);
         animator.SetFloat("R_Attack_Speed", R_Hand.attack_speed);
         animator.SetFloat("Movement_Speed", movement_speed);

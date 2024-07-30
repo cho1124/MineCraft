@@ -35,14 +35,37 @@ namespace Entity_Data
         [SerializeField] protected float attack_speed_rate;
         [SerializeField] protected float guard_rate = 0f;
 
-        public float movement_speed { get; private set; }
-        public float jump_height { get; private set; }
+        [SerializeField] public Action On_Death;
+
+        [SerializeField] protected GameObject blood_particle;
+
+        public float movement_speed { get; protected set; }
+        public float jump_height { get; protected set; }
 
 
 
         protected Animator animator;
         protected Renderer[] entityRenderer;
         protected Color[] originalColor;
+
+        public bool is_stunned = false;
+        protected void Update()
+        {
+            if (posture_current <= 0f)
+            {
+                animator.SetFloat("Movement_Speed", movement_speed * 0.01f);
+                is_stunned = true;
+            }
+
+            if(is_stunned && posture_current >= posture_max)
+            {
+                animator.SetFloat("Movement_Speed", movement_speed);
+                is_stunned = false;
+            }
+
+            posture_current += posture_max * 0.1f * Time.deltaTime;
+            posture_current = Mathf.Clamp(posture_current, 0f, posture_max);
+        }
 
         protected void Awake_Default()
         {
@@ -55,14 +78,15 @@ namespace Entity_Data
             entityRenderer = GetComponentsInChildren<Renderer>();
             originalColor = new Color[entityRenderer.Length];
             for (int i = 0; i < entityRenderer.Length; i++) originalColor[i] = entityRenderer[i].material.color;
+            On_Death += Death;
         }
 
         public void Update_Status()
         {
             health_max = VIT * 2f;
 
-            weight_base = VIT * 1f + END * 0.5f;
-            weight_max = END * 0.75f + STR * 1.5f;
+            weight_base = VIT * 0.3f + END * 0.2f;
+            weight_max = END * 1f + STR * 1.5f;
             weight_current = weight_base;
 
             weight_rate = weight_current / weight_max;
@@ -77,8 +101,8 @@ namespace Entity_Data
             attack_damage_min_rate = 0.5f + DEX * 0.005f;
             attack_speed_rate = 1f + AGI * 0.005f;
 
-            movement_speed = 1f + AGI * 0.0025f - weight_rate;
-            jump_height = 1f * AGI * 0.0025f - weight_rate;
+            movement_speed = Mathf.Max(0.1f, 1f + AGI * 0.0025f);
+            jump_height = Mathf.Max(0.1f, 1f + AGI * 0.0025f);
         }
 
         public void On_Hit(float damage, Collider attacker)
@@ -107,7 +131,6 @@ namespace Entity_Data
                     {
                         damage_posture_result *= 1f - guard_rate;
                         posture_current -= damage_posture_result;
-                        //float knockback_rate = damage_posture_result / posture_max; //넉백 이벤트 추가하기
                         if (posture_current <= 0) Debug.Log("그로기!");
                     }
                 }
@@ -122,7 +145,7 @@ namespace Entity_Data
                     if (health_current <= 0)
                     {
                         Debug.Log("사망!");
-                        Destroy(gameObject);
+                        On_Death();
                     }
                 }
 
@@ -133,6 +156,12 @@ namespace Entity_Data
                     if (posture_current <= 0) Debug.Log("그로기!");
                 }
             }
+        }
+
+        protected void Death()
+        {
+            Instantiate(blood_particle, transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
 
         protected IEnumerator BlinkRed()

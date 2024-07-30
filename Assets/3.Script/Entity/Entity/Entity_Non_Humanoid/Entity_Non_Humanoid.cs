@@ -21,6 +21,8 @@ public class Entity_Non_Humanoid : Entity
         head.Set_Collider();
         body.Set_Collider();
 
+        movement_speed = Mathf.Max(0.1f, movement_speed - weight_rate);
+
         animator.SetFloat("Head_Attack_Speed", head.attack_speed);
         animator.SetFloat("Body_Attack_Speed", body.attack_speed);
         animator.SetFloat("Movement_Speed", movement_speed);
