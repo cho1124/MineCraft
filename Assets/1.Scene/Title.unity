@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 35861280}
   - component: {fileID: 35861279}
+  - component: {fileID: 35861281}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -179,6 +180,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &35861281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35861278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63c83bdfed7c437c9534de60639e73c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterVolumeScrollbar: {fileID: 1500355151}
+  bgmVolumeScrollbar: {fileID: 1443190137}
+  sfxVolumeScrollbar: {fileID: 319626725}
+  Full_volume_text: {fileID: 1619289626}
+  background_volume_text: {fileID: 1226914220}
+  effect_text: {fileID: 426728833}
 --- !u!1 &40415155
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,7 +757,6 @@ GameObject:
   - component: {fileID: 239896679}
   - component: {fileID: 239896681}
   - component: {fileID: 239896680}
-  - component: {fileID: 239896682}
   m_Layer: 5
   m_Name: VolumeSetting
   m_TagString: Untagged
@@ -809,25 +827,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 239896678}
   m_CullTransparentMesh: 1
---- !u!114 &239896682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 239896678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b63c83bdfed7c437c9534de60639e73c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sr:
-  - {fileID: 1500355151}
-  - {fileID: 1443190137}
-  - {fileID: 319626725}
-  Full_volume_text: {fileID: 1619289626}
-  background_volume_text: {fileID: 1226914220}
-  effect_text: {fileID: 426728833}
 --- !u!1 &262056266
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,7 +987,7 @@ GameObject:
   - component: {fileID: 319626726}
   - component: {fileID: 319626725}
   m_Layer: 5
-  m_Name: SFX-Scrollbar
+  m_Name: SFXScrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1064,9 +1063,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 35861279}
+      - m_Target: {fileID: 35861278}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetSFXVolume
+        m_MethodName: 
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2538,7 +2537,7 @@ GameObject:
   - component: {fileID: 1443190138}
   - component: {fileID: 1443190137}
   m_Layer: 5
-  m_Name: BGM-Scrollbar
+  m_Name: BGMScrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2614,9 +2613,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 35861279}
+      - m_Target: {fileID: 35861278}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetMusicVolume
+        m_MethodName: 
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2810,7 +2809,7 @@ GameObject:
   - component: {fileID: 1500355152}
   - component: {fileID: 1500355151}
   m_Layer: 5
-  m_Name: Master-Scrollbar
+  m_Name: MasterScrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2886,13 +2885,13 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 35861279}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetMasterVolume
-        m_Mode: 0
+      - m_Target: {fileID: 35861278}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: 
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
