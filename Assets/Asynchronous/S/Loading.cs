@@ -14,7 +14,7 @@ public class Loading : MonoBehaviour
     {
         next_scene = scene_name;
 
-        SceneManager.LoadScene("LoadingScene");
+        SceneManager.LoadScene("Asynchronous");
     }
 
     private void Start()
