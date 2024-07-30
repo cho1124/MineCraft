@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 3814150900931058936}
   - component: {fileID: 234553988139471709}
   - component: {fileID: 2640722184500455319}
-  - component: {fileID: 7997095498614851084}
   - component: {fileID: -8110258089995345586}
+  - component: {fileID: 659662198976588726}
   m_Layer: 0
-  m_Name: beaf
+  m_Name: Beaf
   m_TagString: Food
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,20 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7997095498614851084
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4586149473705199170}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -9012614417623711775, guid: 8b3a8439eaf546c49b02df7a634e01a0, type: 3}
 --- !u!54 &-8110258089995345586
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -109,7 +95,20 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &659662198976588726
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4586149473705199170}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.008125, y: 0.0075, z: 0.000625}
+  m_Center: {x: -0.00031250005, y: -0.0006250001, z: 0}

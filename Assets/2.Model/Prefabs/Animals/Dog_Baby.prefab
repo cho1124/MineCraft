@@ -174,9 +174,7 @@ GameObject:
   - component: {fileID: 3340006270538378881}
   - component: {fileID: 4839310882173390500}
   - component: {fileID: 8625637450714215326}
-  - component: {fileID: 1545370284803632050}
   - component: {fileID: 5482801779554579892}
-  - component: {fileID: 6584103050244368821}
   m_Layer: 0
   m_Name: Dog_Baby
   m_TagString: Animals
@@ -192,7 +190,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4093909873755144833}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.944, y: -5.197112, z: 8.18}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4828285249390814734}
@@ -254,36 +252,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.5715064, z: 1.6832294}
   m_Center: {x: 0, y: 0.82541543, z: 0.042798042}
---- !u!114 &1545370284803632050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4093909873755144833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df633c0701137d149a29a734015c9389, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 
-  name: 
-  damage: 3
-  maxHealth: 30
-  health: 0
-  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
-  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
-  adultPrefab: {fileID: 1417258215064542, guid: 7451ef01e53127446b9d7406220542f6, type: 3}
-  babyPrefab: {fileID: 4093909873755144833}
-  hungerLevel: 10
-  baseSpeed: 2
-  dynamicNavMesh: {fileID: 0}
-  heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
-  shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 1
-  detectionAngle: 45
-  detectionRays: 5
-  wanderRadius: 10
 --- !u!114 &5482801779554579892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,42 +268,21 @@ MonoBehaviour:
   name: 
   damage: 3
   maxHealth: 30
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1417258215064542, guid: 7451ef01e53127446b9d7406220542f6, type: 3}
   babyPrefab: {fileID: 4093909873755144833}
+  overgrowthPrefab: {fileID: 7650826435742435958, guid: f73e28d40d007754eb1a33d946fa13d7, type: 3}
   hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
+  walkSpeed: 3
+  runSpeed: 4
+  minWalkTime: 4
+  maxWalkTime: 8
+  jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
+  head: {fileID: 2884509576127646079}
   wanderRadius: 30
---- !u!195 &6584103050244368821
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4093909873755144833}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &5180575141314686982
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class SettingsUI : MonoBehaviour
 {
     public Slider masterVolumeSlider;
-    public Slider musicVolumeSlider;
+    public Slider bgmVolumeSlider;
     public Slider sfxVolumeSlider;
     private AudioManager audioManager;
 
@@ -15,12 +15,12 @@ public class SettingsUI : MonoBehaviour
 
         // 슬라이더 값을 로드된 설정 값으로 초기화
         masterVolumeSlider.value = audioManager.masterVolume;
-        musicVolumeSlider.value = audioManager.musicVolume;
+        bgmVolumeSlider.value = audioManager.bgmVolume;
         sfxVolumeSlider.value = audioManager.sfxVolume;
 
         // 슬라이더 값 변경 시 이벤트 등록
         masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
-        musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+        bgmVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
@@ -31,7 +31,7 @@ public class SettingsUI : MonoBehaviour
 
     public void SetMusicVolume(float volume)
     {
-        audioManager.SetMusicVolume(volume);
+        audioManager.SetBGMVolume(volume);
     }
 
     public void SetSFXVolume(float volume)

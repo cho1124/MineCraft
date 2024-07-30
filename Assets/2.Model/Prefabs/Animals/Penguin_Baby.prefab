@@ -255,9 +255,7 @@ GameObject:
   - component: {fileID: 7862487304325361719}
   - component: {fileID: 4598729621488730750}
   - component: {fileID: 5091919555997049969}
-  - component: {fileID: 1779363284764300512}
   - component: {fileID: 920090740847476986}
-  - component: {fileID: 5737227684897110945}
   m_Layer: 0
   m_Name: Penguin_Baby
   m_TagString: Animals
@@ -330,36 +328,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1779363284764300512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172145746540233397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33e89eedc93e30d45b1da8e9798de2c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 
-  name: 
-  damage: 2
-  maxHealth: 10
-  health: 0
-  deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
-  beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
-  adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
-  babyPrefab: {fileID: 6172145746540233397}
-  hungerLevel: 7
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
-  heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
-  shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 1
-  detectionAngle: 45
-  detectionRays: 5
-  wanderRadius: 30
 --- !u!114 &920090740847476986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,39 +344,18 @@ MonoBehaviour:
   name: 
   damage: 2
   maxHealth: 10
-  health: 0
   deathEffectPrefab: {fileID: 4190522762714960317, guid: 8ea9985cabb3a3642a65b5bfd2be242d, type: 3}
   beafPrefab: {fileID: 4586149473705199170, guid: 42d6629d5e254c94fb066b231a9f6c0d, type: 3}
   adultPrefab: {fileID: 1755646104177140, guid: 2884e6b071e1c2a4faef2e7fd67b481e, type: 3}
   babyPrefab: {fileID: 6172145746540233397}
+  overgrowthPrefab: {fileID: 8343810386093485254, guid: 5c8e2a2c0cc23714c9819e2b37d3e666, type: 3}
   hungerLevel: 6
-  baseSpeed: 0
-  dynamicNavMesh: {fileID: 0}
+  walkSpeed: 3
+  runSpeed: 4
+  minWalkTime: 4
+  maxWalkTime: 8
+  jumpForce: 4
   heartObjectPrefab: {fileID: 7636213137212032965, guid: 585a7b66d2e8a2d41bf1b23b822bc545, type: 3}
   shockObjectPrefab: {fileID: 2362877423402487834, guid: 3c7115a23afdbf74b87adec322cb2303, type: 3}
-  detectionDistance: 3
-  detectionAngle: 45
-  detectionRays: 5
+  head: {fileID: 5260316571984642649}
   wanderRadius: 30
---- !u!195 &5737227684897110945
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172145746540233397}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
