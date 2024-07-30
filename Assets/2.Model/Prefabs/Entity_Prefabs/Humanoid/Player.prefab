@@ -735,6 +735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91e3d372a57a2f449663672073d4f11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entity: {fileID: 0}
   controller: {fileID: 0}
   animator: {fileID: 0}
   head_transform: {fileID: 0}
@@ -783,6 +784,8 @@ MonoBehaviour:
   attack_damage_min_rate: 0
   attack_speed_rate: 0
   guard_rate: 0
+  blood_particle: {fileID: 3548588485384254792, guid: 2f9e7dc163581394da1e00b561eed65d, type: 3}
+  is_stunned: 0
   L_Hand: {fileID: 0}
   R_Hand: {fileID: 0}
   inventory: {fileID: 0}
@@ -804,7 +807,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f53269b984f74573b735003e1847df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  on_off_obj: {fileID: 0}
+  backGroundCanvasGroup: {fileID: 0}
+  inventoryCanvasGroup: {fileID: 0}
+  craftingCanvasGroup: {fileID: 0}
+  chestCanvasGroup: {fileID: 0}
+  hwaroGroup: {fileID: 0}
   on_off_tr: 0
 --- !u!114 &1629210814871413176
 MonoBehaviour:
@@ -831,6 +838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db0f31dcb8aff742b01f4a4cc97e48b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tempItemSlot: {fileID: 0}
   inv_Slot:
   - {fileID: 0}
   - {fileID: 0}
@@ -876,7 +884,19 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  items: []
+  Crafting_Mini_Slot:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  Equipment_Part:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Inventory_obj: {fileID: 1629210816002272848}
 --- !u!114 &7235845662590292089
 MonoBehaviour:
@@ -891,6 +911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  tracking_time: 0
 --- !u!1 &1629210814886499105
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,7 +1423,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1629210815864154579
 GameObject:
@@ -1598,7 +1619,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1629210816172408641
 GameObject:

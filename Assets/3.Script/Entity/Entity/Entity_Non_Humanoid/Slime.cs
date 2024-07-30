@@ -25,12 +25,9 @@ public class Slime : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            while (Vector3.Distance(random_direction, transform.position) < 5f)
-            {
-                random_direction = Random.insideUnitSphere * 7f;
-                random_direction += spawn_position;
-            }
-            random_direction.y = spawn_position.y;
+            
+            random_direction = new Vector3(Random.Range(0f, 1f), 0, Random.Range(0f, 1f)).normalized * 2f;
+            random_direction += spawn_position;
             Instantiate(slime_small, random_direction, Quaternion.identity);
         }
     }

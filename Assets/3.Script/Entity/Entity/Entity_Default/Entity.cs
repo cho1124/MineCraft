@@ -161,6 +161,10 @@ namespace Entity_Data
         protected void Death()
         {
             Instantiate(blood_particle, transform.position, Quaternion.identity);
+            Invoke("Death_In", 0.1f);
+        }
+        protected void Death_In()
+        {
             Destroy(gameObject);
         }
 

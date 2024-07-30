@@ -188,7 +188,7 @@ public class Player_Control : MonoBehaviour
 
         Move_Animation(key_h, key_v);
         gravity_velocity += Physics.gravity.y * Time.deltaTime;
-        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
+        //controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
     }
 
     private void Move_Animation(float key_h, float key_v)
