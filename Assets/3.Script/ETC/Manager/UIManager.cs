@@ -10,38 +10,42 @@ public class UIManager : MonoBehaviour
 
     [Header("인벤토리 내부 슬롯")]
     public InventorySlot[] inventorySlots; //1번 슬롯 배열
-    public InventorySlot[] hotbarSlots; //2번 슬롯 배열
     // 0: HEAD, 1: CHEST, 2: LEGGINGS, 3: FEET, 4: WEAPON, 5: Accessories
     public InventorySlot[] equipmentSlots; //퍼블릭 마음이 너무 아픕니다
+    public CraftingSlot[] minicraftingSlots;
 
     [Header("인벤토리 외부 슬롯")]
-    public InventorySlot[]  HotBarSlots_Out;
-   
+    public InventorySlot[] HotBarSlots_Out;
 
+    
 
     [Header("아이템 세터(디버깅용으로 임시로 보이는 것)")]
     [SerializeField] private InventoryItem[] hotitemSet;
     [SerializeField] private InventoryItem[] hotitemSet_inv;
     [SerializeField] private InventoryItem[] invenitemSet;
-
+    
     [Header("ETC")]
     [SerializeField] private Transform draggablesTransform;
     [SerializeField] private InventoryItem itemPrefab;
+    
+    public CanvasGroup TrashCan;
 
     private void Awake()
     {
-        
+
     }
 
     private void Start()
     {
+        //hotitemSet = new InventoryItem[HotBarSlots_Out.Length];
         hotitemSet = new InventoryItem[HotBarSlots_Out.Length];
-        hotitemSet_inv = new InventoryItem[hotbarSlots.Length];
         invenitemSet = new InventoryItem[inventorySlots.Length];
+        
+       
 
         if (Inventory.instance != null)
         {
-            Inventory.instance.OnChangedInv += SetHotBarInv;
+
             Inventory.instance.OnChangedInv += SetHotBar;
             Inventory.instance.OnChangedInv += SetInventory;
         }
@@ -53,18 +57,44 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        
         if (carriedItem == null) return;
 
         carriedItem.transform.position = Input.mousePosition;
+        
+
     }
+
+    
+
+
 
     public void SetCarriedItem(InventoryItem item)
     {
+        
+        
+
+
+
+
         if (carriedItem != null)
         {
-            if (item.activeSlot != null && item.activeSlot.myItem != null && item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type) return;
+            if (item.activeSlot != null && item.activeSlot.myItem != null && item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type)
+            {
+                
+                return;
+            }
+
+
+            
+
             item.activeSlot.SetItem(carriedItem);
+            
         }
+        
+
+        Debug.Log($"item's name : {item.name}, item's id : {item.itemComponent.ItemID}");
+
 
         if (item != null &&
             item.activeSlot != null &&
@@ -95,9 +125,12 @@ public class UIManager : MonoBehaviour
         }
 
         carriedItem = item;
+        //Inventory.instance.tempItemSlot = 
         carriedItem.canvasGroup.blocksRaycasts = false;
         item.transform.SetParent(draggablesTransform);
         
+
+
     }
 
     public void EquipEquipment(Equipment_Type tag, InventoryItem item = null)
@@ -126,49 +159,9 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
-
-    private void SetHotBarInv()
-    {
-        Debug.Log("HotBarChanged123");
-
-        for(int i = 0; i < hotbarSlots.Length; i++)
-        {
-            if (hotbarSlots[i] == null)
-            {
-                Debug.LogWarning($"HotBarSlot at index {i} is null.");
-                continue;
-            }
-
-            if (Inventory.instance.inv_Slot[i] == null)
-            {
-                Debug.Log("inv_Slot is nulllllllllll");
-                if (hotbarSlots[i].myItem != null)
-                {
-                    Debug.Log("in : remove");
-                    TryRemoveItem(hotbarSlots, hotitemSet_inv, i, out InventoryItem removedItem);
-                    //Destroy(HotBarSlots_Out[i].myItem);
-                }
-            }
-            else
-            {
-                var tempItem = Inventory.instance.inv_Slot[i];
-
-                TryPlaceItem(hotbarSlots, hotitemSet_inv, i, tempItem, itemPrefab);
-
-                if (hotbarSlots[i].myItem == null)
-                {
-                    Debug.Log($"After TryPlaceItem, hotbarSlots[{i}].myItem is still null.");
-                    //TryRemoveItem(hotbarSlots, hotitemSet_inv, i, out InventoryItem removedItem);
-                }
-            }
-        }
-
-    }
-
     private void SetHotBar()
     {
-        Debug.Log("HotBarChanged");
-
+        
         for (int i = 0; i < HotBarSlots_Out.Length; i++)
         {
             if (HotBarSlots_Out[i] == null)
@@ -177,42 +170,37 @@ public class UIManager : MonoBehaviour
                 continue;
             }
 
-            if (Inventory.instance.inv_Slot == null)
-            {
-                Debug.LogError("Inventory slots are null. Ensure that inv_Slot array is initialized.");
-                return;
-            }
-
             if (Inventory.instance.inv_Slot[i] == null)
             {
-                
+
                 if (HotBarSlots_Out[i].myItem != null)
                 {
-                    Debug.Log("out : remove");
-                    TryRemoveItem(HotBarSlots_Out, hotitemSet, i, out InventoryItem removedItem);
-                    hotitemSet_inv[i] = hotitemSet[i];
 
+
+
+                    TryRemoveItem(HotBarSlots_Out, hotitemSet, i, out InventoryItem removedItem);
                     //Destroy(HotBarSlots_Out[i].myItem);
                 }
-
                 
+
+
             }
             else
             {
                 var tempItem = Inventory.instance.inv_Slot[i];
-                Debug.Log($"Trying to place item {tempItem} at index {i}");
+                
 
                 TryPlaceItem(HotBarSlots_Out, hotitemSet, i, tempItem, itemPrefab);
-                
+
                 if (HotBarSlots_Out[i].myItem == null)
                 {
-                    Debug.Log($"After TryPlaceItem, HotBarSlots_Out[{i}].myItem is still null.");
+                    
                     //TryRemoveItem(HotBarSlots_Out, hotitemSet, i, out InventoryItem removedItem);
                 }
 
-                
 
-                
+
+
             }
         }
     }
@@ -220,35 +208,44 @@ public class UIManager : MonoBehaviour
 
     private void SetInventory()
     {
-        int index;
 
-        for(int i = 0; i < inventorySlots.Length; i++)
+        if (Inventory.instance.inv_Slot == null)
         {
-            index = i + hotbarSlots.Length;
-            if(Inventory.instance.inv_Slot == null)
-            {
-                Debug.LogError("인벤없데이");
-                return;
-            }
+            Debug.LogError("인벤없데이");
+            return;
+        }
 
-            if(Inventory.instance.inv_Slot[index] == null)
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (Inventory.instance.inv_Slot[i] == null)
             {
+
                 if (inventorySlots[i].myItem != null)
                 {
-                    TryRemoveItem(inventorySlots, invenitemSet, i, out InventoryItem removedItem);
+                    
+
+                    //Destroy(HotBarSlots_Out[i].myItem);
                 }
 
+                TryRemoveItem(inventorySlots, invenitemSet, i, out InventoryItem removedItem);
                 
+
+                //TryRemoveItem(CraftingSlots, craftitemSet, i, out removedItem);
+                //if(inven)
+
+
             }
             else
             {
-                var tempItem = Inventory.instance.inv_Slot[index];
+                var tempItem = Inventory.instance.inv_Slot[i];
                 TryPlaceItem(inventorySlots, invenitemSet, i, tempItem, itemPrefab);
+                //var tempItem2 = Inventory.instance.inv_Slot[i];
+                //TryPlaceItem(CraftingSlots, craftitemSet, i, tempItem2, itemPrefab);
+
             }
 
-            
-
         }
+
     }
 
     public bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem, InventoryItem itemPrefab)
@@ -259,60 +256,32 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
-        //if (slots[index].myItem == null && itemSet[index] == null) //아무것도 없을때
-        //{
-        //    itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
-        //    itemSet[index].Initialize(tempItem, slots[index]);
-        //    return true;
-        //}
-        //else if(slots[index].myItem != null && itemSet[index] == null) 
-        //{
-        //    Debug.Log("ㅎㅎ");
-        //    
-        //    itemSet[index].Initialize(tempItem, slots[index]);
-        //    return true;
-        //}
-        //else
-        //{
-        //    Debug.Log("shit");
-        //    itemSet[index].Initialize(tempItem, slots[index]);
-        //    return true;
-        //}
+        //Debug.Log($"Trying to place item at index {index}");
 
-
-        if(itemSet[index] == null)
+        // slots[index].myItem이 null인 경우에만 작업을 수행
+        if (slots[index].myItem == null)
         {
-            
-            if (slots[index].myItem == null)
+            if (itemSet[index] == null)
             {
+                //Debug.Log("itemset index : " + index);
+                // itemSet[index]가 null이면 새 인스턴스를 생성합니다.
                 itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
-                itemSet[index].Initialize(tempItem, slots[index]);
-                return true;
             }
+            
+
+            // itemSet[index]를 초기화합니다.
+            
             
         }
         else
         {
-            if (slots[index].myItem == null)
-            {
-
-                itemSet[index].Initialize(tempItem, slots[index]);
-                return true;
-            }
-            else
-            {
-                Debug.Log("ㅎㅎ");
-
-                itemSet[index].Initialize(tempItem, slots[index]);
-                return true;
-            }
+            Debug.Log("버그찾기" + index);
         }
 
-
+        itemSet[index].Initialize(tempItem, slots[index]);
         return false;
     }
 
-    
 
     public bool TryRemoveItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, out InventoryItem removedItem)
     {
@@ -324,14 +293,17 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
-        if (slots[index].myItem != null && itemSet[index] != null)
+        
+        if (itemSet[index] != null && slots[index].myItem != null)
         {
             removedItem = itemSet[index];
+            Debug.Log(itemSet[index].name);
+            Destroy(removedItem.gameObject);
             itemSet[index] = null;
             slots[index].myItem = null;
-            Destroy(removedItem.gameObject);
             return true;
         }
+        
         return false;
     }
 }

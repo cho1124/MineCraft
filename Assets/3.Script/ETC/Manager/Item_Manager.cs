@@ -72,7 +72,7 @@ public class Item_Manager : MonoBehaviour
 
         Dic_Add(itemData.equipmentItems);
 
-        Dic_Add(itemData.blockTypes);
+        
 
         //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
 
@@ -97,7 +97,7 @@ public class Item_Manager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.K))
         {
-            SpawnItem(307, transform.position);
+            SpawnItem(5, transform.position);
         }
     }
 
@@ -381,5 +381,5 @@ public class ItemData
     public List<PlaceableItem> placeableItems { get; set; }
     public List<EquipmentItem> equipmentItems { get; set; }
 
-    public List<BlockType> blockTypes { get; set; }
+    
 }

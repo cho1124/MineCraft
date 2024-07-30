@@ -3,10 +3,14 @@ using System.Collections.Generic;
 
 public class ItemComponent : MonoBehaviour
 {
-    public int itemID { get; private set; }
+    private int itemID;
     public int ItemID
     {
         get => itemID;
+        set
+        {
+            itemID = value;
+        }
     }
 
     public string itemName { get; private set; }
@@ -160,7 +164,7 @@ public class ItemComponent : MonoBehaviour
 
     }
 
-    public bool Check_Empty()
+    public bool Use()
     {
         stackCurrent--;
         if(stackCurrent <= 0)

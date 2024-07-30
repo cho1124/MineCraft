@@ -10,6 +10,9 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
     Image itemIcon;
     UIManager Inven;
     Text itemCount;
+    public int item_id;
+    public int item_quantity;
+    [SerializeField] private int count = 0;
 
     public Equipment_Type equip_type = Equipment_Type.NONE;
    
@@ -57,6 +60,8 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         //equip_type = 
         this.itemComponent = itemComponent;
         itemIcon.sprite = itemComponent.itemIcon;
+        item_id = itemComponent.ItemID;
+        item_quantity = itemComponent.stackCurrent;
 
         if (itemComponent.StackCurrent <= 1)
         {
@@ -75,6 +80,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         if(eventData.button == PointerEventData.InputButton.Left)
         {
             Inven.SetCarriedItem(this);
+            
         }
     }
 } 

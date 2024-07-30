@@ -62,47 +62,7 @@ public class InventoryUI : MonoBehaviour
         carriedItem.transform.position = Input.mousePosition;
     }
 
-    public void SetCarriedItem(InventoryItem item)
-    {
-        if (carriedItem != null)
-        {
-            if (item.activeSlot != null && item.activeSlot.myItem != null && item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type) return;
-            item.activeSlot.SetItem(carriedItem);
-        }
-
-        if (item != null &&
-            item.activeSlot != null &&
-            item.activeSlot.myItem != null &&
-            item.activeSlot.myItem.equip_type != Equipment_Type.NONE)
-        {
-            EquipEquipment(item.activeSlot.Equip_Type, null);
-        }
-        else
-        {
-            // 어느 부분에서 null이 발생했는지 디버그 로그 추가
-            if (item == null)
-            {
-                Debug.LogError("Item is null.");
-            }
-            else if (item.activeSlot == null)
-            {
-                Debug.LogError("item.activeSlot is null.");
-            }
-            else if (item.activeSlot.myItem == null)
-            {
-                Debug.LogError("item.activeSlot.myItem is null.");
-            }
-            else if (item.activeSlot.myItem.equip_type == Equipment_Type.NONE)
-            {
-                Debug.LogError("item.activeSlot.myItem.equip_type is NONE.");
-            }
-        }
-
-        carriedItem = item;
-        carriedItem.canvasGroup.blocksRaycasts = false;
-        item.transform.SetParent(draggablesTransform);
-    }
-
+    
     public void EquipEquipment(Equipment_Type tag, InventoryItem item = null)
     {
         switch (tag)

@@ -8,12 +8,16 @@ public class Inventory : MonoBehaviour
 
     public static Inventory instance;
 
+
+    public ItemComponent tempItemSlot = null;
+
     public ItemComponent[] inv_Slot = new ItemComponent[36]; // 핫바랑 합쳐서 한번에 처리하자
     
     public ItemComponent[] Equipment_Slot = new ItemComponent[7]; //0 : head, 1 : chest, 2 : legs, 3 : feet, 4 : weapon1, 5 : weapon2 6 : access
+    public ItemComponent[] Crafting_Mini_Slot = new ItemComponent[4];
     public Transform[] Equipment_Part = new Transform[7];
+    private Item_Manager itemManager;
 
-    
 
     public Transform Inventory_obj;
 
@@ -28,9 +32,10 @@ public class Inventory : MonoBehaviour
             return;
         }
         instance = this;
-    }
 
-    
+        itemManager = FindObjectOfType<Item_Manager>();
+
+    }
 
     /// <summary>
     /// hotbar -> inven -> 그 다음에 자유롭게 이동 가능
@@ -61,12 +66,13 @@ public class Inventory : MonoBehaviour
                     if (item.StackCurrent == 0)
                     {
                         Debug.Log($"{i}번 슬롯의 현재 스택 카운트 : " + inv_Slot[i].StackCurrent);
-                        Debug.Log($"{i}번 슬롯의 현재 id : {inv_Slot[i].itemID}");
+                        Debug.Log($"{i}번 슬롯의 현재 id : {inv_Slot[i].ItemID}");
 
                         item.transform.SetParent(Inventory_obj);
-                        //item.gameObject.SetActive(false);
-                        Destroy(item.gameObject);
+                        item.gameObject.SetActive(false);
+                        //Destroy(item.gameObject);
                         ChangeEvent(); //카운트도 할거야
+
                         return;
                     }
                 }
@@ -75,6 +81,14 @@ public class Inventory : MonoBehaviour
         }
 
            
+    }
+
+    public GameObject DestroyItem(ItemComponent item)
+    {
+        //인벤토리 슬롯에서 보내는 과정 추가
+        GameObject newobj = itemManager.SpawnItem(item.ItemID, transform.position);
+        ChangeEvent();
+        return newobj;
     }
 
     public void ChangeEvent()

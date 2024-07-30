@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
     public GameObject ui_craftTable;
     public GameObject ui_chest;
     public GameObject ui_furnance;
+    public Transform ContainerUI;
     
     private ItemComponent[] inventorySlots; //사용할 인덱스는 0부터 8까지
     //--------------UI end---------------------//
@@ -87,12 +88,10 @@ public class Player : MonoBehaviour
 
         UIInit();
 
-
-
         // 마우스 커서가 Game 밖으로 안나가게 고정
         Cursor.lockState = CursorLockMode.Locked;
 
-        selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " block selected";
+        SelectedIndex();
     }
 
     private void UIInit()
@@ -108,6 +107,41 @@ public class Player : MonoBehaviour
     }
 
 
+    private void SetHighlightBlock()
+    {
+        
+        
+
+        for(int i = 0; i < inventorySlots.Length; i++)
+        {
+            Image image = inventorySlots[i].GetComponent<Image>();
+            Color color = image.color;
+            if (i == selectedBlockIndex)
+            {
+                color.a = 0.3f;
+            }
+            else
+            {
+                color.a = 0;
+            }
+        }
+
+
+    }
+
+    private void SelectedIndex()
+    {
+        //SetHighlightBlock();
+
+        if (inventorySlots[selectedBlockIndex] == null)
+        {
+            selectedBlockText.text = $"{selectedBlockIndex + 1} slot NONE block selected";
+        }
+        else
+        {
+            selectedBlockText.text = inventorySlots[selectedBlockIndex].itemName + " block selected";
+        }
+    }
 
     // 고정된 시간마다 호출, 불필요한 연산 줄이고 정확한 물리연산
     private void FixedUpdate()
@@ -353,101 +387,106 @@ public class Player : MonoBehaviour
 
     private void InvenScroll()
     {
-        
+        HandleScrollInput();
+        HandleNumberInput();
+        SelectedIndex();
+
+        if (highlightBlock.gameObject.activeSelf)
+        {
+            HandleBlockDestroy();
+            HandleBlockPlacement();
+        }
+    }
+
+    private void HandleScrollInput()
+    {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0)
         {
             if (scroll > 0)
-                selectedBlockIndex++;
+                selectedBlockIndex = (byte)((selectedBlockIndex + 1) % 9);
             else
-                selectedBlockIndex--;
-
-            if (selectedBlockIndex > 8)
-                selectedBlockIndex = 0;
-            if (selectedBlockIndex < 0)
-                selectedBlockIndex = 8;
-
-            if(inventorySlots[selectedBlockIndex] == null)
-            {
-                selectedBlockText.text =  $"{selectedBlockIndex - 1} slot NONE block selected";
-            }
-            else
-            {
-                selectedBlockText.text = inventorySlots[selectedBlockIndex].itemName + " block selected";
-            }
-
-            
-        }
-
-        if (highlightBlock.gameObject.activeSelf)
-        {
-
-
-            // 블록 파괴 Destroy block
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 destroyPos = highlightBlock.position;
-                byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
-
-                if (destroyedBlockID == 3)
-                {
-                    destroyedBlockID = 5;
-                }
-
-
-                //GameObject popObjectPrefab = Resources.Load<GameObject>("PopObject"); //찾았다 내사랑, 아이템 매니저의 spawnitem이랑 연동하면 끝
-
-                itemManager.SetItem(destroyedBlockID, destroyPos, world);
-                //GameObject popObjectInstance = itemManager.SpawnItem(destroyedBlockID, destroyPos);
-                //
-                //PopObject popObject = popObjectInstance.GetComponent<PopObject>();
-                //
-                //popObject.Initialize(world, destroyPos, destroyedBlockID);
-            }
-
-
-
-
-            // 블록 배치 Place block
-            if (Input.GetMouseButtonDown(1))
-            {
-                switch (world.GetChunkFromVector3(highlightBlock.position).CheckBlockID(highlightBlock.position))
-                {
-                    // chest
-                    case 16:
-                        ui_chest.SetActive(true);
-                        break;
-
-                    // Furnance
-                    case 18:
-                        ui_furnance.SetActive(true);
-                        break;
-
-                    // craftTable
-                    case 19:
-                        ui_craftTable.SetActive(true);
-                        break;
-                    default:
-                        world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, (byte)inventorySlots[selectedBlockIndex].itemID);
-
-                        if(inventorySlots[selectedBlockIndex].Check_Empty())
-                        {
-                            inventorySlots[selectedBlockIndex] = null;
-                        }
-                        Inventory.instance.ChangeEvent();
-                        //inventorySlots[selectedBlockIndex].StackCurrent--;
-
-                        break;
-                }
-
-
-
-            }
-
-
-
+                selectedBlockIndex = (byte)((selectedBlockIndex - 1 + 9) % 9);
         }
     }
+
+    private void HandleNumberInput()
+    {
+        for (int i = 0; i <= 8; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                selectedBlockIndex = (byte)i;
+                break;
+            }
+        }
+    }
+
+    private void HandleBlockDestroy()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 destroyPos = highlightBlock.position;
+            byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
+
+            if (destroyedBlockID == 3)
+            {
+                destroyedBlockID = 5;
+            }
+
+            itemManager.SetItem(destroyedBlockID, destroyPos, world);
+        }
+    }
+
+    private void HandleBlockPlacement()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            byte blockID = world.GetChunkFromVector3(highlightBlock.position).CheckBlockID(highlightBlock.position);
+
+            switch (blockID)
+            {
+                case 16:
+                    ui_chest.SetActive(true);
+                    break;
+                case 18:
+                    ui_furnance.SetActive(true);
+                    break;
+                case 19:
+                    ui_craftTable.SetActive(true);
+                    break;
+                default:
+                    PlaceBlockOrUseItem();
+                    break;
+            }
+        }
+    }
+
+    private void PlaceBlockOrUseItem()
+    {
+        if (inventorySlots[selectedBlockIndex] != null)
+        {
+            if (inventorySlots[selectedBlockIndex].SetType == 3) // 블록들
+            {
+                world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, (byte)inventorySlots[selectedBlockIndex].ItemID);
+                if (inventorySlots[selectedBlockIndex].Use())
+                {
+                    inventorySlots[selectedBlockIndex] = null;
+                }
+            }
+            else if (inventorySlots[selectedBlockIndex].SetType == 2) // 소비 아이템
+            {
+                // 아이템 사용 로직을 추가하세요.
+                if (inventorySlots[selectedBlockIndex].Use())
+                {
+                    inventorySlots[selectedBlockIndex] = null;
+                }
+            }
+
+            Inventory.instance.ChangeEvent();
+        }
+    }
+
 
 
 
