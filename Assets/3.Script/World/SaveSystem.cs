@@ -74,6 +74,23 @@ public static class SaveSystem
 
     }
 
+    public static void DeleteWorld(string worldName)
+    {
+        string worldPath = World.Instance.appPath + "/saves/" + worldName + "/";
+        if (Directory.Exists(worldPath))
+        {
+            // UI 띄우기?
+
+            Directory.Delete(worldPath);
+        }
+        else
+        {
+            // UI를 띄우던.... 그냥 return 해서 반응없게하던.... 자유
+            return;
+        }
+
+    }
+
 
     public static void SaveChunk(ChunkData chunk, string worldName)
     {
@@ -117,6 +134,8 @@ public static class SaveSystem
 
 
     }
+
+
 
 
 
