@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
 
     public ItemComponent[] inv_Slot = new ItemComponent[36]; // 핫바랑 합쳐서 한번에 처리하자
     
-    public ItemComponent[] Equipment_Slot = new ItemComponent[7]; //0 : head, 1 : chest, 2 : legs, 3 : feet, 4 : weapon1, 5 : weapon2 6 : access
+    public ItemComponent[] Equipment_Slot = new ItemComponent[6]; //0 : head, 1 : chest, 2 : legs, 3 : feet, 4 : weapon1, 5 : weapon2
     public ItemComponent[] Crafting_Mini_Slot = new ItemComponent[4];
     public Transform[] Equipment_Part = new Transform[7];
     private Item_Manager itemManager;
