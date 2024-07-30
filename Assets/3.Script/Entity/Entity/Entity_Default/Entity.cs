@@ -37,6 +37,8 @@ namespace Entity_Data
 
         [SerializeField] public Action On_Death;
 
+        [SerializeField] protected GameObject blood_particle;
+
         public float movement_speed { get; protected set; }
         public float jump_height { get; protected set; }
 
@@ -45,6 +47,25 @@ namespace Entity_Data
         protected Animator animator;
         protected Renderer[] entityRenderer;
         protected Color[] originalColor;
+
+        public bool is_stunned = false;
+        protected void Update()
+        {
+            if (posture_current <= 0f)
+            {
+                animator.SetFloat("Movement_Speed", movement_speed * 0.01f);
+                is_stunned = true;
+            }
+
+            if(is_stunned && posture_current >= posture_max)
+            {
+                animator.SetFloat("Movement_Speed", movement_speed);
+                is_stunned = false;
+            }
+
+            posture_current += posture_max * 0.1f * Time.deltaTime;
+            posture_current = Mathf.Clamp(posture_current, 0f, posture_max);
+        }
 
         protected void Awake_Default()
         {
@@ -110,7 +131,6 @@ namespace Entity_Data
                     {
                         damage_posture_result *= 1f - guard_rate;
                         posture_current -= damage_posture_result;
-                        //float knockback_rate = damage_posture_result / posture_max; //넉백 이벤트 추가하기
                         if (posture_current <= 0) Debug.Log("그로기!");
                     }
                 }
@@ -140,6 +160,7 @@ namespace Entity_Data
 
         protected void Death()
         {
+            Instantiate(blood_particle, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
 

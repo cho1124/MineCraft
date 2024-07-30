@@ -5,6 +5,7 @@ using Entity_Data;
 
 public class Entity_Non_Humanoid_Control : MonoBehaviour
 {
+    [SerializeField] private Entity entity;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
@@ -13,6 +14,8 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
 
     [SerializeField] private Target_Handler target_handler;
 
+    [SerializeField] private bool is_passive = false;
+
     private Quaternion target_rotation;
     private float key_h, key_v;
 
@@ -20,7 +23,7 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
     private float speed_v;
 
     private float jump_height = 1f;
-    private float gravity_velocity = 0f;
+    [SerializeField] private float gravity_velocity = 0f;
 
     private float input_key_h = 0f;
     private float input_key_v;
@@ -43,6 +46,7 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
 
     private void Awake()
     {
+        TryGetComponent(out entity);
         TryGetComponent(out controller);
         TryGetComponent(out animator);
         //head_transform = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Head");
@@ -63,8 +67,6 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
         {
             target_handler.target = null;
             is_tracking = false;
-            StopCoroutine(Tracking_Target_Co());
-            StopCoroutine(Attack_Target_Co());
         }
         GroundedCheck();
         Move_Control();
@@ -84,6 +86,7 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
             input_key_sprint = true;
             yield return new WaitForSeconds(1.0f);
         }
+        input_key_v = 0f;
         input_key_sprint = false;
         yield return null;
     }
@@ -150,8 +153,17 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
 
         if (!animator.GetBool("Is_Attacking"))
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
-            head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
+            if (is_passive)
+            {
+                target_rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, rotation_anchor.transform.rotation.eulerAngles.y - 180f, transform.rotation.eulerAngles.z);
+                transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
+                head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * -5f);
+            }
+            else
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, target_rotation, 5f * Time.deltaTime);
+                head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
+            }
         }
     }
     private void Move_Control()
@@ -208,10 +220,18 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
     }
     private void Attack_Control()
     {
-        animator.SetBool("LR_Attack", is_L_down && is_R_down);
-        animator.SetBool("L_Attack", is_L_down);
-        animator.SetBool("R_Attack", is_R_down);
-        
+        if (!entity.is_stunned)
+        {
+            animator.SetBool("LR_Attack", is_L_down && is_R_down);
+            animator.SetBool("L_Attack", is_L_down);
+            animator.SetBool("R_Attack", is_R_down);
+        }
+        else
+        {
+            animator.SetBool("LR_Attack", false);
+            animator.SetBool("L_Attack", false);
+            animator.SetBool("R_Attack", false);
+        }
     }
 
     public void On_Attack_Trigger_Enter()

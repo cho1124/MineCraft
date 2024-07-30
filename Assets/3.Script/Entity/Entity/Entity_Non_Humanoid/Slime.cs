@@ -23,11 +23,11 @@ public class Slime : MonoBehaviour
         spawn_position = transform.position; // 죽은 위치 저장
         Vector3 random_direction = Vector3.zero;
 
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
-            while (Vector3.Distance(random_direction, transform.position) < 3f)
+            while (Vector3.Distance(random_direction, transform.position) < 5f)
             {
-                random_direction = Random.insideUnitSphere * 5f;
+                random_direction = Random.insideUnitSphere * 7f;
                 random_direction += spawn_position;
             }
             random_direction.y = spawn_position.y;
