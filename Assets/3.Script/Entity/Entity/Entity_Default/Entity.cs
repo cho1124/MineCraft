@@ -154,6 +154,7 @@ namespace Entity_Data
                     health_current -= damage_health_result;
                     if (health_current <= 0)
                     {
+                        AudioManager.instance.PlayRandomSFX(entity_name, "Die");
                         Debug.Log("»ç¸Á!");
                         On_Death();
                     }
