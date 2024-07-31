@@ -23,44 +23,46 @@ public class Entity_Spawner : MonoBehaviour
     [SerializeField] private float spawn_radius = 10f;//스폰 반경
     [SerializeField] private float spawn_distance = 10f; // 재스폰 거리, 플레이어가 이 거리를 이동하면 다시 동물을 스폰합니다.
 
-    [SerializeField] private Transform player_transform;
+    [SerializeField] private GameObject player;
     [SerializeField] private Vector3 last_spawn_position;
 
-    private void Awake()
-    {
-        GameObject.Find("Player").TryGetComponent(out player_transform);
-    }
-
-    void Update()
+    private void Update()
     {
         // 플레이어의 현재 위치와 마지막 위치 사이의 거리를 계산하여 재스폰 거리를 초과했는지 확인합니다.
-        if (Vector3.Distance(player_transform.position, last_spawn_position) > spawn_distance)
+        if (Vector3.Distance(player.transform.position, last_spawn_position) > spawn_distance)
         {
             // 마지막 플레이어 위치를 현재 위치로 갱신합니다.
-            last_spawn_position = player_transform.position;
+            last_spawn_position = player.transform.position;
             Spawn_Entity();
         }
     }
 
-    void Spawn_Entity()
+    private void Spawn_Entity()
     {
-        GameObject entity = entity_prefabs[Random.Range(0, entity_prefabs.Length)];
-        int spawn_count = Random.Range(minSpawnCount, maxSpawnCount + 1);
-        for(int i = 0; i < spawn_count; i++) Instantiate(entity, Get_Random_Position(), Quaternion.identity);
+        for(int i = 0; i < Random.Range(minSpawnCount, maxSpawnCount + 1); i++) Instantiate(entity_prefabs[Random.Range(0, entity_prefabs.Length)], Get_Random_Position(), Quaternion.identity);
     }
 
-    Vector3 Get_Random_Position()
+    private Vector3 Get_Random_Position()
     {
         // 플레이어 주변의 랜덤 방향을 설정합니다.
         Vector3 random_direction = Vector3.zero;
 
-        while (Vector3.Distance(random_direction, player_transform.position) < 5f)
+        random_direction = Random.insideUnitSphere * spawn_radius;
+        random_direction += player.transform.position;
+
+        while (Vector3.Distance(random_direction, player.transform.position) < 5f)
         {
             random_direction = Random.insideUnitSphere * spawn_radius;
-            random_direction += player_transform.position;
-        }
+            random_direction += player.transform.position;
 
-        random_direction.y = player_transform.position.y; //y축 고정
+        }
         return random_direction;
     }
+
+    //private void OnDrawGizmos()
+    //{
+    //    Vector3 random_direction = Vector3.zero;
+    //    random_direction = Random.insideUnitSphere * spawn_radius;
+    //    Gizmos.DrawRay(player.transform.position, random_direction);
+    //}
 }

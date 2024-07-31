@@ -13926,7 +13926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1849353201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13941,11 +13941,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entity_prefabs:
   - {fileID: 8172328940395608558, guid: 2f578622c23360c43946ed0864ab272e, type: 3}
+  - {fileID: 6314995711337629624, guid: 34e5607a7d349fb4cb688b5c53601497, type: 3}
+  - {fileID: 361989065709391700, guid: 9cea7ebd30f4b254b92f78e94c504b50, type: 3}
+  - {fileID: 8048371914176449904, guid: df2c0f920bb870a468713337816bc8b4, type: 3}
+  - {fileID: 6521080780425568120, guid: 898f15fb16a81f34ca24d42c88a694e3, type: 3}
+  - {fileID: 1512172473974732995, guid: 1b9c4543cbef7654e832e7dfb1f7d216, type: 3}
+  - {fileID: 817215163657114399, guid: 78f12d2574e995d4a80e1a34f2e99ca4, type: 3}
+  - {fileID: 2259792536060256549, guid: cbe63599ed78c0249a2f81af8adfe5fe, type: 3}
+  - {fileID: 4525835774191317131, guid: 3367d35310af03d40bb6cabaf1cb86b3, type: 3}
+  - {fileID: 8180068666178031606, guid: dc23d054da594644e99283424720a673, type: 3}
+  - {fileID: 6201133898774352714, guid: 2690bea43fec1fa498174c09464aa3a4, type: 3}
+  - {fileID: 6201133898774352714, guid: 2113c7cbfd910a94fb447aa3f5d33240, type: 3}
+  - {fileID: 6201133898774352714, guid: 16974f331108c5a418fcc3f74b019a03, type: 3}
+  - {fileID: 6201133898774352714, guid: 929dd1334751f11478c208747b0032f7, type: 3}
+  - {fileID: 3747062317061168913, guid: 32c9f87c23d93ce43a9708bdd205f598, type: 3}
+  - {fileID: 3747062317061168913, guid: 50b2dda7c1d64394b803fde2929ff236, type: 3}
+  - {fileID: 3747062317061168913, guid: 443949ba95799724ca9c86c7c29d06bb, type: 3}
+  - {fileID: 3747062317061168913, guid: 349937646e5829b4ca79c5608309f726, type: 3}
   minSpawnCount: 1
   maxSpawnCount: 5
   spawn_radius: 10
   spawn_distance: 10
-  player_transform: {fileID: 2130394463}
+  player: {fileID: 1883072243}
   last_spawn_position: {x: 0, y: 0, z: 0}
 --- !u!4 &1849353202
 Transform:
@@ -14438,6 +14455,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1878760935}
   m_CullTransparentMesh: 1
+--- !u!1 &1883072243 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1629210814871413170, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+  m_PrefabInstance: {fileID: 322235734}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1884224072 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2823534354470670678, guid: 7938e7821b0f6db479114ac0fa9d9f3a, type: 3}

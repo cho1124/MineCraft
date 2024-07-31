@@ -78,17 +78,35 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
     {
         Rotation_Control();
 
-        if (animator.GetFloat("Speed_V") > 0f && front) transform.position += transform.forward * -0.1f;
-        if (animator.GetFloat("Speed_V") < 0f && back) transform.position += transform.forward * 0.1f;
-        if (animator.GetFloat("Speed_H") > 0f && right) transform.position += transform.right * -0.1f;
-        if (animator.GetFloat("Speed_H") < 0f && left) transform.position += transform.right * 0.1f;
-        if (down) transform.position += transform.up * 0.1f;
-
-        if (animator.GetFloat("Speed_V") != 0f || animator.GetFloat("Speed_H") != 0f)
+        if (animator.GetFloat("Speed_V") > 0f && front)
         {
-            if (front || back || right || left) input_key_jump = true;
+            transform.position += transform.forward * -0.1f;
+            input_key_jump = true;
         }
         else input_key_jump = false;
+
+        if (animator.GetFloat("Speed_V") < 0f && back)
+        {
+            transform.position += transform.forward * 0.1f;
+            input_key_jump = true;
+        }
+        else input_key_jump = false;
+        
+        if (animator.GetFloat("Speed_H") > 0f && right)
+        {
+            transform.position += transform.right * -0.1f;
+            input_key_jump = true;
+        }
+        else input_key_jump = false;
+
+        if (animator.GetFloat("Speed_H") < 0f && left)
+        {
+            transform.position += transform.right * 0.1f;
+            input_key_jump = true;
+        }
+        else input_key_jump = false;
+
+        if (down) transform.position += transform.up * 0.1f;
     }
 
     private IEnumerator Tracking_Target_Co()
@@ -222,7 +240,10 @@ public class Entity_Non_Humanoid_Control : MonoBehaviour
         animator.SetFloat("Speed_H", Mathf.Lerp(animator.GetFloat("Speed_H"), speed_h, Time.deltaTime * 3f));
         animator.SetFloat("Speed_V", Mathf.Lerp(animator.GetFloat("Speed_V"), speed_v, Time.deltaTime * 3f));
 
-        velocity += transform.forward * speed_v * animator.GetFloat("Movement_Speed");
+        Vector3 move_direction = transform.forward * speed_v * animator.GetFloat("Movement_Speed");
+
+        velocity.x = move_direction.x;
+        velocity.z = move_direction.z;
     }
     private void Attack_Control()
     {

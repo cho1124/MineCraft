@@ -100,17 +100,35 @@ public class Entity_Humanoid_Control : MonoBehaviour
             //L_Hand.transform.Rotate(new Vector3(-60f, -45f, 15f));
         }
 
-        if (animator.GetFloat("Speed_V") > 0f && front)transform.position += transform.forward * -0.1f;
-        if (animator.GetFloat("Speed_V") < 0f && back) transform.position += transform.forward * 0.1f;
-        if (animator.GetFloat("Speed_H") > 0f && right) transform.position += transform.right * -0.1f;
-        if (animator.GetFloat("Speed_H") < 0f && left) transform.position += transform.right * 0.1f;
-        if (down) transform.position += transform.up * 0.1f;
-
-        if (animator.GetFloat("Speed_V") != 0f || animator.GetFloat("Speed_H") != 0f)
+        if (animator.GetFloat("Speed_V") > 0f && front)
         {
-            if (front || back || right || left) input_key_jump = true;
+            transform.position += transform.forward * -0.1f;
+            input_key_jump = true;
         }
         else input_key_jump = false;
+
+        if (animator.GetFloat("Speed_V") < 0f && back)
+        {
+            transform.position += transform.forward * 0.1f;
+            input_key_jump = true;
+        }
+        else input_key_jump = false;
+
+        if (animator.GetFloat("Speed_H") > 0f && right)
+        {
+            transform.position += transform.right * -0.1f;
+            input_key_jump = true;
+        }
+        else input_key_jump = false;
+
+        if (animator.GetFloat("Speed_H") < 0f && left)
+        {
+            transform.position += transform.right * 0.1f;
+            input_key_jump = true;
+        }
+        else input_key_jump = false;
+
+        if (down) transform.position += transform.up * 0.1f;
     }
 
     private IEnumerator Tracking_Target_Co()
