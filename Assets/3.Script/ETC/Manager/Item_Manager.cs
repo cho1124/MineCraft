@@ -97,6 +97,7 @@ public class Item_Manager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.K))
         {
+            AudioManager.instance.PlayRandomSFX("UI", "Click");
             SpawnItem(5, transform.position);
         }
     }
