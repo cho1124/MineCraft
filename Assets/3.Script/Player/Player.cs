@@ -41,8 +41,8 @@ public class Player : MonoBehaviour
     private Vector3 velocity;
     private float verticalMomentum = 0;
     private bool jumpRequest;
-    [HideInInspector]
     public bool isOpeningUI = false;
+    //[HideInInspector]
     //-------------움직임 끝 -----------------//
 
 
@@ -70,6 +70,7 @@ public class Player : MonoBehaviour
 
     //조영준 커스텀 시작
     private Item_Manager itemManager;
+    private Player_Control controller;
 
 
     // 초기화
@@ -79,14 +80,18 @@ public class Player : MonoBehaviour
         //world = GameObject.Find("World").GetComponent<World>();
         world = FindAnyObjectByType<World>();
         itemManager = FindObjectOfType<Item_Manager>();
-        
+        controller = GetComponent<Player_Control>();
+
+
+
+
         inventorySlots = GetComponent<Inventory>().inv_Slot;
         if (itemManager == null)
         {
             //Debug.LogError("Fuck");
         }
 
-        UIInit();
+        
 
         // 마우스 커서가 Game 밖으로 안나가게 고정
         Cursor.lockState = CursorLockMode.Locked;
@@ -94,40 +99,10 @@ public class Player : MonoBehaviour
         SelectedIndex();
     }
 
-    private void UIInit()
-    {
-        ui_craftTable = GameObject.Find("CraftTableUI");
-        ui_chest = GameObject.Find("ChestUI");
-        ui_furnance = GameObject.Find("FurnanceUI");
+    
 
 
-        ui_craftTable.SetActive(false);
-        ui_chest.SetActive(false);
-        ui_furnance.SetActive(false);
-    }
-
-
-    private void SetHighlightBlock()
-    {
-        
-        
-
-        for(int i = 0; i < inventorySlots.Length; i++)
-        {
-            Image image = inventorySlots[i].GetComponent<Image>();
-            Color color = image.color;
-            if (i == selectedBlockIndex)
-            {
-                color.a = 0.3f;
-            }
-            else
-            {
-                color.a = 0;
-            }
-        }
-
-
-    }
+    
 
     private void SelectedIndex()
     {
@@ -146,13 +121,13 @@ public class Player : MonoBehaviour
     // 고정된 시간마다 호출, 불필요한 연산 줄이고 정확한 물리연산
     private void FixedUpdate()
     {
-        CalculateVelocity();
-        if (jumpRequest)
-            Jump();
-
-        transform.Rotate(Vector3.up * mouseHorizontal * world.settings.mouseSensitivity);
-        cam.Rotate(Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
-        transform.Translate(velocity, Space.World);
+       CalculateVelocity();
+       if (jumpRequest)
+           Jump();
+       
+       transform.Rotate(Vector3.up * mouseHorizontal * world.settings.mouseSensitivity);
+       cam.Rotate(Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
+       transform.Translate(velocity, Space.World);
     }
 
 
@@ -163,6 +138,7 @@ public class Player : MonoBehaviour
         GetPlayerInputs();
         PlaceCursorBlocks();
         SetDirection();
+        
     }
 
 
@@ -275,10 +251,11 @@ public class Player : MonoBehaviour
     {
         if (isOpeningUI == false)
         {
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
-            mouseHorizontal = Input.GetAxis("Mouse X");
-            mouseVertical = Input.GetAxis("Mouse Y");
+           //horizontal = Input.GetAxis("Horizontal");
+           //vertical = Input.GetAxis("Vertical");
+           //mouseHorizontal = Input.GetAxis("Mouse X");
+           //mouseVertical = Input.GetAxis("Mouse Y");
+            
             
             
             
@@ -294,8 +271,8 @@ public class Player : MonoBehaviour
             
             if (isGrounded && Input.GetButtonDown("Jump"))
                 jumpRequest = true;
-
-            //CreativeScroll();
+            
+            CreativeScroll();
 
             InvenScroll();
         }

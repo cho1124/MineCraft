@@ -48,7 +48,16 @@ namespace Entity_Data
         protected Renderer[] entityRenderer;
         protected Color[] originalColor;
 
+
+        
+
         public bool is_stunned = false;
+
+        private void Start()
+        {
+            
+        }
+
         protected void Update()
         {
             if (posture_current <= 0f)
@@ -67,10 +76,11 @@ namespace Entity_Data
             posture_current = Mathf.Clamp(posture_current, 0f, posture_max);
         }
 
+       
         protected void Awake_Default()
         {
             animator = GetComponent<Animator>();
-
+            
             Update_Status();
             health_current = health_max;
             posture_current = posture_max;
@@ -181,5 +191,11 @@ namespace Entity_Data
                 entityRenderer[i].material.color = originalColor[i];
             }
         }
+
+        
+
     }
+
+
+
 }

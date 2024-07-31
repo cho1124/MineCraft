@@ -19,7 +19,7 @@ public class PlayerCollision : MonoBehaviour
                 return;
             }
 
-            AudioManager.instance.PlayRandomSFX("Humanoid", "Get");
+            //AudioManager.instance.PlayRandomSFX("Humanoid", "Get");
             Inventory.instance.AddItem(itemComponent);
 
 
