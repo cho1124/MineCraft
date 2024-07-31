@@ -284,6 +284,7 @@ public class Player_Control : MonoBehaviour
     public void On_Attack_Trigger_Enter()
     {
         animator.SetBool("Is_Attacking", true);
+        AudioManager.instance.PlayRandomSFX("Player", "Attack");
     }
     public void On_Attack_Trigger_Exit()
     {
