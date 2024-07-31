@@ -65,6 +65,9 @@ public class AudioManager : MonoBehaviour {
     public AudioMixerGroup bgmMixerGroup; // BGM 오디오 믹서 그룹
     public AudioMixerGroup sfxMixerGroup; // SFX 오디오 믹서 그룹
 
+    public Button myButton;
+    public AudioSource myAudioSource;
+
     private void Awake() {
         if (instance == null) {
             instance = this;
@@ -103,6 +106,10 @@ public class AudioManager : MonoBehaviour {
         if (bgmClips.Length > 0) {
             StartCoroutine(PlayRandomBGM()); //BGM3가지중 랜덤하게 재생하는 코루틴 시작
         }
+    }
+
+    void Start() {
+        myButton.onClick.AddListener(() => myAudioSource.Play());
     }
 
     public void SetMasterVolume(float volume) { //마스터볼륨을 설정하고 PlayerPrefs에 저장
