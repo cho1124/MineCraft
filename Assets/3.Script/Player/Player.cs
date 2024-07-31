@@ -110,12 +110,16 @@ public class Player : MonoBehaviour
             health = data.health;
             Vector3 position = new Vector3(data.position[0], data.position[1], data.position[2]);
             transform.position = position;
-
+      
             inventory.Clear();
             foreach (Item_Stackable_Data itemData in data.inventory) {
                 ItemComponent itemComponent = new ItemComponent(); // ItemComponent 초기화
                 itemComponent.ItemID = itemData.item_ID;
-                itemComponent.stackCurrent = itemData.stack_current;
+                itemComponent.stackCurrent = itemData.stackCurrent;
+                itemComponent.item_name = itemData.item_name;
+                itemComponent.item_model_in_world = itemData.item_model_in_world;
+                itemComponent.item_model_in_inventory = itemData.item_model_in_inventory;
+                itemComponent.stack_max = itemData.stack_max;
 
                 InventoryItem item = new InventoryItem();
                 item.Initialize(itemComponent, null); // 필요한 경우 parent를 설정

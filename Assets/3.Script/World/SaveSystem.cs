@@ -121,31 +121,31 @@ public static class SaveSystem
     // 플레이어 데이터를 저장하는 메서드
     public static void SavePlayer(Player player) {
         string savePath = World.Instance.appPath + "/saves/" + player.worldName + "/";
-
+   
         if (!Directory.Exists(savePath))
             Directory.CreateDirectory(savePath);
-
+   
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(savePath + "player.player", FileMode.Create);
-
+   
         PlayerData playerData = new PlayerData(player);
         formatter.Serialize(stream, playerData);
         stream.Close();
     }
-
+   
     // 플레이어 데이터를 로드하는 메서드
     public static PlayerData LoadPlayer(string worldName) {
         string loadPath = World.Instance.appPath + "/saves/" + worldName + "/player.player";
-
+   
         if (File.Exists(loadPath)) {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(loadPath, FileMode.Open);
-
+   
             PlayerData playerData = formatter.Deserialize(stream) as PlayerData;
             stream.Close();
             return playerData;
         }
-
+   
         return null;
     }
 
