@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SkyDome : MonoBehaviour
 {
-    public Player player;
+    public Transform player;
     public GameObject sun;
     public GameObject moon;
 

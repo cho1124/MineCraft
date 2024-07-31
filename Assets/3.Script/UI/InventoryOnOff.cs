@@ -11,7 +11,7 @@ public class InventoryOnOff : MonoBehaviour
     
     [HideInInspector] public bool on_off_tr = false; // 인벤토리, Dead UI ON, OFF 선언 (Bool)
 
-    private bool isInventoryOpen = false;
+    public bool isInventoryOpen = false;
     private bool isCraftingOpen = false;
     private bool isChestOpen = false;
     private bool isHwaroOpen = false;

@@ -11,7 +11,10 @@ public class Entity_Humanoid : Entity
     [SerializeField] private Inventory inventory = null;
     [SerializeField] private ItemComponent L_held_data, R_held_data, helmet_data, chestplate_data, leggings_data, boots_data;
 
-    
+    public Transform[] anchorLeft; //0 : BareHand, 1 : One_hand_Sword, 2 : One_hand_Axe, 3 : Bow
+    public Transform[] anchorRight; //아래도 마찬가지
+
+
 
     private void Awake()
     {
@@ -71,13 +74,16 @@ public class Entity_Humanoid : Entity
             if (inventory.Equipment_Slot[4] != null) //weapon1
             {
                 L_held_data = inventory.Equipment_Slot[4];
+                Debug.Log(L_held_data.meleeDamage + "asdsad");
                // Debug.Log(inventory.Equipment_Slot[4].equipmentType);
                 L_Hand.Set_Value_Melee(attack_damage_base + L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.toolTier);
-                L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(false);
+                
+                anchorLeft[0].gameObject.SetActive(false);
 
-                
-                
-                EquipWeapon(inventory.Equipment_Slot[4].equipmentType, 4, L_Hand);
+
+
+
+                EquipWeaponL(inventory.Equipment_Slot[4].equipmentType, 4);
 
 
             }
@@ -85,8 +91,8 @@ public class Entity_Humanoid : Entity
             {
                 L_held_data = null;
                 L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
-                L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
-                //UnEquipWeapon(L_Hand);
+                anchorLeft[0].gameObject.SetActive(true);
+                UnEquipWeaponL();
 
 
                 //L_Hand.gameObject.transform.Find(inventory.Equipment_Slot[4].equipmentType).gameObject.SetActive(false);
@@ -96,17 +102,17 @@ public class Entity_Humanoid : Entity
             {
                 R_held_data = inventory.Equipment_Slot[5];
                 R_Hand.Set_Value_Melee(attack_damage_base + R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.toolTier);
-                R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(false);
+                anchorRight[0].gameObject.SetActive(false);
 
-                
-                EquipWeapon(inventory.Equipment_Slot[5].equipmentType, 5, R_Hand);
+
+                EquipWeaponR(inventory.Equipment_Slot[5].equipmentType, 5);
             }
             else
             {
                 R_held_data = null;
                 R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
-                R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
-                //UnEquipWeapon(R_Hand);
+                anchorRight[0].gameObject.SetActive(true);
+                UnEquipWeaponR();
             }
 
 
@@ -218,34 +224,125 @@ public class Entity_Humanoid : Entity
     }
 
 
-    private void EquipWeapon(string item, int index, Part hand)
+    private void EquipWeaponL(string item, int index)
     {
-        //Debug.Log(item);
-        Transform temp = hand.gameObject.transform.Find(item);
-        temp.gameObject.SetActive(true);
+        Transform temp;
+
+        switch(item)
+        {
+            case "ONE_HANDED_SWORD":
+                temp = anchorLeft[1];
+                anchorLeft[1].gameObject.SetActive(true);
+                break;
+            case "ONE_HANDED_AXE":
+                temp = anchorLeft[2];
+                anchorLeft[2].gameObject.SetActive(true);
+                break;
+            case "TWO_HANDED_SWORD":
+                temp = anchorLeft[3];
+                anchorLeft[3].gameObject.SetActive(true);
+                break;
+            case "BOW":
+                temp = anchorLeft[4];
+                anchorLeft[4].gameObject.SetActive(true);
+                break;
+            default:
+                return;
+                
+
+        }
+
+        inventory.Equipment_Slot[index].transform.SetParent(temp);
+        inventory.Equipment_Slot[index].transform.localPosition = Vector3.zero;
+        inventory.Equipment_Slot[index].transform.localRotation = Quaternion.identity;
+        inventory.Equipment_Slot[index].transform.localScale = new Vector3(1.5f, 1.5f, 1f);
+        inventory.Equipment_Slot[index].gameObject.layer = 0;
+        
+        inventory.Equipment_Slot[index].gameObject.SetActive(true);
+        
+    }
+
+    private void EquipWeaponR(string item, int index)
+    {
+        Transform temp;
+
+        switch (item)
+        {
+            case "ONE_HANDED_SWORD":
+                temp = anchorRight[1];
+                anchorRight[1].gameObject.SetActive(true);
+                break;
+            case "ONE_HANDED_AXE":
+                temp = anchorRight[2];
+                anchorRight[2].gameObject.SetActive(true);
+                break;
+            case "TWO_HANDED_SWORD":
+                temp = anchorLeft[3];
+                anchorLeft[3].gameObject.SetActive(true);
+                break;
+            case "BOW":
+                temp = anchorRight[4];
+                anchorRight[4].gameObject.SetActive(true);
+                break;
+            default:
+                return;
+
+
+        }
+
         inventory.Equipment_Slot[index].transform.SetParent(temp);
         inventory.Equipment_Slot[index].transform.localPosition = Vector3.zero;
         inventory.Equipment_Slot[index].transform.localRotation = Quaternion.identity;
         inventory.Equipment_Slot[index].transform.localScale = new Vector3(1.5f, 1.5f, 1f);
         inventory.Equipment_Slot[index].gameObject.layer = 0;
         inventory.Equipment_Slot[index].gameObject.SetActive(true);
-        
+
     }
 
-    private void UnEquipWeapon(Part hand)
+    private void UnEquipWeaponL()
     {
-        
-        Transform temp = hand.gameObject.transform.GetChild(0);
-        if(temp == null)
+       Transform temp;
+
+       for(int i = 0; i < anchorLeft.Length; i++)
         {
-            return;
+            if(anchorLeft[i].childCount != 0)
+            {
+                temp = anchorLeft[i].GetChild(0);
+                temp.transform.SetParent(inventory.Inventory_obj);
+                temp.localScale = Vector3.one;
+                temp.gameObject.SetActive(false);
+                anchorLeft[i].gameObject.SetActive(false);
+                return;
+            }
+
+        }
+        
+        
+    }
+    private void UnEquipWeaponR()
+    {
+        Transform temp;
+
+        for (int i = 0; i < anchorRight.Length; i++)
+        {
+            if (anchorRight[i].childCount != 0)
+            {
+                temp = anchorRight[i].GetChild(0);
+                temp.transform.SetParent(inventory.Inventory_obj);
+                temp.localScale = Vector3.one;
+                temp.gameObject.SetActive(false);
+                anchorRight[i].gameObject.SetActive(false);
+                return;
+            }
+
         }
 
-        
-        temp.transform.SetParent(inventory.Inventory_obj);
-        temp.localScale = Vector3.one;
-        temp.gameObject.SetActive(false);
+
     }
+
+    
+
+
 
     public void On_L_Hand_Collider()
     {

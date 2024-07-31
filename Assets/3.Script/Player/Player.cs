@@ -110,11 +110,11 @@ public class Player : MonoBehaviour
 
         if (inventorySlots[selectedBlockIndex] == null)
         {
-            selectedBlockText.text = $"{selectedBlockIndex + 1} slot NONE block selected";
+            selectedBlockText.text = $"{selectedBlockIndex + 1}";
         }
         else
         {
-            selectedBlockText.text = inventorySlots[selectedBlockIndex].itemName + " block selected";
+            selectedBlockText.text = inventorySlots[selectedBlockIndex].itemName;
         }
     }
 

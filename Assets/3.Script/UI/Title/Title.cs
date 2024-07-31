@@ -30,7 +30,7 @@ public class Title : MonoBehaviour
 
     public void StartGame() // 게임 시작
     {
-        SceneManager.LoadScene("Inventory");
+        SceneManager.LoadScene("World");
 
         Debug.Log("게임 시작");
     }

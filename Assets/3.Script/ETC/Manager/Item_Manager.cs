@@ -45,6 +45,8 @@ public class Item_Manager : MonoBehaviour
     [Header("테스트 해보세용")]
     public int TestKey = 7;
 
+    public Transform player;
+
     private void Awake()
     {
         TextAsset jsonFile = Resources.Load<TextAsset>("ItemData"); // 테스트용
@@ -87,24 +89,20 @@ public class Item_Manager : MonoBehaviour
         //    SpawnItem(262, transform.position);
         //}
 
-        for(int i = 200; i < 400; i++)
+        
+        for (int j = 0; j < 10; j++)
         {
-            SpawnItem(i, transform.position);
+            SpawnItem(5, player.position);
+        }
+
+        for (int i = 200; i < 400; i++)
+        {
+            SpawnItem(i, player.position);
         }
         
         
 
     }
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            AudioManager.instance.PlayRandomSFX("UI", "Click");
-            SpawnItem(5, transform.position);
-        }
-    }
-
 
     public void SetLayerToItem(GameObject obj, string layer)
     {

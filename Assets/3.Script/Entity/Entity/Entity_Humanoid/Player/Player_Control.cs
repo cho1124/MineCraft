@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Experimental;
 using Entity_Data;
+using UnityEngine.UI;
 
 public class Player_Control : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class Player_Control : MonoBehaviour
     private bool is_L_down = false;
     private bool is_R_down = false;
     private bool is_guard_down = false;
-
+    private Transform cam;
 
 
     [SerializeField] private float EntityWidth = 0.25f;
@@ -53,7 +54,21 @@ public class Player_Control : MonoBehaviour
     private Vector3 velocity;
     private World world;
 
+    //블록 체크 관련된 것
+    public Transform highlightBlock;
+    public Transform placeBlock;
+    public float checkIncrement = 0.1f;
+    public float reach = 8f;
 
+    public Text selectedBlockText;
+    public byte selectedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
+
+    public int orientation;
+
+    private Item_Manager itemManager;
+    private ItemComponent[] inventorySlots; //사용할 인덱스는 0부터 8까지
+
+    private InventoryOnOff inventoryOnOff;
 
     private void Awake()
     {
@@ -66,23 +81,33 @@ public class Player_Control : MonoBehaviour
         rotation_anchor = gameObject.transform.Find("Rotation_Anchor").gameObject;
         L_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Left:Upper/Arm:Left:Lower/Arm:Left:Hand").gameObject;
         R_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Right:Upper/Arm:Right:Lower/Arm:Right:Hand").gameObject;
+        
+        
 
+    }
+
+    private void Start()
+    {
+        itemManager = FindObjectOfType<Item_Manager>();
+        inventorySlots = GetComponent<Inventory>().inv_Slot;
+        cam = GameObject.Find("Main Camera").transform;
+        inventoryOnOff = GetComponent<InventoryOnOff>();
+
+        SelectedIndex();
     }
 
     private void Update()
     {
         isGrounded = Check_Ground();
 
-        Move_Control();
-        Attack_Control();
-
-        if(Input.GetKeyDown(KeyCode.F))
+        if(!inventoryOnOff.isInventoryOpen)
         {
-            for(int i = 0; i < Inventory.instance.inv_Slot.Length; i++)
-            {
-                Debug.Log($"{i}인덱스의 아이디" + Inventory.instance.inv_Slot[i].ItemID + $"{i}인덱스의 현재 스택 개수 :" + Inventory.instance.inv_Slot[i].StackCurrent);
-            }
-        }   
+            Move_Control();
+            Attack_Control();
+            PlaceCursorBlocks();
+        }
+
+
     }
 
     private void LateUpdate()
@@ -105,6 +130,20 @@ public class Player_Control : MonoBehaviour
         if (animator.GetFloat("Speed_H") > 0f && right) transform.position += transform.right * -0.1f;
         if (animator.GetFloat("Speed_H") < 0f && left) transform.position += transform.right * 0.1f;
         if (down) transform.position += transform.up * 0.1f;
+    }
+
+    private void SelectedIndex()
+    {
+        //SetHighlightBlock();
+
+        if (inventorySlots[selectedBlockIndex] == null)
+        {
+            selectedBlockText.text = $"{selectedBlockIndex + 1}";
+        }
+        else
+        {
+            selectedBlockText.text = inventorySlots[selectedBlockIndex].itemName;
+        }
     }
 
     private void Rotation_Control()
@@ -192,6 +231,8 @@ public class Player_Control : MonoBehaviour
             if (Mathf.Abs(velocity.z) < 0.01f) velocity.z = 0f;
             transform.position = transform.position + velocity * Time.deltaTime;
         }
+
+        InvenScroll();
     }
 
     private void Move_Animation(float key_h, float key_v)
@@ -221,6 +262,149 @@ public class Player_Control : MonoBehaviour
             animator.SetBool("L_Attack", false);
             animator.SetBool("R_Attack", false);
             animator.SetBool("Guard", false);
+        }
+    }
+
+    private void PlaceCursorBlocks()
+    {
+        float step = checkIncrement;
+        // 마지막으로 탐지된 위치를 저장할 변수;
+        Vector3 lastPos = new Vector3();
+
+        // reach 거리만큼 반복
+        while (step < reach)
+        {
+
+            // 카메라의 위치에서 카메라가 바라보고 있는 방향으로 Step 거리만큼 이동
+            Vector3 pos = transform.position + (transform.forward * step);
+
+            // 만약 거기에 Voxel이 있다면
+            if (world.CheckForVoxel(pos))
+            {
+
+
+                // 화면에 표시인데 좌표가 안맞아서 내가 투명하게 해놓음;
+                highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                placeBlock.position = lastPos;
+                highlightBlock.gameObject.SetActive(true);
+                placeBlock.gameObject.SetActive(true);
+
+                // 블록 탐지됐으므로 메서드 종료
+                return;
+            }
+            // 현재 위치를 마지막 위치로 업데이트
+            lastPos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+
+            // 탐지 간격을 증가시킴;
+            step += checkIncrement;
+        }
+        // reach 거리 내에 블럭이 없으면 비활성화
+        // 사실 내가 투명도 100으로 해서 안보임
+        highlightBlock.gameObject.SetActive(false);
+        placeBlock.gameObject.SetActive(false);
+
+    }
+
+
+    private void InvenScroll()
+    {
+        HandleScrollInput();
+        HandleNumberInput();
+        SelectedIndex();
+
+        if (highlightBlock.gameObject.activeSelf)
+        {
+            HandleBlockDestroy();
+            HandleBlockPlacement();
+        }
+    }
+
+    private void HandleScrollInput()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
+        {
+            if (scroll > 0)
+                selectedBlockIndex = (byte)((selectedBlockIndex + 1) % 9);
+            else
+                selectedBlockIndex = (byte)((selectedBlockIndex - 1 + 9) % 9);
+        }
+    }
+
+    private void HandleNumberInput()
+    {
+        for (int i = 0; i <= 8; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                selectedBlockIndex = (byte)i;
+                break;
+            }
+        }
+    }
+
+    private void HandleBlockDestroy()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 destroyPos = highlightBlock.position;
+            byte destroyedBlockID = world.GetChunkFromVector3(destroyPos).EditVoxel(destroyPos, 0);
+
+            if (destroyedBlockID == 3)
+            {
+                destroyedBlockID = 5;
+            }
+
+            itemManager.SetItem(destroyedBlockID, destroyPos, world);
+        }
+    }
+
+    private void HandleBlockPlacement()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            byte blockID = world.GetChunkFromVector3(highlightBlock.position).CheckBlockID(highlightBlock.position);
+
+            switch (blockID)
+            {
+                case 16:
+                    //ui_chest.SetActive(true);
+                    break;
+                case 18:
+                    //ui_furnance.SetActive(true);
+                    break;
+                case 19:
+                    //ui_craftTable.SetActive(true);
+                    break;
+                default:
+                    PlaceBlockOrUseItem();
+                    break;
+            }
+        }
+    }
+
+    private void PlaceBlockOrUseItem()
+    {
+        if (inventorySlots[selectedBlockIndex] != null)
+        {
+            if (inventorySlots[selectedBlockIndex].SetType == 3) // 블록들
+            {
+                world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, (byte)inventorySlots[selectedBlockIndex].ItemID);
+                if (inventorySlots[selectedBlockIndex].Use())
+                {
+                    inventorySlots[selectedBlockIndex] = null;
+                }
+            }
+            else if (inventorySlots[selectedBlockIndex].SetType == 2) // 소비 아이템
+            {
+                // 아이템 사용 로직을 추가하세요.
+                if (inventorySlots[selectedBlockIndex].Use())
+                {
+                    inventorySlots[selectedBlockIndex] = null;
+                }
+            }
+
+            Inventory.instance.ChangeEvent();
         }
     }
 
