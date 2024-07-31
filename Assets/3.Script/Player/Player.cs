@@ -18,6 +18,11 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+
+    public float health;
+    public string worldName;
+    public Inventory inventory;
+
     private Transform cam;
     private World world;
 
@@ -76,6 +81,9 @@ public class Player : MonoBehaviour
     // 초기화
     private void Start()
     {
+
+        PlayerData data = SaveSystem.LoadPlayer(worldName);
+
         cam = GameObject.Find("Main Camera").transform;
         //world = GameObject.Find("World").GetComponent<World>();
         world = FindAnyObjectByType<World>();
@@ -97,12 +105,31 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         SelectedIndex();
+
+        if (data != null) {
+            health = data.health;
+            Vector3 position = new Vector3(data.position[0], data.position[1], data.position[2]);
+            transform.position = position;
+
+            inventory.Clear();
+            foreach (Item_Stackable_Data itemData in data.inventory) {
+                ItemComponent itemComponent = new ItemComponent(); // ItemComponent 초기화
+                itemComponent.ItemID = itemData.item_ID;
+                itemComponent.stackCurrent = itemData.stack_current;
+
+                InventoryItem item = new InventoryItem();
+                item.Initialize(itemComponent, null); // 필요한 경우 parent를 설정
+                inventory.Add(item);
+            }
+        }
     }
 
-    
+    private void OnApplicationQuit() {
+        SaveSystem.SavePlayer(this);
+    }
 
 
-    
+
 
     private void SelectedIndex()
     {

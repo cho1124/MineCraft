@@ -103,10 +103,19 @@ public class Player_Control : MonoBehaviour
 
     private void GroundedCheck()
     {
+
+        // 현재 Grounded 상태를 저장
+        bool wasGrounded = Grounded;
+
         // set sphere position, with offset
         Vector3 box_position = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckBox(box_position, GroundedBoxSize, transform.rotation, GroundLayers);
         // update animator if using character
+
+        // 플레이어가 착지했을 때
+        if (!wasGrounded && Grounded) {
+            AudioManager.instance.PlayRandomSFX("Humanoid", "Landing");
+        }
     }
     private void OnDrawGizmos()
     {
