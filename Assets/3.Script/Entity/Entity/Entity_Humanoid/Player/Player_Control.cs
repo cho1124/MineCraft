@@ -72,6 +72,16 @@ public class Player_Control : MonoBehaviour
         GroundedCheck();
         Move_Control();
         Attack_Control();
+
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            for(int i = 0; i < Inventory.instance.inv_Slot.Length; i++)
+            {
+                Debug.Log($"{i}인덱스의 아이디" + Inventory.instance.inv_Slot[i].ItemID + $"{i}인덱스의 현재 스택 개수 :" + Inventory.instance.inv_Slot[i].StackCurrent);
+            }
+        }
+
     }
 
     private void LateUpdate()

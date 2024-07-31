@@ -8,9 +8,7 @@ public class InventoryOnOff : MonoBehaviour
 
     [SerializeField] private CanvasGroup backGroundCanvasGroup = null;
     [SerializeField] private CanvasGroup inventoryCanvasGroup = null;
-    [SerializeField] private CanvasGroup craftingCanvasGroup = null;
-    [SerializeField] private CanvasGroup chestCanvasGroup = null;
-    [SerializeField] private CanvasGroup hwaroGroup = null;
+    
     [HideInInspector] public bool on_off_tr = false; // 인벤토리, Dead UI ON, OFF 선언 (Bool)
 
     private bool isInventoryOpen = false;
@@ -24,10 +22,7 @@ public class InventoryOnOff : MonoBehaviour
             ToggleInventory();
         }
         //임시로 만든 것
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            ToggleCrafting();
-        }
+        
 
     }
 
@@ -40,19 +35,7 @@ public class InventoryOnOff : MonoBehaviour
         SwitchInventory(isInventoryOpen);
     }
 
-    void ToggleCrafting()
-    {
-        isCraftingOpen = !isCraftingOpen;
-        SwitchBackGroundCanvas(isCraftingOpen);
-        if (isCraftingOpen)
-        {
-            OpenCrafting();
-        }
-        else
-        {
-            CloseCrafting();
-        }
-    }
+    
 
     void SwitchBackGroundCanvas(bool isOpen)
     {
@@ -86,19 +69,7 @@ public class InventoryOnOff : MonoBehaviour
         inventoryCanvasGroup.blocksRaycasts = isOpen;
     }
 
-    void OpenCrafting()
-    {
-        craftingCanvasGroup.alpha = 1;
-        craftingCanvasGroup.interactable = true;
-        craftingCanvasGroup.blocksRaycasts = true;
-    }
-
-    void CloseCrafting()
-    {
-        craftingCanvasGroup.alpha = 0;
-        craftingCanvasGroup.interactable = false;
-        craftingCanvasGroup.blocksRaycasts = false;
-    }
+    
 
 
 }

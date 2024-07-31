@@ -242,12 +242,6 @@ public class Item_Manager : MonoBehaviour
         }
     }
 
-    private void Dic_Add(List<BlockType> blockTypes)
-    {
-
-    }
-
-
     //enum parse 개편한 것
     private Equipment_Weapon_Type? ParseWeaponType(string type)
     {
@@ -384,3 +378,4 @@ public class ItemData
 
     
 }
+

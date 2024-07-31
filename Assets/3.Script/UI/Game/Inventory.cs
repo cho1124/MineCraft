@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,13 +10,13 @@ public class Inventory : MonoBehaviour
     public static Inventory instance;
 
 
-    public ItemComponent tempItemSlot = null;
+    
 
     public ItemComponent[] inv_Slot = new ItemComponent[36]; // 핫바랑 합쳐서 한번에 처리하자
-    
     public ItemComponent[] Equipment_Slot = new ItemComponent[6]; //0 : head, 1 : chest, 2 : legs, 3 : feet, 4 : weapon1, 5 : weapon2
     public ItemComponent[] Crafting_Mini_Slot = new ItemComponent[4];
-    public Transform[] Equipment_Part = new Transform[7];
+    public Transform[] Equipment_Part = new Transform[6];
+
     private Item_Manager itemManager;
 
 
@@ -96,5 +97,9 @@ public class Inventory : MonoBehaviour
         OnChangedInv?.Invoke();
     }
 
+    
 }
+
+
+
 
