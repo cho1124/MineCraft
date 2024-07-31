@@ -11,6 +11,8 @@ public class Entity_Humanoid : Entity
     [SerializeField] private Inventory inventory = null;
     [SerializeField] private ItemComponent L_held_data, R_held_data, helmet_data, chestplate_data, leggings_data, boots_data;
 
+    
+
     private void Awake()
     {
         TryGetComponent(out inventory);
@@ -20,32 +22,45 @@ public class Entity_Humanoid : Entity
         Update_Status_Humanoid();
     }
 
+    private void Start()
+    {
+        inventory.OnChangedInv += Update_Status_Humanoid;
+        
+    }
+
     public void Update_Status_Humanoid()
     {
-        if(inventory != null)
+        if(inventory == null)
         {
-            if (inventory.Equipment_Slot[0] != null)
+            Debug.Log("Null 널 어쩌면 좋니");
+        }
+        //Debug.Log("event!!");
+
+        //0 : head, 1 : chest, 2 : legs, 3 : feet, 4 : weapon1, 5 : weapon2
+        if (inventory != null)
+        {
+            if (inventory.Equipment_Slot[0] != null) //head
             {
                 helmet_data = inventory.Equipment_Slot[0];
                 weight_current = weight_current + helmet_data.weight;
                 defense_current = defense_current + helmet_data.armorDefense;
             }
             else helmet_data = null;
-            if (inventory.Equipment_Slot[1] != null)
+            if (inventory.Equipment_Slot[1] != null) //chest
             {
                 chestplate_data = inventory.Equipment_Slot[1];
                 weight_current = weight_current + chestplate_data.weight;
                 defense_current = defense_current + chestplate_data.armorDefense;
             }
             else chestplate_data = null;
-            if (inventory.Equipment_Slot[2] != null)
+            if (inventory.Equipment_Slot[2] != null) // legs
             {
                 leggings_data = inventory.Equipment_Slot[2];
                 weight_current = weight_current + leggings_data.weight;
                 defense_current = defense_current + leggings_data.armorDefense;
             }
             else leggings_data = null;
-            if (inventory.Equipment_Slot[3] != null)
+            if (inventory.Equipment_Slot[3] != null) // feet
             {
                 boots_data = inventory.Equipment_Slot[3];
                 weight_current = weight_current + boots_data.weight;
@@ -53,30 +68,45 @@ public class Entity_Humanoid : Entity
             }
             else boots_data = null;
 
-            if (inventory.Equipment_Slot[4] != null)
+            if (inventory.Equipment_Slot[4] != null) //weapon1
             {
                 L_held_data = inventory.Equipment_Slot[4];
+               // Debug.Log(inventory.Equipment_Slot[4].equipmentType);
                 L_Hand.Set_Value_Melee(attack_damage_base + L_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, L_held_data.meleeSpeed, attack_speed_rate, L_held_data.toolTier);
                 L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(false);
+
+                
+                
+                EquipWeapon(inventory.Equipment_Slot[4].equipmentType, 4, L_Hand);
+
+
             }
             else
             {
                 L_held_data = null;
                 L_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
                 L_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
+                //UnEquipWeapon(L_Hand);
+
+
+                //L_Hand.gameObject.transform.Find(inventory.Equipment_Slot[4].equipmentType).gameObject.SetActive(false);
             }
 
-            if (inventory.Equipment_Slot[5] != null)
+            if (inventory.Equipment_Slot[5] != null) //weapon2
             {
                 R_held_data = inventory.Equipment_Slot[5];
                 R_Hand.Set_Value_Melee(attack_damage_base + R_held_data.meleeDamage, attack_damage_max_rate, attack_damage_min_rate, R_held_data.meleeSpeed, attack_speed_rate, R_held_data.toolTier);
                 R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(false);
+
+                
+                EquipWeapon(inventory.Equipment_Slot[5].equipmentType, 5, R_Hand);
             }
             else
             {
                 R_held_data = null;
                 R_Hand.Set_Value_Melee(attack_damage_base, attack_damage_max_rate, attack_damage_min_rate, 1f, attack_speed_rate, 1);
                 R_Hand.gameObject.transform.Find("Bare_Hand").gameObject.SetActive(true);
+                //UnEquipWeapon(R_Hand);
             }
 
 
@@ -148,10 +178,10 @@ public class Entity_Humanoid : Entity
                     guard_rate = 0.5f;
                     break;
                 case 1:
-                    guard_rate = L_held_data.guardRate;
+                    guard_rate = R_held_data.guardRate;
                     break;
                 case -1:
-                    guard_rate = R_held_data.guardRate;
+                    guard_rate = L_held_data.guardRate;
                     break;
                 case 2:
                 case -2:
@@ -185,6 +215,36 @@ public class Entity_Humanoid : Entity
         animator.SetFloat("L_Attack_Speed", L_Hand.attack_speed);
         animator.SetFloat("R_Attack_Speed", R_Hand.attack_speed);
         animator.SetFloat("Movement_Speed", movement_speed);
+    }
+
+
+    private void EquipWeapon(string item, int index, Part hand)
+    {
+        //Debug.Log(item);
+        Transform temp = hand.gameObject.transform.Find(item);
+        temp.gameObject.SetActive(true);
+        inventory.Equipment_Slot[index].transform.SetParent(temp);
+        inventory.Equipment_Slot[index].transform.localPosition = Vector3.zero;
+        inventory.Equipment_Slot[index].transform.localRotation = Quaternion.identity;
+        inventory.Equipment_Slot[index].transform.localScale = new Vector3(1.5f, 1.5f, 1f);
+        inventory.Equipment_Slot[index].gameObject.layer = 0;
+        inventory.Equipment_Slot[index].gameObject.SetActive(true);
+        
+    }
+
+    private void UnEquipWeapon(Part hand)
+    {
+        
+        Transform temp = hand.gameObject.transform.GetChild(0);
+        if(temp == null)
+        {
+            return;
+        }
+
+        
+        temp.transform.SetParent(inventory.Inventory_obj);
+        temp.localScale = Vector3.one;
+        temp.gameObject.SetActive(false);
     }
 
     public void On_L_Hand_Collider()

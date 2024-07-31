@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
         }
         
 
-        Debug.Log($"item's name : {item.name}, item's id : {item.itemComponent.ItemID}");
+        //Debug.Log($"item's name : {item.name}, item's id : {item.itemComponent.ItemID}");
 
 
         if (item != null &&
@@ -273,10 +273,7 @@ public class UIManager : MonoBehaviour
             
             
         }
-        else
-        {
-            Debug.Log("버그찾기" + index);
-        }
+        
 
         itemSet[index].Initialize(tempItem, slots[index]);
         return false;
@@ -297,7 +294,7 @@ public class UIManager : MonoBehaviour
         if (itemSet[index] != null && slots[index].myItem != null)
         {
             removedItem = itemSet[index];
-            Debug.Log(itemSet[index].name);
+            
             Destroy(removedItem.gameObject);
             itemSet[index] = null;
             slots[index].myItem = null;
