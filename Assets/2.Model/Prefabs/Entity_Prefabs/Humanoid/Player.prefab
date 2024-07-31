@@ -473,7 +473,6 @@ GameObject:
   - component: {fileID: 1629210814871413173}
   - component: {fileID: 1629210814871413172}
   - component: {fileID: 1629210814871413175}
-  - component: {fileID: 1629210814871413174}
   - component: {fileID: 1629210814871413169}
   - component: {fileID: 1629210814871413168}
   - component: {fileID: 1629210814871413171}
@@ -541,9 +540,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &1629210814871413175
 CapsuleCollider:
@@ -558,24 +557,6 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!143 &1629210814871413174
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1629210814871413170}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.1
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1629210814871413169
 MonoBehaviour:
@@ -736,20 +717,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  controller: {fileID: 0}
+  rigidbody_self: {fileID: 0}
   animator: {fileID: 0}
   head_transform: {fileID: 0}
   position_anchor: {fileID: 0}
   rotation_anchor: {fileID: 0}
   L_Hand: {fileID: 0}
   R_Hand: {fileID: 0}
-  Grounded: 0
-  GroundedOffset: 0
-  GroundedBoxSize: {x: 1, y: 0.5, z: 1}
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  drawGizmo: 1
+  EntityWidth: 0.25
+  EntityHeight: 2
+  isGrounded: 0
 --- !u!114 &1629210814871413171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -809,9 +786,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundCanvasGroup: {fileID: 0}
   inventoryCanvasGroup: {fileID: 0}
-  craftingCanvasGroup: {fileID: 0}
-  chestCanvasGroup: {fileID: 0}
-  hwaroGroup: {fileID: 0}
   on_off_tr: 0
 --- !u!114 &1629210814871413176
 MonoBehaviour:
@@ -838,7 +812,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db0f31dcb8aff742b01f4a4cc97e48b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tempItemSlot: {fileID: 0}
   inv_Slot:
   - {fileID: 0}
   - {fileID: 0}

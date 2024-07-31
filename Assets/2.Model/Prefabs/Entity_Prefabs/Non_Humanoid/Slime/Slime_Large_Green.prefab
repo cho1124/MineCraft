@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 6295141593239640914}
   - component: {fileID: 6201133898774352692}
   - component: {fileID: 6201133898774352695}
-  - component: {fileID: 6201133898774352694}
   - component: {fileID: 6201133898774352713}
   - component: {fileID: 6201133898774352712}
   - component: {fileID: 6201133898774352715}
@@ -104,9 +103,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &6201133898774352695
 CapsuleCollider:
@@ -122,24 +121,6 @@ CapsuleCollider:
   m_Height: 0.01
   m_Direction: 1
   m_Center: {x: 0, y: 0.01, z: 0}
---- !u!143 &6201133898774352694
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6201133898774352714}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 0.01
-  m_Radius: 0.01
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.01, z: 0}
 --- !u!114 &6201133898774352713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,19 +133,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46fa2d466ee26684cb9bc3490785f4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  entity: {fileID: 0}
+  rigidbody_self: {fileID: 0}
   animator: {fileID: 0}
   head_transform: {fileID: 6197905339539367520}
   position_anchor: {fileID: 6332710384288134234}
   rotation_anchor: {fileID: 6332710384051772900}
   target_handler: {fileID: 0}
-  Grounded: 1
-  GroundedOffset: 0
-  GroundedBoxSize: {x: 3, y: 0.5, z: 3}
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  drawGizmo: 1
+  is_passive: 0
+  EntityWidth: 0.25
+  EntityHeight: 2
+  isGrounded: 0
 --- !u!114 &6201133898774352712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +179,7 @@ MonoBehaviour:
   attack_speed_rate: 0
   guard_rate: 0
   blood_particle: {fileID: 3548588485384254792, guid: 2f9e7dc163581394da1e00b561eed65d, type: 3}
+  is_stunned: 0
   head: {fileID: 6201133899501440692}
   body: {fileID: 6201133898938124869}
 --- !u!114 &6201133898774352715
@@ -215,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  tracking_time: 0
 --- !u!114 &6201133898774352758
 MonoBehaviour:
   m_ObjectHideFlags: 0

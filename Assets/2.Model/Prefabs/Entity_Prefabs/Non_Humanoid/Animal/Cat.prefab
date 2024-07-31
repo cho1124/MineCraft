@@ -370,7 +370,6 @@ GameObject:
   - component: {fileID: 6266575236385213776}
   - component: {fileID: 6298003777417453024}
   - component: {fileID: 6287529872839807870}
-  - component: {fileID: 6314995711337629252}
   - component: {fileID: 6314995711337629253}
   - component: {fileID: 6314995711337629626}
   - component: {fileID: 6314995711337629627}
@@ -438,7 +437,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &6287529872839807870
 BoxCollider:
@@ -453,24 +452,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.71, y: 1.7600174, z: 1.54}
   m_Center: {x: 0, y: 0.9200088, z: 0}
---- !u!143 &6314995711337629252
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314995711337629624}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &6314995711337629253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,24 +465,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  controller: {fileID: 0}
+  rigidbody_self: {fileID: 0}
   animator: {fileID: 0}
   head_transform: {fileID: 6316828554384195338}
   position_anchor: {fileID: 6316015877791907851}
   rotation_anchor: {fileID: 6316015877727775491}
   target_handler: {fileID: 0}
   is_passive: 1
-  gravity_velocity: 0
-  Grounded: 1
-  GroundedOffset: 0
-  GroundedBoxSize: {x: 1, y: 0.5, z: 1}
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 64
   EntityWidth: 0.3
-  gravity: -9.8
+  EntityHeight: 2
   isGrounded: 0
-  drawGizmo: 1
 --- !u!114 &6314995711337629626
 MonoBehaviour:
   m_ObjectHideFlags: 0

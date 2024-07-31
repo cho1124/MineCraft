@@ -10,7 +10,7 @@ using Entity_Data;
 public class Player_Control : MonoBehaviour
 {
     [SerializeField] private Entity entity;
-    [SerializeField] private CharacterController controller;
+    [SerializeField] private Rigidbody rigidbody_self;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
     [SerializeField] private GameObject position_anchor;
@@ -29,7 +29,6 @@ public class Player_Control : MonoBehaviour
     private float speed_v;
 
     private float jump_height = 1f; // player_data에서 가져오기
-    private float gravity_velocity = 0f;
 
     private float input_cursor_h;
     private float input_cursor_v;
@@ -44,31 +43,23 @@ public class Player_Control : MonoBehaviour
 
     private bool is_L_down = false;
     private bool is_R_down = false;
-
     private bool is_guard_down = false;
 
-    //public bool Grounded;
-    //public float GroundedOffset;
-    //public Vector3 GroundedBoxSize;
-    //public LayerMask GroundLayers;
-    //
-    //[Header("Debug")]
-    //[SerializeField] private bool drawGizmo;
 
-    public float EntityWidth = 0.25f;
-    public float EntityHeight = 2f;
-    private float verticalMomentum = 0;
-    public float gravity = -9.8f;
+
+    [SerializeField] private float EntityWidth = 0.25f;
+    [SerializeField] private float EntityHeight = 2f;
+    [SerializeField] private bool isGrounded;
     private Vector3 velocity;
-    public bool isGrounded;
     private World world;
 
-    private Vector3 last_position;
+
 
     private void Awake()
     {
+        world = FindAnyObjectByType<World>();
+        TryGetComponent(out rigidbody_self);
         TryGetComponent(out entity);
-        TryGetComponent(out controller);
         TryGetComponent(out animator);
         head_transform = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Head");
         position_anchor = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Head/Position_Anchor").gameObject;
@@ -76,16 +67,14 @@ public class Player_Control : MonoBehaviour
         L_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Left:Upper/Arm:Left:Lower/Arm:Left:Hand").gameObject;
         R_Hand = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Arm:Right:Upper/Arm:Right:Lower/Arm:Right:Hand").gameObject;
 
-        world = FindAnyObjectByType<World>();
     }
 
     private void Update()
     {
-        last_position = transform.position;
+        isGrounded = Check_Ground();
 
         Move_Control();
         Attack_Control();
-
 
         if(Input.GetKeyDown(KeyCode.F))
         {
@@ -93,9 +82,7 @@ public class Player_Control : MonoBehaviour
             {
                 Debug.Log($"{i}인덱스의 아이디" + Inventory.instance.inv_Slot[i].ItemID + $"{i}인덱스의 현재 스택 개수 :" + Inventory.instance.inv_Slot[i].StackCurrent);
             }
-        }
-
-        Debug.Log($"{transform.forward}");
+        }   
     }
 
     private void LateUpdate()
@@ -113,61 +100,12 @@ public class Player_Control : MonoBehaviour
             //L_Hand.transform.Rotate(new Vector3(-60f, -45f, 15f));
         }
 
-        //if (right || left)
-        //{
-        //    transform.position = new Vector3(last_position.x, transform.position.y, transform.position.z);
-        //}
-        //
-        //if (front || back)
-        //{
-        //    transform.position = new Vector3(transform.position.x, transform.position.y, last_position.z);
-        //}
-
-        if(animator.GetFloat("Speed_V") > 0f && front)
-        {
-            Debug.Log("front");
-            transform.position += transform.forward * -0.1f;
-        }
-
-        if (animator.GetFloat("Speed_V") < 0f && back)
-        {
-            Debug.Log("back");
-            transform.position += transform.forward * 0.1f;
-        }
-
-        if (animator.GetFloat("Speed_H") > 0f && right)
-        {
-            Debug.Log("right");
-            transform.position += transform.right * -0.1f;
-        }
-
-        if (animator.GetFloat("Speed_H") < 0f && left)
-        {
-            Debug.Log("left");
-            transform.position += transform.right * 0.1f;
-        }
+        if (animator.GetFloat("Speed_V") > 0f && front) transform.position += transform.forward * -0.1f;
+        if (animator.GetFloat("Speed_V") < 0f && back) transform.position += transform.forward * 0.1f;
+        if (animator.GetFloat("Speed_H") > 0f && right) transform.position += transform.right * -0.1f;
+        if (animator.GetFloat("Speed_H") < 0f && left) transform.position += transform.right * 0.1f;
+        if (down) transform.position += transform.up * 0.1f;
     }
-
-    private void FixedUpdate()
-    {
-        isGrounded = Check_Ground();
-    }
-
-
-    //private void GroundedCheck()
-    //{
-    //    // set sphere position, with offset
-    //    Vector3 box_position = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-    //    Grounded = Physics.CheckBox(box_position, GroundedBoxSize, transform.rotation, GroundLayers);
-    //    // update animator if using character
-    //}
-    //private void OnDrawGizmos()
-    //{
-    //    if (!drawGizmo) return;
-    //
-    //    Gizmos.color = Color.cyan;
-    //    Gizmos.DrawCube(transform.position + (transform.up * GroundedOffset), GroundedBoxSize);
-    //}
 
     private void Rotation_Control()
     {
@@ -178,18 +116,8 @@ public class Player_Control : MonoBehaviour
         cursor_y += cursor_v;
         cursor_y = Mathf.Clamp(cursor_y, -90f, 90f);
 
-        if(!animator.GetBool("Is_Attacking") && (animator.GetBool("LR_Attack") || animator.GetBool("L_Attack") || animator.GetBool("R_Attack")) || animator.GetBool("Is_Guarding") || animator.GetBool("Is_Drawing"))
-        {
-            temp_y = cursor_x;
-        }
-        else if(key_h != 0 || key_v != 0)
-        {
-            temp_y = cursor_x;
-            //if (key_v == 0) temp_y = cursor_x;
-            //else if (((key_h < 0) && !(key_v < 0)) || ((key_h > 0) && (key_v < 0))) temp_y = cursor_x - 45f;
-            //else if (((key_h > 0) && !(key_v < 0)) || ((key_h < 0) && (key_v < 0))) temp_y = cursor_x + 45f;
-            //else if (key_v != 0 && key_h == 0) temp_y = cursor_x;
-        }
+        if(!animator.GetBool("Is_Attacking") && (animator.GetBool("LR_Attack") || animator.GetBool("L_Attack") || animator.GetBool("R_Attack")) || animator.GetBool("Is_Guarding") || animator.GetBool("Is_Drawing")) temp_y = cursor_x;
+        else if(key_h != 0 || key_v != 0) temp_y = cursor_x;
         else
         {
             if (Difference(cursor_x, temp_y) > 45f)
@@ -202,7 +130,6 @@ public class Player_Control : MonoBehaviour
 
         rotation_anchor.transform.position = position_anchor.transform.position;
         rotation_anchor.transform.rotation = Quaternion.Euler(-cursor_y, cursor_x, 0);
-
 
         if (!animator.GetBool("Is_Attacking"))
         {
@@ -234,14 +161,15 @@ public class Player_Control : MonoBehaviour
                 animator.SetBool("IsGround", true);
                 animator.SetBool("IsJump", false);
 
-                gravity_velocity = 0f;
+                velocity = Vector3.zero;
 
                 // 짬푸
                 if (input_key_jump)
                 {
                     animator.SetBool("IsJump", true);
                     animator.SetBool("IsGround", false);
-                    gravity_velocity = jump_height * 9.8f;
+                    isGrounded = false;
+                    velocity = rigidbody_self.velocity + transform.up * jump_height * 9.8f * 0.5f;
                 }
             }
             else
@@ -253,12 +181,17 @@ public class Player_Control : MonoBehaviour
         else
         {
             animator.SetBool("IsGround", false);
-            gravity_velocity -= 9.8f * Time.deltaTime;
+            velocity += transform.up * -9.8f * 0.01f;
         }
 
         Move_Animation(key_h, key_v);
-        //controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
-        //if(gravity_velocity != 0f) transform.position += transform.up * gravity_velocity * Time.deltaTime;
+        if (velocity != Vector3.zero)
+        {
+            velocity = new Vector3(Mathf.Lerp(velocity.x, 0f, Time.deltaTime), velocity.y, Mathf.Lerp(velocity.z, 0f, Time.deltaTime));
+            if (Mathf.Abs(velocity.x) < 0.01f) velocity.x = 0f;
+            if (Mathf.Abs(velocity.z) < 0.01f) velocity.z = 0f;
+            transform.position = transform.position + velocity * Time.deltaTime;
+        }
     }
 
     private void Move_Animation(float key_h, float key_v)
@@ -280,10 +213,7 @@ public class Player_Control : MonoBehaviour
                 animator.SetBool("R_Attack", is_R_down);
             }
 
-            if (!animator.GetBool("Is_Attacking"))
-            {
-                animator.SetBool("Guard", is_guard_down);
-            }
+            if (!animator.GetBool("Is_Attacking")) animator.SetBool("Guard", is_guard_down);
         }
         else
         {
@@ -369,234 +299,83 @@ public class Player_Control : MonoBehaviour
         animator.SetBool("Is_Guarding", false);
     }
 
-    private void CalculateVelocity()
-    {
-
-        // 중력 계산
-        //if (verticalMomentum > gravity)
-        //    verticalMomentum += Time.fixedDeltaTime * gravity;
-
-
-        // 걷기 & 달리기
-        //if (isSprinting)
-        //    velocity = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * sprintSpeed;
-        //else
-        //    velocity = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * walkSpeed;
-
-        //velocity += Vector3.up * verticalMomentum * Time.fixedDeltaTime;
-
-        //앞뒤좌우 검사 
-        if ((velocity.z > 0 && front) || (velocity.z < 0 && back))
-            velocity.z = 0;
-        if ((velocity.x > 0 && right) || (velocity.x < 0 && left))
-            velocity.x = 0;
-
-        // 떨어지거나 올라갈때
-        if (velocity.y < 0)
-            velocity.y = CheckDownSpeed(velocity.y);
-        else if (velocity.y > 0)
-            velocity.y = CheckUpSpeed(velocity.y);
-    }
-
     private bool Check_Ground()
     {
-        if (world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.1f, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.1f, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.1f, transform.position.z + EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.1f, transform.position.z + EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y - 0.1f, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y - 0.1f, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y - 0.1f, transform.position.z + EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y - 0.1f, transform.position.z + EntityWidth))
+        if (world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y - 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y - 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y - 0.05f, transform.position.z + EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y - 0.05f, transform.position.z + EntityWidth))
             )
         {
-            Debug.Log("땅인데?");
-            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.1f, transform.position.z - EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.1f, transform.position.z - EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.1f, transform.position.z + EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.1f, transform.position.z + EntityWidth)))
+            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)))
                 return false;
             else return true;
         }
         else return false;
     }
 
-
-    // 떨어지는거 계산
-    private float CheckDownSpeed(float downSpeed)
+    private bool front
     {
-        if (world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + downSpeed, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + downSpeed, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + downSpeed, transform.position.z + EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + downSpeed, transform.position.z + EntityWidth)))
-        {
-            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + downSpeed, transform.position.z - EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + downSpeed, transform.position.z - EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + downSpeed, transform.position.z + EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + downSpeed, transform.position.z + EntityWidth)))
-            {
-                isGrounded = false;
-                return downSpeed;
-
-            }
-            else
-            {
-                isGrounded = true;
-                return 0;
-            }
-        }
-        else
-        {
-            isGrounded = false;
-            return downSpeed;
-        }
-    }
-
-    // 올라가는거 계산
-    private float CheckUpSpeed(float upSpeed)
-    {
-        if (world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z - EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z + EntityWidth)) ||
-            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z + EntityWidth)))
-        {
-            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z - EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z - EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z + EntityWidth)) ||
-                world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 2f + upSpeed, transform.position.z + EntityWidth)))
-                return upSpeed;
-            else
-                return 0;
-        }
-        else
-        {
-            return upSpeed;
-        }
-    }
-
-
-
-    public bool front
-    {
-        //get
-        //{
-        //    if (world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + EntityWidth)) ||
-        //       world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + EntityWidth)))
-        //    {
-        //        if (world.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + EntityWidth)) ||
-        //            world.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + EntityWidth)))
-        //            return false;
-        //        else
-        //            return true;
-        //
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //
-        //    //return World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
-        //    //       World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth));
-        //}
-
         get
         {
-            if (world.CheckForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight))
+            if (world.CheckForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight))
             {
-                if (world.CheckWaterForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckWaterForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight)) return false;
+                if (world.CheckWaterForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight)) return false;
                 else return true;
             }
             else return false;
         }
     }
-    public bool back
+    private bool back
     {
-        //get
-        //{
-        //    if (world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - EntityWidth)) ||
-        //        world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - EntityWidth)))
-        //    {
-        //        if (world.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - EntityWidth)) ||
-        //            world.CheckWaterForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - EntityWidth)))
-        //            return false;
-        //        else
-        //            return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //    //return World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
-        //    //       World.Instance.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth));
-        //}
-
         get
         {
-            if (world.CheckForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight))
+            if (world.CheckForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight))
             {
-                if (world.CheckWaterForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckWaterForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight)) return false;
+                if (world.CheckWaterForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight)) return false;
                 else return true;
             }
             else return false;
         }
     }
-    public bool left
+    private bool left
     {
-        //get
-        //{
-        //    if (world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y, transform.position.z)) ||
-        //        world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 1f, transform.position.z)))
-        //    {
-        //        if (world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y, transform.position.z)) ||
-        //            world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 1f, transform.position.z)))
-        //            return false;
-        //        else
-        //            return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //    //return world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
-        //    //       world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z));
-        //}
-
         get
         {
-            if (world.CheckForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight))
+            if (world.CheckForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight))
             {
-                if (world.CheckWaterForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckWaterForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight)) return false;
+                if (world.CheckWaterForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight)) return false;
                 else return true;
             }
             else return false;
         }
     }
-    public bool right
+    private bool right
     {
-        //get
-        //{
-        //    if (world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y, transform.position.z)) ||
-        //        world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 1f, transform.position.z)))
-        //    {
-        //        if (world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y, transform.position.z)) ||
-        //            world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 1f, transform.position.z)))
-        //            return false;
-        //        else
-        //            return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //    //return world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
-        //    //       world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z));
-        //}
-
         get
         {
-            if (world.CheckForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight))
+            if (world.CheckForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight))
             {
-                if (world.CheckWaterForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight * 0.1f) || world.CheckWaterForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight)) return false;
+                if (world.CheckWaterForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight)) return false;
+                else return true;
+            }
+            else return false;
+        }
+    }
+    private bool down
+    {
+        get
+        {
+            if (world.CheckForVoxel(transform.position + transform.up * EntityHeight * 0.1f))
+            {
+                if (world.CheckWaterForVoxel(transform.position + transform.up * EntityHeight * 0.1f)) return false;
                 else return true;
             }
             else return false;

@@ -211,7 +211,6 @@ GameObject:
   - component: {fileID: 2259792536060256573}
   - component: {fileID: 2259792536060256574}
   - component: {fileID: 2259792536060256575}
-  - component: {fileID: 2259792536060256544}
   - component: {fileID: 2259792536060256545}
   - component: {fileID: 2259792536060256546}
   - component: {fileID: 2259792536060256547}
@@ -273,9 +272,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &2259792536060256575
 CapsuleCollider:
@@ -291,24 +290,6 @@ CapsuleCollider:
   m_Height: 0.02
   m_Direction: 1
   m_Center: {x: 0, y: 0.01, z: 0}
---- !u!143 &2259792536060256544
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2259792536060256549}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 0.02
-  m_Radius: 0.005
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.01, z: 0}
 --- !u!114 &2259792536060256545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,19 +302,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46fa2d466ee26684cb9bc3490785f4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  entity: {fileID: 0}
+  rigidbody_self: {fileID: 0}
   animator: {fileID: 0}
   head_transform: {fileID: 2259792535912308173}
   position_anchor: {fileID: 2259792535991548317}
   rotation_anchor: {fileID: 2259792537171686975}
   target_handler: {fileID: 0}
-  Grounded: 1
-  GroundedOffset: 0
-  GroundedBoxSize: {x: 1, y: 0.5, z: 1}
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  drawGizmo: 1
+  is_passive: 0
+  EntityWidth: 0.25
+  EntityHeight: 2
+  isGrounded: 0
 --- !u!114 &2259792536060256546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,6 +348,7 @@ MonoBehaviour:
   attack_speed_rate: 0
   guard_rate: 0
   blood_particle: {fileID: 3548588485384254792, guid: 2f9e7dc163581394da1e00b561eed65d, type: 3}
+  is_stunned: 0
   head: {fileID: 2259792536512279852}
   body: {fileID: 2259792536241482323}
 --- !u!114 &2259792536060256547
@@ -384,6 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  tracking_time: 0
 --- !u!114 &2259792536060256548
 MonoBehaviour:
   m_ObjectHideFlags: 0

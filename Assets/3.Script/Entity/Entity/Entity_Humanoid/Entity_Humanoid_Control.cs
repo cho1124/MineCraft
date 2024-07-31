@@ -6,7 +6,7 @@ using Entity_Data;
 public class Entity_Humanoid_Control : MonoBehaviour
 {
     [SerializeField] private Entity entity;
-    [SerializeField] private CharacterController controller;
+    [SerializeField] private Rigidbody rigidbody_self;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform head_transform;
     [SerializeField] private GameObject position_anchor;
@@ -23,8 +23,7 @@ public class Entity_Humanoid_Control : MonoBehaviour
     private float speed_h;
     private float speed_v;
 
-    private float jump_height = 1f; // player_data¿¡¼­ °¡Á®¿À±â
-    private float gravity_velocity = 0f;
+    private float jump_height = 1f;
 
     private float input_key_h = 0f;
     private float input_key_v;
@@ -36,23 +35,25 @@ public class Entity_Humanoid_Control : MonoBehaviour
 
     private bool is_L_down = false;
     private bool is_R_down = false;
-
     private bool is_guard_down = false;
 
     private bool is_tracking = false;
 
-    public bool Grounded;
-    public float GroundedOffset;
-    public Vector3 GroundedBoxSize;
-    public LayerMask GroundLayers;
 
-    [Header("Debug")]
-    [SerializeField] private bool drawGizmo;
+
+    [SerializeField] private float EntityWidth = 0.25f;
+    [SerializeField] private float EntityHeight = 2f;
+    [SerializeField] private bool isGrounded;
+    private Vector3 velocity;
+    private World world;
+
+
 
     private void Awake()
     {
+        world = FindAnyObjectByType<World>();
+        TryGetComponent(out rigidbody_self);
         TryGetComponent(out entity);
-        TryGetComponent(out controller);
         TryGetComponent(out animator);
         head_transform = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Head");
         position_anchor = gameObject.transform.Find("SimplePlayer.arma/center/Body/Chest/Head/Position_Anchor").gameObject;
@@ -77,7 +78,9 @@ public class Entity_Humanoid_Control : MonoBehaviour
             StopCoroutine(Tracking_Target_Co());
             StopCoroutine(Attack_Target_Co());
         }
-        GroundedCheck();
+
+        isGrounded = Check_Ground();
+
         Move_Control();
         Attack_Control();
     }
@@ -96,6 +99,18 @@ public class Entity_Humanoid_Control : MonoBehaviour
             L_Hand.transform.LookAt(R_Hand.transform);
             //L_Hand.transform.Rotate(new Vector3(-60f, -45f, 15f));
         }
+
+        if (animator.GetFloat("Speed_V") > 0f && front)transform.position += transform.forward * -0.1f;
+        if (animator.GetFloat("Speed_V") < 0f && back) transform.position += transform.forward * 0.1f;
+        if (animator.GetFloat("Speed_H") > 0f && right) transform.position += transform.right * -0.1f;
+        if (animator.GetFloat("Speed_H") < 0f && left) transform.position += transform.right * 0.1f;
+        if (down) transform.position += transform.up * 0.1f;
+
+        if (animator.GetFloat("Speed_V") != 0f || animator.GetFloat("Speed_H") != 0f)
+        {
+            if (front || back || right || left) input_key_jump = true;
+        }
+        else input_key_jump = false;
     }
 
     private IEnumerator Tracking_Target_Co()
@@ -167,20 +182,6 @@ public class Entity_Humanoid_Control : MonoBehaviour
         yield return null;
     }
 
-    private void GroundedCheck()
-    {
-        // set sphere position, with offset
-        Vector3 box_position = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-        Grounded = Physics.CheckBox(box_position, GroundedBoxSize, transform.rotation, GroundLayers);
-        // update animator if using character
-    }
-    private void OnDrawGizmos()
-    {
-        if (!drawGizmo) return;
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawCube(transform.position + (transform.up * GroundedOffset), GroundedBoxSize);
-    }
     private void Rotation_Control()
     {
         rotation_anchor.transform.position = position_anchor.transform.position;
@@ -196,7 +197,7 @@ public class Entity_Humanoid_Control : MonoBehaviour
     }
     private void Move_Control()
     {
-        if (Grounded)
+        if (isGrounded)
         {
             if (!animator.GetBool("Is_Attacking"))
             {
@@ -212,12 +213,15 @@ public class Entity_Humanoid_Control : MonoBehaviour
                 animator.SetBool("IsGround", true);
                 animator.SetBool("IsJump", false);
 
+                velocity = Vector3.zero;
+
                 // Â«Çª
                 if (input_key_jump)
                 {
                     animator.SetBool("IsJump", true);
                     animator.SetBool("IsGround", false);
-                    gravity_velocity = Mathf.Sqrt(-5f * jump_height * Physics.gravity.y);
+                    isGrounded = false;
+                    velocity = rigidbody_self.velocity + transform.up * jump_height * 9.8f * 0.5f;
                 }
             }
             else
@@ -226,11 +230,20 @@ public class Entity_Humanoid_Control : MonoBehaviour
                 key_v = 0f;
             }
         }
-        else animator.SetBool("IsGround", false);
+        else
+        {
+            animator.SetBool("IsGround", false);
+            velocity += transform.up * -9.8f * 0.01f;
+        } 
 
         Move_Animation(key_h, key_v);
-        gravity_velocity += Physics.gravity.y * Time.deltaTime;
-        controller.Move(new Vector3(0, gravity_velocity, 0) * Time.deltaTime);
+        if (velocity != Vector3.zero)
+        {
+            velocity = new Vector3(Mathf.Lerp(velocity.x, 0f, Time.deltaTime), velocity.y, Mathf.Lerp(velocity.z, 0f, Time.deltaTime));
+            if (Mathf.Abs(velocity.x) < 0.01f) velocity.x = 0f;
+            if (Mathf.Abs(velocity.z) < 0.01f) velocity.z = 0f;
+            transform.position = transform.position + velocity * Time.deltaTime;
+        }
     }
 
     private void Move_Animation(float key_h, float key_v)
@@ -252,10 +265,7 @@ public class Entity_Humanoid_Control : MonoBehaviour
                 animator.SetBool("R_Attack", is_R_down);
             }
 
-            if (!animator.GetBool("Is_Attacking"))
-            {
-                animator.SetBool("Guard", is_guard_down);
-            }
+            if (!animator.GetBool("Is_Attacking")) animator.SetBool("Guard", is_guard_down);
         }
         else
         {
@@ -291,5 +301,88 @@ public class Entity_Humanoid_Control : MonoBehaviour
     public void On_Guard_Trigger_Exit()
     {
         animator.SetBool("Is_Guarding", false);
+    }
+
+    private bool Check_Ground()
+    {
+        if (world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y - 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y - 0.05f, transform.position.z - EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y - 0.05f, transform.position.z + EntityWidth)) ||
+            world.CheckForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y - 0.05f, transform.position.z + EntityWidth))
+            )
+        {
+            if (world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z - EntityWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x + EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)) ||
+                world.CheckWaterForVoxel(new Vector3(transform.position.x - EntityWidth, transform.position.y + 0.05f, transform.position.z + EntityWidth)))
+                return false;
+            else return true;
+        }
+        else return false;
+    }
+
+    private bool front
+    {
+        get
+        {
+            if (world.CheckForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight))
+            {
+                if (world.CheckWaterForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position + transform.forward * EntityWidth + transform.up * EntityHeight)) return false;
+                else return true;
+            }
+            else return false;
+        }
+    }
+    private bool back
+    {
+        get
+        {
+            if (world.CheckForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight))
+            {
+                if (world.CheckWaterForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position - transform.forward * EntityWidth + transform.up * EntityHeight)) return false;
+                else return true;
+            }
+            else return false;
+        }
+    }
+    private bool left
+    {
+        get
+        {
+            if (world.CheckForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight))
+            {
+                if (world.CheckWaterForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position - transform.right * EntityWidth + transform.up * EntityHeight)) return false;
+                else return true;
+            }
+            else return false;
+        }
+    }
+    private bool right
+    {
+        get
+        {
+            if (world.CheckForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight))
+            {
+                if (world.CheckWaterForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight * 0.3f) || world.CheckWaterForVoxel(transform.position + transform.right * EntityWidth + transform.up * EntityHeight)) return false;
+                else return true;
+            }
+            else return false;
+        }
+    }
+    private bool down
+    {
+        get
+        {
+            if (world.CheckForVoxel(transform.position + transform.up * EntityHeight * 0.1f))
+            {
+                if (world.CheckWaterForVoxel(transform.position + transform.up * EntityHeight * 0.1f)) return false;
+                else return true;
+            }
+            else return false;
+        }
     }
 }
