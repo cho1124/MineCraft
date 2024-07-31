@@ -1817,6 +1817,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1629210814871413168, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: EntityWidth
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210814871413168, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
       propertyPath: GroundLayers.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}
@@ -1829,8 +1833,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1629210814871413172, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210814871413172, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
       propertyPath: m_IsKinematic
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1629210814871413177, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
       propertyPath: inventoryCanvasGroup
@@ -16983,7 +16991,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2130394450}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf63846a352182141968e7376674266a, type: 3}
   m_Name: 
