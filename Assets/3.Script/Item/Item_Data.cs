@@ -1,29 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 //아이템 데이터 재활용좀 할게용
+[Flags]
 public enum Equipment_Type
 {
-    NONE,
-    HELMET,
-    CHESTPLATE,
-    LEGGINGS,
-    BOOTS,
-    SHIELD,
-    ONE_HANDED_SWORD,
-    ONE_HANDED_AXE,
-    ONE_HANDED_BLUNT,
-    TWO_HANDED_SWORD,
-    TWO_HANDED_AXE,
-    TWO_HANDED_BLUNT,
-    BOW,
-    PICKAXE,
-    SHOVEL,
-    HOE
+    NONE = 0,
+    HELMET = 1 << 0,              // 1
+    CHESTPLATE = 1 << 1,          // 2
+    LEGGINGS = 1 << 2,            // 4
+    BOOTS = 1 << 3,               // 8
+    SHIELD = 1 << 4,              // 16
+    ONE_HANDED_SWORD = 1 << 5,    // 32
+    ONE_HANDED_AXE = 1 << 6,      // 64
+    ONE_HANDED_BLUNT = 1 << 7,    // 128
+    TWO_HANDED_SWORD = 1 << 8,    // 256
+    TWO_HANDED_AXE = 1 << 9,      // 512
+    TWO_HANDED_BLUNT = 1 << 10,   // 1024
+    BOW = 1 << 11,                // 2048
+    PICKAXE = 1 << 12,            // 4096
+    SHOVEL = 1 << 13,             // 8192
+    HOE = 1 << 14                 // 16384
 }
-
 //아이템을 부수기 위해 필요한 타입에 대한 피드백 필요
 
 

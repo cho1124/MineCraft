@@ -87,7 +87,10 @@ public class Item_Manager : MonoBehaviour
         //    SpawnItem(262, transform.position);
         //}
 
-        
+        for(int i = 200; i < 400; i++)
+        {
+            SpawnItem(i, transform.position);
+        }
         
         
 
