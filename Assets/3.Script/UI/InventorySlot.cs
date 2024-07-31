@@ -15,10 +15,11 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
     private UIManager Inven;
 
+    
     public Equipment_Type Equip_Type;
 
     private float slot_color_value = 0.2f;
-    private bool isCrafting;
+    
 
     public delegate void ItemChanged();
     public event ItemChanged OnItemChanged;
@@ -64,8 +65,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         
         bool isInEquip = false; //나중에 쓸 무언가
         bool isInEquipNew = false;
-        isCrafting = false;
-        bool isCraftingNew = false;
+        
+        
         
 
         // 아이템이 핫바 슬롯에 있는지 확인
@@ -73,18 +74,13 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         int oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, Inven.carriedItem.activeSlot);
 
-        Debug.Log("이거 몇이여 :" + oldSlotIndex);
+        
         if (oldSlotIndex == -1)
         {
             oldSlotIndex = System.Array.IndexOf(Inven.equipmentSlots, Inven.carriedItem.activeSlot);
             isInEquip = true;
         }
-        if(oldSlotIndex == -1)
-        {
-            oldSlotIndex = System.Array.IndexOf(Inven.minicraftingSlots, Inven.carriedItem.activeSlot);
-            isInEquip = false;
-            isCrafting = true;
-        }
+        
 
 
         
@@ -95,58 +91,37 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         
 
         int newSlotIndex = System.Array.IndexOf(Inven.inventorySlots, this);
-        Debug.Log("이거 몇이여2 :" + newSlotIndex);
+        
         if (newSlotIndex == -1)
         {
             newSlotIndex = System.Array.IndexOf(Inven.equipmentSlots, this);
             isInEquipNew = true;
 
         }
-        if(newSlotIndex == -1)
-        {
-            newSlotIndex = System.Array.IndexOf(Inven.minicraftingSlots, this);
-            isCraftingNew = true;
-            isInEquipNew = false;
-        }
 
-        
+
+
         //Debug.Log("newSlotIndex" + newSlotIndex);
 
 
 
 
         //Debug.Log("Previous slot index: " + oldSlotIndex);
-        Debug.Log("carriedItem " + Inven.carriedItem);
+
 
         // Set current slot
 
-        if(!isCrafting)
-        {
-            Inven.carriedItem = null;
+        Inven.carriedItem = null;
 
-            // Reset old slot
-            item.activeSlot.myItem = null;
+        // Reset old slot
+        item.activeSlot.myItem = null;
 
-            myItem = item;
-            myItem.activeSlot = this;
-            myItem.transform.SetParent(transform);
-            myItem.canvasGroup.blocksRaycasts = true;
-        }
-        else
-        {
-            Debug.Log("crafting block");
-            Inven.carriedItem = item;
-            myItem = item;
-            myItem.activeSlot = this;
-            myItem.transform.SetParent(transform);
-            myItem.transform.position = Vector2.zero;
+        myItem = item;
+        myItem.activeSlot = this;
+        myItem.transform.SetParent(transform);
+        myItem.canvasGroup.blocksRaycasts = true;
 
-            myItem.canvasGroup.blocksRaycasts = true;
-        }
 
-        
-
-        
 
         //Swap
         //아 또 멍청한 실수 했다
@@ -162,13 +137,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             else if (isInEquip && !isInEquipNew)
             {
-                if(!isCrafting)
-                {
-                    Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
-                }
-
-                // isInEquip는 true이고 isInEquipNew는 false인 경우
                 
+                Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
+                // isInEquip는 true이고 isInEquipNew는 false인 경우
+
             }
         }
         else
@@ -183,20 +155,11 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             else
             {
-                if (isCrafting)
-                {
-                    Inventory.instance.inv_Slot[oldSlotIndex].StackCurrent--;
-                    Inventory.instance.Crafting_Mini_Slot[newSlotIndex] = Inventory.instance.inv_Slot[oldSlotIndex];
-                    Inventory.instance.Crafting_Mini_Slot[newSlotIndex].StackCurrent++;
-                }
-
-
+                
                 // isInEquip와 isInEquipNew가 모두 false인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
                 
                 
-
-
             }
 
         }

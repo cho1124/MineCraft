@@ -3053,7 +3053,7 @@ GameObject:
   - component: {fileID: 426043631}
   - component: {fileID: 426043634}
   m_Layer: 5
-  m_Name: Weapon2Slot
+  m_Name: WeaponLeftSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3153,7 +3153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 265b755864718794da340a91dbe35395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Equip_Type: 32736
+  Equip_Type: 32
 --- !u!1001 &439803868
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4484,7 +4484,7 @@ GameObject:
   - component: {fileID: 666103695}
   - component: {fileID: 666103698}
   m_Layer: 5
-  m_Name: Weapon1Slot
+  m_Name: WeaponRightSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4584,7 +4584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 265b755864718794da340a91dbe35395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Equip_Type: 32736
+  Equip_Type: 32
 --- !u!1 &671710666
 GameObject:
   m_ObjectHideFlags: 0
@@ -12005,8 +12005,8 @@ MonoBehaviour:
   - {fileID: 1889779286}
   - {fileID: 515422996}
   - {fileID: 1633571762}
-  - {fileID: 666103698}
   - {fileID: 426043634}
+  - {fileID: 666103698}
   minicraftingSlots:
   - {fileID: 0}
   - {fileID: 0}
@@ -16393,6 +16393,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1629210814737173357, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Name
+      value: R_BOW
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210814737173357, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210814818608188, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Name
+      value: R_ONE_HANDED_AXE
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210814818608188, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1629210814871413170, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
       propertyPath: m_Name
       value: Player
@@ -16447,6 +16463,66 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1629210814871413178, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815011105278, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Name
+      value: ONE_HANDED_SWORD
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815011105278, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815011105279, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815011105279, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815011105279, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.00277
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815044407541, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Name
+      value: ONE_HANDED_SWORD
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815044407541, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815117761688, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815456733438, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Name
+      value: L_ONE_HANDED_AXE
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815456733438, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815846898959, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815936479433, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_Name
+      value: L_BOW
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210815936479433, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210816107085127, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629210816183806872, guid: cd9a9cc03271d644cacf0cc7f345f8e9, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
