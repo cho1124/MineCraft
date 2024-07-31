@@ -37,7 +37,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         if(eventData.button == PointerEventData.InputButton.Left)
         {
             if(Inven.carriedItem == null) return;
-            if(Equip_Type != Equipment_Type.NONE && Inven.carriedItem.equip_type != Equip_Type) return;
+            if(Equip_Type != Equipment_Type.NONE && (Inven.carriedItem.equip_type & Equip_Type) == 0) return;
 
             
             

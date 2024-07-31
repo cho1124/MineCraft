@@ -99,6 +99,14 @@ public class Inventory : MonoBehaviour
 
     
 }
+[System.Serializable]
+public class ItemComponentData
+{
+    public int Item_id;
+    public int CurrentStack;
+
+}
+
 
 
 
