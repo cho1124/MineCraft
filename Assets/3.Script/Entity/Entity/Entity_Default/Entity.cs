@@ -14,11 +14,43 @@ namespace Entity_Data
 
         [SerializeField] protected float VIT, END, STR, DEX, AGI;
 
-        [SerializeField] protected float health_max;
-        [SerializeField] protected float health_current;
+        [SerializeField] private float health_max;
+
+        public float Health_max
+        {
+            get => health_max;
+
+            private set { }
+            
+            
+        }
+
+        [SerializeField] private float health_current;
+
+        public float Health_current
+        {
+            get => health_current;
+            private set { }
+        }
+
 
         [SerializeField] protected float posture_max;
+        public float Posture_max
+        {
+            get => posture_max;
+
+            private set { }
+
+
+        }
         [SerializeField] protected float posture_current;
+
+        public float Posture_current
+        {
+            get => posture_current;
+            private set { }
+        }
+
 
         [SerializeField] protected float weight_base;
         [SerializeField] protected float weight_max;
@@ -48,8 +80,9 @@ namespace Entity_Data
         protected Renderer[] entityRenderer;
         protected Color[] originalColor;
 
-
         
+
+
 
         public bool is_stunned = false;
 

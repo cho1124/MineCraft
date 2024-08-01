@@ -14,6 +14,8 @@ public class Entity_Humanoid : Entity
     public Transform[] anchorLeft; //0 : BareHand, 1 : One_hand_Sword, 2 : One_hand_Axe, 3 : Bow
     public Transform[] anchorRight; //아래도 마찬가지
 
+    public delegate void StatusUpdate();
+    public event StatusUpdate OnChangedStatus;
 
 
     private void Awake()
@@ -339,10 +341,6 @@ public class Entity_Humanoid : Entity
 
 
     }
-
-    
-
-
 
     public void On_L_Hand_Collider()
     {
