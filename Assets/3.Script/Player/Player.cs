@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
     {
         cam = GameObject.Find("Main Camera").transform;
         //world = GameObject.Find("World").GetComponent<World>();
-        world = FindAnyObjectByType<World>();
+        world = FindObjectOfType<World>();
         itemManager = FindObjectOfType<Item_Manager>();
         controller = GetComponent<Player_Control>();
 

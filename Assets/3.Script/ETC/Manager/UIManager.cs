@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public InventoryItem carriedItem;
+    public Entity_Humanoid player;
 
     [Header("인벤토리 내부 슬롯")]
     public InventorySlot[] inventorySlots; //1번 슬롯 배열
@@ -27,13 +28,9 @@ public class UIManager : MonoBehaviour
     [Header("ETC")]
     [SerializeField] private Transform draggablesTransform;
     [SerializeField] private InventoryItem itemPrefab;
+    public Image hpbar;
+    public Image staminabar;
     
-    public CanvasGroup TrashCan;
-
-    private void Awake()
-    {
-
-    }
 
     private void Start()
     {
@@ -53,6 +50,19 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("Inventory instance is null. Ensure that Inventory is properly initialized.");
         }
+
+        if(player != null)
+        {
+            player.OnChangedStatus += UpdateStatus;
+        }
+
+
+    }
+
+    private void UpdateStatus()
+    {
+        hpbar.fillAmount = player.Health_current / player.Health_max;
+        staminabar.fillAmount = player.Posture_current / player.Posture_max;
     }
 
     void Update()
@@ -61,7 +71,9 @@ public class UIManager : MonoBehaviour
         if (carriedItem == null) return;
 
         carriedItem.transform.position = Input.mousePosition;
-        
+        UpdateStatus();
+
+
 
     }
 

@@ -51,7 +51,7 @@ public class Entity_Humanoid_Control : MonoBehaviour
 
     private void Awake()
     {
-        world = FindAnyObjectByType<World>();
+        world = FindObjectOfType<World>();
         TryGetComponent(out rigidbody_self);
         TryGetComponent(out entity);
         TryGetComponent(out animator);
