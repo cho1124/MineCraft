@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public InventoryItem carriedItem;
+    
     public Entity_Humanoid player;
 
     [Header("인벤토리 내부 슬롯")]
@@ -28,7 +29,7 @@ public class UIManager : MonoBehaviour
     [Header("ETC")]
     [SerializeField] private Transform draggablesTransform;
     [SerializeField] private InventoryItem itemPrefab;
-    public Image hpbar;
+    public Slider hpbar;
     public Image staminabar;
     
 
@@ -38,7 +39,8 @@ public class UIManager : MonoBehaviour
         hotitemSet = new InventoryItem[HotBarSlots_Out.Length];
         invenitemSet = new InventoryItem[inventorySlots.Length];
         
-       
+
+
 
         if (Inventory.instance != null)
         {
@@ -61,17 +63,20 @@ public class UIManager : MonoBehaviour
 
     private void UpdateStatus()
     {
-        hpbar.fillAmount = player.Health_current / player.Health_max;
+        Debug.Log("player max : " + player.Health_max + "player current : " + player.Health_current);
+        
+
+        hpbar.value = player.Health_current / player.Health_max;
         staminabar.fillAmount = player.Posture_current / player.Posture_max;
     }
 
     void Update()
     {
-        
+        //개빡쳐서 업뎃에 넣음
+        UpdateStatus();
         if (carriedItem == null) return;
 
         carriedItem.transform.position = Input.mousePosition;
-        UpdateStatus();
 
 
 
