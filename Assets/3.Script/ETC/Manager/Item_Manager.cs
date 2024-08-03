@@ -90,10 +90,7 @@ public class Item_Manager : MonoBehaviour
         //}
 
         
-        for (int j = 0; j < 10; j++)
-        {
-            SpawnItem(5, player.position);
-        }
+        
 
         for (int i = 200; i < 400; i++)
         {

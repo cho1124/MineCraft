@@ -206,7 +206,7 @@ public class Chunk
         // 현재 블록 ID 저장
         byte currentBlockID = chunkData.map[xCheck, yCheck, zCheck].id;
 
-        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, World.Instance._player.orientation);
+        chunkData.ModifyVoxel(new Vector3Int(xCheck, yCheck, zCheck), newID, World.Instance.player.GetComponent<Player_Control>().orientation);
         // 새로운 블록 ID로 설정
 
 

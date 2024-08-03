@@ -58,7 +58,7 @@ public class Player_Control : MonoBehaviour
     public Transform highlightBlock;
     public Transform placeBlock;
     public float checkIncrement = 0.1f;
-    public float reach = 8f;
+    public float reach = 2f;
 
     public Text selectedBlockText;
     public byte selectedBlockIndex = 1; // 0 은 에어블록 -> isSolid 가 아님
@@ -105,6 +105,8 @@ public class Player_Control : MonoBehaviour
             Move_Control();
             Attack_Control();
             PlaceCursorBlocks();
+            SetDirection();
+
         }
 
 
@@ -176,6 +178,9 @@ public class Player_Control : MonoBehaviour
             head_transform.LookAt(rotation_anchor.transform.position + rotation_anchor.transform.forward * 5f);
         }
     }
+
+
+    //개선점 : mathf.abs 사용
     private float Difference(float a, float b)
     {
         if (a < b) return b - a;
@@ -228,7 +233,7 @@ public class Player_Control : MonoBehaviour
         {
             velocity = new Vector3(Mathf.Lerp(velocity.x, 0f, Time.deltaTime), velocity.y, Mathf.Lerp(velocity.z, 0f, Time.deltaTime));
             if (Mathf.Abs(velocity.x) < 0.01f) velocity.x = 0f;
-            if (Mathf.Abs(velocity.z) < 0.01f) velocity.z = 0f;
+            if (Mathf.Abs(velocity.z) < 0.01f) velocity.z = 0f; //?이건 머시여
             transform.position = transform.position + velocity * Time.deltaTime;
         }
 
@@ -263,6 +268,20 @@ public class Player_Control : MonoBehaviour
             animator.SetBool("R_Attack", false);
             animator.SetBool("Guard", false);
         }
+    }
+
+    void SetDirection()
+    {
+        Vector3 XZDirection = transform.forward;
+        XZDirection.y = 0;
+        if (Vector3.Angle(XZDirection, Vector3.forward) <= 45)
+            orientation = 0;
+        else if (Vector3.Angle(XZDirection, Vector3.right) <= 45)
+            orientation = 5;
+        else if (Vector3.Angle(XZDirection, Vector3.back) <= 45)
+            orientation = 1;
+        else
+            orientation = 4;
     }
 
     private void PlaceCursorBlocks()
@@ -304,7 +323,6 @@ public class Player_Control : MonoBehaviour
         placeBlock.gameObject.SetActive(false);
 
     }
-
 
     private void InvenScroll()
     {

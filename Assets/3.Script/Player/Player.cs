@@ -209,10 +209,6 @@ public class Player : MonoBehaviour
     }
 
 
-
-
-
-
     private void CalculateVelocity()
     {
 
@@ -241,9 +237,6 @@ public class Player : MonoBehaviour
         else if (velocity.y > 0)
             velocity.y = CheckUpSpeed(velocity.y);
     }
-
-
-
 
 
     // 캐릭터 컨트롤 인풋
