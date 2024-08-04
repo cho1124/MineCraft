@@ -2,12 +2,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class SceneLoader : MonoBehaviour
 {
     static string nextScene = null;
 
     [SerializeField] private Image progressBar = null;
+    [SerializeField] private TMP_Text generateText;
 
     private void Start()
     {
@@ -35,16 +37,16 @@ public class SceneLoader : MonoBehaviour
         {
             yield return null;
 
-            if (operation.progress < 0.9f)
+            if (operation.progress < 0.6f)
             {
                 progressBar.fillAmount = operation.progress;
             }
             else
             {
                 timer += Time.unscaledDeltaTime;
-                progressBar.fillAmount = Mathf.Lerp(0.9f, 1f, timer);
+                progressBar.fillAmount = Mathf.Lerp(0, 0.8f, timer);
 
-                if (progressBar.fillAmount >= 1f)
+                if (progressBar.fillAmount >= 0.8f)
                 {
                     Debug.Log("로딩 완료, 씬 활성화...");
                     operation.allowSceneActivation = true;
@@ -63,6 +65,7 @@ public class SceneLoader : MonoBehaviour
         {
             Debug.Log("World 인스턴스 초기화 대기 중...");
             yield return null;
+            
         }
 
         Debug.Log("World 인스턴스 발견.");
@@ -71,8 +74,11 @@ public class SceneLoader : MonoBehaviour
         while (!World.Instance.isLoadingComplete)
         {
             Debug.Log("World 로딩 완료 대기 중...");
+            
             yield return null;
         }
+        
+
 
         // 로딩 완료 후 로딩 씬 비활성화
         AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync("Asynchronous");
@@ -82,6 +88,7 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
 
+        progressBar.fillAmount = 1f;
         Debug.Log("World 로딩 완료.");
     }
 }
