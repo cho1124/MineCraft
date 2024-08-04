@@ -21,10 +21,7 @@ public class UIManager : MonoBehaviour
 
     
 
-    [Header("아이템 세터(디버깅용으로 임시로 보이는 것)")]
-    [SerializeField] private InventoryItem[] hotitemSet;
-    [SerializeField] private InventoryItem[] hotitemSet_inv;
-    [SerializeField] private InventoryItem[] invenitemSet;
+    
     
     [Header("ETC")]
     [SerializeField] private Transform draggablesTransform;
@@ -36,8 +33,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         //hotitemSet = new InventoryItem[HotBarSlots_Out.Length];
-        hotitemSet = new InventoryItem[HotBarSlots_Out.Length];
-        invenitemSet = new InventoryItem[inventorySlots.Length];
+        
         
 
 
@@ -61,9 +57,11 @@ public class UIManager : MonoBehaviour
 
     }
 
+    
+
     private void UpdateStatus()
     {
-        Debug.Log("player max : " + player.Health_max + "player current : " + player.Health_current);
+        //Debug.Log("player max : " + player.Health_max + "player current : " + player.Health_current);
         
 
         hpbar.value = player.Health_current / player.Health_max;
@@ -74,6 +72,7 @@ public class UIManager : MonoBehaviour
     {
         //개빡쳐서 업뎃에 넣음
         UpdateStatus();
+       
         if (carriedItem == null) return;
 
         carriedItem.transform.position = Input.mousePosition;
@@ -90,10 +89,6 @@ public class UIManager : MonoBehaviour
     {
         
         
-
-
-
-
         if (carriedItem != null)
         {
             if (item.activeSlot != null && item.activeSlot.myItem != null && item.activeSlot.myItem.equip_type != Equipment_Type.NONE && item.activeSlot.myItem.equip_type != carriedItem.equip_type)
@@ -150,6 +145,9 @@ public class UIManager : MonoBehaviour
 
     }
 
+    
+
+
     public void EquipEquipment(Equipment_Type tag, InventoryItem item = null)
     {
         switch (tag)
@@ -193,9 +191,7 @@ public class UIManager : MonoBehaviour
                 if (HotBarSlots_Out[i].myItem != null)
                 {
 
-
-
-                    TryRemoveItem(HotBarSlots_Out, hotitemSet, i, out InventoryItem removedItem);
+                    TryRemoveItem(HotBarSlots_Out, i, out InventoryItem removedItem);
                     //Destroy(HotBarSlots_Out[i].myItem);
                 }
                 
@@ -207,7 +203,7 @@ public class UIManager : MonoBehaviour
                 var tempItem = Inventory.instance.inv_Slot[i];
                 
 
-                TryPlaceItem(HotBarSlots_Out, hotitemSet, i, tempItem, itemPrefab);
+                TryPlaceItem(HotBarSlots_Out, i, tempItem, itemPrefab);
 
                 if (HotBarSlots_Out[i].myItem == null)
                 {
@@ -225,8 +221,7 @@ public class UIManager : MonoBehaviour
 
     private void SetInventory()
     {
-
-        if (Inventory.instance.inv_Slot == null)
+        if (Inventory.instance == null || Inventory.instance.inv_Slot == null)
         {
             Debug.LogError("인벤없데이");
             return;
@@ -234,40 +229,34 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            if (Inventory.instance.inv_Slot[i] == null)
+            if (i >= Inventory.instance.inv_Slot.Length)
             {
+                Debug.LogError($"Inventory slot index {i} is out of range.");
+                continue;
+            }
 
-                if (inventorySlots[i].myItem != null)
+            var inventorySlot = Inventory.instance.inv_Slot[i];
+            var uiSlot = inventorySlots[i];
+
+            if (inventorySlot == null)
+            {
+                if (uiSlot.myItem != null)
                 {
-                    
-
-                    //Destroy(HotBarSlots_Out[i].myItem);
+                    TryRemoveItem(inventorySlots, i, out InventoryItem removedItem);
+                    Debug.Log("Removed item at index " + i);
                 }
-
-                TryRemoveItem(inventorySlots, invenitemSet, i, out InventoryItem removedItem);
-                
-
-                //TryRemoveItem(CraftingSlots, craftitemSet, i, out removedItem);
-                //if(inven)
-
-
             }
             else
             {
-                var tempItem = Inventory.instance.inv_Slot[i];
-                TryPlaceItem(inventorySlots, invenitemSet, i, tempItem, itemPrefab);
-                //var tempItem2 = Inventory.instance.inv_Slot[i];
-                //TryPlaceItem(CraftingSlots, craftitemSet, i, tempItem2, itemPrefab);
-
+                var tempItem = inventorySlot;
+                TryPlaceItem(inventorySlots, i, tempItem, itemPrefab);
             }
-
         }
-
     }
 
-    public bool TryPlaceItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, ItemComponent tempItem, InventoryItem itemPrefab)
+    public bool TryPlaceItem(InventorySlot[] slots, int index, ItemComponent tempItem, InventoryItem itemPrefab)
     {
-        if (index >= slots.Length || index >= itemSet.Length)
+        if (index >= slots.Length)
         {
             Debug.LogError($"Index {index} is out of range for slots or itemSet array.");
             return false;
@@ -278,42 +267,40 @@ public class UIManager : MonoBehaviour
         // slots[index].myItem이 null인 경우에만 작업을 수행
         if (slots[index].myItem == null)
         {
-            if (itemSet[index] == null)
-            {
-                //Debug.Log("itemset index : " + index);
-                // itemSet[index]가 null이면 새 인스턴스를 생성합니다.
-                itemSet[index] = Instantiate(itemPrefab, slots[index].transform);
-            }
-            
+
+            Debug.Log("slots is null");
+
+
+            slots[index].myItem = Instantiate(itemPrefab, slots[index].transform);
 
             // itemSet[index]를 초기화합니다.
-            
-            
-        }
-        
 
-        itemSet[index].Initialize(tempItem, slots[index]);
-        return false;
+
+        }
+
+
+        slots[index].myItem.Initialize(tempItem, slots[index]);
+        return true;
     }
 
 
-    public bool TryRemoveItem(InventorySlot[] slots, InventoryItem[] itemSet, int index, out InventoryItem removedItem)
+    public bool TryRemoveItem(InventorySlot[] slots, int index, out InventoryItem removedItem)
     {
         removedItem = null;
 
-        if (index >= slots.Length || index >= itemSet.Length)
+        if (index >= slots.Length)
         {
             Debug.LogError($"Index {index} is out of range for slots or itemSet array.");
             return false;
         }
 
         
-        if (itemSet[index] != null && slots[index].myItem != null)
+        if (slots[index].myItem != null)
         {
-            removedItem = itemSet[index];
             
-            Destroy(removedItem.gameObject);
-            itemSet[index] = null;
+            
+            Destroy(slots[index].myItem);
+            
             slots[index].myItem = null;
             return true;
         }

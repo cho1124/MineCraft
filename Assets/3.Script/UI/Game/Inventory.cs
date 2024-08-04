@@ -84,10 +84,11 @@ public class Inventory : MonoBehaviour
            
     }
 
-    public GameObject DestroyItem(ItemComponent item)
+    public GameObject DestroyItem(ItemComponent item, int slotIndex)
     {
         //인벤토리 슬롯에서 보내는 과정 추가
         GameObject newobj = itemManager.SpawnItem(item.ItemID, transform.position);
+        inv_Slot[slotIndex] = null;
         ChangeEvent();
         return newobj;
     }

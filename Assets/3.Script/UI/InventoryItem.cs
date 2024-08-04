@@ -79,7 +79,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         
         if(eventData.button == PointerEventData.InputButton.Left)
         {
-            AudioManager.instance.PlayRandomSFX("UI", "Click");
+            //AudioManager.instance.PlayRandomSFX("UI", "Click");
             Inven.SetCarriedItem(this);
             
         }

@@ -60,32 +60,24 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         //
         //
 
-
         //int oldSlotIndex = -1;
         
         bool isInEquip = false; //나중에 쓸 무언가
         bool isInEquipNew = false;
         
         
-        
-
-        // 아이템이 핫바 슬롯에 있는지 확인
-        
-
+      
         int oldSlotIndex = System.Array.IndexOf(Inven.inventorySlots, Inven.carriedItem.activeSlot);
 
-        
+        Debug.Log("oldSlotIndex : " + oldSlotIndex);
+
+
         if (oldSlotIndex == -1)
         {
             oldSlotIndex = System.Array.IndexOf(Inven.equipmentSlots, Inven.carriedItem.activeSlot);
             isInEquip = true;
         }
         
-
-
-        
-        //Debug.Log("oldSlotIndex" + oldSlotIndex);
-
 
         // 새로운 슬롯의 인덱스를 저장
         
@@ -98,19 +90,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             isInEquipNew = true;
 
         }
-
-
-
-        //Debug.Log("newSlotIndex" + newSlotIndex);
-
-
-
-
-        //Debug.Log("Previous slot index: " + oldSlotIndex);
+        Debug.Log("newSlotIndex : " + newSlotIndex);
 
 
         // Set current slot
-
         Inven.carriedItem = null;
 
         // Reset old slot
@@ -122,24 +105,19 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         myItem.canvasGroup.blocksRaycasts = true;
 
 
-
         //Swap
-        //아 또 멍청한 실수 했다
+        
         if (isInEquip != isInEquipNew)
         {
             if (!isInEquip && isInEquipNew)
             {
-                
                 // isInEquip는 false이고 isInEquipNew는 true인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.Equipment_Slot[newSlotIndex]);
-                
-
             }
-            else if (isInEquip && !isInEquipNew)
+            else
             {
-                
-                Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
                 // isInEquip는 true이고 isInEquipNew는 false인 경우
+                Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
 
             }
         }
@@ -147,37 +125,24 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         {
             if (isInEquip && isInEquipNew)
             {
-
-
-
                 // isInEquip와 isInEquipNew가 모두 true인 경우
                 Swap(ref Inventory.instance.Equipment_Slot[oldSlotIndex], ref Inventory.instance.Equipment_Slot[newSlotIndex]);
             }
             else
             {
-                
                 // isInEquip와 isInEquipNew가 모두 false인 경우
                 Swap(ref Inventory.instance.inv_Slot[oldSlotIndex], ref Inventory.instance.inv_Slot[newSlotIndex]);
-                
                 
             }
 
         }
 
-
-        //itemCom  = Inventory.instance.inv_Slot[oldSlotIndex];
-
-        
-        //TODO >>> 핫바에 대한 부분, 장비장착에 대한 부분, 장비 장착시, itemLayer를 제거하고 사용 가능한 아이템으로 변환할 것 >>>> 필수 정말짱중요
-
-
-
         if (Equip_Type != Equipment_Type.NONE)
         { 
             Inven.EquipEquipment(Equip_Type, myItem);
         }
-        OnItemChanged?.Invoke();
         Inventory.instance.ChangeEvent();
+        OnItemChanged?.Invoke();
     }
 
     private void Swap(ref ItemComponent Old_Item, ref ItemComponent New_Item)
