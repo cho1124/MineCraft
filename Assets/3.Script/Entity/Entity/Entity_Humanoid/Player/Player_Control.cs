@@ -302,9 +302,10 @@ public class Player_Control : MonoBehaviour
         // reach 거리만큼 반복
         while (step < reach)
         {
-
+            Vector3 newPos = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
             // 카메라의 위치에서 카메라가 바라보고 있는 방향으로 Step 거리만큼 이동
-            Vector3 pos = transform.position + (transform.forward * step);
+            Vector3 pos = newPos + (transform.forward * step);
+            Debug.DrawLine(newPos, pos);
 
             // 만약 거기에 Voxel이 있다면
             if (world.CheckForVoxel(pos))
