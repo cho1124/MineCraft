@@ -65,7 +65,7 @@ public class Player_Control : MonoBehaviour
 
     public int orientation;
 
-    private Item_Manager itemManager;
+    
     private ItemComponent[] inventorySlots; //사용할 인덱스는 0부터 8까지
 
     private InventoryOnOff inventoryOnOff;
@@ -88,7 +88,7 @@ public class Player_Control : MonoBehaviour
 
     private void Start()
     {
-        itemManager = FindObjectOfType<Item_Manager>();
+        
         inventorySlots = GetComponent<Inventory>().inv_Slot;
         cam = GameObject.Find("Main Camera").transform;
         inventoryOnOff = GetComponent<InventoryOnOff>();
@@ -107,6 +107,15 @@ public class Player_Control : MonoBehaviour
             PlaceCursorBlocks();
             SetDirection();
 
+        }
+        if(Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Vector3 newPos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 5f);
+
+            for(int i = 200; i < 400; i++)
+            {
+                Item_Manager.instance.SpawnItem(i, newPos);
+            }
         }
 
 
@@ -372,8 +381,7 @@ public class Player_Control : MonoBehaviour
             {
                 destroyedBlockID = 5;
             }
-
-            itemManager.SetItem(destroyedBlockID, destroyPos, world);
+            Item_Manager.instance.SetItem(destroyedBlockID, destroyPos, world);
         }
     }
 

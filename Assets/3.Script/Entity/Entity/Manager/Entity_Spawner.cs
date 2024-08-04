@@ -26,6 +26,7 @@ public class Entity_Spawner : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private Vector3 last_spawn_position;
 
+    
     private void Update()
     {
         // 플레이어의 현재 위치와 마지막 위치 사이의 거리를 계산하여 재스폰 거리를 초과했는지 확인합니다.

@@ -17,7 +17,7 @@ public class Inventory : MonoBehaviour
     public ItemComponent[] Crafting_Mini_Slot = new ItemComponent[4];
     public Transform[] Equipment_Part = new Transform[6];
 
-    private Item_Manager itemManager;
+    
 
 
     public Transform Inventory_obj;
@@ -34,7 +34,7 @@ public class Inventory : MonoBehaviour
         }
         instance = this;
 
-        itemManager = FindObjectOfType<Item_Manager>();
+        
 
     }
 
@@ -87,7 +87,7 @@ public class Inventory : MonoBehaviour
     public GameObject DestroyItem(ItemComponent item, int slotIndex)
     {
         //인벤토리 슬롯에서 보내는 과정 추가
-        GameObject newobj = itemManager.SpawnItem(item.ItemID, transform.position);
+        GameObject newobj = Item_Manager.instance.SpawnItem(item.ItemID, transform.position);
         inv_Slot[slotIndex] = null;
         ChangeEvent();
         return newobj;

@@ -47,8 +47,24 @@ public class Item_Manager : MonoBehaviour
 
     public Transform player;
 
+    public static Item_Manager instance;
+
+
+
     private void Awake()
     {
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+
+
         TextAsset jsonFile = Resources.Load<TextAsset>("ItemData"); // 테스트용
         if (jsonFile == null)
         {
@@ -62,8 +78,6 @@ public class Item_Manager : MonoBehaviour
         // JSON 문자열을 ItemData 객체로 파싱
         ItemData itemData = JsonConvert.DeserializeObject<ItemData>(jsonString);
 
-
-        
         // 파싱된 데이터 사용 예제
 
         Dic_Add(itemData.stackableItems);
@@ -74,32 +88,11 @@ public class Item_Manager : MonoBehaviour
 
         Dic_Add(itemData.equipmentItems);
 
-        
 
-        //Debug.Log(Item_Dictionary.item_dictionary[7].item_ID);
-
-        //SpawnItem(TestKey, transform.position);
-    }
-
-    void Start()
-    {
-
-        //for(int i = 0; i < 1000; i++)
-        //{
-        //    SpawnItem(262, transform.position);
-        //}
-
-        
-        
-
-        for (int i = 200; i < 400; i++)
-        {
-            SpawnItem(i, player.position);
-        }
-        
-        
 
     }
+
+    
 
     public void SetLayerToItem(GameObject obj, string layer)
     {

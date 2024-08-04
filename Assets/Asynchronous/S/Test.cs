@@ -8,7 +8,7 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Loading.LoadScene("Scene2");
+            SceneLoader.LoadScene("Scene2");
         }
     }
 }

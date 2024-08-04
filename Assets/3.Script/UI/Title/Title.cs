@@ -13,26 +13,28 @@ public class Title : MonoBehaviour
 
     private void Awake()
     {
-        rt = this.GetComponent<RectTransform>();
+        rt = GetComponent<RectTransform>();
     }
 
     private void Update()
     {
-        float speed = this.background_speed * Time.deltaTime;
+        float speed = background_speed * Time.deltaTime;
 
-        this.rt.Translate(-speed, 0, 0);
+        rt.Translate(-speed, 0, 0);
 
-        if (this.rt.position.x <= -4000)
+        if (rt.position.x <= -4000)
         {
-            this.rt.position = Vector3.zero;
+            rt.position = Vector3.zero;
         }
     }
 
     public void StartGame() // 게임 시작
     {
-        SceneManager.LoadScene("World");
+        Debug.Log("진짜게임시작");
+        SceneLoader.LoadScene("World");
 
-        Debug.Log("게임 시작");
+
+        //Debug.Log("게임 시작");
     }
 
     public void ExitGame() // 게임 종료

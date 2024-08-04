@@ -15,7 +15,12 @@ public class World : MonoBehaviour
     ///
 
     public Settings settings;
-
+    // 로딩 완료 플래그
+    public bool isLoadingComplete = false;
+    private bool isInit = false;
+    public float stableFrameDuration = 2.0f; // 프레임 안정성을 확인할 시간 (초)
+    public int targetFrameRate = 120; // 목표 프레임 레이트
+    public float frameCheckInterval = 0.1f; // 프레임 체크 간격 (초)
 
 
     // 플레이어
@@ -25,6 +30,9 @@ public class World : MonoBehaviour
     public new Camera camera;
     public bool isWorldGenerate = true; //디버깅용
 
+
+    
+    private Entity_Spawner entitySpawner;
 
     //  ================================================== //
     //  ================= 월드 생성 관련 ================== //
@@ -112,6 +120,11 @@ public class World : MonoBehaviour
         appPath = Application.persistentDataPath;
 
         _player = player.GetComponent<Player>();
+
+        
+        entitySpawner = FindObjectOfType<Entity_Spawner>();
+        entitySpawner.gameObject.SetActive(false);
+
     }
 
     public WorldData worldData;
@@ -120,10 +133,13 @@ public class World : MonoBehaviour
     //월드 생성
     private void Start()
     {
+        Debug.Log("World Init");
         WorldInit();
+
 
     }
 
+    
     private void WorldInit()
     {
         if(isWorldGenerate)
@@ -136,7 +152,7 @@ public class World : MonoBehaviour
         }
 
         
-        player.position = spawnPoint;
+        
 
         worldData = SaveSystem.LoadWorld("Prototype"); //로드
 
@@ -151,7 +167,10 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
 
 
+        
 
+
+        player.position = spawnPoint;
         if (settings.enableThreading)
         {
             chunkUpdateThread = new Thread(new ThreadStart(ThreadUpdate));
@@ -167,7 +186,13 @@ public class World : MonoBehaviour
 
         playerLastChunkCoord = GetChunkCoordFromVector3(player.transform.position);
         SetGlobalLightValue();
+
+        
+
+        
     }
+
+    
 
     public void SetGlobalLightValue()
     {
@@ -186,10 +211,6 @@ public class World : MonoBehaviour
         {
             WorldGenerate();
         }
-
-        
-
-
 
         if (Input.GetKeyDown(KeyCode.F1))
             SaveSystem.SaveWorld(worldData);
@@ -217,6 +238,12 @@ public class World : MonoBehaviour
         if (chunksToCreate.Count > 0)
         {
             CreateChunk();
+        }
+        else
+        {
+            isLoadingComplete = true;
+            entitySpawner.gameObject.SetActive(true);
+            
         }
 
 
